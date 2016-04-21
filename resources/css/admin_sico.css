@@ -1,0 +1,7 @@
+div#header {
+    background-color: #F0F0F0;
+    /*background: url(../images/logo.png) no-repeat;*/
+    background: url(../images/logowithsico.png) no-repeat;
+    height: 110px;
+    margin-top: 0px;
+}

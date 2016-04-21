@@ -1,0 +1,38 @@
+
+<!DOCTYPE >
+<html>
+	<head>
+		<title>VelObs 2 Pieds 2 Roues [Admin]</title>
+		<link rel="shortcut icon" type="image/png" href="resources/favicon/favicon.ico" />
+	</head>
+	<body>
+		<div id="loading">
+			<div class="loading-indicator">
+				<img alt="mooveatis" src="resources/images/mooveatis32.png" width="32" height="32" style="margin-right:8px;float:left;vertical-align:top;"/>VelObs - <a href="http://www.mooveatis.fr" target="_blank">Mooveatis</a><br /><span id="loading-msg">Loading styles and images ...</span>
+			</div>
+			<link rel="stylesheet" type="text/css" href="lib/js/framework/ext-3.4.0/resources/css/ext-all.css" />
+			<link rel="stylesheet" type="text/css" href="lib/js/framework/ext-3.4.0/resources/css/xtheme-gray.css" />
+			<link rel="stylesheet" type="text/css" href="lib/js/framework/GeoExt/resources/css/geoext-all.css" />
+			<link rel="stylesheet" type="text/css" href="lib/js/framework/GeoExt/resources/css/gxtheme-gray.css" />
+			<link rel="stylesheet" type="text/css" href="resources/css/admin.css" />
+			<link rel="stylesheet" type="text/css" href="resources/css/icon.css" />
+			
+			<script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Loading framework...'</script>
+			<script type="text/javascript" src="lib/js/framework/ext-3.4.0/adapter/ext/ext-base.js"></script>
+			<script type="text/javascript" src="lib/js/framework/ext-3.4.0/ext-all.js"></script>
+			
+			<script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Loading geographic components...'</script>
+			<script type="text/javascript" src="lib/js/framework/OpenLayers-2.11/OpenLayers.js"></script>
+			<script type="text/javascript" src="lib/js/framework/GeoExt/script/GeoExt.js"></script>
+			
+			<script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Loading language...';</script>
+			<script type="text/javascript" src="lib/js/framework/ext-3.4.0/src/locale/ext-lang-fr.js"></script>
+			
+			<script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Loading application...'</script>
+			<script type="text/javascript" src="lib/js/admin/login.js"></script>
+			
+			<script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Initialization...'</script>
+		</div>
+		<div id="form_admin"/>
+	</body>
+</html>

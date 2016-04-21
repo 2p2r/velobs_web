@@ -1,0 +1,245 @@
+html, body{
+	font: normal 11px arial, tahoma, helvetica, sans-serif;
+	margin:0;
+	padding:0;
+	overflow:hidden;
+	height:100%;
+	background:#d2d9df;
+	text-align: justify;
+}
+#loading-mask{
+	height:100%;
+	position:absolute;
+	left:0;
+	top:0;
+	width:100%;
+	z-index:20000;
+}
+#loading{
+	text-align: center;
+	height:auto;
+	position:absolute;
+	left:45%;
+	top:40%;
+	padding:2px;
+	z-index:20001;
+}
+#loading a {
+	color:#225588;
+}
+#loading .loading-indicator{
+	background:#d2d9df;
+	color:#444;
+	font:bold 13px Helvetica, Arial, sans-serif;
+	height:auto;
+	margin:0;
+	padding:10px;
+}
+#loading-msg {
+	font-size: 10px;
+	font-weight: normal;
+}
+#form_admin {
+	position:absolute;
+	left: 40%; 
+	top: 40%;
+}
+
+.x-panel-body p {
+	margin:0px;
+}
+.x-column-layout-ct .x-panel {
+	margin-bottom:4px;
+}
+.x-column-layout-ct .x-panel-dd-spacer {
+	margin-bottom:0px;
+}
+.x-toolbar-cell .x-form-checkbox, .x-toolbar-cell .x-form-radio {
+	margin-top: 0px;
+}
+.checkhillshading {
+	color: gray;
+	padding-right: 15px;
+}
+.header .x-panel-body { 
+	background-color: #F0F0F0;
+	/*background: url(../images/logowithgt.png) no-repeat;*/
+}
+div#header {
+/*	background-color: #F0F0F0;
+	background: url(../images/logowithgt.png) no-repeat;*/
+	height: 110px;
+	margin-top: 7px;
+}
+div#mooveatis{
+	float: right;
+	height: 60px;
+	width: 60px;
+	margin-right: 10px;
+	margin-top: 15px;
+	background-image: url(../images/mooveatis-logo.png);
+	cursor: pointer;
+}
+div#disconnect{
+	position: relative;
+	float: right;
+	height: 16px;
+	width: 16px;
+	background-image: url(../icon/fugue/plug-disconnect-nb.png);
+	margin: 10px;
+	cursor: pointer;
+}
+div#disconnect:hover {
+	background-image: url(../icon/fugue/plug-disconnect.png);
+}
+
+div#gotopublicmap{
+	position: relative;
+	float: right;
+	height: 16px;
+	width: 16px;
+	background-image: url(../icon/silk/map_go-nb.png);
+	margin: 10px;
+	cursor: pointer;
+}
+div#gotopublicmap:hover {
+	background-image: url(../icon/silk/map_go.png);
+}
+div#hellouser{
+	position: relative;
+	float: right;
+	margin: 10px;
+	font-weight: bold;
+}
+div#hellouser:hover{
+	cursor: pointer;
+	text-decoration: underline;
+}
+div#update{
+	position: relative;
+	float: right;
+	height: 16px;
+	width: 16px;
+	background-image: url(../images/update.gif);
+	margin: 10px;
+	cursor: pointer;
+}
+
+
+/* ---- */
+.valid{
+	background-color: #6bae64;
+}
+.notvalid{
+	background-color: #d25e5e;
+}
+.verygood{
+	background-color: #6bae64;
+}
+.good{
+	background-color: #d7de76;
+}
+.mid{
+	background-color: #e0d275;
+}
+.bad{
+	background-color: #f5980c;
+}
+.not{
+	background-color: #d25e5e;
+}
+.publicpoi{
+	background-color: #f5c4c4;
+}
+.grey{
+	background-color: #e1dede;
+}
+.nophoto{
+	background-color: #e0d275;
+}
+.photo{
+	background-color: #aae0ac;
+}
+.nocomment{
+	background-color: #f5c4c4;
+}
+.commentmoderate{
+	background-color: #f5980c;
+}
+.infoSupTabPanelPopup{
+	padding: 5px;
+	text-align: justify;
+}
+/* ---- */
+
+.bold-button button {
+	font-weight: bold;
+}
+
+
+ul.x-tab-strip li.space-tab {
+	float: left;
+	margin-left: 10px;
+	padding-left: 5px;
+}
+
+div.olControlLayerSwitcher .layersDiv {
+	background-color: black;
+}
+
+/* IconCombo */
+/* X-BROWSER-WARNING: this is not being honored by Safari */
+.ux-icon-combo-icon {
+	background-repeat: no-repeat;
+	background-position: 0 50%;
+	width: 18px;
+	height: 14px;
+}
+
+.ux-icon-combo-input {
+	padding-left: 25px;
+}
+
+.x-form-field-wrap .ux-icon-combo-icon {
+	top: 3px;
+	left: 5px;
+}
+.ux-icon-combo-item {
+	background-repeat: no-repeat ! important;
+	background-position: 3px 50% ! important;
+	padding-left: 24px ! important;
+}
+
+#IconListingEditorGrid .x-grid3-cell {vertical-align: middle !important;}
+#CategoryListingEditorGrid .x-grid3-cell {vertical-align: middle !important;}
+#SubCategoryListingEditorGrid .x-grid3-cell {vertical-align: middle !important;}
+
+.checkhillshading {
+	color: gray;
+	padding-right: 15px;
+}
+
+.olControlAttribution {
+	bottom: 3px !important;
+	font-size: 12px;
+	color: gray;
+}
+.olControlAttribution a {
+	color: red;
+	font-weight: bold;
+	text-decoration: none;
+}
+.olControlAttribution a:hover {
+	text-decoration: underline;
+}
+
+.x-toolbar div.xtb-text {
+	padding: 0px 2px 0;
+	line-height: 16px;
+	display: block;
+}
+div.olLayerGooglePoweredBy {display:none;}
+
+.pointerimg:hover {
+	cursor:pointer;
+}

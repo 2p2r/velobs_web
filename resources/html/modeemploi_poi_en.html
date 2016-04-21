@@ -1,0 +1,101 @@
+<html> 
+<head> 
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+	<title>Mode d'emploi des enregistrements</title> 
+	<link rel="stylesheet" type="text/css" href="./css/modeemploi.css" />
+</head> 
+<body> 
+	<div class="logocredits"></div> 
+	<h3><span>Les enregistrements</span></h3>
+<br/>
+L'onglet de gestion des enregistrements permet de gérer toutes les informations relatives à un enregistrement :
+<ul>
+<li>les champs d'informations : repère, nom de la voie, description, proposition, observation terrain, sous-catégorie, nom de l'adhérent, email, téléphone, réponse de Toulouse Métropole, commentaire final de l'association ;</li>
+<li>la sous-catégorie ;</li>
+<li>une commune et un pôle ;</li>
+<li>une priorité ;</li>
+<li>un statut ;</li>
+<li>la position géographique ;</li>
+<li>les images éventuelles ;</li>
+<li>l'affichage ;</li>
+<li>la modération ;</li>
+<li>la date de création ;</li>
+<li>un attribut de modération ;</li>
+<li>un attribut d'affichage ;</li>
+<li>le mode de géolocalisation.</li>
+</ul>
+<br/>
+Un enregistement appartient à une et une seule sous-catégorie.
+<br/>Il n'y a pas de limitation du nombre d'enregistrements par sous-catégorie.
+<br/><br/>
+
+<b>Un enregistrement est défini par :</b>
+<br/><br/>
+<img src="./images/modeemploi_poi1.png" />
+<ul>
+<li>un numéro d'identification - non modifiable ;</li>
+<li>un repère de rue - modifiable ;</li>
+<li>un nom de voie - modifiable ;</li>
+<li>une commune - modifiable ;</li>
+<li>un pole - modifiable ;</li>
+<li>une priorité - modifiable ;</li>
+<li>une description - modifiable ;</li>
+<li>une proposition - modifiable ;</li>
+<li>un observation terrain - modifiable ;</li>
+<li>une sous-catégorie - modifiable ;</li>
+<li>un attribut de modération - modifiable ;</li>
+<li>un attribut d'affichage - modifiable ;</li>
+<li>une image - modifiable.</li>
+<li>des coordonnées géographiques - modifiable ;</li>
+<li>une date de création - modifiable ;</li>
+<li>un mode de géolocalisation - non modifiable ;</li>
+<li>un nom d'adhérent - modifiable ;</li>
+<li>un email d'adhérent - modifiable ;</li>
+<li>un téléphone d'ahérent - modifiable ;</li>
+<li>une réponse de Toulouse Métropole  - modifiable ;</li>
+<li>un commentaire final de l'association  - modifiable ;</li>
+<li>un attribut de statut - non modifiable ;</li>
+</ul>
+La modification des tous les champs qui caractérisent l'enregistrement - hormis la position géographique, la sous-catégorie, le pole, la commune, et la gestion des images - se fait grâce à un <b>double-clic</b> sur la cellule et en modifiant le contenu.
+<br/>Une fois la modification effectuée il suffit de cliquer en-dehors de cette cellule pour que la modification prenne effet immédiatement en base de données.
+<br/><br/>### L'<b>affectation</b> à la commune et au pôle territorial est renseignée automatiquement par l'application sur la base de la position géographique, il est cependant possible de les modifier le cas échéant en sélectionnant une autre commune ou un autre pôle :
+<br/><br/>
+<img src="./images/modeemploi_poi12.png" />
+<br/><br/>### Il est possible d'associer une <b>image</b> a un enregistrement en double-cliquant sur la cellule du champ 'Image' - ça ouvre une fenêtre qui permet de sélectionner une image et de l'uploader sur le serveur. Les extensions autorisées sont jpeg, jpg, png et gif, la taille maximum autorisée est d'1 Mo :
+<br/><br/>
+<img src="./images/modeemploi_poi3.png" />
+<br/><br/>Si une image est déjà présente, il sera alors possible de la modifier ou la supprimer en double-cliquant sur la cellule du champ 'Image' de l'enregistrement :
+<br/><br/>
+<img src="./images/modeemploi_poi2.png" />
+<br/><br/>### La <b>position géographique</b> de l'enregistrement peut être modifiée en double-cliquant sur les champs 'Latitude' ou 'Longitude', une fenêtre cartographique s'ouvre et il est alors possible de modifier la position géographique en déplaçant le marqueur :
+<br/><br/>
+<img src="./images/modeemploi_poi4.png" />
+<br/><br/>Il est possible de modifier le fond cartographique pour afficher un rendu différent (les données proviennent du projet OpenStreetMap et du service Bing Maps pour les images satellites) :
+<br/><br/>
+<img src="./images/modeemploi_poi5.png" />
+<br/><br/>### La <b>modération</b> s'effectue via la case à cocher 'Modération'. Lorsqu'un enregistrement est ajouté en base de données, celui-ci est considéré comme 'non modéré', il n'est pas affiché sur la cartographie. Une fois l'enregistrement modéré, ce dernier est affiché sur la carte et un mail est envoyé au contributeur pour le remercier de sa participation et de l'engagement du processus de résolution du problème soumis. A l'ouverture de l'interface d'administration, une alerte prévient qu'un ou plusieurs enregistrements sont en attente de modération : 
+<br/><br/>
+<img src="./images/modeemploi_poi6.png" />
+<br/><br/>Il est possible de visualiser un enregistrement sur la carte en effectuant un clic droid sur l'identifiant (ie. le premier champ), l'onglet 'Carte' avec l'enregistrement s'ouvre :
+<br/><br/>
+<img src="./images/modeemploi_poi7.png" />
+<br/><br/>
+<img src="./images/modeemploi_poi8.png" />
+<br/><br/>Par défaut, la pagination commence à partir de 500 enregistrements, il est possible de modifier ce chiffre pour plus de souplesse. Veuillez contacter l'administrateur pour modifier ce chiffre :
+<br/><br/>
+<img src="./images/modeemploi_poi9.png" />
+<br/><br/>### La <b>suppression</b> d'un ou plusieurs enregistrements s'effectue en les sélectionnant et en cliquant sur le bouton'Supprimer'. La suppression est juste une mise en corbeille. Il est alors possible de les remettre dans la liste des enregistrements en cas d'erreur lors de la suppression.
+<br/><br/>
+<img src="./images/modeemploi_poi10.png" />
+<br/><br/>
+<img src="./images/modeemploi_poi11.png" />
+<br/><br/>### Les <b>statuts</b> et <b>priorités</b> sont administrables dans les onglets ad-hoc :
+<br/><br/>
+<img src="./images/modeemploi_poi13.png" />
+<br/><br/>
+<img src="./images/modeemploi_poi14.png" />
+
+
+<br/><br/><br/>
+</body> 
+</html> 

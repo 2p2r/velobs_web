@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<style type='text/css'>
+        body {
+			background-color:#ffffff;
+		}
+		.background {
+			width:100%;
+			border:0;
+		}
+	</style>
+<script  type="text/javascript">
+	function detectBrowser() {
+	  var useragent = navigator.userAgent;
+	  if (useragent.indexOf('Android') != -1) {
+	  	document.location.href="http://assovelotoulouse.mooveatis.fr/resources/android/TraceMobBikeProject20130118-2.apk";
+	  } else {
+	  	var background = document.getElementById("background");
+	  	background.src = "./images/background.png";
+	  }
+	}
+</script>
+</head>
+<body id="body" onload="detectBrowser();">
+	<img id="background" class="background" src="./images/background2.png" />
+</body>
+</html>
