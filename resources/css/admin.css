@@ -263,3 +263,7 @@ div.olControlLayerSwitcher .layersDiv {
 .olControlAttribution a:hover {
 	text-decoration: underline;
 }
+
+ .ext-webkit .x-small-editor .x-form-field {
+    color: black !important;
+}
