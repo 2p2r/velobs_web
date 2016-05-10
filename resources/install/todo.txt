@@ -14,6 +14,7 @@ Notice de migration pour l'application VelObs :
    - resources/icon/marker/16x18
    - resources/csv
  + modifier les droits en écriture pour le fichier resources/css/icon.css
+ + modifier les droits en écriture pour le répertoire resources/csv
  + créer une base de données MySQL (ex. velobs) :
    - interclassement : utf8_general_ci
  + importer dans l'ordre de la numérotation les 19 scripts SQL du répertoire resources/sql
