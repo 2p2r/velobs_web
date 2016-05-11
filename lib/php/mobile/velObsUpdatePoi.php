@@ -35,8 +35,8 @@
 Un nouveau commentaire a été ajouté sur le POI n°'.$id_poi.'. Veuillez vous connecter à l\'interface d\'administration pour le modérer.
 Lien vers la modération : '.URL.'/admin.html?id='.$id_poi.'
 Cordialement, l\'application vélo :)';
-                    $headers = 'From: toulouse@fubicy.org' . "\r\n" .
-                    'Reply-To: toulouse@fubicy.org' . "\r\n" .
+                    $headers = 'From: 2p2r@le-pic.org' . "\r\n" .
+                    'Reply-To: 2p2r@le-pic.org' . "\r\n" .
                     'X-Mailer: PHP/' . phpversion();
 
                     mail($to, $subject, $message, $headers);
@@ -54,8 +54,8 @@ Cordialement, l\'application vélo :)';
 Un nouveau commentaire a été ajouté sur le POI n°'.$id_poi.'. Veuillez vous connecter à l\'interface d\'administration pour le modérer.
 Lien vers la modération : '.URL.'/admin.html?id='.$id_poi.'
 Cordialement, l\'application vélo :)';
-                    $headers = 'From: toulouse@fubicy.org' . "\r\n" .
-                    'Reply-To: toulouse@fubicy.org' . "\r\n" .
+                    $headers = 'From: 2p2r@le-pic.org' . "\r\n" .
+                    'Reply-To: 2p2r@le-pic.org' . "\r\n" .
                     'Content-Type: text/plain; charset=UTF-8' . "\r\n" .
                     'X-Mailer: PHP/' . phpversion();
 
@@ -135,8 +135,8 @@ Cordialement, l\'application vélo :)';
 Une nouvelle photo a été ajoutée sur le POI n°'.$id_poi.'. Veuillez vous connecter à l\'interface d\'administration pour la modérer.
 Lien vers la modération : '.URL.'/admin.html?id='.$id_poi.'
 Cordialement, l\'application vélo :)';
-                    $headers = 'From: toulouse@fubicy.org' . "\r\n" .
-                    'Reply-To: toulouse@fubicy.org' . "\r\n" .
+                    $headers = 'From: 2p2r@le-pic.org' . "\r\n" .
+                    'Reply-To: 2p2r@le-pic.org' . "\r\n" .
                     'X-Mailer: PHP/' . phpversion();
 
                     $sql = "SELECT mail_users FROM users WHERE usertype_id_usertype = 1";
@@ -161,8 +161,8 @@ Cordialement, l\'application vélo :)';
 Une nouvelle photo a été ajoutée sur le POI n°'.$id_poi.'. Veuillez vous connecter à l\'interface d\'administration pour la modérer.
 Lien vers la modération : '.URL.'/admin.html?id='.$id_poi.'
 Cordialement, l\'application vélo :)';
-                    $headers = 'From: toulouse@fubicy.org' . "\r\n" .
-                    'Reply-To: toulouse@fubicy.org' . "\r\n" .
+                    $headers = 'From: 2p2r@le-pic.org' . "\r\n" .
+                    'Reply-To: 2p2r@le-pic.org' . "\r\n" .
                     'Content-Type: text/plain; charset=UTF-8' . "\r\n" .
                     'X-Mailer: PHP/' . phpversion();
 

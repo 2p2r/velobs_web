@@ -132,8 +132,8 @@
 			$message = 'Bonjour !
 Un nouvel enregistrement a été ajouté. Veuillez vous connecter à l\'interface d\'administration pour le modérer.
 Cordialement, l\'application vélo :)';
-			$headers = 'From: toulouse@fubicy.org' . "\r\n" .
-			'Reply-To: toulouse@fubicy.org' . "\r\n" .
+			$headers = 'From: 2p2r@le-pic.org' . "\r\n" .
+			'Reply-To: 2p2r@le-pic.org' . "\r\n" .
 			'X-Mailer: PHP/' . phpversion();
 			$details = '
 				

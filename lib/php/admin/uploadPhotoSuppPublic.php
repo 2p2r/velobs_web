@@ -90,8 +90,8 @@
 Une nouvelle photo a été ajoutée sur le POI n°'.$id_poi.'. Veuillez vous connecter à l\'interface d\'administration pour le modérer.
 Lien vers la modération : '.URL.'/admin.html?id='.$id_poi.'
 Cordialement, l\'application vélo :)';
-                    $headers = 'From: toulouse@fubicy.org' . "\r\n" .
-                    'Reply-To: toulouse@fubicy.org' . "\r\n" .
+                    $headers = 'From: 2p2r@le-pic.org' . "\r\n" .
+                    'Reply-To: 2p2r@le-pic.org' . "\r\n" .
                     'X-Mailer: PHP/' . phpversion();
 
                     mail($to, $subject, $message, $headers);
@@ -107,8 +107,8 @@ Cordialement, l\'application vélo :)';
 Une nouvelle photo a été ajoutée sur le POI n°'.$id_poi.'. Veuillez vous connecter à l\'interface d\'administration pour le modérer.
 Lien vers la modération : '.URL.'/admin.html?id='.$id_poi.'
 Cordialement, l\'application vélo :)';
-                    $headers = 'From: toulouse@fubicy.org' . "\r\n" .
-                    'Reply-To: toulouse@fubicy.org' . "\r\n" .
+                    $headers = 'From: 2p2r@le-pic.org' . "\r\n" .
+                    'Reply-To: 2p2r@le-pic.org' . "\r\n" .
                     'Content-Type: text/plain; charset=UTF-8' . "\r\n" .
                     'Content-Transfer-Encoding: quoted-printable' . "\r\n" .
                     'X-Mailer: PHP/' . phpversion();

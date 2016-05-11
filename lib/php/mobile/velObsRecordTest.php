@@ -147,8 +147,8 @@
 Un nouvel enregistrement a été ajouté. Veuillez vous connecter à l\'interface d\'administration pour le modérer.
 Lien vers la modération : '.URL.'/admin.html?id='.$id_poi.'
 Cordialement, l\'Association 2 pieds 2 roues :)';
-                    $headers = 'From: toulouse@fubicy.org' . "\r\n" .
-                    'Reply-To: toulouse@fubicy.org' . "\r\n" .
+                    $headers = 'From: 2p2r@le-pic.org' . "\r\n" .
+                    'Reply-To: 2p2r@le-pic.org' . "\r\n" .
                     'Content-Type: text/plain; charset=UTF-8' . "\r\n" .
                     'X-Mailer: PHP/' . phpversion();
                     $details = '
@@ -190,8 +190,8 @@ Cordialement, l\'Association 2 pieds 2 roues :)';
 Un nouvel enregistrement a été ajouté sur le pole - '.$lib_pole.' -. Veuillez vous connecter à l\'interface d\'administration pour le modérer.
 Lien vers la modération : '.URL.'/admin.html?id='.$id_poi.'
 Cordialement, l\'Association 2 pieds 2 roues :)';
-                    $headers = 'From: toulouse@fubicy.org' . "\r\n" .
-                    'Reply-To: toulouse@fubicy.org' . "\r\n" .
+                    $headers = 'From: 2p2r@le-pic.org' . "\r\n" .
+                    'Reply-To: 2p2r@le-pic.org' . "\r\n" .
                     'Content-Type: text/plain; charset=UTF-8' . "\r\n" .
                     'X-Mailer: PHP/' . phpversion();
                     $details = '
@@ -376,8 +376,8 @@ Cordialement, l\'Association 2 pieds 2 roues :)';
 Un nouvel enregistrement a été ajouté. Veuillez vous connecter à l\'interface d\'administration pour le modérer.
 Lien vers la modération : '.URL.'/admin.html?id='.$id_poi.'
 Cordialement, l\'Association 2 pieds 2 roues :)';
-                        $headers = 'From: toulouse@fubicy.org' . "\r\n" .
-                        'Reply-To: toulouse@fubicy.org' . "\r\n" .
+                        $headers = 'From: 2p2r@le-pic.org' . "\r\n" .
+                        'Reply-To: 2p2r@le-pic.org' . "\r\n" .
                         'Content-Type: text/plain; charset=UTF-8' . "\r\n" .
                         'X-Mailer: PHP/' . phpversion();
                         $details = '
@@ -418,8 +418,8 @@ Cordialement, l\'Association 2 pieds 2 roues :)';
 Un nouvel enregistrement a été ajouté sur le pole - '.$lib_pole.' -. Veuillez vous connecter à l\'interface d\'administration pour le modérer.
 Lien vers la modération : '.URL.'/admin.html?id='.$id_poi.'
 Cordialement, l\'Association 2 pieds 2 roues :)';
-                        $headers = 'From: toulouse@fubicy.org' . "\r\n" .
-                        'Reply-To: toulouse@fubicy.org' . "\r\n" .
+                        $headers = 'From: 2p2r@le-pic.org' . "\r\n" .
+                        'Reply-To: 2p2r@le-pic.org' . "\r\n" .
                         'Content-Type: text/plain; charset=UTF-8' . "\r\n" .
                         'X-Mailer: PHP/' . phpversion();
                         $details = '
