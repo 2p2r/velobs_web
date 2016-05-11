@@ -85,13 +85,14 @@
 
                 if (!isset($_SESSION['user']) || $_SESSION['role'] == 2 || $_SESSION['role'] == 3) {
                     $to      = 'observations_adherents_assovelo@le-pic.org';
-                    $subject = '[Asso vélo Toulouse] Nouvelle photo à modérer sur le POI n°'.$id_poi;
+                    $subject = '[Association 2 pieds 2 roues] Nouvelle photo à modérer sur le POI n°'.$id_poi;
                     $message = 'Bonjour !
 Une nouvelle photo a été ajoutée sur le POI n°'.$id_poi.'. Veuillez vous connecter à l\'interface d\'administration pour le modérer.
 Lien vers la modération : '.URL.'/admin.html?id='.$id_poi.'
-Cordialement, l\'application vélo :)';
+Cordialement, l\'application velobs)';
                     $headers = 'From: 2p2r@le-pic.org' . "\r\n" .
                     'Reply-To: 2p2r@le-pic.org' . "\r\n" .
+                    'Content-Type: text/plain; charset=UTF-8' . "\r\n" .
                     'X-Mailer: PHP/' . phpversion();
 
                     mail($to, $subject, $message, $headers);
@@ -102,11 +103,11 @@ Cordialement, l\'application vélo :)';
                     $pole_id_pole = $row[0];
 
 
-                   $subject = '[Asso vélo Toulouse] Nouvelle photo à modérer sur le POI n°'.$id_poi;
+                   $subject = '[Association 2 pieds 2 roues] Nouvelle photo à modérer sur le POI n°'.$id_poi;
                    $message = 'Bonjour !
 Une nouvelle photo a été ajoutée sur le POI n°'.$id_poi.'. Veuillez vous connecter à l\'interface d\'administration pour le modérer.
 Lien vers la modération : '.URL.'/admin.html?id='.$id_poi.'
-Cordialement, l\'application vélo :)';
+Cordialement, l\'application velobs)';
                     $headers = 'From: 2p2r@le-pic.org' . "\r\n" .
                     'Reply-To: 2p2r@le-pic.org' . "\r\n" .
                     'Content-Type: text/plain; charset=UTF-8' . "\r\n" .
