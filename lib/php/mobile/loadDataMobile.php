@@ -128,12 +128,13 @@
 			
 			/* envoi d'un mail aux administrateurs */
 			$to      = 'observations_adherents_assovelo@le-pic.org';
-			$subject = '[Asso vélo Toulouse] Nouvel enregistrement à modérer';
+			$subject = '[Association 2 pieds 2 roues] Nouvel enregistrement à modérer';
 			$message = 'Bonjour !
 Un nouvel enregistrement a été ajouté. Veuillez vous connecter à l\'interface d\'administration pour le modérer.
-Cordialement, l\'application vélo :)';
+Cordialement, l\'application velobs)';
 			$headers = 'From: 2p2r@le-pic.org' . "\r\n" .
 			'Reply-To: 2p2r@le-pic.org' . "\r\n" .
+			'Content-Type: text/plain; charset=UTF-8' . "\r\n" .
 			'X-Mailer: PHP/' . phpversion();
 			$details = '
 				

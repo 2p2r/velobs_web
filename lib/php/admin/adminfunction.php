@@ -1597,6 +1597,7 @@ Cordialement, l\'Association 2 pieds 2 roues :)';
 
 							$headers = 'From: 2p2r@le-pic.org' . "\r\n" .
 							'Reply-To: 2p2r@le-pic.org' . "\r\n" .
+							'Content-Type: text/plain; charset=UTF-8' . "\r\n" .
 							'X-Mailer: PHP/' . phpversion();
 							mail($to, $subject, $message, $headers);
 						}
@@ -4062,7 +4063,7 @@ Cordialement, l\'Association 2 pieds 2 roues :)';
 
                 /* envoi d'un mail aux administrateurs */
                 //$to      = 'observations_adherents_assovelo@le-pic.org';
-                $subject = '[Asso vélo Toulouse] Nouveau commentaire à modérer sur le POI n°'.$id_poi;
+                $subject = '[Association 2 pieds 2 roues] Nouveau commentaire à modérer sur le POI n°'.$id_poi;
                 $message = 'Bonjour !
 Un nouveau commentaire a été ajouté sur le POI n°'.$id_poi.'. Veuillez vous connecter à l\'interface d\'administration pour le modérer.
 Lien vers la modération : '.URL.'/admin.html?id='.$id_poi.'
@@ -4075,6 +4076,7 @@ Cordialement, l\'application VelObs :)';
                 $message .= $details;
                 $headers = 'From: 2p2r@le-pic.org' . "\r\n" .
                 'Reply-To: 2p2r@le-pic.org' . "\r\n" .
+                'Content-Type: text/plain; charset=UTF-8' . "\r\n" .
                 'X-Mailer: PHP/' . phpversion();
 
                 $sql = "SELECT mail_users FROM users WHERE usertype_id_usertype = 1";
