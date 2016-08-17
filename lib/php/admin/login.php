@@ -14,7 +14,7 @@
 			$result = mysql_query($sql);
 			if (!$result) {
 				$arr['msg'] = 'Invalid request : '.mysql_error()."\n";
-				$arr['msg'] .= 'Request : '.$sql;
+				//$arr['msg'] .= 'Request : '.$sql;
 				$arr['success'] = FALSE;
 			} else {
 				if (mysql_num_rows($result) != 0) {
@@ -35,14 +35,15 @@
 						$_SESSION['mail'] = $row['mail_users'];
 						$_SESSION['role'] = $row['usertype_id_usertype'];
 						$_SESSION['nom'] = $row['nom_users'];
-
+						//si l'utilisateur fait partie d'une communauté de commune
                         if ($row['usertype_id_usertype'] == 2) {
                             $sql2 = "SELECT ids_territoire FROM territoire WHERE id_territoire = ".$row['territoire_id_territoire'];
                         	$result2 = mysql_query($sql2);
                         	while ($row2 = mysql_fetch_array($result2)) {
                         	    $_SESSION['territoire'] = $row2['ids_territoire'];
                         	}
-                        } else if (($row['usertype_id_usertype'] == 3) || ($row['usertype_id_usertype'] == 4)) {
+                        }//si l'utilisateur fait partie d'un pole technique ou est responsable pole 2P2R
+                        else if (($row['usertype_id_usertype'] == 3) || ($row['usertype_id_usertype'] == 4)) {
                             $_SESSION['territoire'] = 0;
                         }
 
