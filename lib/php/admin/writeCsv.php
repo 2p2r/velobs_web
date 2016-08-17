@@ -52,17 +52,48 @@
 							break;	
 												
 						case 'poi':
-							$file = "velobs_admin_poi_".date('Y-m-d').".csv";
+							$file = "velobs_poi_".date('Y-m-d').".csv";
 							$fh = fopen("../../../resources/csv/".$file, 'w');
 							if (!$fh) {
 								echo '{"success": false}';
 							} else {
-								$sql = "SELECT poi.*, priorite.lib_priorite, pole.lib_pole, quartier.lib_quartier, x(poi.geom_poi) AS X, y(poi.geom_poi) AS Y, lib_category, lib_subcategory, lib_commune FROM poi INNER JOIN subcategory ON (subcategory.id_subcategory = poi.subcategory_id_subcategory) INNER JOIN category ON (subcategory.category_id_category = category.id_category) INNER JOIN commune ON (commune.id_commune = poi.commune_id_commune) INNER JOIN quartier ON (quartier.id_quartier = poi.quartier_id_quartier) INNER JOIN pole ON (pole.id_pole = poi.pole_id_pole) INNER JOIN priorite ON (priorite.id_priorite = poi.priorite_id_priorite) WHERE delete_poi = FALSE ORDER BY id_poi ASC";
+								if (isset($_SESSION['type']) && isset($_SESSION['pole'])){
+									$extraSQL = "";
+									//si l'utilisateur fait partie d'un pole technique, on restreint les POI correspondant au pole et qui ne sont pas avec priorité à "A modérer", "refusé par 2P2R" et "Doublon"
+									if ($_SESSION['type'] == 3){
+										$extraSQL = " AND poi.pole_id_pole = " .$_SESSION['pole'] . " AND poi.priorite_id_priorite NOT IN (4,7,15) AND moderation_poi = 1 ";
+									}//si l'utilisateur fait partie d'une communauté de communes, on restreint les POI à ceux qui ne sont pas avec priorité à "A modérer", "refusé par 2P2R" et "Doublon"
+									elseif ($_SESSION['type'] == 2){
+										$extraSQL = " AND poi.priorite_id_priorite NOT IN (4,7,15) AND moderation_poi = 1 AND commune_id_commune IN (".str_replace(';',',',$_SESSION['territoire']).") ";
+									}//si l'utilisateur fait partie des modérateurs, on restreint les POI correspondant au pole
+									elseif ($_SESSION['type'] == 4){
+										$extraSQL = " AND poi.pole_id_pole = " .$_SESSION['pole'] . " ";
+									}
+								}
+								$sql = "SELECT 
+											poi.*, 
+											priorite.lib_priorite, 
+											pole.lib_pole, 
+											x(poi.geom_poi) AS X, 
+											y(poi.geom_poi) AS Y, 
+											lib_category, 
+											lib_subcategory, 
+											lib_commune 
+										FROM poi 
+											INNER JOIN subcategory ON (subcategory.id_subcategory = poi.subcategory_id_subcategory) 
+											INNER JOIN category ON (subcategory.category_id_category = category.id_category) 
+											INNER JOIN commune ON (commune.id_commune = poi.commune_id_commune) 
+											INNER JOIN pole ON (pole.id_pole = poi.pole_id_pole) 
+											INNER JOIN priorite ON (priorite.id_priorite = poi.priorite_id_priorite) 
+										WHERE 
+											poi.delete_poi = FALSE 
+											$extraSQL
+										ORDER BY id_poi DESC";
 								$result = mysql_query($sql);
-								$csv = '"Identifiant";"Commentaire final de l\'association";"Réponse du Grand Toulouse";"Observation terrain";"Priorité";"Pôle";"Quartier";"Adhérent";"Libellé enregistrement";"Catégorie";"Sous-catégorie";"Repère";"Rue";"Commune";"Description";"Proposition";"Modération";"Affichage sur la carte";"Latitude";"Longitude";"Date création";"Mode géolocalisation";"Email"';
+								$csv = '"Identifiant";"Commentaire final de l\'association";"Réponse du Grand Toulouse";"Observation terrain";"Priorité";"Pôle";"Adhérent";"Libellé enregistrement";"Catégorie";"Sous-catégorie";"Repère";"Rue";"Commune";"Description";"Proposition";"Modération";"Affichage sur la carte";"Latitude";"Longitude";"Date création";"Mode géolocalisation";"Email";"Lien administration"';
 								$csv .= "\r\n";
 								while ($row = mysql_fetch_array($result)) {
-									$csv .= stripslashes($row['id_poi'].';"'.str_replace('"', "", $row['commentfinal_poi']).'";"'.str_replace('"', "", $row['reponsegrandtoulouse_poi']).'";"'.str_replace('"', "", $row['observationterrain_poi']).'";"'.$row['lib_priorite'].'";"'.$row['lib_pole'].'";"'.$row['lib_quartier'].'";"'.$row['adherent_poi'].'";"'.str_replace('"', "", $row['lib_poi']).'";"'.stripslashes($row['lib_category']).'";"'.stripslashes($row['lib_subcategory']).'";"'.str_replace('"', "", $row['num_poi']).'";"'.str_replace('"', "", $row['rue_poi']).'";"'.$row['lib_commune'].'";"'.str_replace('"', "", $row['desc_poi']).'";"'.str_replace('"', "", $row['prop_poi']).'";'.$row['moderation_poi'].';'.$row['display_poi'].';'.$row['Y'].';'.$row['X'].';"'.$row['datecreation_poi'].'";'.$row['geolocatemode_poi'].';"'.$row['mail_poi'].'"');
+									$csv .= stripslashes($row['id_poi'].';"'.str_replace('"', "", $row['commentfinal_poi']).'";"'.str_replace('"', "", $row['reponsegrandtoulouse_poi']).'";"'.str_replace('"', "", $row['observationterrain_poi']).'";"'.$row['lib_priorite'].'";"'.$row['lib_pole'].'";"'.$row['adherent_poi'].'";"'.str_replace('"', "", $row['lib_poi']).'";"'.stripslashes($row['lib_category']).'";"'.stripslashes($row['lib_subcategory']).'";"'.str_replace('"', "", $row['num_poi']).'";"'.str_replace('"', "", $row['rue_poi']).'";"'.$row['lib_commune'].'";"'.str_replace('"', "", $row['desc_poi']).'";"'.str_replace('"', "", $row['prop_poi']).'";'.$row['moderation_poi'].';'.$row['display_poi'].';'.$row['Y'].';'.$row['X'].';"'.$row['datecreation_poi'].'";'.$row['geolocatemode_poi'].';"'.$row['mail_poi'].'";"'.URL.'/admin.php?id='.$row['id_poi'].'"');
 									$csv .= "\r\n";
 								}
 								fputs($fh, $csv);
@@ -70,47 +101,6 @@
 								echo '{"success": true, "file": "'.$file.'"}';
 							}
 							break;
-
-					    case 'poimodo':
-                            $file = "velobs_pole-".$_SESSION['pole']."_poi_".date('Y-m-d').".csv";
-                            $fh = fopen("../../../resources/csv/".$file, 'w');
-                            if (!$fh) {
-                                echo '{"success": false}';
-                            } else {
-                                $sql = "SELECT poi.*, priorite.lib_priorite, pole.lib_pole, quartier.lib_quartier, x(poi.geom_poi) AS X, y(poi.geom_poi) AS Y, lib_category, lib_subcategory, lib_commune FROM poi INNER JOIN subcategory ON (subcategory.id_subcategory = poi.subcategory_id_subcategory) INNER JOIN category ON (subcategory.category_id_category = category.id_category) INNER JOIN commune ON (commune.id_commune = poi.commune_id_commune) INNER JOIN quartier ON (quartier.id_quartier = poi.quartier_id_quartier) INNER JOIN pole ON (pole.id_pole = poi.pole_id_pole) INNER JOIN priorite ON (priorite.id_priorite = poi.priorite_id_priorite) WHERE pole_id_pole = ".$_SESSION['pole']." WHERE delete_poi = FALSE ORDER BY id_poi ASC";
-                                $result = mysql_query($sql);
-                                $csv = '"Identifiant";"Commentaire final de l\'association";"Réponse du Grand Toulouse";"Observation terrain";"Priorité";"Pôle";"Quartier";"Adhérent";"Libellé enregistrement";"Catégorie";"Sous-catégorie";"Repère";"Rue";"Commune";"Description";"Proposition";"Modération";"Affichage sur la carte";"Latitude";"Longitude";"Date création";"Mode géolocalisation";"Email"';
-                                $csv .= "\r\n";
-                                while ($row = mysql_fetch_array($result)) {
-                                    $csv .= stripslashes($row['id_poi'].';"'.str_replace('"', "", $row['commentfinal_poi']).'";"'.str_replace('"', "", $row['reponsegrandtoulouse_poi']).'";"'.str_replace('"', "", $row['observationterrain_poi']).'";"'.$row['lib_priorite'].'";"'.$row['lib_pole'].'";"'.$row['lib_quartier'].'";"'.$row['adherent_poi'].'";"'.str_replace('"', "", $row['lib_poi']).'";"'.stripslashes($row['lib_category']).'";"'.stripslashes($row['lib_subcategory']).'";"'.str_replace('"', "", $row['num_poi']).'";"'.str_replace('"', "", $row['rue_poi']).'";"'.$row['lib_commune'].'";"'.str_replace('"', "", $row['desc_poi']).'";"'.str_replace('"', "", $row['prop_poi']).'";'.$row['moderation_poi'].';'.$row['display_poi'].';'.$row['Y'].';'.$row['X'].';"'.$row['datecreation_poi'].'";'.$row['geolocatemode_poi'].';"'.$row['mail_poi'].'"');
-                                    $csv .= "\r\n";
-                                }
-                                fputs($fh, $csv);
-                                fclose($fh);
-                                echo '{"success": true, "file": "'.$file.'"}';
-                            }
-                            break;
-							
-						case 'poicomcom':
-							$file = "velobs_poi_comcom_".date('Y-m-d').".csv";
-							$fh = fopen("../../../resources/csv/".$file, 'w');
-							if (!$fh) {
-								echo '{"success": false}';
-							} else {
-								$sql = "SELECT poi.*, priorite.lib_priorite, pole.lib_pole, x(poi.geom_poi) AS X, y(poi.geom_poi) AS Y, lib_commune, lib_subcategory FROM poi INNER JOIN subcategory ON (subcategory.id_subcategory = poi.subcategory_id_subcategory) INNER JOIN category ON (subcategory.category_id_category = category.id_category) INNER JOIN commune ON (commune.id_commune = poi.commune_id_commune) INNER JOIN quartier ON (quartier.id_quartier = poi.quartier_id_quartier) INNER JOIN pole ON (pole.id_pole = poi.pole_id_pole) INNER JOIN priorite ON (priorite.id_priorite = poi.priorite_id_priorite) WHERE moderation_poi = 1 AND priorite.id_priorite <> 7 AND priorite.id_priorite <> 15 AND commune_id_commune IN (".str_replace(';',',',$_SESSION['territoire']).") AND pole_id_pole <> 9 AND delete_poi = FALSE ORDER BY id_poi ASC";
-								$result = mysql_query($sql);
-								$csv = '"Identifiant";"Commentaire final de l\'association";"Réponse du Grand Toulouse";"Observation terrain";"Priorité";"Pôle";"Type d\'observation";"Repère";"Rue";"Commune";"Description";"Proposition";"Latitude";"Longitude";"Date de création"';
-								$csv .= "\r\n";
-								while ($row = mysql_fetch_array($result)) {
-									$csv .= stripslashes($row['id_poi'].';"'.str_replace('"', "", $row['commentfinal_poi']).'";"'.str_replace('"', "", $row['reponsegrandtoulouse_poi']).'";"'.str_replace('"', "", $row['observationterrain_poi']).'";"'.$row['lib_priorite'].'";"'.str_replace('"', "", $row['lib_pole']).'";"'.stripslashes($row['lib_subcategory']).'";"'.str_replace('"', "", $row['num_poi']).'";"'.str_replace('"', "", $row['rue_poi']).'";"'.$row['lib_commune'].'";"'.str_replace('"', "", $row['desc_poi']).'";"'.str_replace('"', "", $row['prop_poi']).'";'.$row['Y'].';'.$row['X'].';"'.$row['datecreation_poi'].'";');
-									$csv .= "\r\n";
-								}
-								fputs($fh, $csv);
-								fclose($fh);
-								echo '{"success": true, "file": "'.$file.'"}';
-							}
-							break;		
-							
 						case 'commune':
 							$file = "commune_".date('Y-m-d').".csv";
 							$fh = fopen("../../../resources/csv/".$file, 'w');
