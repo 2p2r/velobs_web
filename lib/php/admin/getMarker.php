@@ -29,7 +29,7 @@
 				$i = 0;
 				while ($row = mysql_fetch_array($result)) {
 				$arr[$i]['id'] = $row['id_poi'];
-				$arr[$i]['lib'] = stripslashes($row['lib_poi']);
+				$arr[$i]['lib'] = stripslashes($row['lib_subcategory']);
 				$arr[$i]['date'] = $row['datecreation_poi'];
 				$arr[$i]['desc'] = stripslashes($row['desc_poi']);
 				$arr[$i]['repgt'] = stripslashes($row['reponsegrandtoulouse_poi']);
