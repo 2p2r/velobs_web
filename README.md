@@ -1,3 +1,7 @@
+Application web permettant aux cyclistes de signaler les problèmes sur les aménagements cyclables ; puis aux collectivités territoriales compétentes de les traiter.
+
+C'est en production à Toulouse pour 2 pieds 2 roues sur : http://velobs.2p2r.org/
+
 # Quelques commentaires sur l'application :
 
 * le répertoire lib/js contient tous les scripts nécessaires à l'utilisation :
@@ -50,7 +54,6 @@
     * resources/icon/marker/16x18
     * resources/csv
  * modifier les droits en écriture pour le fichier resources/css/icon.css
- * modifier les droits en écriture pour le répertoire resources/csv
  * créer une base de données MySQL (ex. velobs) :
     * interclassement : utf8_general_ci
  * importer dans l'ordre de la numérotation les 19 scripts SQL du répertoire resources/sql
