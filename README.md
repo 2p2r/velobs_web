@@ -35,7 +35,7 @@ C'est en production à Toulouse pour 2 pieds 2 roues sur : http://velobs.2p2r.or
     * répertoire csv de stockage d'export des fichiers csv
     * répertoire favicon
     * répertoire html qui contient les pages html des modes d'emploi
-    * répertoire icon contient les set d'icones utilisés + les icônes uploadés pour l'arbre des couches
+    * répertoire icon contient les sets d'icones utilisés + les icônes uploadés pour l'arbre des couches
     * répertoire images les images logo et autres
     * répertoire kml des fichiers de géométries (utile au début)
     * répertoire pictures contient toutes les images relatives aux enregistrements

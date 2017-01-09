@@ -263,7 +263,20 @@ div.olControlLayerSwitcher .layersDiv {
 .olControlAttribution a:hover {
 	text-decoration: underline;
 }
-
- .ext-webkit .x-small-editor .x-form-field {
+.x-toolbar .x-item-disabled {
+    cursor: not-allowed;
+   background-color:#EEEEFF;
+        opacity: 1;
+}
+.x-trigger-noedit{
+cursor: not-allowed;
+   background-color:#EEEEFF;
+        opacity: 1;
+}
+.x-form-text, textarea.x-form-field {
+    background-image: none;
+}
+.ext-webkit .x-small-editor .x-form-field {
     color: black !important;
 }
+
