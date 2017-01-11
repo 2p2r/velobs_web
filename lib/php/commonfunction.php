@@ -1,5 +1,5 @@
 <?php
-
+	include 'key.php';
 	/* 	Function name 	: getTranslation
 	 * 	Input			: language id, string
 	 * 	Output			: string translation
@@ -26,12 +26,12 @@
 	}
 
 	function sendMail ($to, $subject, $body){
-                    $headers = 'From: 2p2r@le-pic.org' . "\r\n" .
-                    'Reply-To: 2p2r@le-pic.org' . "\r\n" .
+                    $headers = 'From: '. MAIL_FROM . "\r\n" .
+                    'Reply-To: ' . MAIL_REPLY_TO ."\r\n" .
                     'Content-Type: text/plain; charset=UTF-8' . "\r\n" .
                     'X-Mailer: PHP/' . phpversion();
 
-                    mail($to, '[VelObs 2P2R] '.$subject, $body, $headers);
+                    mail($to, MAIL_SUBJECT_PREFIX . ' '.$subject, $body, $headers);
 
 	}
 	
