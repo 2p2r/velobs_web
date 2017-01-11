@@ -84,35 +84,18 @@
                 $result3 = mysql_query($sql3);
 
                 if (!isset($_SESSION['user']) || $_SESSION['role'] == 2 || $_SESSION['role'] == 3) {
-                    $to      = 'observations_adherents_assovelo@le-pic.org';
-                    $subject = '[Association 2 pieds 2 roues] Nouvelle photo à modérer sur le POI n°'.$id_poi;
+                    
+                   $subject = 'Photo à modérer sur le POI n°'.$id_poi;
                     $message = 'Bonjour !
-Une nouvelle photo a été ajoutée sur le POI n°'.$id_poi.'. Veuillez vous connecter à l\'interface d\'administration pour le modérer.
+Une nouvelle photo a été ajoutée sur l\'observation n°'.$id_poi.'. Veuillez vous connecter à l\'interface d\'administration pour le modérer.
 Lien vers la modération : '.URL.'/admin.html?id='.$id_poi.'
-Cordialement, l\'application velobs)';
-                    $headers = 'From: 2p2r@le-pic.org' . "\r\n" .
-                    'Reply-To: 2p2r@le-pic.org' . "\r\n" .
-                    'Content-Type: text/plain; charset=UTF-8' . "\r\n" .
-                    'X-Mailer: PHP/' . phpversion();
-
-                    mail($to, $subject, $message, $headers);
+Cordialement, l\'application velobs:)';
+		sendMail(MAIL_ALIAS_OBSERVATION_ADHERENTS,'Photo à modérer sur l\'observation n°'.$id_poi,$message);
 
                     $sql = "SELECT pole_id_pole FROM poi WHERE id_poi = ".$id_poi;
                     $res = mysql_query($sql);
                     $row = mysql_fetch_row($res);
                     $pole_id_pole = $row[0];
-
-
-                   $subject = '[Association 2 pieds 2 roues] Nouvelle photo à modérer sur le POI n°'.$id_poi;
-                   $message = 'Bonjour !
-Une nouvelle photo a été ajoutée sur le POI n°'.$id_poi.'. Veuillez vous connecter à l\'interface d\'administration pour le modérer.
-Lien vers la modération : '.URL.'/admin.html?id='.$id_poi.'
-Cordialement, l\'application velobs)';
-                    $headers = 'From: 2p2r@le-pic.org' . "\r\n" .
-                    'Reply-To: 2p2r@le-pic.org' . "\r\n" .
-                    'Content-Type: text/plain; charset=UTF-8' . "\r\n" .
-                    'Content-Transfer-Encoding: quoted-printable' . "\r\n" .
-                    'X-Mailer: PHP/' . phpversion();
 
                     $sql2 = "SELECT mail_users FROM users WHERE (usertype_id_usertype = 1 OR usertype_id_usertype = 4) AND mail_users LIKE '".$mail_poi."'";
                     $result2 = mysql_query($sql2);
@@ -123,11 +106,9 @@ Cordialement, l\'application velobs)';
                         $result = mysql_query($sql);
                         while ($row = mysql_fetch_array($result)) {
                             $to = $row['mail_users'];
-                            mail($to, $subject, $message, $headers);
+				sendMail($to,'Photo à modérer sur l\'observation n°'.$id_poi,$message);
                         }
-                    } else {
-                        // pas d'envoi de mail >> bypass
-                    }
+                    } 
                 }
 
             } else {
