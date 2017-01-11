@@ -85,7 +85,7 @@
 
                 if (!isset($_SESSION['user']) || $_SESSION['role'] == 2 || $_SESSION['role'] == 3) {
                     
-                   $subject = 'Photo à modérer sur le POI n°'.$id_poi;
+                   $subject = 'Photo à modérer sur l\'observation n°'.$id_poi;
                     $message = 'Bonjour !
 Une nouvelle photo a été ajoutée sur l\'observation n°'.$id_poi.'. Veuillez vous connecter à l\'interface d\'administration pour le modérer.
 Lien vers la modération : '.URL.'/admin.html?id='.$id_poi.'

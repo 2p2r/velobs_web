@@ -402,7 +402,7 @@ Cordialement, l\'Association 2 pieds 2 roues :)';
                         }
 
                     /* envoi d'un mail aux administrateurs #pole# de l'association */
-                        $subject = 'Nouvel enregistrement à modérer';
+                        $subject = 'Nouvelle observation à modérer';
                         $message = 'Bonjour !
 Une nouvelle observation a été ajoutée sur le pole - '.$lib_pole.' -. Veuillez vous connecter à l\'interface d\'administration pour la modérer.
 Lien vers la modération : '.URL.'/admin.html?id='.$id_poi.'
