@@ -1,6 +1,6 @@
 <?php
 	include '../key.php';
-	
+	include '../commonfunction.php';	
 	/*	List of functions
 	 * 		- getMarkerIcon
 	 * 		- updateMarkerIcon 
@@ -1389,7 +1389,7 @@
 									$to = $row4['mail_poi'];
 								}
 								//$to      = 'observations_adherents_assovelo@le-pic.org';
-								$subject = '[Association 2 pieds 2 roues] Merci pour votre participation';
+								$subject = 'Merci pour votre participation';
 
 								// on regarde dans quelle comcom le POI appartient et on switch le contenu du mail en fonction
 								$sql = "SELECT commune_id_commune FROM poi WHERE id_poi LIKE ".$id_poi;
@@ -1404,35 +1404,31 @@
 								    switch ($row[0]) {
 								        case 1:
 								            $message = 'Bonjour !
-Le nouvel enregistrement que vous avez envoyé a été modéré par l\'association. Le problème identifié est une urgence qui nécessite une intervention rapide des services techniques.
+L\'observation que vous avez envoyée a été modérée par l\'association. Le problème identifié est une urgence qui nécessite une intervention rapide des services techniques.
 Veuillez téléphoner au 05 61 222 222 pour prévenir de ce problème si ce problème si celui-ci est sur la commune de Toulouse.
 Cordialement, l\'Association 2 pieds 2 roues et Toulouse Métropole:)';
 								            break;
 								        case 2:
 								            $message = 'Bonjour !
-Le nouvel enregistrement que vous avez envoyé a été modéré par l\'association. Le problème identifié est une urgence qui nécessite une intervention rapide des services techniques.
+L\'observation que vous avez envoyée a été modérée par l\'association. Le problème identifié est une urgence qui nécessite une intervention rapide des services techniques.
 Veuillez contacter les services techniques de la communauté de communes.
 Cordialement, l\'Association 2 pieds 2 roues et le Sicoval:)';
 								            break;
 								        case 3:
 								            $message = 'Bonjour !
-Le nouvel enregistrement que vous avez envoyé a été modéré par l\'association. Le problème identifié est une urgence qui nécessite une intervention rapide des services techniques.
+L\'observation que vous avez envoyée a été modérée par l\'association. Le problème identifié est une urgence qui nécessite une intervention rapide des services techniques.
 Veuillez contacter les services techniques de la communauté de communes.
 Cordialement, l\'Association 2 pieds 2 roues et la CAM:)';
 								            break;
 								    }
 								} else {
 								    $message = 'Bonjour !
-Le nouvel enregistrement que vous avez envoyé a été modéré par l\'association. Le problème identifié est une urgence qui nécessite une intervention rapide des services techniques.
+L\'observation que vous avez envoyée a été modérée par l\'association. Le problème identifié est une urgence qui nécessite une intervention rapide des services techniques.
 Veuillez contacter les services techniques de votre commune.
 Cordialement, l\'Association 2 pieds 2 roues :)';
 								}
 
-								$headers = 'From: 2p2r@le-pic.org' . "\r\n" .
-								'Reply-To: 2p2r@le-pic.org' . "\r\n" .
-								'Content-Type: text/plain; charset=UTF-8' . "\r\n" .
-								'X-Mailer: PHP/' . phpversion();
-								mail($to, $subject, $message, $headers);
+								sendMail($to, $subject, $message);
 
 								// et on fixe à true le champ mailsentuser_poi
 								$sql3 = "UPDATE poi SET mailsentuser_poi = 1 WHERE id_poi = ".$id_poi;
@@ -1449,7 +1445,7 @@ Cordialement, l\'Association 2 pieds 2 roues :)';
 									$to = $row4['mail_poi'];
 								}
 								//$to      = 'observations_adherents_assovelo@le-pic.org';
-								$subject = '[Association 2 pieds 2 roues] Merci pour votre participation';
+								$subject = 'Merci pour votre participation';
 
 								// on regarde dans quelle comcom le POI appartient et on switch le contenu du mail en fonction
                                 $sql = "SELECT commune_id_commune FROM poi WHERE id_poi LIKE ".$id_poi;
@@ -1465,31 +1461,26 @@ Cordialement, l\'Association 2 pieds 2 roues :)';
                                     switch ($row[0]) {
                                         case 1:
                                             $message = 'Bonjour !
-Le nouvel enregistrement que vous avez envoyé a été modéré par l\'association. Le problème identifié a été envoyé aux services municipaux.
+L\'observation que vous avez envoyée a été modérée par l\'association. Le problème identifié a été envoyé aux services municipaux.
 Cordialement, l\'Association 2 pieds 2 roues et Toulouse Métropole :)';
                                             break;
                                         case 2:
                                             $message = 'Bonjour !
-Le nouvel enregistrement que vous avez envoyé a été modéré par l\'association. Le problème identifié a été envoyé aux services municipaux.
+L\'observation que vous avez envoyée a été modérée par l\'association. Le problème identifié a été envoyé aux services municipaux.
 Cordialement, l\'Association 2 pieds 2 roues et le Sicoval :)';
                                             break;
                                         case 3:
                                             $message = 'Bonjour !
-Le nouvel enregistrement que vous avez envoyé a été modéré par l\'association. Le problème identifié a été envoyé aux services municipaux.
+L\'observation que vous avez envoyée a été modérée par l\'association. Le problème identifié a été envoyé aux services municipaux.
 Cordialement, l\'Association 2 pieds 2 roues et la CAM :)';
                                             break;
                                     }
                                 } else {
                                     $message = 'Bonjour !
-Le nouvel enregistrement que vous avez envoyé a été modéré par l\'association. Le problème identifié a été envoyé aux services municipaux.
+L\'observation que vous avez envoyée a été modérée par l\'association. Le problème identifié a été envoyé aux services municipaux.
 Cordialement, l\'Association 2 pieds 2 roues :)';
                                 }
-
-								$headers = 'From: 2p2r@le-pic.org' . "\r\n" .
-								'Reply-To: 2p2r@le-pic.org' . "\r\n" .
-								'Content-Type: text/plain; charset=UTF-8' . "\r\n" .
-								'X-Mailer: PHP/' . phpversion();
-								mail($to, $subject, $message, $headers);
+								sendMail($to, $subject, $message);
 
 								// on fixe à true le champ mailsentuser_poi
 								$sql3 = "UPDATE poi SET mailsentuser_poi = 1 WHERE id_poi = ".$id_poi;
@@ -1555,7 +1546,7 @@ Cordialement, l\'Association 2 pieds 2 roues :)';
                                 $comment = $row5['commentfinal_poi'];
                             }
 
-							$subject = '[Association 2 pieds 2 roues] Proposition prise en compte';
+							$subject = 'Observation prise en compte';
 
 							// on regarde dans quelle comcom le POI appartient et on switch le contenu du mail en fonction
                             $sql = "SELECT commune_id_commune FROM poi WHERE id_poi LIKE ".$id_poi;
@@ -1595,11 +1586,7 @@ Voici le commentaire final de l\'association : '.$comment.'
 Cordialement, l\'Association 2 pieds 2 roues :)';
                             }
 
-							$headers = 'From: 2p2r@le-pic.org' . "\r\n" .
-							'Reply-To: 2p2r@le-pic.org' . "\r\n" .
-							'Content-Type: text/plain; charset=UTF-8' . "\r\n" .
-							'X-Mailer: PHP/' . phpversion();
-							mail($to, $subject, $message, $headers);
+						sendMail($to, $subject, $message);
 						}
 
 						if ($priorite_id_priorite == 7 || $priorite_id_priorite == 12) {
@@ -1614,7 +1601,7 @@ Cordialement, l\'Association 2 pieds 2 roues :)';
                                 $comment = $row5['commentfinal_poi'];
                             }
 
-                            $subject = '[Association 2 pieds 2 roues] Observation non transmise à la collectivité';
+                            $subject = 'Observation non transmise à la collectivité';
 
                             // on regarde dans quelle comcom le POI appartient et on switch le contenu du mail en fonction
                             $sql = "SELECT commune_id_commune FROM poi WHERE id_poi LIKE ".$id_poi;
@@ -1657,12 +1644,8 @@ Cependant le problème relaté a été refusé.
 Voici le commentaire final de l\'association : '.$comment.'
 Cordialement, l\'Association 2 pieds 2 roues :)';
                             }
-
-                            $headers = 'From: 2p2r@le-pic.org' . "\r\n" .
-                            'Reply-To: 2p2r@le-pic.org' . "\r\n" .
-                            'Content-Type: text/plain; charset=UTF-8' . "\r\n" .
-                            'X-Mailer: PHP/' . phpversion();
-                            mail($to, $subject, $message, $headers);
+	
+                            sendMail($to, $subject, $message);
                         }
 
                         if ($priorite_id_priorite == 15) {
@@ -1672,7 +1655,7 @@ Cordialement, l\'Association 2 pieds 2 roues :)';
                                 $to = $row6['mail_poi'];
                             }
 
-                            $subject = '[Association 2 pieds 2 roues] Observation doublon';
+                            $subject = 'Observation doublon';
 
                             // on regarde dans quelle comcom le POI appartient et on switch le contenu du mail en fonction
                             $sql = "SELECT commune_id_commune FROM poi WHERE id_poi LIKE ".$id_poi;
@@ -1712,11 +1695,7 @@ Le problème que vous avez identifié nous a déjà relaté par un autre observa
 Cordialement, l\'Association 2 pieds 2 roues :)';
                             }
 
-                            $headers = 'From: 2p2r@le-pic.org' . "\r\n" .
-                            'Reply-To: 2p2r@le-pic.org' . "\r\n" .
-                            'Content-Type: text/plain; charset=UTF-8' . "\r\n" .
-                            'X-Mailer: PHP/' . phpversion();
-                            mail($to, $subject, $message, $headers);
+                            sendMail($to, $subject, $message);
 
                             $sql7 = "UPDATE poi SET mailsentuser_poi = 1 WHERE id_poi = ".$id_poi;
                             $result7 = mysql_query($sql7);
@@ -1746,7 +1725,7 @@ Cordialement, l\'Association 2 pieds 2 roues :)';
 
 						// mail à l'association vélo pour prévenir d'un changement de statut + mail au(x) responsable(s) du pole
 						//$to      = 'observations_adherents_assovelo@le-pic.org';
-						$subject = '[Association 2 pieds 2 roues] Changement de statut de l\'enregistrement n°'.$id_poi.' - '.$lib_pole;
+						$subject = 'Changement de statut de l\'observation n°'.$id_poi.' - '.$lib_pole;
 
 						// on regarde dans quelle comcom le POI appartient et on switch le contenu du mail en fonction
                         $sql = "SELECT commune_id_commune FROM poi WHERE id_poi LIKE ".$id_poi;
@@ -1762,21 +1741,21 @@ Cordialement, l\'Association 2 pieds 2 roues :)';
                             switch ($row[0]) {
                                 case 1:
                                     $message = 'Bonjour !
-Toulouse Métropole a effectué un changement de statut sur l\'enregistrement n°'.$id_poi.' du pole '.$lib_pole.'
+Toulouse Métropole a effectué un changement de statut sur l\'observation n°'.$id_poi.' du pole '.$lib_pole.'
 Nouveau statut : '.$lib_status.'
 Veuillez consulter l\'interface d\'administration pour consulter les informations relatives.
 Cordialement, l\'Association 2 pieds 2 roues et Toulouse Métropole :)';
                                     break;
                                 case 2:
                                     $message = 'Bonjour !
-Le Sicoval a effectué un changement de statut sur l\'enregistrement n°'.$id_poi.' du pole '.$lib_pole.'
+Le Sicoval a effectué un changement de statut sur l\'observation n°'.$id_poi.' du pole '.$lib_pole.'
 Nouveau statut : '.$lib_status.'
 Veuillez consulter l\'interface d\'administration pour consulter les informations relatives.
 Cordialement, l\'Association 2 pieds 2 roues et le Sicoval :)';
                                     break;
                                 case 3:
                                     $message = 'Bonjour !
-La CAM a effectué un changement de statut sur l\'enregistrement n°'.$id_poi.' du pole '.$lib_pole.'
+La CAM a effectué un changement de statut sur l\'observation n°'.$id_poi.' du pole '.$lib_pole.'
 Nouveau statut : '.$lib_status.'
 Veuillez consulter l\'interface d\'administration pour consulter les informations relatives.
 Cordialement, l\'Association 2 pieds 2 roues et la CAM :)';
@@ -1784,23 +1763,19 @@ Cordialement, l\'Association 2 pieds 2 roues et la CAM :)';
                             }
                         } else {
                             $message = 'Bonjour !
-Un changement de statut a été effecrtué sur l\'enregistrement n°'.$id_poi.' du pole '.$lib_pole.'
+Un changement de statut a été effectué sur l\'observation n°'.$id_poi.' du pole '.$lib_pole.'
 Nouveau statut : '.$lib_status.'
 Veuillez consulter l\'interface d\'administration pour consulter les informations relatives.
 Lien vers la modération : '.URL.'/admin.html?id='.$id_poi.'
 Cordialement, l\'Association 2 pieds 2 roues :)';
                         }
 
-						$headers = 'From: 2p2r@le-pic.org' . "\r\n" .
-						'Reply-To: 2p2r@le-pic.org' . "\r\n" .
-						'Content-Type: text/plain; charset=UTF-8' . "\r\n" .
-						'X-Mailer: PHP/' . phpversion();
 
 						$sql2 = "SELECT mail_users FROM users WHERE usertype_id_usertype = 1 OR (usertype_id_usertype = 4 AND num_pole = ".$id_pole.")";
 						$result2 = mysql_query($sql2);
 						while ($row2 = mysql_fetch_array($result2)) {
 						    $to = $row2['mail_users'];
-						    mail($to, $subject, $message, $headers);
+                            				sendMail($to, $subject, $message);
 						}
 
 
@@ -1815,22 +1790,18 @@ Cordialement, l\'Association 2 pieds 2 roues :)';
                                 $territoire_id_territoire = $row2['territoire_id_territoire'];
                             }
 
-                            $subject = '[VelObs] Modification de l\'enregistrement n°'.$id_poi.' par le pole '.$lib_pole;
+                            $subject = 'Modification de l\'observation n°'.$id_poi.' par le pole '.$lib_pole;
                             $message = 'Bonjour !
-Le pole '.$lib_pole.' a modifié l\'enregistrement n°'.$id_poi.'.
+Le pole '.$lib_pole.' a modifié l\'observation n°'.$id_poi.'.
 Veuillez consulter l\'interface d\'administration pour voir cette modification.
 Lien vers la modération : '.URL.'/admin.html?id='.$id_poi.'
 Cordialement, l\'Association 2 pieds 2 roues :)';
-                            $headers = 'From: 2p2r@le-pic.org' . "\r\n" .
-                            'Reply-To: 2p2r@le-pic.org' . "\r\n" .
-                            'Content-Type: text/plain; charset=UTF-8' . "\r\n" .
-                            'X-Mailer: PHP/' . phpversion();
 
                             $sql3 = "SELECT mail_users FROM users WHERE usertype_id_usertype = 2 AND territoire_id_territoire = ".$territoire_id_territoire;
                             $result3 = mysql_query($sql3);
                             while ($row3 = mysql_fetch_array($result3)) {
                                 $to = $row3['mail_users'];
-                                mail($to, $subject, $message, $headers);
+                            	sendMail($to, $subject, $message);
                             }
                         }
 
@@ -3623,18 +3594,14 @@ Cordialement, l\'Association 2 pieds 2 roues :)';
 				$linktomoderation = URL.'/admin.html?id='.$max;
 
 				/* envoi d'un mail aux administrateurs de l'association */
-				$subject = '[Association 2 pieds 2 roues] Nouvel enregistrement à modérer';
+				$subject = 'Nouvelle observation à modérer';
 				$message = 'Bonjour !
-Un nouvel enregistrement a été ajouté sur le pole - '.$lib_pole.' -. Veuillez vous connecter à l\'interface d\'administration pour le modérer.
+Une nouvelle observation a été ajoutée sur le pole - '.$lib_pole.' -. Veuillez vous connecter à l\'interface d\'administration pour le modérer.
 Lien vers la modération : '.URL.'/admin.html?id='.$max.'
 Cordialement, l\'Association 2 pieds 2 roues :)';
-				$headers = 'From: 2p2r@le-pic.org' . "\r\n" .
-                'Reply-To: 2p2r@le-pic.org' . "\r\n" .
-                'Content-Type: text/plain; charset=UTF-8' . "\r\n" .
-                'X-Mailer: PHP/' . phpversion();
 				$details = '
 				
-	------------- Détails de l\'enregistrement -------------
+	------------- Détails de l\'observation -------------
 	 # pole : '.$lib_pole.'
 	 # repère : '.$num_poi.'
 	 # nom de la voie : '.$rue_poi.'
@@ -3658,7 +3625,7 @@ Cordialement, l\'Association 2 pieds 2 roues :)';
                     while ($row = mysql_fetch_array($result)) {
                         $to = $row['mail_users'];
                         if ($to != '') {
-                            mail($to, $subject, $message, $headers);
+                            sendMail($to, $subject, $message);
                         }
                     }
                     /* fin envoi d'un mail aux administrateurs de l'association */
@@ -3667,18 +3634,14 @@ Cordialement, l\'Association 2 pieds 2 roues :)';
                 }
 
 				/* envoi d'un mail aux administrateurs #pole# de l'association */
-                $subject = '[Association 2 pieds 2 roues] Nouvel enregistrement à modérer';
+                $subject = 'Nouvelle observation à modérer';
                 $message = 'Bonjour !
-Un nouvel enregistrement a été ajouté sur le pole - '.$lib_pole.' -. Veuillez vous connecter à l\'interface d\'administration pour le modérer.
+Une nouvelle observation a été ajoutée sur le pole - '.$lib_pole.' -. Veuillez vous connecter à l\'interface d\'administration pour le modérer.
 Lien vers la modération : '.URL.'/admin.html?id='.$max.'
 Cordialement, l\'Association 2 pieds 2 roues :)';
-                $headers = 'From: 2p2r@le-pic.org' . "\r\n" .
-                'Reply-To: 2p2r@le-pic.org' . "\r\n" .
-                'Content-Type: text/plain; charset=UTF-8' . "\r\n" .
-                'X-Mailer: PHP/' . phpversion();
                 $details = '
 
-    ------------- Détails de l\'enregistrement -------------
+    ------------- Détails de l\'observation -------------
      # pole : '.$lib_pole.'
      # repère : '.$num_poi.'
      # nom de la voie : '.$rue_poi.'
@@ -3702,7 +3665,7 @@ Cordialement, l\'Association 2 pieds 2 roues :)';
                     while ($row = mysql_fetch_array($result)) {
                         $to = $row['mail_users'];
                         if ($to != '') {
-                            mail($to, $subject, $message, $headers);
+                            sendMail($to, $subject, $message);
                         }
                     }
                     /* fin envoi d'un mail aux administrateurs #pole# de l'association */
@@ -4063,9 +4026,9 @@ Cordialement, l\'Association 2 pieds 2 roues :)';
 
                 /* envoi d'un mail aux administrateurs */
                 //$to      = 'observations_adherents_assovelo@le-pic.org';
-                $subject = '[Association 2 pieds 2 roues] Nouveau commentaire à modérer sur le POI n°'.$id_poi;
+                $subject = 'Nouveau commentaire à modérer sur l\'observation n°'.$id_poi;
                 $message = 'Bonjour !
-Un nouveau commentaire a été ajouté sur le POI n°'.$id_poi.'. Veuillez vous connecter à l\'interface d\'administration pour le modérer.
+Un nouveau commentaire a été ajouté sur l\'observation n°'.$id_poi.'. Veuillez vous connecter à l\'interface d\'administration pour le modérer.
 Lien vers la modération : '.URL.'/admin.html?id='.$id_poi.'
 Cordialement, l\'application VelObs :)';
                 $details = '
@@ -4074,21 +4037,16 @@ Cordialement, l\'application VelObs :)';
      '.$text.'
                 ';
                 $message .= $details;
-                $headers = 'From: 2p2r@le-pic.org' . "\r\n" .
-                'Reply-To: 2p2r@le-pic.org' . "\r\n" .
-                'Content-Type: text/plain; charset=UTF-8' . "\r\n" .
-                'X-Mailer: PHP/' . phpversion();
 
                 $sql = "SELECT mail_users FROM users WHERE usertype_id_usertype = 1";
                 $result = mysql_query($sql);
                 while ($row = mysql_fetch_array($result)) {
                     $to = $row['mail_users'];
                     if ($to != '') {
-                        mail($to, $subject, $message, $headers);
+                        sendMail($to, $subject, $message);
                     }
                 }
 
-                //mail($to, $subject, $message, $headers);
                 /* fin envoi d'un mail aux administrateurs */
 
                 $sql = "SELECT pole_id_pole FROM poi WHERE id_poi = ".$id_poi;
@@ -4097,17 +4055,13 @@ Cordialement, l\'application VelObs :)';
                 $pole_id_pole = $row[0];
 
                 /* envoi d'un mail aux administrateurs #pole# de l'association */
-                $headers = 'From: 2p2r@le-pic.org' . "\r\n" .
-                'Reply-To: 2p2r@le-pic.org' . "\r\n" .
-                'Content-Type: text/plain; charset=UTF-8' . "\r\n" .
-                'X-Mailer: PHP/' . phpversion();
 
                 // boucle sur les administrateurs #pole# généraux de l'association
                 $sql = "SELECT mail_users FROM users WHERE usertype_id_usertype = 4 AND num_pole = ".$pole_id_pole;
                 $result = mysql_query($sql);
                 while ($row = mysql_fetch_array($result)) {
                     $to = $row['mail_users'];
-                    mail($to, $subject, $message, $headers);
+                        sendMail($to, $subject, $message);
                 }
 
                 if (!$result) {
