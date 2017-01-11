@@ -127,18 +127,13 @@
 			mysql_close($link);
 			
 			/* envoi d'un mail aux administrateurs */
-			$to      = 'observations_adherents_assovelo@le-pic.org';
-			$subject = '[Association 2 pieds 2 roues] Nouvel enregistrement à modérer';
+			$subject = 'Nouvelle observation à modérer';
 			$message = 'Bonjour !
-Un nouvel enregistrement a été ajouté. Veuillez vous connecter à l\'interface d\'administration pour le modérer.
+Une nouvelle observation a été ajoutée. Veuillez vous connecter à l\'interface d\'administration pour la modérer.
 Cordialement, l\'application velobs)';
-			$headers = 'From: 2p2r@le-pic.org' . "\r\n" .
-			'Reply-To: 2p2r@le-pic.org' . "\r\n" .
-			'Content-Type: text/plain; charset=UTF-8' . "\r\n" .
-			'X-Mailer: PHP/' . phpversion();
 			$details = '
 				
-	------------- Détails de l\'enregistrement -------------
+	------------- Détails de l\'observation -------------
 	 # pole : '.$lib_pole.'
 	 # latitude : '.$latitude_poi.'
 	 # longitude : '.$longitude_poi.'
@@ -149,7 +144,7 @@ Cordialement, l\'application velobs)';
 				';
 			$message .= $details;
 			
-			mail($to, $subject, $message, $headers);
+			sendMail(MAIL_ALIAS_OBSERVATION_ADHERENTS, $subject, $message);
 			/* fin envoi d'un mail aux administrateurs */		
 			
 			break;

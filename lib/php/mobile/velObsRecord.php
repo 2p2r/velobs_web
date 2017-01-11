@@ -1,6 +1,7 @@
 <?php header('Content-Type: text/html; charset=UTF-8');
 
     include '../key.php';
+	include '../commonfunction.php';
 	include '../admin/adminfunction.php';
 
 	switch (SGBD) {
@@ -143,18 +144,14 @@
                     // envoi mail aux administrateurs généraux de 2p2r
 
                     /* envoi d'un mail aux administrateurs de l'association */
-                    $subject = '[Velobs 2P2R] Nouvel enregistrement à modérer';
+                    $subject = 'Nouvelle observation à modérer';
                     $message = 'Bonjour !
-Un nouvel enregistrement a été ajouté. Veuillez vous connecter à l\'interface d\'administration pour le modérer.
+Une nouvelle observation a été ajoutée. Veuillez vous connecter à l\'interface d\'administration pour la modérer.
 Lien vers la modération : '.URL.'/admin.html?id='.$id_poi.'
 Cordialement, l\'Association 2 pieds 2 roues :)';
-                    $headers = 'From: 2p2r@le-pic.org' . "\r\n" .
-                    'Reply-To: 2p2r@le-pic.org' . "\r\n" .
-                    'Content-Type: text/plain; charset=UTF-8' . "\r\n" .
-                    'X-Mailer: PHP/' . phpversion();
                     $details = '
 
-    ------------- Détails de l\'enregistrement -------------
+    ------------- Détails de l\'observation -------------
      # pole : '.$lib_pole.'
      # repère : '.$num_poi.'
      # nom de la voie : '.$rue_poi.'
@@ -177,7 +174,7 @@ Cordialement, l\'Association 2 pieds 2 roues :)';
                         $result = mysql_query($sql);
                         while ($row = mysql_fetch_array($result)) {
                             $to = $row['mail_users'];
-                            mail($to, $subject, $message, $headers);
+                            sendMail($to, $subject, $message);
                         }
                         /* fin envoi d'un mail aux administrateurs de l'association */
                     } else {
@@ -186,18 +183,14 @@ Cordialement, l\'Association 2 pieds 2 roues :)';
 
                     // envoi mail aux responsables des poles 2p2r
                     /* envoi d'un mail aux administrateurs #pole# de l'association */
-                    $subject = '[Velobs 2P2R] Nouvel enregistrement à modérer';
+                    $subject = 'Nouvelle observation à modérer';
                     $message = 'Bonjour !
-Un nouvel enregistrement a été ajouté sur le pole - '.$lib_pole.' -. Veuillez vous connecter à l\'interface d\'administration pour le modérer.
+Une nouvelle observation a été ajoutée sur le pole - '.$lib_pole.' -. Veuillez vous connecter à l\'interface d\'administration pour la modérer.
 Lien vers la modération : '.URL.'/admin.html?id='.$id_poi.'
 Cordialement, l\'Association 2 pieds 2 roues :)';
-                    $headers = 'From: 2p2r@le-pic.org' . "\r\n" .
-                    'Reply-To: 2p2r@le-pic.org' . "\r\n" .
-                    'Content-Type: text/plain; charset=UTF-8' . "\r\n" .
-                    'X-Mailer: PHP/' . phpversion();
                     $details = '
 
-    ------------- Détails de l\'enregistrement -------------
+    ------------- Détails de l\'observation -------------
      # pole : '.$lib_pole.'
      # repère : '.$num_poi.'
      # nom de la voie : '.$rue_poi.'
@@ -220,7 +213,7 @@ Cordialement, l\'Association 2 pieds 2 roues :)';
                         $result = mysql_query($sql);
                         while ($row = mysql_fetch_array($result)) {
                             $to = $row['mail_users'];
-                            mail($to, $subject, $message, $headers);
+                            sendMail($to, $subject, $message);
                         }
                         /* fin envoi d'un mail aux administrateurs #pole# de l'association */
                     } else {
@@ -371,18 +364,14 @@ Cordialement, l\'Association 2 pieds 2 roues :)';
                         // envoi mail aux administrateurs généraux de 2p2r
 
                     /* envoi d'un mail aux administrateurs de l'association */
-                        $subject = '[Velobs 2P2R] Nouvel enregistrement à modérer';
+                        $subject = 'Nouvelle observation à modérer';
                         $message = 'Bonjour !
-Un nouvel enregistrement a été ajouté. Veuillez vous connecter à l\'interface d\'administration pour le modérer.
+Une nouvelle observation a été ajoutée. Veuillez vous connecter à l\'interface d\'administration pour la modérer.
 Lien vers la modération : '.URL.'/admin.html?id='.$id_poi.'
 Cordialement, l\'Association 2 pieds 2 roues :)';
-                        $headers = 'From: 2p2r@le-pic.org' . "\r\n" .
-                        'Reply-To: 2p2r@le-pic.org' . "\r\n" .
-                        'Content-Type: text/plain; charset=UTF-8' . "\r\n" .
-                        'X-Mailer: PHP/' . phpversion();
                         $details = '
 
-    ------------- Détails de l\'enregistrement -------------
+    ------------- Détails de l\'observation -------------
      # pole : '.$lib_pole.'
      # repère : '.$num_poi.'
      # nom de la voie : '.$rue_poi.'
@@ -405,7 +394,7 @@ Cordialement, l\'Association 2 pieds 2 roues :)';
                             $result = mysql_query($sql);
                             while ($row = mysql_fetch_array($result)) {
                                 $to = $row['mail_users'];
-                                mail($to, $subject, $message, $headers);
+                                sendMail($to, $subject, $message);
                             }
                             /* fin envoi d'un mail aux administrateurs de l'association */
                         } else {
@@ -413,18 +402,14 @@ Cordialement, l\'Association 2 pieds 2 roues :)';
                         }
 
                     /* envoi d'un mail aux administrateurs #pole# de l'association */
-                        $subject = '[Velobs 2P2R] Nouvel enregistrement à modérer';
+                        $subject = 'Nouvel enregistrement à modérer';
                         $message = 'Bonjour !
-Un nouvel enregistrement a été ajouté sur le pole - '.$lib_pole.' -. Veuillez vous connecter à l\'interface d\'administration pour le modérer.
+Une nouvelle observation a été ajoutée sur le pole - '.$lib_pole.' -. Veuillez vous connecter à l\'interface d\'administration pour la modérer.
 Lien vers la modération : '.URL.'/admin.html?id='.$id_poi.'
 Cordialement, l\'Association 2 pieds 2 roues :)';
-                        $headers = 'From: 2p2r@le-pic.org' . "\r\n" .
-                        'Reply-To: 2p2r@le-pic.org' . "\r\n" .
-                        'Content-Type: text/plain; charset=UTF-8' . "\r\n" .
-                        'X-Mailer: PHP/' . phpversion();
                         $details = '
 
-    ------------- Détails de l\'enregistrement -------------
+    ------------- Détails de l\'observation -------------
      # pole : '.$lib_pole.'
      # repère : '.$num_poi.'
      # nom de la voie : '.$rue_poi.'
@@ -447,7 +432,7 @@ Cordialement, l\'Association 2 pieds 2 roues :)';
                             $result = mysql_query($sql);
                             while ($row = mysql_fetch_array($result)) {
                                 $to = $row['mail_users'];
-                                mail($to, $subject, $message, $headers);
+                                sendMail($to, $subject, $message);
                             }
                             /* fin envoi d'un mail aux administrateurs #pole# de l'association */
                         } else {

@@ -29,18 +29,13 @@
                     $result = mysql_query($sql);
 
                     /* envoi d'un mail aux administrateurs */
-                    $to      = 'observations_adherents_assovelo@le-pic.org';
-                    $subject = '[Velobs 2P2R] Nouveau commentaire à modérer sur le POI n°'.$id_poi;
+                    $subject = 'Nouveau commentaire à modérer sur l\'observation n°'.$id_poi;
                     $message = 'Bonjour !
-Un nouveau commentaire a été ajouté sur le POI n°'.$id_poi.'. Veuillez vous connecter à l\'interface d\'administration pour le modérer.
+Un nouveau commentaire a été ajouté sur l\'observation n°'.$id_poi.'. Veuillez vous connecter à l\'interface d\'administration pour le modérer.
 Lien vers la modération : '.URL.'/admin.html?id='.$id_poi.'
 Cordialement, l\'application velobs)';
-                    $headers = 'From: 2p2r@le-pic.org' . "\r\n" .
-                    'Reply-To: 2p2r@le-pic.org' . "\r\n" .
-                    'Content-Type: text/plain; charset=UTF-8' . "\r\n" .
-                    'X-Mailer: PHP/' . phpversion();
 
-                    mail($to, $subject, $message, $headers);
+                    sendMail(MAIL_ALIAS_OBSERVATION_ADHERENTS, $subject, $message);
                     /* fin envoi d'un mail aux administrateurs */
 
                     $sql = "SELECT pole_id_pole FROM poi WHERE id_poi = ".$id_poi;
@@ -50,15 +45,11 @@ Cordialement, l\'application velobs)';
 
 
                     /* envoi d'un mail aux administrateurs #pole# de l'association */
-                   $subject = '[Velobs 2P2R] Nouveau commentaire à modérer sur le POI n°'.$id_poi;
+                   $subject = 'Nouveau commentaire à modérer sur l\'observation n°'.$id_poi;
                    $message = 'Bonjour !
-Un nouveau commentaire a été ajouté sur le POI n°'.$id_poi.'. Veuillez vous connecter à l\'interface d\'administration pour le modérer.
+Un nouveau commentaire a été ajouté sur l\'observation n°'.$id_poi.'. Veuillez vous connecter à l\'interface d\'administration pour le modérer.
 Lien vers la modération : '.URL.'/admin.html?id='.$id_poi.'
 Cordialement, l\'application velobs)';
-                    $headers = 'From: 2p2r@le-pic.org' . "\r\n" .
-                    'Reply-To: 2p2r@le-pic.org' . "\r\n" .
-                    'Content-Type: text/plain; charset=UTF-8' . "\r\n" .
-                    'X-Mailer: PHP/' . phpversion();
 
                     $sql2 = "SELECT mail_users FROM users WHERE (usertype_id_usertype = 1 OR usertype_id_usertype = 4) AND mail_users LIKE '".$mail_poi."'";
                     $result2 = mysql_query($sql2);
@@ -69,7 +60,7 @@ Cordialement, l\'application velobs)';
                         $result = mysql_query($sql);
                         while ($row = mysql_fetch_array($result)) {
                             $to = $row['mail_users'];
-                            mail($to, $subject, $message, $headers);
+                            sendMail($to, $subject, $message);
                         }
                         /* fin envoi d'un mail aux administrateurs #pole# de l'association */
                     } else {
@@ -130,23 +121,18 @@ Cordialement, l\'application velobs)';
                     }
 
                     /* envoi d'un mail aux administrateurs */
-                    //$to      = 'observations_adherents_assovelo@le-pic.org';
-                    $subject = '[Velobs 2P2R] Nouvelle photo à modérer sur le POI n°'.$id_poi;
+                    $subject = 'Nouvelle photo à modérer sur l\'observation n°'.$id_poi;
                     $message = 'Bonjour !
-Une nouvelle photo a été ajoutée sur le POI n°'.$id_poi.'. Veuillez vous connecter à l\'interface d\'administration pour la modérer.
+Une nouvelle photo a été ajoutée sur l\'observation n°'.$id_poi.'. Veuillez vous connecter à l\'interface d\'administration pour la modérer.
 Lien vers la modération : '.URL.'/admin.html?id='.$id_poi.'
 Cordialement, l\'application velobs)';
-                    $headers = 'From: 2p2r@le-pic.org' . "\r\n" .
-                    'Reply-To: 2p2r@le-pic.org' . "\r\n" .
-                    'Content-Type: text/plain; charset=UTF-8' . "\r\n" .
-                    'X-Mailer: PHP/' . phpversion();
 
                     $sql = "SELECT mail_users FROM users WHERE usertype_id_usertype = 1";
                     $result = mysql_query($sql);
                     while ($row = mysql_fetch_array($result)) {
                         $to = $row['mail_users'];
                         if ($to != '') {
-                            mail($to, $subject, $message, $headers);
+                            sendMail($to, $subject, $message);
                         }
                     }
                     /* fin envoi d'un mail aux administrateurs */
@@ -158,15 +144,11 @@ Cordialement, l\'application velobs)';
 
 
                     /* envoi d'un mail aux administrateurs #pole# de l'association */
-                   $subject = '[Velobs 2P2R] Nouveau commentaire à modérer sur le POI n°'.$id_poi;
+                   $subject = 'Nouveau commentaire à modérer sur l\'observation n°'.$id_poi;
                    $message = 'Bonjour !
-Une nouvelle photo a été ajoutée sur le POI n°'.$id_poi.'. Veuillez vous connecter à l\'interface d\'administration pour la modérer.
+Une nouvelle photo a été ajoutée sur l\'observation n°'.$id_poi.'. Veuillez vous connecter à l\'interface d\'administration pour la modérer.
 Lien vers la modération : '.URL.'/admin.html?id='.$id_poi.'
 Cordialement, l\'application velobs)';
-                    $headers = 'From: 2p2r@le-pic.org' . "\r\n" .
-                    'Reply-To: 2p2r@le-pic.org' . "\r\n" .
-                    'Content-Type: text/plain; charset=UTF-8' . "\r\n" .
-                    'X-Mailer: PHP/' . phpversion();
 
                     $sql2 = "SELECT mail_users FROM users WHERE (usertype_id_usertype = 1 OR usertype_id_usertype = 4) AND mail_users LIKE '".$mail_poi."'";
                     $result2 = mysql_query($sql2);
@@ -177,7 +159,7 @@ Cordialement, l\'application velobs)';
                         $result = mysql_query($sql);
                         while ($row = mysql_fetch_array($result)) {
                             $to = $row['mail_users'];
-                            mail($to, $subject, $message, $headers);
+                            sendMail($to, $subject, $message);
                         }
                         /* fin envoi d'un mail aux administrateurs #pole# de l'association */
                     } else {
