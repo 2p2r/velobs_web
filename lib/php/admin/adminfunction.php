@@ -1405,27 +1405,27 @@
 								        case 1:
 								            $message = 'Bonjour !
 L\'observation que vous avez envoyée a été modérée par l\'association. Le problème identifié est une urgence qui nécessite une intervention rapide des services techniques.
-Veuillez téléphoner au 05 61 222 222 pour prévenir de ce problème si ce problème si celui-ci est sur la commune de Toulouse.
-Cordialement, l\'Association 2 pieds 2 roues et Toulouse Métropole:)';
+'.VELOBS_EMERGENCY_MAIL1.'.
+Cordialement, l\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE1.':)';
 								            break;
 								        case 2:
 								            $message = 'Bonjour !
 L\'observation que vous avez envoyée a été modérée par l\'association. Le problème identifié est une urgence qui nécessite une intervention rapide des services techniques.
 Veuillez contacter les services techniques de la communauté de communes.
-Cordialement, l\'Association 2 pieds 2 roues et le Sicoval:)';
+Cordialement, l\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE2.':)';
 								            break;
 								        case 3:
 								            $message = 'Bonjour !
 L\'observation que vous avez envoyée a été modérée par l\'association. Le problème identifié est une urgence qui nécessite une intervention rapide des services techniques.
 Veuillez contacter les services techniques de la communauté de communes.
-Cordialement, l\'Association 2 pieds 2 roues et la CAM:)';
+Cordialement, l\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE3.':)';
 								            break;
 								    }
 								} else {
 								    $message = 'Bonjour !
 L\'observation que vous avez envoyée a été modérée par l\'association. Le problème identifié est une urgence qui nécessite une intervention rapide des services techniques.
 Veuillez contacter les services techniques de votre commune.
-Cordialement, l\'Association 2 pieds 2 roues :)';
+Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
 								}
 
 								sendMail($to, $subject, $message);
@@ -1462,23 +1462,23 @@ Cordialement, l\'Association 2 pieds 2 roues :)';
                                         case 1:
                                             $message = 'Bonjour !
 L\'observation que vous avez envoyée a été modérée par l\'association. Le problème identifié a été envoyé aux services municipaux.
-Cordialement, l\'Association 2 pieds 2 roues et Toulouse Métropole :)';
+Cordialement, l\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE1.' :)';
                                             break;
                                         case 2:
                                             $message = 'Bonjour !
 L\'observation que vous avez envoyée a été modérée par l\'association. Le problème identifié a été envoyé aux services municipaux.
-Cordialement, l\'Association 2 pieds 2 roues et le Sicoval :)';
+Cordialement, l\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE2.' :)';
                                             break;
                                         case 3:
                                             $message = 'Bonjour !
 L\'observation que vous avez envoyée a été modérée par l\'association. Le problème identifié a été envoyé aux services municipaux.
-Cordialement, l\'Association 2 pieds 2 roues et la CAM :)';
+Cordialement, l\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE3.' :)';
                                             break;
                                     }
                                 } else {
                                     $message = 'Bonjour !
 L\'observation que vous avez envoyée a été modérée par l\'association. Le problème identifié a été envoyé aux services municipaux.
-Cordialement, l\'Association 2 pieds 2 roues :)';
+Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
                                 }
 								sendMail($to, $subject, $message);
 
@@ -1562,28 +1562,28 @@ Cordialement, l\'Association 2 pieds 2 roues :)';
                                 switch ($row[0]) {
                                     case 1:
                                         $message = 'Bonjour !
-L\'Association 2 pieds 2 roues et Toulouse Métropole vous remercie. Le problème a bien été pris en compte et réglé par la communauté urbaine.
+L\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE1.' vous remercie. Le problème a bien été pris en compte et réglé par la communauté urbaine.
 Voici le commentaire final de l\'association : '.$comment.'
-Cordialement, l\'Association 2 pieds 2 roues et Toulouse Métropole :)';
+Cordialement, l\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE1.' :)';
                                         break;
                                     case 2:
                                         $message = 'Bonjour !
-L\'Association 2 pieds 2 roues et Toulouse Métropole vous remercie. Le problème a bien été pris en compte et réglé par la communauté urbaine.
+L\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE1.' vous remercie. Le problème a bien été pris en compte et réglé par la communauté urbaine.
 Voici le commentaire final de l\'association : '.$comment.'
-Cordialement, l\'Association 2 pieds 2 roues et le Sicoval :)';
+Cordialement, l\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE2.' :)';
                                         break;
                                     case 3:
                                         $message = 'Bonjour !
-L\'Association 2 pieds 2 roues et Toulouse Métropole vous remercie. Le problème a bien été pris en compte et réglé par la communauté urbaine.
+L\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE1.' vous remercie. Le problème a bien été pris en compte et réglé par la communauté urbaine.
 Voici le commentaire final de l\'association : '.$comment.'
-Cordialement, l\'Association 2 pieds 2 roues et la CAM :)';
+Cordialement, l\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE3.' :)';
                                         break;
                                 }
                             } else {
                                 $message = 'Bonjour !
-L\'Association 2 pieds 2 roues et Toulouse Métropole vous remercie. Le problème a bien été pris en compte et réglé par la communauté urbaine.
+L\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE1.' vous remercie. Le problème a bien été pris en compte et réglé par la communauté urbaine.
 Voici le commentaire final de l\'association : '.$comment.'
-Cordialement, l\'Association 2 pieds 2 roues :)';
+Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
                             }
 
 						sendMail($to, $subject, $message);
@@ -1617,32 +1617,32 @@ Cordialement, l\'Association 2 pieds 2 roues :)';
                                 switch ($row[0]) {
                                     case 1:
                                         $message = 'Bonjour !
-L\'Association 2 pieds 2 roues et Toulouse Métropole vous remercie de votre participation.
+L\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE1.' vous remercie de votre participation.
 Cependant le problème relaté a été refusé.
 Voici le commentaire final de l\'association : '.$comment.'
-Cordialement, l\'Association 2 pieds 2 roues et Toulouse Métropole :)';
+Cordialement, l\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE1.' :)';
                                         break;
                                     case 2:
                                         $message = 'Bonjour !
-L\'Association 2 pieds 2 roues et le Sicoval vous remercie de votre participation.
+L\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE2.' vous remercie de votre participation.
 Cependant le problème relaté a été refusé.
 Voici le commentaire final de l\'association : '.$comment.'
-Cordialement, l\'Association 2 pieds 2 roues et le Sicoval :)';
+Cordialement, l\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE2.' :)';
                                         break;
                                     case 3:
                                         $message = 'Bonjour !
-L\'Association 2 pieds 2 roues et la CAM vous remercie de votre participation.
+L\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE3.' vous remercie de votre participation.
 Cependant le problème relaté a été refusé.
 Voici le commentaire final de l\'association : '.$comment.'
-Cordialement, l\'Association 2 pieds 2 roues et la CAM :)';
+Cordialement, l\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE3.' :)';
                                         break;
                                 }
                             } else {
                                 $message = 'Bonjour !
-L\'Association 2 pieds 2 roues vous remercie de votre participation.
+L\'Association '.VELOBS_ASSOCIATION.' vous remercie de votre participation.
 Cependant le problème relaté a été refusé.
 Voici le commentaire final de l\'association : '.$comment.'
-Cordialement, l\'Association 2 pieds 2 roues :)';
+Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
                             }
 	
                             sendMail($to, $subject, $message);
@@ -1671,28 +1671,28 @@ Cordialement, l\'Association 2 pieds 2 roues :)';
                                 switch ($row[0]) {
                                     case 1:
                                         $message = 'Bonjour !
-L\'Association 2 pieds 2 roues et Toulouse Métropole vous remercie de votre participation.
+L\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE1.' vous remercie de votre participation.
 Le problème que vous avez identifié nous a déjà relaté par un autre observateur.
-Cordialement, l\'Association 2 pieds 2 roues et Toulouse Métropole :)';
+Cordialement, l\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE1.' :)';
                                         break;
                                     case 2:
                                         $message = 'Bonjour !
-L\'Association 2 pieds 2 roues et le Sicoval vous remercie de votre participation.
+L\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE2.' vous remercie de votre participation.
 Le problème que vous avez identifié nous a déjà relaté par un autre observateur.
-Cordialement, l\'Association 2 pieds 2 roues et Toulouse Métropole :)';
+Cordialement, l\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE1.' :)';
                                         break;
                                     case 3:
                                         $message = 'Bonjour !
-L\'Association 2 pieds 2 roues et la CAM vous remercie de votre participation.
+L\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE3.' vous remercie de votre participation.
 Le problème que vous avez identifié nous a déjà relaté par un autre observateur.
-Cordialement, l\'Association 2 pieds 2 roues et la CAM :)';
+Cordialement, l\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE3.' :)';
                                         break;
                                 }
                             } else {
                                 $message = 'Bonjour !
-L\'Association 2 pieds 2 roues vous remercie de votre participation.
+L\'Association '.VELOBS_ASSOCIATION.' vous remercie de votre participation.
 Le problème que vous avez identifié nous a déjà relaté par un autre observateur.
-Cordialement, l\'Association 2 pieds 2 roues :)';
+Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
                             }
 
                             sendMail($to, $subject, $message);
@@ -1741,24 +1741,24 @@ Cordialement, l\'Association 2 pieds 2 roues :)';
                             switch ($row[0]) {
                                 case 1:
                                     $message = 'Bonjour !
-Toulouse Métropole a effectué un changement de statut sur l\'observation n°'.$id_poi.' du pole '.$lib_pole.'
+'.VELOBS_COLLECTIVITE1.' a effectué un changement de statut sur l\'observation n°'.$id_poi.' du pole '.$lib_pole.'
 Nouveau statut : '.$lib_status.'
 Veuillez consulter l\'interface d\'administration pour consulter les informations relatives.
-Cordialement, l\'Association 2 pieds 2 roues et Toulouse Métropole :)';
+Cordialement, l\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE1.' :)';
                                     break;
                                 case 2:
                                     $message = 'Bonjour !
-Le Sicoval a effectué un changement de statut sur l\'observation n°'.$id_poi.' du pole '.$lib_pole.'
+'.VELOBS_COLLECTIVITE2.' a effectué un changement de statut sur l\'observation n°'.$id_poi.' du pole '.$lib_pole.'
 Nouveau statut : '.$lib_status.'
 Veuillez consulter l\'interface d\'administration pour consulter les informations relatives.
-Cordialement, l\'Association 2 pieds 2 roues et le Sicoval :)';
+Cordialement, l\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE2.' :)';
                                     break;
                                 case 3:
                                     $message = 'Bonjour !
-La CAM a effectué un changement de statut sur l\'observation n°'.$id_poi.' du pole '.$lib_pole.'
+'.VELOBS_COLLECTIVITE3.' a effectué un changement de statut sur l\'observation n°'.$id_poi.' du pole '.$lib_pole.'
 Nouveau statut : '.$lib_status.'
 Veuillez consulter l\'interface d\'administration pour consulter les informations relatives.
-Cordialement, l\'Association 2 pieds 2 roues et la CAM :)';
+Cordialement, l\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE3.' :)';
                                     break;
                             }
                         } else {
@@ -1767,7 +1767,7 @@ Un changement de statut a été effectué sur l\'observation n°'.$id_poi.' du p
 Nouveau statut : '.$lib_status.'
 Veuillez consulter l\'interface d\'administration pour consulter les informations relatives.
 Lien vers la modération : '.URL.'/admin.html?id='.$id_poi.'
-Cordialement, l\'Association 2 pieds 2 roues :)';
+Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
                         }
 
 
@@ -1795,7 +1795,7 @@ Cordialement, l\'Association 2 pieds 2 roues :)';
 Le pole '.$lib_pole.' a modifié l\'observation n°'.$id_poi.'.
 Veuillez consulter l\'interface d\'administration pour voir cette modification.
 Lien vers la modération : '.URL.'/admin.html?id='.$id_poi.'
-Cordialement, l\'Association 2 pieds 2 roues :)';
+Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
 
                             $sql3 = "SELECT mail_users FROM users WHERE usertype_id_usertype = 2 AND territoire_id_territoire = ".$territoire_id_territoire;
                             $result3 = mysql_query($sql3);
@@ -3598,7 +3598,7 @@ Cordialement, l\'Association 2 pieds 2 roues :)';
 				$message = 'Bonjour !
 Une nouvelle observation a été ajoutée sur le pole - '.$lib_pole.' -. Veuillez vous connecter à l\'interface d\'administration pour le modérer.
 Lien vers la modération : '.URL.'/admin.html?id='.$max.'
-Cordialement, l\'Association 2 pieds 2 roues :)';
+Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
 				$details = '
 				
 	------------- Détails de l\'observation -------------
@@ -3638,7 +3638,7 @@ Cordialement, l\'Association 2 pieds 2 roues :)';
                 $message = 'Bonjour !
 Une nouvelle observation a été ajoutée sur le pole - '.$lib_pole.' -. Veuillez vous connecter à l\'interface d\'administration pour le modérer.
 Lien vers la modération : '.URL.'/admin.html?id='.$max.'
-Cordialement, l\'Association 2 pieds 2 roues :)';
+Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
                 $details = '
 
     ------------- Détails de l\'observation -------------

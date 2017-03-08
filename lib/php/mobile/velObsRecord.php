@@ -148,7 +148,7 @@
                     $message = 'Bonjour !
 Une nouvelle observation a été ajoutée. Veuillez vous connecter à l\'interface d\'administration pour la modérer.
 Lien vers la modération : '.URL.'/admin.html?id='.$id_poi.'
-Cordialement, l\'Association 2 pieds 2 roues :)';
+Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
                     $details = '
 
     ------------- Détails de l\'observation -------------
@@ -187,7 +187,7 @@ Cordialement, l\'Association 2 pieds 2 roues :)';
                     $message = 'Bonjour !
 Une nouvelle observation a été ajoutée sur le pole - '.$lib_pole.' -. Veuillez vous connecter à l\'interface d\'administration pour la modérer.
 Lien vers la modération : '.URL.'/admin.html?id='.$id_poi.'
-Cordialement, l\'Association 2 pieds 2 roues :)';
+Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
                     $details = '
 
     ------------- Détails de l\'observation -------------
@@ -368,7 +368,7 @@ Cordialement, l\'Association 2 pieds 2 roues :)';
                         $message = 'Bonjour !
 Une nouvelle observation a été ajoutée. Veuillez vous connecter à l\'interface d\'administration pour la modérer.
 Lien vers la modération : '.URL.'/admin.html?id='.$id_poi.'
-Cordialement, l\'Association 2 pieds 2 roues :)';
+Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
                         $details = '
 
     ------------- Détails de l\'observation -------------
@@ -406,7 +406,7 @@ Cordialement, l\'Association 2 pieds 2 roues :)';
                         $message = 'Bonjour !
 Une nouvelle observation a été ajoutée sur le pole - '.$lib_pole.' -. Veuillez vous connecter à l\'interface d\'administration pour la modérer.
 Lien vers la modération : '.URL.'/admin.html?id='.$id_poi.'
-Cordialement, l\'Association 2 pieds 2 roues :)';
+Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
                         $details = '
 
     ------------- Détails de l\'observation -------------

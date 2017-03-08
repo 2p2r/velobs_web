@@ -10,7 +10,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-		<title>VelObs 2 Pieds 2 Roues [Admin]</title>
+		<title>VelObs [Admin]</title>
 		<link rel="shortcut icon" type="image/png" href="resources/favicon/favicon.ico" />
 	</head>
 	<body>
@@ -88,7 +88,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-		<title>VelObs 2 Pieds 2 Roues [Admin]</title>
+		<title>VelObs [Admin]</title>
 		<link rel="shortcut icon" type="image/png" href="resources/favicon/favicon.ico" />
 	</head>
 	<body>
@@ -164,7 +164,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-		<title>VelObs 2 Pieds 2 Roues [Admin]</title>
+		<title>VelObs [Admin]</title>
 		<link rel="shortcut icon" type="image/png" href="resources/favicon/favicon.ico" />
 	</head>
 	<body>
@@ -242,7 +242,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-		<title>VelObs 2 Pieds 2 Roues [Admin]</title>
+		<title>VelObs [Admin]</title>
 		<link rel="shortcut icon" type="image/png" href="resources/favicon/favicon.ico" />
 	</head>
 	<body>

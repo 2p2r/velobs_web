@@ -60,3 +60,18 @@ C'est en production à Toulouse pour 2 pieds 2 roues sur : http://velobs.2p2r.or
  * créer une base de données MySQL (ex. velobs) :
     * interclassement : utf8_general_ci
  * importer dans l'ordre de la numérotation les 19 scripts SQL du répertoire resources/sql
+ 
+#   Notice d'adaptation à d'autres territoires pour l'application VelObs :
+
+  * éditer le fichier lib/php/key.php :  
+     * définir les variables propres à l'association vélo et les collectivités concernées
+  * éditer les fichiers  lib/js/translate_fr.js et lib/js/translate_en.js pour adapter à votre contexte les variables
+     * T_header_main : contenu du panneau supérieur de la page principale
+     * T_textHowToParticipate : contenu du pop up "comment participer"
+  * adapter les logos dans resources/images en respectant les dimensions    
+  * adapter les tables
+     * configmap: coordonnees GPS du centre de la carte
+     * territoire: liste des territoires caracterisés par les codes INSEE des communes du territoire  
+     * commune:  liste des communes caractérisées par leur code INSEE et leur contour géographique
+     * pole:  liste des poles  caractérisés par leur nom et leur contour géographique
+     * quartier: liste des quartiers de la metropole caractérisés par leur nom
