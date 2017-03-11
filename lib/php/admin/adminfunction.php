@@ -1346,8 +1346,18 @@
 			case 'mysql':
 				$link = mysql_connect(HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
-                mysql_query("SET NAMES 'utf8'");
+				mysql_query("SET NAMES 'utf8'");
+				// on regarde dans quelle comcom le POI appartient et on switch le contenu du mail en fonction
+				$sqlCommune = "SELECT commune_id_commune FROM poi WHERE id_poi LIKE ".$id_poi;
+				$res = mysql_query($sqlCommune);
+				$row = mysql_fetch_row($res);
+				$commune_id_commune = $row[0];
 
+				$sqlTerritoire = "SELECT id_territoire FROM territoire WHERE ids_territoire LIKE '%".$commune_id_commune."%'";
+				$res = mysql_query($sqlTerritoire);
+				$rowTerritoire = mysql_fetch_row($res);
+				$num_rows_territoire = mysql_num_rows($res);
+				
 				if (isset($_POST['display_poi'])) {
 					$display_poi = $_POST['display_poi'];
 					$sql = "UPDATE poi SET display_poi = $display_poi WHERE id_poi = $id_poi";
@@ -1388,41 +1398,32 @@
 								while ($row4 = mysql_fetch_array($result4)) {
 									$to = $row4['mail_poi'];
 								}
-								//$to      = 'observations_adherents_assovelo@le-pic.org';
 								$subject = 'Merci pour votre participation';
 
-								// on regarde dans quelle comcom le POI appartient et on switch le contenu du mail en fonction
-								$sql = "SELECT commune_id_commune FROM poi WHERE id_poi LIKE ".$id_poi;
-								$res = mysql_query($sql);
-								$row = mysql_fetch_row($res);
-								$commune_id_commune = $row[0];
-
-								$sql1 = "SELECT id_territoire FROM territoire WHERE ids_territoire LIKE '%".$commune_id_commune."%'";
-								$res = mysql_query($sql1);
-								$num_rows = mysql_num_rows($res);
-								if ($num_rows == 1) {
-								    switch ($row[0]) {
-								        case 1:
-								            $message = 'Bonjour !
+								
+								if ($num_rows_territoire == 1) {
+									switch ($rowTerritoire[0]) {
+										case 1:
+											$message = 'Bonjour !
 L\'observation que vous avez envoyée a été modérée par l\'association. Le problème identifié est une urgence qui nécessite une intervention rapide des services techniques.
 '.VELOBS_EMERGENCY_MAIL1.'.
 Cordialement, l\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE1.':)';
-								            break;
-								        case 2:
-								            $message = 'Bonjour !
+											break;
+										case 2:
+											$message = 'Bonjour !
 L\'observation que vous avez envoyée a été modérée par l\'association. Le problème identifié est une urgence qui nécessite une intervention rapide des services techniques.
 Veuillez contacter les services techniques de la communauté de communes.
 Cordialement, l\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE2.':)';
-								            break;
-								        case 3:
-								            $message = 'Bonjour !
+											break;
+										case 3:
+											$message = 'Bonjour !
 L\'observation que vous avez envoyée a été modérée par l\'association. Le problème identifié est une urgence qui nécessite une intervention rapide des services techniques.
 Veuillez contacter les services techniques de la communauté de communes.
 Cordialement, l\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE3.':)';
-								            break;
-								    }
+											break;
+									}
 								} else {
-								    $message = 'Bonjour !
+									$message = 'Bonjour !
 L\'observation que vous avez envoyée a été modérée par l\'association. Le problème identifié est une urgence qui nécessite une intervention rapide des services techniques.
 Veuillez contacter les services techniques de votre commune.
 Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
@@ -1444,21 +1445,10 @@ Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
 								while ($row4 = mysql_fetch_array($result4)) {
 									$to = $row4['mail_poi'];
 								}
-								//$to      = 'observations_adherents_assovelo@le-pic.org';
 								$subject = 'Merci pour votre participation';
 
-								// on regarde dans quelle comcom le POI appartient et on switch le contenu du mail en fonction
-                                $sql = "SELECT commune_id_commune FROM poi WHERE id_poi LIKE ".$id_poi;
-                                $res = mysql_query($sql);
-                                $row = mysql_fetch_row($res);
-                                $commune_id_commune = $row[0];
-
-                                $sql = "SELECT id_territoire FROM territoire WHERE ids_territoire LIKE '%".$commune_id_commune."%'";
-                                $res = mysql_query($sql);
-                                $row = mysql_fetch_row($res);
-                                $num_rows = mysql_num_rows($res);
-                                if ($num_rows == 1) {
-                                    switch ($row[0]) {
+                                if ($num_rows_territoire == 1) {
+                                    switch ($rowTerritoire[0]) {
                                         case 1:
                                             $message = 'Bonjour !
 L\'observation que vous avez envoyée a été modérée par l\'association. Le problème identifié a été envoyé aux services municipaux.
@@ -1548,40 +1538,30 @@ Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
 
 							$subject = 'Observation prise en compte';
 
-							// on regarde dans quelle comcom le POI appartient et on switch le contenu du mail en fonction
-                            $sql = "SELECT commune_id_commune FROM poi WHERE id_poi LIKE ".$id_poi;
-                            $res = mysql_query($sql);
-                            $row = mysql_fetch_row($res);
-                            $commune_id_commune = $row[0];
-
-                            $sql = "SELECT id_territoire FROM territoire WHERE ids_territoire LIKE '%".$commune_id_commune."%'";
-                            $res = mysql_query($sql);
-                            $num_rows = mysql_num_rows($res);
-                            $row = mysql_fetch_row($res);
-                            if ($num_rows == 1) {
-                                switch ($row[0]) {
+                            if ($num_rows_territoire == 1) {
+                                switch ($rowTerritoire[0]) {
                                     case 1:
                                         $message = 'Bonjour !
-L\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE1.' vous remercie. Le problème a bien été pris en compte et réglé par la communauté urbaine.
+L\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE1.' vous remercient. Le problème a bien été pris en compte et réglé par la collectivité.
 Voici le commentaire final de l\'association : '.$comment.'
 Cordialement, l\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE1.' :)';
                                         break;
                                     case 2:
                                         $message = 'Bonjour !
-L\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE1.' vous remercie. Le problème a bien été pris en compte et réglé par la communauté urbaine.
+L\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE2.' vous remercient. Le problème a bien été pris en compte et réglé par la collectivité.
 Voici le commentaire final de l\'association : '.$comment.'
 Cordialement, l\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE2.' :)';
                                         break;
                                     case 3:
                                         $message = 'Bonjour !
-L\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE1.' vous remercie. Le problème a bien été pris en compte et réglé par la communauté urbaine.
+L\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE3.' vous remercient. Le problème a bien été pris en compte et réglé par la collectivité.
 Voici le commentaire final de l\'association : '.$comment.'
 Cordialement, l\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE3.' :)';
                                         break;
                                 }
                             } else {
                                 $message = 'Bonjour !
-L\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE1.' vous remercie. Le problème a bien été pris en compte et réglé par la communauté urbaine.
+L\'Association '.VELOBS_ASSOCIATION.' vous remercie. Le problème a bien été pris en compte et réglé par la collectivité.
 Voici le commentaire final de l\'association : '.$comment.'
 Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
                             }
@@ -1603,36 +1583,26 @@ Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
 
                             $subject = 'Observation non transmise à la collectivité';
 
-                            // on regarde dans quelle comcom le POI appartient et on switch le contenu du mail en fonction
-                            $sql = "SELECT commune_id_commune FROM poi WHERE id_poi LIKE ".$id_poi;
-                            $res = mysql_query($sql);
-                            $row = mysql_fetch_row($res);
-                            $commune_id_commune = $row[0];
-
-                            $sql = "SELECT id_territoire FROM territoire WHERE ids_territoire LIKE '%".$commune_id_commune."%'";
-                            $res = mysql_query($sql);
-                            $row = mysql_fetch_row($res);
-                            $num_rows = mysql_num_rows($res);
-                            if ($num_rows == 1) {
-                                switch ($row[0]) {
+                            if ($num_rows_territoire == 1) {
+                                switch ($rowTerritoire[0]) {
                                     case 1:
                                         $message = 'Bonjour !
-L\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE1.' vous remercie de votre participation.
-Cependant le problème relaté a été refusé.
+L\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE1.' vous remercient de votre participation.
+Cependant le problème rapporté a été refusé.
 Voici le commentaire final de l\'association : '.$comment.'
 Cordialement, l\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE1.' :)';
                                         break;
                                     case 2:
                                         $message = 'Bonjour !
-L\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE2.' vous remercie de votre participation.
-Cependant le problème relaté a été refusé.
+L\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE2.' vous remercient de votre participation.
+Cependant le problème rapporté a été refusé.
 Voici le commentaire final de l\'association : '.$comment.'
 Cordialement, l\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE2.' :)';
                                         break;
                                     case 3:
                                         $message = 'Bonjour !
-L\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE3.' vous remercie de votre participation.
-Cependant le problème relaté a été refusé.
+L\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE3.' vous remercient de votre participation.
+Cependant le problème rapporté a été refusé.
 Voici le commentaire final de l\'association : '.$comment.'
 Cordialement, l\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE3.' :)';
                                         break;
@@ -1640,7 +1610,7 @@ Cordialement, l\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE3.' 
                             } else {
                                 $message = 'Bonjour !
 L\'Association '.VELOBS_ASSOCIATION.' vous remercie de votre participation.
-Cependant le problème relaté a été refusé.
+Cependant le problème rapporté a été refusé.
 Voici le commentaire final de l\'association : '.$comment.'
 Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
                             }
@@ -1657,41 +1627,31 @@ Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
 
                             $subject = 'Observation doublon';
 
-                            // on regarde dans quelle comcom le POI appartient et on switch le contenu du mail en fonction
-                            $sql = "SELECT commune_id_commune FROM poi WHERE id_poi LIKE ".$id_poi;
-                            $res = mysql_query($sql);
-                            $row = mysql_fetch_row($res);
-                            $commune_id_commune = $row[0];
-
-                            $sql = "SELECT id_territoire FROM territoire WHERE ids_territoire LIKE '%".$commune_id_commune."%'";
-                            $res = mysql_query($sql);
-                            $row = mysql_fetch_row($res);
-                            $num_rows = mysql_num_rows($res);
-                            if ($num_rows == 1) {
-                                switch ($row[0]) {
+                            if ($num_rows_territoire == 1) {
+                                switch ($rowTerritoire[0]) {
                                     case 1:
                                         $message = 'Bonjour !
-L\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE1.' vous remercie de votre participation.
-Le problème que vous avez identifié nous a déjà relaté par un autre observateur.
+L\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE1.' vous remercient de votre participation.
+Le problème que vous avez identifié nous a déjà été rapporté par un autre observateur.
 Cordialement, l\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE1.' :)';
                                         break;
                                     case 2:
                                         $message = 'Bonjour !
-L\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE2.' vous remercie de votre participation.
-Le problème que vous avez identifié nous a déjà relaté par un autre observateur.
+L\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE1.' vous remercient de votre participation.
+Le problème que vous avez identifié nous a déjà été rapporté par un autre observateur.
 Cordialement, l\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE1.' :)';
                                         break;
                                     case 3:
                                         $message = 'Bonjour !
-L\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE3.' vous remercie de votre participation.
-Le problème que vous avez identifié nous a déjà relaté par un autre observateur.
+L\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE3.' vous remercient de votre participation.
+Le problème que vous avez identifié nous a déjà été rapporté par un autre observateur.
 Cordialement, l\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE3.' :)';
                                         break;
                                 }
                             } else {
                                 $message = 'Bonjour !
 L\'Association '.VELOBS_ASSOCIATION.' vous remercie de votre participation.
-Le problème que vous avez identifié nous a déjà relaté par un autre observateur.
+Le problème que vous avez identifié nous a déjà été rapporté par un autre observateur.
 Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
                             }
 
@@ -1724,21 +1684,10 @@ Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
 						$sql = "UPDATE poi SET adherent_poi = '$adherent_poi', lib_poi = '$lib_poi', rue_poi = '$rue_poi', num_poi = '$num_poi', tel_poi = '$tel_poi', mail_poi = '$mail_poi', desc_poi = '$desc_poi', prop_poi = '$prop_poi', observationterrain_poi = '$observationterrain_poi', reponsepole_poi = '$reponsepole_poi', reponsegrandtoulouse_poi = '$reponsegrandtoulouse_poi', commentfinal_poi = '$commentfinal_poi', datecreation_poi = '$datecreation_poi', datefix_poi = '$datefix_poi', status_id_status = $status_id_status WHERE id_poi = $id_poi";
 
 						// mail à l'association vélo pour prévenir d'un changement de statut + mail au(x) responsable(s) du pole
-						//$to      = 'observations_adherents_assovelo@le-pic.org';
 						$subject = 'Changement de statut de l\'observation n°'.$id_poi.' - '.$lib_pole;
 
-						// on regarde dans quelle comcom le POI appartient et on switch le contenu du mail en fonction
-                        $sql = "SELECT commune_id_commune FROM poi WHERE id_poi LIKE ".$id_poi;
-                        $res = mysql_query($sql);
-                        $row = mysql_fetch_row($res);
-                        $commune_id_commune = $row[0];
-
-                        $sql = "SELECT id_territoire FROM territoire WHERE ids_territoire LIKE '%".$commune_id_commune."%'";
-                        $res = mysql_query($sql);
-                        $row = mysql_fetch_row($res);
-                        $num_rows = mysql_num_rows($res);
-                        if ($num_rows == 1) {
-                            switch ($row[0]) {
+                        if ($num_rows_territoire == 1) {
+                            switch ($rowTerritoire[0]) {
                                 case 1:
                                     $message = 'Bonjour !
 '.VELOBS_COLLECTIVITE1.' a effectué un changement de statut sur l\'observation n°'.$id_poi.' du pole '.$lib_pole.'
