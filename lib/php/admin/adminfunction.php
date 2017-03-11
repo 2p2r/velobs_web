@@ -1358,6 +1358,10 @@
 				$rowTerritoire = mysql_fetch_row($res);
 				$num_rows_territoire = mysql_num_rows($res);
 				
+				$sqlMailPOI = "SELECT mail_poi FROM poi WHERE id_poi = ".$id_poi;
+                $result4 = mysql_query($sqlMailPOI);
+                $rowMailPOI = mysql_fetch_array($result4);
+
 				if (isset($_POST['display_poi'])) {
 					$display_poi = $_POST['display_poi'];
 					$sql = "UPDATE poi SET display_poi = $display_poi WHERE id_poi = $id_poi";
@@ -1374,9 +1378,9 @@
 					
 					$sql2 = "SELECT id_priorite FROM priorite INNER JOIN poi ON (poi.priorite_id_priorite = priorite.id_priorite) WHERE id_poi = ".$id_poi;
 					$result2 = mysql_query($sql2);
-					while ($row2 = mysql_fetch_array($result2)) {
-						$id_priorite = $row2['id_priorite'];
-					}
+					$row2 = mysql_fetch_array($result2);
+					$id_priorite = $row2['id_priorite'];
+					
 					if ($id_priorite == 4) {
 						$temp = "notmoderate";
 					} else {
@@ -1386,21 +1390,15 @@
 						// gestion du champ mailsentuser_poi + envoi de mail dès que modéré
 						$sql2 = "SELECT mailsentuser_poi FROM poi WHERE id_poi = ".$id_poi;
 						$result2 = mysql_query($sql2);
-						while ($row2 = mysql_fetch_array($result2)) {
-							$mailsent = $row2['mailsentuser_poi'];
-						}
+						$row2 = mysql_fetch_array($result2);
+						$mailsent = $row2['mailsentuser_poi'];
+						
 						if ($id_priorite == 8) {
 							if (($mailsent == 0) && ($fix_poi == true)) {
-
 								/* envoi d'un mail à l'observateur */
-								$sql4 = "SELECT mail_poi FROM poi WHERE id_poi = ".$id_poi;
-								$result4 = mysql_query($sql4);
-								while ($row4 = mysql_fetch_array($result4)) {
-									$to = $row4['mail_poi'];
-								}
+								$to = $rowMailPOI['mail_poi'];	
 								$subject = 'Merci pour votre participation';
 
-								
 								if ($num_rows_territoire == 1) {
 									switch ($rowTerritoire[0]) {
 										case 1:
@@ -1440,11 +1438,7 @@ Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
 							if (($mailsent == 0) && ($fix_poi == true)) {
 
 								/* envoi d'un mail à l'observateur */
-								$sql4 = "SELECT mail_poi FROM poi WHERE id_poi = ".$id_poi;
-								$result4 = mysql_query($sql4);
-								while ($row4 = mysql_fetch_array($result4)) {
-									$to = $row4['mail_poi'];
-								}
+								$to = $rowMailPOI['mail_poi'];
 								$subject = 'Merci pour votre participation';
 
                                 if ($num_rows_territoire == 1) {
@@ -1475,7 +1469,6 @@ Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
 								// on fixe à true le champ mailsentuser_poi
 								$sql3 = "UPDATE poi SET mailsentuser_poi = 1 WHERE id_poi = ".$id_poi;
 								$result3 = mysql_query($sql3);
-
 							}
 						}
 					}
@@ -1525,17 +1518,13 @@ Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
 
 						// mail à la personne qui a envoyé la proposition pour le prévenir que son intervention a été prise en compte par la comcom et par l'asso
 						if ($priorite_id_priorite == 6) {
-							$sql4 = "SELECT mail_poi FROM poi WHERE id_poi = ".$id_poi;
-							$result4 = mysql_query($sql4);
-							while ($row4 = mysql_fetch_array($result4)) {
-								$to = $row4['mail_poi'];
-							}
+							$to = $rowMailPOI['mail_poi'];
+							
 							$sql5 = "SELECT commentfinal_poi FROM poi WHERE id_poi = ".$id_poi;
                             $result5 = mysql_query($sql5);
-                            while ($row5 = mysql_fetch_array($result5)) {
-                                $comment = $row5['commentfinal_poi'];
-                            }
-
+                            $row5 = mysql_fetch_array($result5);
+                            $comment = $row5['commentfinal_poi'];
+                            
 							$subject = 'Observation prise en compte';
 
                             if ($num_rows_territoire == 1) {
@@ -1570,17 +1559,13 @@ Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
 						}
 
 						if ($priorite_id_priorite == 7 || $priorite_id_priorite == 12) {
-                            $sql4 = "SELECT mail_poi FROM poi WHERE id_poi = ".$id_poi;
-                            $result4 = mysql_query($sql4);
-                            while ($row4 = mysql_fetch_array($result4)) {
-                                $to = $row4['mail_poi'];
-                            }
+                            $to = $rowMailPOI['mail_poi'];
+                            
                             $sql5 = "SELECT commentfinal_poi FROM poi WHERE id_poi = ".$id_poi;
                             $result5 = mysql_query($sql5);
-                            while ($row5 = mysql_fetch_array($result5)) {
-                                $comment = $row5['commentfinal_poi'];
-                            }
-
+                            $row5 = mysql_fetch_array($result5);
+                            $comment = $row5['commentfinal_poi'];
+                            
                             $subject = 'Observation non transmise à la collectivité';
 
                             if ($num_rows_territoire == 1) {
@@ -1621,10 +1606,9 @@ Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
                         if ($priorite_id_priorite == 15) {
                             $sql6 = "SELECT mail_poi FROM poi WHERE id_poi = ".$id_poi;
                             $result6 = mysql_query($sql6);
-                            while ($row6 = mysql_fetch_array($result6)) {
-                                $to = $row6['mail_poi'];
-                            }
-
+                            $row6 = mysql_fetch_array($result6);
+                            $to = $row6['mail_poi'];
+                            
                             $subject = 'Observation doublon';
 
                             if ($num_rows_territoire == 1) {
@@ -1654,7 +1638,6 @@ L\'Association '.VELOBS_ASSOCIATION.' vous remercie de votre participation.
 Le problème que vous avez identifié nous a déjà été rapporté par un autre observateur.
 Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
                             }
-
                             sendMail($to, $subject, $message);
 
                             $sql7 = "UPDATE poi SET mailsentuser_poi = 1 WHERE id_poi = ".$id_poi;
@@ -1669,17 +1652,17 @@ Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
 						
 						$sql3 = "SELECT lib_status FROM status WHERE id_status = ".$status_id_status;
 						$result3 = mysql_query($sql3);
-						while ($row3 = mysql_fetch_array($result3)) {
-							$lib_status = $row3['lib_status'];
-						}
+						$row3 = mysql_fetch_array($result3);
+						$lib_status = $row3['lib_status'];
+						
 						
 						$sql2 = "SELECT pole.* FROM pole INNER JOIN poi ON (id_pole = pole_id_pole) WHERE id_poi = ".$id_poi;
 						$result2 = mysql_query($sql2);
-						while ($row2 = mysql_fetch_array($result2)) {
-							$lib_pole = $row2['lib_pole'];
-							$id_pole = $row2['id_pole'];
-							$territoire_id_territoire = $row2['territoire_id_territoire'];
-						}
+						$row2 = mysql_fetch_array($result2);
+						$lib_pole = $row2['lib_pole'];
+						$id_pole = $row2['id_pole'];
+						$territoire_id_territoire = $row2['territoire_id_territoire'];
+						
 						
 						$sql = "UPDATE poi SET adherent_poi = '$adherent_poi', lib_poi = '$lib_poi', rue_poi = '$rue_poi', num_poi = '$num_poi', tel_poi = '$tel_poi', mail_poi = '$mail_poi', desc_poi = '$desc_poi', prop_poi = '$prop_poi', observationterrain_poi = '$observationterrain_poi', reponsepole_poi = '$reponsepole_poi', reponsegrandtoulouse_poi = '$reponsegrandtoulouse_poi', commentfinal_poi = '$commentfinal_poi', datecreation_poi = '$datecreation_poi', datefix_poi = '$datefix_poi', status_id_status = $status_id_status WHERE id_poi = $id_poi";
 
@@ -1719,25 +1702,22 @@ Lien vers la modération : '.URL.'/admin.html?id='.$id_poi.'
 Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
                         }
 
-
 						$sql2 = "SELECT mail_users FROM users WHERE usertype_id_usertype = 1 OR (usertype_id_usertype = 4 AND num_pole = ".$id_pole.")";
 						$result2 = mysql_query($sql2);
 						while ($row2 = mysql_fetch_array($result2)) {
 						    $to = $row2['mail_users'];
-                            				sendMail($to, $subject, $message);
+                            sendMail($to, $subject, $message);
 						}
-
-
 					} else {
 					    // mail à la comcom si un pole a édité le champ 'Réponse pole'
                         if ($poleedit == 1) {
 
                             $sql2 = "SELECT pole.* FROM pole INNER JOIN poi ON (id_pole = pole_id_pole) WHERE id_poi = ".$id_poi;
                             $result2 = mysql_query($sql2);
-                            while ($row2 = mysql_fetch_array($result2)) {
-                                $lib_pole = $row2['lib_pole'];
-                                $territoire_id_territoire = $row2['territoire_id_territoire'];
-                            }
+                            $row2 = mysql_fetch_array($result2);
+                            $lib_pole = $row2['lib_pole'];
+                            $territoire_id_territoire = $row2['territoire_id_territoire'];
+                            
 
                             $subject = 'Modification de l\'observation n°'.$id_poi.' par le pole '.$lib_pole;
                             $message = 'Bonjour !
