@@ -47,13 +47,16 @@ C'est en production à Toulouse pour 2 pieds 2 roues sur : http://velobs.2p2r.or
  * décompresser l'archive dans le répertoire voulu sur le serveur de production
  * copier le fichier lib/js/key.js.template vers lib/js/key.js
  * éditer lib/js/key.js en ajoutant votre clé d'API thunderforest
+ * copier le ficher lib/php/key.php.template vers lib/php/key.php
  * éditer le fichier lib/php/key.php :
-    * définir la variable HOST : url du serveur MySQL
-    * définir la variable PORT : port du serveur MySQL
-    * définir la variable DB_USER : login du serveur MySQL
-    * définir la variable DB_PASS : password du serveur MySQL
-    * définir la variable DB_NAME : nom de la base de données VelObs
-    * définir la variable URL : url de l'application
+    * définir la constante HOST : url du serveur MySQL
+    * définir la constante PORT : port du serveur MySQL
+    * définir la constante DB_USER : login du serveur MySQL
+    * définir la constante DB_PASS : password du serveur MySQL
+    * définir la constante DB_NAME : nom de la base de données VelObs
+    * définir la constante URL : url de l'application
+    * définir les constantes  MAIL_* pour l'envoi des mails de VélObs
+    * définir les constantes VELOBS_* en fonction des institutions avec lesquelles vous travaillez
  * modifier les droits en écriture pour les répertoires :
     * resources/pictures
     * resources/icon/marker
