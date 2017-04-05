@@ -8,6 +8,7 @@ C'est en production à Toulouse pour 2 pieds 2 roues sur : http://velobs.2p2r.or
 # Quelques commentaires sur l'application :
 
 * le répertoire lib/js contient tous les scripts nécessaires à l'utilisation :
+    * key.js.template configuration des variables spécifiques à votre instance (pour l'instant uniquement l'API KEY de thunderforest
     * translation_fr.js et translation_en.js les deux fichiers de traduction de tous les textes affichés à l'écran (il est possible de modifier les préférences pour chaque utilisateur via base de données et le champ language_id_language de la table users)
     * tous les scripts JavaScript décomposés en trois répertoires :
         * admin : les scripts pour les différents rôles d'usage de l'interface d'administration (1 => admin général 2p2r ; 2 => admin comcom ; 3 => pole technique ; 4 => admin pole 2p2r)
@@ -41,9 +42,11 @@ C'est en production à Toulouse pour 2 pieds 2 roues sur : http://velobs.2p2r.or
     * répertoire pictures contient toutes les images relatives aux enregistrements
     * répertoire sql contient toutes les tables de la base de données ) la date du 10 janvier 2016
    
-#   Notice de migration pour l'application VelObs :
+#   Notice d'installation pour l'application VelObs :
 
  * décompresser l'archive dans le répertoire voulu sur le serveur de production
+ * copier le fichier lib/js/key.js.template vers lib/js/key.js
+ * éditer lib/js/key.js en ajoutant votre clé d'API thunderforest
  * éditer le fichier lib/php/key.php :
     * définir la variable HOST : url du serveur MySQL
     * définir la variable PORT : port du serveur MySQL
