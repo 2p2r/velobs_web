@@ -20,4 +20,5 @@
 	define('VELOBS_COLLECTIVITE2', 'le Sicoval');
 	define('VELOBS_COLLECTIVITE3', 'la CAM');
 	define('VELOBS_EMERGENCY_MAIL1', 'Veuillez téléphoner au 05 61 222 222 pour prévenir de ce problème si celui-ci est sur la commune de Toulouse');
+  include_once('mysql2i.class.php');
 ?>
