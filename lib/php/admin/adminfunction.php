@@ -1525,15 +1525,18 @@ Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
 							$row5 = mysql_fetch_array($result5);
 							$comment = $row5['commentfinal_poi'];
 							
-							$subject = 'Observation prise en compte';
+							$subject = 'Observation n°'.$id_poi.'prise en compte';
 
 							if ($num_rows_territoire == 1) {
 								switch ($rowTerritoire[0]) {
 									case 1:
 										$message = 'Bonjour !
-L\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE1.' vous remercient. Le problème a bien été pris en compte et réglé par la collectivité.
+L\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE1.' vous remercient. 
+L\'observation n°'.$id_poi.' a bien été pris en compte et réglé par la collectivité.
+Vous pouvez voir l\'observation résolue ici : '.URL.'/?id='.$id_poi.'
 Voici le commentaire final de l\'association : '.$comment.'
-Cordialement, l\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE1.' :)';
+Cordialement, 
+l\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE1.' :)';
 										break;
 									case 2:
 										$message = 'Bonjour !
