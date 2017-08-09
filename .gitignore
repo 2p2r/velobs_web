@@ -1,2 +1,4 @@
 resources/pictures
 *.csv
+lib/js/key.js
+lib/php/key.php

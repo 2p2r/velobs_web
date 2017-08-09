@@ -3473,14 +3473,10 @@ Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
 					if (is_in_polygon($points_polygon, $vertices_x, $vertices_y, $longitude_poi, $latitude_poi)) {
 						//echo "Is in polygon!";
 						$pole_id_pole = $row['id_pole'];
+						$lib_pole = $row['lib_pole'];
 					}
 				}
 				
-// 				$sql = "SELECT lib_pole FROM pole WHERE id_pole = ".$pole_id_pole;
-// 				$result = mysql_query($sql);
-// 				while ($row = mysql_fetch_array($result)) {
-// 					$lib_pole = $row['lib_pole'];	
-// 				}
 				
 				$quartier_id_quartier = 99999;
 				
@@ -4109,5 +4105,4 @@ Cordialement, l\'application VelObs :)';
 						break;
 				}
 			}
-
 ?>
