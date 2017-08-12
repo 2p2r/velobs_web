@@ -753,10 +753,8 @@
 						$i++;
 					}
 					echo '({"total":"'.$nbrows.'","results":'.json_encode($arr).'})';
-					//echo '({"total":"'.$sql.'","results":'.json_encode($arr).'})';
 				} else {
 					echo '({"total":"0", "results":""})';
-					//echo '({"total":"'.$sql.'", "results":""})';
 				}
 				mysql_free_result($result);
 				mysql_close($link);
@@ -3423,18 +3421,14 @@ Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
 				$longitude_poi = $_POST['longitude_poi'];
 				$subcategory_id_subcategory = $_POST['subcategory_id_subcategory'];
 
-				/*$commune_id_commune = $_POST['commune_id_commune'];
-				$pole_id_pole = $_POST['pole_id_pole'];
-				$quartier_id_quartier = $_POST['quartier_id_quartier'];*/
-				
 				$sql = "SELECT lib_subcategory FROM subcategory WHERE id_subcategory = ".$subcategory_id_subcategory;
 				$result = mysql_query($sql);
 				while ($row = mysql_fetch_array($result)) {
 					$lib_subcategory = $row['lib_subcategory'];
 				}
-				
+				//détermination de la commune concernée par croisement du polygone de la commune ave latitude et longitude
 				$commune_id_commune = 99999;
-				$sql = "SELECT id_commune, AsText(geom_commune) AS geom FROM commune";
+				$sql = "SELECT id_commune, AsText(geom_commune) AS geom, lib_commune FROM commune";
 				$result = mysql_query($sql);
 				while ($row = mysql_fetch_array($result)) {
 					$commune = $row['geom'];
@@ -3451,17 +3445,18 @@ Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
 					if (is_in_polygon($points_polygon, $vertices_x, $vertices_y, $longitude_poi, $latitude_poi)) {
 						//echo "Is in polygon!";
 						$commune_id_commune = $row['id_commune'];
+						$lib_commune = $row['lib_commune'];
 					}
 				}
 
-				$sql = "SELECT lib_commune FROM commune WHERE id_commune = ".$commune_id_commune;
-				$result = mysql_query($sql);
-				while ($row = mysql_fetch_array($result)) {
-					$lib_commune = $row['lib_commune'];
-				}
-				
+// 				$sql = "SELECT lib_commune FROM commune WHERE id_commune = ".$commune_id_commune;
+// 				$result = mysql_query($sql);
+// 				while ($row = mysql_fetch_array($result)) {
+// 					$lib_commune = $row['lib_commune'];
+// 				}
+				//détermination du pole concerné par croisement du polygone de la commune ave latitude et longitude
 				$pole_id_pole = 9;
-				$sql = "SELECT id_pole, AsText(geom_pole) AS geom FROM pole";
+				$sql = "SELECT id_pole, AsText(geom_pole) AS geom, lib_pole FROM pole";
 				$result = mysql_query($sql);
 				while ($row = mysql_fetch_array($result)) {
 					$pole = $row['geom'];
@@ -3478,23 +3473,19 @@ Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
 					if (is_in_polygon($points_polygon, $vertices_x, $vertices_y, $longitude_poi, $latitude_poi)) {
 						//echo "Is in polygon!";
 						$pole_id_pole = $row['id_pole'];
+						$lib_pole = $row['lib_pole'];
 					}
 				}
 				
-				$sql = "SELECT lib_pole FROM pole WHERE id_pole = ".$pole_id_pole;
-				$result = mysql_query($sql);
-				while ($row = mysql_fetch_array($result)) {
-					$lib_pole = $row['lib_pole'];	
-				}
 				
 				$quartier_id_quartier = 99999;
 				
 				$datecreation_poi = date('Y-m-d');			
-				
+				//TODO : supprimer le id_poi du lib_poi généré
 				$sql = "SELECT max(id_poi) + 1, lib_subcategory FROM poi INNER JOIN subcategory ON (poi.subcategory_id_subcategory = subcategory.id_subcategory) WHERE subcategory_id_subcategory = ".$subcategory_id_subcategory;
 				$result = mysql_query($sql);
 				$lib_poi = mysql_real_escape_string(mysql_result($result, 0, 0)." ".mysql_result($result, 0, 1));
-
+				//si le mail de la personne qui soumet le POI est aussi un modérateur, on positionne moderation_poi à vrai
 				$sql2 = "SELECT mail_users FROM users WHERE (usertype_id_usertype = 1 OR usertype_id_usertype = 4) AND mail_users LIKE '".$mail_poi."'";
 				$result2 = mysql_query($sql2);
 				$num_rows2 = mysql_num_rows($result2);
@@ -3543,7 +3534,7 @@ Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
 	 # soumis par : '.$mail_poi.'
 				';
 				$message .= $details;
-
+				// si la personne qui soumet le POI n'est pas admin ou moderateur sur un pole, on envoie un mail aux admin
 				$sql2 = "SELECT mail_users FROM users WHERE (usertype_id_usertype = 1 OR usertype_id_usertype = 4) AND mail_users LIKE '".$mail_poi."'";
 				$result2 = mysql_query($sql2);
 				$num_rows2 = mysql_num_rows($result2);
@@ -3557,38 +3548,6 @@ Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
 							sendMail($to, $subject, $message);
 						}
 					}
-					/* fin envoi d'un mail aux administrateurs de l'association */
-				} else {
-					// pas d'envoi de mail >> bypass
-				}
-
-				/* envoi d'un mail aux administrateurs #pole# de l'association */
-				$subject = 'Nouvelle observation à modérer';
-				$message = 'Bonjour !
-Une nouvelle observation a été ajoutée sur le pole - '.$lib_pole.' -. Veuillez vous connecter à l\'interface d\'administration pour le modérer.
-Lien vers la modération : '.URL.'/admin.html?id='.$max.'
-Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
-				$details = '
-
-	------------- Détails de l\'observation -------------
-	 # pole : '.$lib_pole.'
-	 # repère : '.$num_poi.'
-	 # nom de la voie : '.$rue_poi.'
-	 # commune : '.$lib_commune.'
-	 # latitude : '.$latitude_poi.'
-	 # longitude : '.$longitude_poi.'
-	 # catégorie : '.$lib_subcategory.'
-	 # description du problème : '.$desc_poi.'
-	 # proposition : '.$prop_poi.'
-	 # soumis par : '.$mail_poi.'
-				';
-				$message .= $details;
-
-				$sql2 = "SELECT mail_users FROM users WHERE (usertype_id_usertype = 1 OR usertype_id_usertype = 4) AND mail_users LIKE '".$mail_poi."'";
-				$result2 = mysql_query($sql2);
-				$num_rows2 = mysql_num_rows($result2);
-				if ($num_rows2 == 0) {
-					// boucle sur les administrateurs #pole# généraux de l'association
 					$sql = "SELECT mail_users FROM users WHERE usertype_id_usertype = 4 AND num_pole = ".$pole_id_pole;
 					$result = mysql_query($sql);
 					while ($row = mysql_fetch_array($result)) {
@@ -3597,10 +3556,8 @@ Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
 							sendMail($to, $subject, $message);
 						}
 					}
-					/* fin envoi d'un mail aux administrateurs #pole# de l'association */
-				} else {
-					// pas d'envoi de mail >> bypass
-				}
+					/* fin envoi d'un mail aux administrateurs de l'association */
+				} 
 
 				if (!$result) {
 					//echo $sql;
@@ -3954,7 +3911,6 @@ Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
 				$result3 = mysql_query($sql3);
 
 				/* envoi d'un mail aux administrateurs */
-				//$to	  = 'observations_adherents_assovelo@le-pic.org';
 				$subject = 'Nouveau commentaire à modérer sur l\'observation n°'.$id_poi;
 				$message = 'Bonjour !
 Un nouveau commentaire a été ajouté sur l\'observation n°'.$id_poi.'. Veuillez vous connecter à l\'interface d\'administration pour le modérer.
@@ -3967,26 +3923,9 @@ Cordialement, l\'application VelObs :)';
 				';
 				$message .= $details;
 
-				$sql = "SELECT mail_users FROM users WHERE usertype_id_usertype = 1";
-				$result = mysql_query($sql);
-				while ($row = mysql_fetch_array($result)) {
-					$to = $row['mail_users'];
-					if ($to != '') {
-						sendMail($to, $subject, $message);
-					}
-				}
-
-				/* fin envoi d'un mail aux administrateurs */
-
-				$sql = "SELECT pole_id_pole FROM poi WHERE id_poi = ".$id_poi;
-				$res = mysql_query($sql);
-				$row = mysql_fetch_row($res);
-				$pole_id_pole = $row[0];
-
 				/* envoi d'un mail aux administrateurs #pole# de l'association */
-
 				// boucle sur les administrateurs #pole# généraux de l'association
-				$sql = "SELECT mail_users FROM users WHERE usertype_id_usertype = 4 AND num_pole = ".$pole_id_pole;
+				$sql = "SELECT mail_users FROM users WHERE usertype_id_usertype = 1 OR (usertype_id_usertype = 4 AND num_pole = (SELECT pole_id_pole FROM poi WHERE id_poi = ".$id_poi."))";
 				$result = mysql_query($sql);
 				while ($row = mysql_fetch_array($result)) {
 					$to = $row['mail_users'];
@@ -4166,5 +4105,4 @@ Cordialement, l\'application VelObs :)';
 						break;
 				}
 			}
-
 ?>
