@@ -16,7 +16,7 @@
 	<body>
 		<div id="loading"> 
 			<div class="loading-indicator">
-				<img alt="mooveatis" src="resources/images/mooveatis32.png" width="32" height="32" style="margin-right:8px;float:left;vertical-align:top;"/>VelObs - <a href="http://www.mooveatis.fr" target="_blank">Mooveatis</a><br /><span id="loading-msg">Loading styles and images ...</span>
+				<img alt="2P2R" src="resources/images/2p2r.png" width="99" height="64" style="margin-right:8px;float:left;vertical-align:top;"/>VelObs - <a href="https://www.2p2r.org/" target="_blank">2P2R</a><br /><span id="loading-msg">Loading styles and images ...</span>
 			</div>
 			<link rel="stylesheet" type="text/css" href="resources/css/icon.css" />
 			<link rel="stylesheet" type="text/css" href="lib/js/framework/ext-3.4.0/resources/css/ext-all.css" />
@@ -95,7 +95,7 @@
 	<body>
 		<div id="loading"> 
 			<div class="loading-indicator">
-				<img alt="mooveatis" src="resources/images/mooveatis32.png" width="32" height="32" style="margin-right:8px;float:left;vertical-align:top;"/>VelObs - <a href="http://www.mooveatis.fr" target="_blank">Mooveatis</a><br /><span id="loading-msg">Loading styles and images ...</span>
+				<img alt="2P2R" src="resources/images/2p2r.png" width="99" height="64" style="margin-right:8px;float:left;vertical-align:top;"/>VelObs - <a href="https://www.2p2r.org/" target="_blank">2P2R</a><br /><span id="loading-msg">Loading styles and images ...</span>
 			</div>
 			<link rel="stylesheet" type="text/css" href="resources/css/icon.css" />
 			<link rel="stylesheet" type="text/css" href="lib/js/framework/ext-3.4.0/resources/css/ext-all.css" />
@@ -172,7 +172,7 @@
 	<body>
 		<div id="loading"> 
 			<div class="loading-indicator">
-				<img alt="mooveatis" src="resources/images/mooveatis32.png" width="32" height="32" style="margin-right:8px;float:left;vertical-align:top;"/>VelObs - <a href="http://www.mooveatis.fr" target="_blank">Mooveatis</a><br /><span id="loading-msg">Loading styles and images ...</span>
+				<img alt="2P2R" src="resources/images/2p2r.png" width="99" height="64" style="margin-right:8px;float:left;vertical-align:top;"/>VelObs - <a href="https://www.2p2r.org/" target="_blank">2P2R</a><br /><span id="loading-msg">Loading styles and images ...</span>
 			</div>
 			<link rel="stylesheet" type="text/css" href="resources/css/icon.css" />
 			<link rel="stylesheet" type="text/css" href="lib/js/framework/ext-3.4.0/resources/css/ext-all.css" />
@@ -251,7 +251,7 @@
 	<body>
 		<div id="loading">
 			<div class="loading-indicator">
-                <img alt="mooveatis" src="resources/images/mooveatis32.png" width="32" height="32" style="margin-right:8px;float:left;vertical-align:top;"/>VelObs - <a href="http://www.mooveatis.fr" target="_blank">Mooveatis</a><br /><span id="loading-msg">Loading styles and images ...</span>
+                <img alt="2P2R" src="resources/images/2p2r.png" width="99" height="64" style="margin-right:8px;float:left;vertical-align:top;"/>VelObs - <a href="https://www.2p2r.org/" target="_blank">2P2R</a><br /><span id="loading-msg">Loading styles and images ...</span>
             </div>
 			<link rel="stylesheet" type="text/css" href="resources/css/icon.css" />
 			<link rel="stylesheet" type="text/css" href="lib/js/framework/ext-3.4.0/resources/css/ext-all.css" />
