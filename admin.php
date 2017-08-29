@@ -42,6 +42,7 @@
 			<script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Loading language...';</script>
 			<script type="text/javascript" src="lib/js/framework/ext-3.4.0/src/locale/ext-lang-<?php echo $_SESSION['extension_language']; ?>.js"></script>
 			<script type="text/javascript" src="lib/js/translation_<?php echo $_SESSION['extension_language']; ?>.js"></script>
+			<script type="text/javascript" src="lib/js/key.js"></script>
 			
 			<script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Loading extensions...';</script>
 			<script type="text/javascript" src="lib/js/framework/ux/GeoNamesSearchCombo.js"></script>
@@ -120,6 +121,7 @@
 			<script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Loading language...';</script>
 			<script type="text/javascript" src="lib/js/framework/ext-3.4.0/src/locale/ext-lang-<?php echo $_SESSION['extension_language']; ?>.js"></script>
 			<script type="text/javascript" src="lib/js/translation_<?php echo $_SESSION['extension_language']; ?>.js"></script>
+			<script type="text/javascript" src="lib/js/key.js"></script>
 			
 			<script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Loading extensions...';</script>
 			<script type="text/javascript" src="lib/js/framework/ux/GeoNamesSearchCombo.js"></script>
@@ -196,6 +198,7 @@
 			<script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Loading language...';</script>
 			<script type="text/javascript" src="lib/js/framework/ext-3.4.0/src/locale/ext-lang-<?php echo $_SESSION['extension_language']; ?>.js"></script>
 			<script type="text/javascript" src="lib/js/translation_<?php echo $_SESSION['extension_language']; ?>.js"></script>
+			<script type="text/javascript" src="lib/js/key.js"></script>
 			
 			<script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Loading extensions...';</script>
 			<script type="text/javascript" src="lib/js/framework/ux/GeoNamesSearchCombo.js"></script>
@@ -275,7 +278,8 @@
 			<script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Loading language...';</script>
 			<script type="text/javascript" src="lib/js/framework/ext-3.4.0/src/locale/ext-lang-<?php echo $_SESSION['extension_language']; ?>.js"></script>
 			<script type="text/javascript" src="lib/js/translation_<?php echo $_SESSION['extension_language']; ?>.js"></script>
-
+			<script type="text/javascript" src="lib/js/key.js"></script>
+			
 			<script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Loading extensions...';</script>
 			<script type="text/javascript" src="lib/js/framework/ux/GeoNamesSearchCombo.js"></script>
 			<script type="text/javascript" src="lib/js/admin/baselayerlist.js"></script>
