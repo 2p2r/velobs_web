@@ -145,7 +145,7 @@
                     $subject = 'Nouvelle observation à modérer';
                     $message = 'Bonjour !
 Une nouvelle observation a été ajoutée. Veuillez vous connecter à l\'interface d\'administration pour la modérer.
-Lien vers la modération : '.URL.'/admin.html?id='.$id_poi.'
+Lien vers la modération : '.URL.'/admin.php?id='.$id_poi.'
 Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
                     $details = '
 
@@ -184,7 +184,7 @@ Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
                     $subject = 'Nouvelle observation à modérer';
                     $message = 'Bonjour !
 Une nouvelle a été ajoutée sur le pole - '.$lib_pole.' -. Veuillez vous connecter à l\'interface d\'administration pour la modérer.
-Lien vers la modération : '.URL.'/admin.html?id='.$id_poi.'
+Lien vers la modération : '.URL.'/admin.php?id='.$id_poi.'
 Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
                     $details = '
 
@@ -366,7 +366,7 @@ Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
                         $subject = 'Nouvelle observation à modérer';
                         $message = 'Bonjour !
 Une nouvelle observation a été ajoutée. Veuillez vous connecter à l\'interface d\'administration pour la modérer.
-Lien vers la modération : '.URL.'/admin.html?id='.$id_poi.'
+Lien vers la modération : '.URL.'/admin.php?id='.$id_poi.'
 Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
                         $details = '
 
@@ -404,7 +404,7 @@ Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
                         $subject = 'Nouvelle observation à modérer';
                         $message = 'Bonjour !
 Une nouvelle observation a été ajoutée sur le pole - '.$lib_pole.' -. Veuillez vous connecter à l\'interface d\'administration pour la modérer.
-Lien vers la modération : '.URL.'/admin.html?id='.$id_poi.'
+Lien vers la modération : '.URL.'/admin.php?id='.$id_poi.'
 Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
                         $details = '
 
