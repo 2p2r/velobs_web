@@ -88,7 +88,7 @@
                    $subject = 'Photo à modérer sur l\'observation n°'.$id_poi;
                     $message = 'Bonjour !
 Une nouvelle photo a été ajoutée sur l\'observation n°'.$id_poi.'. Veuillez vous connecter à l\'interface d\'administration pour le modérer.
-Lien vers la modération : '.URL.'/admin.html?id='.$id_poi.'
+Lien vers la modération : '.URL.'/admin.php?id='.$id_poi.'
 Cordialement, l\'application velobs:)';
 		sendMail(MAIL_ALIAS_OBSERVATION_ADHERENTS,'Photo à modérer sur l\'observation n°'.$id_poi,$message);
 

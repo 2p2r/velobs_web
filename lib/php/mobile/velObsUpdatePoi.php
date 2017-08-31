@@ -32,7 +32,7 @@
                     $subject = 'Nouveau commentaire à modérer sur l\'observation n°'.$id_poi;
                     $message = 'Bonjour !
 Un nouveau commentaire a été ajouté sur l\'observation n°'.$id_poi.'. Veuillez vous connecter à l\'interface d\'administration pour le modérer.
-Lien vers la modération : '.URL.'/admin.html?id='.$id_poi.'
+Lien vers la modération : '.URL.'/admin.php?id='.$id_poi.'
 Cordialement, l\'application velobs)';
 
                     sendMail(MAIL_ALIAS_OBSERVATION_ADHERENTS, $subject, $message);
@@ -48,7 +48,7 @@ Cordialement, l\'application velobs)';
                    $subject = 'Nouveau commentaire à modérer sur l\'observation n°'.$id_poi;
                    $message = 'Bonjour !
 Un nouveau commentaire a été ajouté sur l\'observation n°'.$id_poi.'. Veuillez vous connecter à l\'interface d\'administration pour le modérer.
-Lien vers la modération : '.URL.'/admin.html?id='.$id_poi.'
+Lien vers la modération : '.URL.'/admin.php?id='.$id_poi.'
 Cordialement, l\'application velobs)';
 
                     $sql2 = "SELECT mail_users FROM users WHERE (usertype_id_usertype = 1 OR usertype_id_usertype = 4) AND mail_users LIKE '".$mail_poi."'";
@@ -124,7 +124,7 @@ Cordialement, l\'application velobs)';
                     $subject = 'Nouvelle photo à modérer sur l\'observation n°'.$id_poi;
                     $message = 'Bonjour !
 Une nouvelle photo a été ajoutée sur l\'observation n°'.$id_poi.'. Veuillez vous connecter à l\'interface d\'administration pour la modérer.
-Lien vers la modération : '.URL.'/admin.html?id='.$id_poi.'
+Lien vers la modération : '.URL.'/admin.php?id='.$id_poi.'
 Cordialement, l\'application velobs)';
 
                     $sql = "SELECT mail_users FROM users WHERE usertype_id_usertype = 1";
@@ -147,7 +147,7 @@ Cordialement, l\'application velobs)';
                    $subject = 'Nouveau commentaire à modérer sur l\'observation n°'.$id_poi;
                    $message = 'Bonjour !
 Une nouvelle photo a été ajoutée sur l\'observation n°'.$id_poi.'. Veuillez vous connecter à l\'interface d\'administration pour la modérer.
-Lien vers la modération : '.URL.'/admin.html?id='.$id_poi.'
+Lien vers la modération : '.URL.'/admin.php?id='.$id_poi.'
 Cordialement, l\'application velobs)';
 
                     $sql2 = "SELECT mail_users FROM users WHERE (usertype_id_usertype = 1 OR usertype_id_usertype = 4) AND mail_users LIKE '".$mail_poi."'";
