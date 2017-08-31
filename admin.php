@@ -169,7 +169,7 @@
 		<title>VelObs [Admin]</title>
 		<link rel="shortcut icon" type="image/png" href="resources/favicon/favicon.ico" />
 	</head>
-	<body>
+	<body onunload="setCookie()">
 		<div id="loading"> 
 			<div class="loading-indicator">
 				<img alt="2P2R" src="resources/images/2p2r.png" width="99" height="64" style="margin-right:8px;float:left;vertical-align:top;"/>VelObs - <a href="https://www.2p2r.org/" target="_blank">2P2R</a><br /><span id="loading-msg">Loading styles and images ...</span>
