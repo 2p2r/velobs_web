@@ -1696,7 +1696,7 @@ Cordialement, l\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE3.' 
 Un changement de statut a été effectué sur l\'observation n°'.$id_poi.' du pole '.$lib_pole.'
 Nouveau statut : '.$lib_status.'
 Veuillez consulter l\'interface d\'administration pour consulter les informations relatives.
-Lien vers la modération : '.URL.'/admin.html?id='.$id_poi.'
+Lien vers la modération : '.URL.'/admin.php?id='.$id_poi.'
 Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
 						}
 
@@ -1721,7 +1721,7 @@ Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
 							$message = 'Bonjour !
 Le pole '.$lib_pole.' a modifié l\'observation n°'.$id_poi.'.
 Veuillez consulter l\'interface d\'administration pour voir cette modification.
-Lien vers la modération : '.URL.'/admin.html?id='.$id_poi.'
+Lien vers la modération : '.URL.'/admin.php?id='.$id_poi.'
 Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
 
 							$sql3 = "SELECT mail_users FROM users WHERE usertype_id_usertype = 2 AND territoire_id_territoire = ".$territoire_id_territoire;
@@ -3510,14 +3510,14 @@ Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
 				
 				$sql = "UPDATE poi SET lib_poi = '$lib' WHERE id_poi = ".$max;
 				$result = mysql_query($sql);
-
-				$linktomoderation = URL.'/admin.html?id='.$max;
+//TODO : mais c'est quoi ce max!!!!!!!!
+				$linktomoderation = URL.'/admin.php?id='.$max;
 
 				/* envoi d'un mail aux administrateurs de l'association */
 				$subject = 'Nouvelle observation à modérer';
 				$message = 'Bonjour !
 Une nouvelle observation a été ajoutée sur le pole - '.$lib_pole.' -. Veuillez vous connecter à l\'interface d\'administration pour le modérer.
-Lien vers la modération : '.URL.'/admin.html?id='.$max.'
+Lien vers la modération : '.URL.'/admin.php?id='.$max.'
 Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
 				$details = '
 				
@@ -3914,7 +3914,7 @@ Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
 				$subject = 'Nouveau commentaire à modérer sur l\'observation n°'.$id_poi;
 				$message = 'Bonjour !
 Un nouveau commentaire a été ajouté sur l\'observation n°'.$id_poi.'. Veuillez vous connecter à l\'interface d\'administration pour le modérer.
-Lien vers la modération : '.URL.'/admin.html?id='.$id_poi.'
+Lien vers la modération : '.URL.'/admin.php?id='.$id_poi.'
 Cordialement, l\'application VelObs :)';
 				$details = '
 
