@@ -1,4 +1,6 @@
 <?php
+	define('DEBUG', FALSE);
+	define('LOG_FILE', 'Path to log file');
 	define('HOST', 'localhost');
 	define('PORT', '3306');
 
