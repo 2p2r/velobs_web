@@ -1,6 +1,7 @@
 <?php
 	include '../key.php';
 	include '../commonfunction.php';	
+	
 	/*	List of functions
 	 * 		- getMarkerIcon
 	 * 		- updateMarkerIcon 
@@ -1346,19 +1347,41 @@
 				mysql_select_db(DB_NAME);
 				mysql_query("SET NAMES 'utf8'");
 				// on regarde dans quelle comcom le POI appartient et on switch le contenu du mail en fonction
-				$sqlCommune = "SELECT commune_id_commune FROM poi WHERE id_poi LIKE ".$id_poi;
-				$res = mysql_query($sqlCommune);
-				$row = mysql_fetch_row($res);
-				$commune_id_commune = $row[0];
-
+ 				if (DEBUG){
+ 					error_log($id_poi."\n", 3, LOG_FILE);
+ 				}
+				$sql = "SELECT *, commune.id_commune, commune.lib_commune, x(poi.geom_poi) AS X, y(poi.geom_poi) AS Y, subcategory.icon_subcategory, subcategory.lib_subcategory FROM poi INNER JOIN subcategory ON (subcategory.id_subcategory = poi.subcategory_id_subcategory) INNER JOIN commune ON (commune.id_commune = poi.commune_id_commune) INNER JOIN priorite ON (poi.priorite_id_priorite = priorite.id_priorite) WHERE poi.id_poi = ".$id_poi;
+				$result = mysql_query($sql);
+				
+				while ($row = mysql_fetch_array($result)) {	
+					$lib_subcategory = stripslashes($row['lib_subcategory']);
+					$desc_poi = stripslashes($row['desc_poi']);
+					$prop_poi = stripslashes($row['prop_poi']);
+					$num_poi = stripslashes($row['num_poi']);
+					$rue_poi = stripslashes($row['rue_poi']);
+					$lib_commune = stripslashes($row['lib_commune']);
+					$mailsent = stripslashes($row['mailsentuser_poi']);
+					$commune_id_commune = stripslashes($row['id_commune']);
+					$rowMailPOI = stripslashes($row['mail_poi']);
+					
+				}
+				$details = '
+				
+	------------- Détails de l\'observation -------------
+	# Numéro observation : '. $id_poi.'
+	# Catégorie : '.$lib_subcategory.'
+	# Repère : '.$num_poi.'
+	# Nom de la voie : '.$rue_poi.'
+	# Commune : '.$lib_commune.'
+	# Description du problème : '.$desc_poi.'
+	# Proposition : '.$prop_poi.'
+	# Lien vers l\'observation : '.URL.'?id='.$id_poi.'
+				';
 				$sqlTerritoire = "SELECT id_territoire FROM territoire WHERE ids_territoire LIKE '%".$commune_id_commune."%'";
 				$res = mysql_query($sqlTerritoire);
 				$rowTerritoire = mysql_fetch_row($res);
 				$num_rows_territoire = mysql_num_rows($res);
 				
-				$sqlMailPOI = "SELECT mail_poi FROM poi WHERE id_poi = ".$id_poi;
-				$result4 = mysql_query($sqlMailPOI);
-				$rowMailPOI = mysql_fetch_array($result4);
 
 				if (isset($_POST['display_poi'])) {
 					$display_poi = $_POST['display_poi'];
@@ -1374,56 +1397,63 @@
 					$sql = "UPDATE poi SET traiteparpole_poi = $traiteparpole_poi WHERE id_poi = $id_poi";
 				} else if (isset($_POST['moderation_poi'])) {
 					
-					$sql2 = "SELECT id_priorite FROM priorite INNER JOIN poi ON (poi.priorite_id_priorite = priorite.id_priorite) WHERE id_poi = ".$id_poi;
-					$result2 = mysql_query($sql2);
-					$row2 = mysql_fetch_array($result2);
-					$id_priorite = $row2['id_priorite'];
+					//Priorités et leur iD
+// 					"1","Un"
+// 					"2","Deux"
+// 					"4","A modérer"
+// 					"6","DONE"
+// 					"7","Refusé par 2p2r"
+// 					"8","3101"
+// 					"12","Refusé par TM"
+// 					"15","Doublon"
 					
+					//POI à modérer
 					if ($id_priorite == 4) {
 						$temp = "notmoderate";
 					} else {
+						//moderation_poi : POI modéré ou non
 						$fix_poi = $_POST['moderation_poi'];
 						$sql = "UPDATE poi SET moderation_poi = $fix_poi WHERE id_poi = $id_poi";
 						
-						// gestion du champ mailsentuser_poi + envoi de mail dès que modéré
-						$sql2 = "SELECT mailsentuser_poi FROM poi WHERE id_poi = ".$id_poi;
-						$result2 = mysql_query($sql2);
-						$row2 = mysql_fetch_array($result2);
-						$mailsent = $row2['mailsentuser_poi'];
-						
+						//URGENCE
 						if ($id_priorite == 8) {
 							if (($mailsent == 0) && ($fix_poi == true)) {
 								/* envoi d'un mail à l'observateur */
-								$to = $rowMailPOI['mail_poi'];	
+								$to = $rowMailPOI;	
 								$subject = 'Merci pour votre participation';
-
-								if ($num_rows_territoire == 1) {
+								//si la commune fait partie d'un territoire
+// 								if ($num_rows_territoire == 1) {
+									//premier territoire
 									switch ($rowTerritoire[0]) {
 										case 1:
 											$message = 'Bonjour !
 L\'observation que vous avez envoyée a été modérée par l\'association. Le problème identifié est une urgence qui nécessite une intervention rapide des services techniques.
-'.VELOBS_EMERGENCY_MAIL1.'.
+'.VELOBS_EMERGENCY_MAIL1.'. '.$details.'
 Cordialement, l\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE1.':)';
 											break;
+											//second territoire
 										case 2:
 											$message = 'Bonjour !
 L\'observation que vous avez envoyée a été modérée par l\'association. Le problème identifié est une urgence qui nécessite une intervention rapide des services techniques.
-Veuillez contacter les services techniques de la communauté de communes.
+Veuillez contacter les services techniques de la communauté de communes.'.$details.'
 Cordialement, l\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE2.':)';
 											break;
+											//troisieme territoire
 										case 3:
 											$message = 'Bonjour !
 L\'observation que vous avez envoyée a été modérée par l\'association. Le problème identifié est une urgence qui nécessite une intervention rapide des services techniques.
-Veuillez contacter les services techniques de la communauté de communes.
+Veuillez contacter les services techniques de la communauté de communes.'.$details.'
 Cordialement, l\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE3.':)';
 											break;
-									}
-								} else {
-									$message = 'Bonjour !
+										default:
+											$message = 'Bonjour !
 L\'observation que vous avez envoyée a été modérée par l\'association. Le problème identifié est une urgence qui nécessite une intervention rapide des services techniques.
-Veuillez contacter les services techniques de votre commune.
+Veuillez contacter les services techniques de votre commune.'.$details.'
 Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
-								}
+									}
+// 								} else {
+									
+// 								}
 
 								sendMail($to, $subject, $message);
 
@@ -1432,34 +1462,35 @@ Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
 								$result3 = mysql_query($sql3);
 
 							}
+							//priorite autre que URGENCE
 						} else {
 							if (($mailsent == 0) && ($fix_poi == true)) {
 
 								/* envoi d'un mail à l'observateur */
-								$to = $rowMailPOI['mail_poi'];
+								$to = $rowMailPOI;
 								$subject = 'Merci pour votre participation';
 
 								if ($num_rows_territoire == 1) {
 									switch ($rowTerritoire[0]) {
 										case 1:
 											$message = 'Bonjour !
-L\'observation que vous avez envoyée a été modérée par l\'association. Le problème identifié a été envoyé aux services municipaux.
+L\'observation que vous avez envoyée a été modérée par l\'association. Le problème identifié a été envoyé aux services municipaux.'.$details.'
 Cordialement, l\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE1.' :)';
 											break;
 										case 2:
 											$message = 'Bonjour !
-L\'observation que vous avez envoyée a été modérée par l\'association. Le problème identifié a été envoyé aux services municipaux.
+L\'observation que vous avez envoyée a été modérée par l\'association. Le problème identifié a été envoyé aux services municipaux.'.$details.'
 Cordialement, l\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE2.' :)';
 											break;
 										case 3:
 											$message = 'Bonjour !
-L\'observation que vous avez envoyée a été modérée par l\'association. Le problème identifié a été envoyé aux services municipaux.
+L\'observation que vous avez envoyée a été modérée par l\'association. Le problème identifié a été envoyé aux services municipaux.'.$details.'
 Cordialement, l\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE3.' :)';
 											break;
 									}
 								} else {
 									$message = 'Bonjour !
-L\'observation que vous avez envoyée a été modérée par l\'association. Le problème identifié a été envoyé aux services municipaux.
+L\'observation que vous avez envoyée a été modérée par l\'association. Le problème identifié a été envoyé aux services municipaux.'.$details.'
 Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
 								}
 								sendMail($to, $subject, $message);
@@ -1516,7 +1547,7 @@ Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
 
 						// mail à la personne qui a envoyé la proposition pour le prévenir que son intervention a été prise en compte par la comcom et par l'asso
 						if ($priorite_id_priorite == 6) {
-							$to = $rowMailPOI['mail_poi'];
+							$to = $rowMailPOI;
 							
 							$sql5 = "SELECT commentfinal_poi FROM poi WHERE id_poi = ".$id_poi;
 							$result5 = mysql_query($sql5);
@@ -1529,26 +1560,26 @@ Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
 								switch ($rowTerritoire[0]) {
 									case 1:
 										$message = 'Bonjour !
-L\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE1.' vous remercient. Le problème a bien été pris en compte et réglé par la collectivité.
+L\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE1.' vous remercient. Le problème a bien été pris en compte et réglé par la collectivité.'.$details.'
 Voici le commentaire final de l\'association : '.$comment.'
 Cordialement, l\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE1.' :)';
 										break;
 									case 2:
 										$message = 'Bonjour !
-L\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE2.' vous remercient. Le problème a bien été pris en compte et réglé par la collectivité.
+L\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE2.' vous remercient. Le problème a bien été pris en compte et réglé par la collectivité.'.$details.'
 Voici le commentaire final de l\'association : '.$comment.'
 Cordialement, l\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE2.' :)';
 										break;
 									case 3:
 										$message = 'Bonjour !
-L\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE3.' vous remercient. Le problème a bien été pris en compte et réglé par la collectivité.
+L\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE3.' vous remercient. Le problème a bien été pris en compte et réglé par la collectivité.'.$details.'
 Voici le commentaire final de l\'association : '.$comment.'
 Cordialement, l\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE3.' :)';
 										break;
 								}
 							} else {
 								$message = 'Bonjour !
-L\'Association '.VELOBS_ASSOCIATION.' vous remercie. Le problème a bien été pris en compte et réglé par la collectivité.
+L\'Association '.VELOBS_ASSOCIATION.' vous remercie. Le problème a bien été pris en compte et réglé par la collectivité.'.$details.'
 Voici le commentaire final de l\'association : '.$comment.'
 Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
 							}
@@ -1557,7 +1588,7 @@ Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
 						}
 
 						if ($priorite_id_priorite == 7 || $priorite_id_priorite == 12) {
-							$to = $rowMailPOI['mail_poi'];
+							$to = $rowMailPOI;
 							
 							$sql5 = "SELECT commentfinal_poi FROM poi WHERE id_poi = ".$id_poi;
 							$result5 = mysql_query($sql5);
@@ -1571,21 +1602,21 @@ Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
 									case 1:
 										$message = 'Bonjour !
 L\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE1.' vous remercient de votre participation.
-Cependant le problème rapporté a été refusé.
+Cependant le problème rapporté a été refusé.'.$details.'
 Voici le commentaire final de l\'association : '.$comment.'
 Cordialement, l\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE1.' :)';
 										break;
 									case 2:
 										$message = 'Bonjour !
 L\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE2.' vous remercient de votre participation.
-Cependant le problème rapporté a été refusé.
+Cependant le problème rapporté a été refusé.'.$details.'
 Voici le commentaire final de l\'association : '.$comment.'
 Cordialement, l\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE2.' :)';
 										break;
 									case 3:
 										$message = 'Bonjour !
 L\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE3.' vous remercient de votre participation.
-Cependant le problème rapporté a été refusé.
+Cependant le problème rapporté a été refusé.'.$details.'
 Voici le commentaire final de l\'association : '.$comment.'
 Cordialement, l\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE3.' :)';
 										break;
@@ -1593,7 +1624,7 @@ Cordialement, l\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE3.' 
 							} else {
 								$message = 'Bonjour !
 L\'Association '.VELOBS_ASSOCIATION.' vous remercie de votre participation.
-Cependant le problème rapporté a été refusé.
+Cependant le problème rapporté a été refusé.'.$details.'
 Voici le commentaire final de l\'association : '.$comment.'
 Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
 							}
@@ -1602,10 +1633,7 @@ Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
 						}
 
 						if ($priorite_id_priorite == 15) {
-							$sql6 = "SELECT mail_poi FROM poi WHERE id_poi = ".$id_poi;
-							$result6 = mysql_query($sql6);
-							$row6 = mysql_fetch_array($result6);
-							$to = $row6['mail_poi'];
+							$to = $rowMailPOI;
 							
 							$subject = 'Observation doublon';
 
@@ -1614,26 +1642,26 @@ Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
 									case 1:
 										$message = 'Bonjour !
 L\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE1.' vous remercient de votre participation.
-Le problème que vous avez identifié nous a déjà été rapporté par un autre observateur.
+Le problème que vous avez identifié nous a déjà été rapporté par un autre observateur.'.$details.'
 Cordialement, l\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE1.' :)';
 										break;
 									case 2:
 										$message = 'Bonjour !
 L\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE2.' vous remercient de votre participation.
-Le problème que vous avez identifié nous a déjà été rapporté par un autre observateur.
+Le problème que vous avez identifié nous a déjà été rapporté par un autre observateur.'.$details.'
 Cordialement, l\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE2.' :)';
 										break;
 									case 3:
 										$message = 'Bonjour !
 L\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE3.' vous remercient de votre participation.
-Le problème que vous avez identifié nous a déjà été rapporté par un autre observateur.
+Le problème que vous avez identifié nous a déjà été rapporté par un autre observateur.'.$details.'
 Cordialement, l\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE3.' :)';
 										break;
 								}
 							} else {
 								$message = 'Bonjour !
 L\'Association '.VELOBS_ASSOCIATION.' vous remercie de votre participation.
-Le problème que vous avez identifié nous a déjà été rapporté par un autre observateur.
+Le problème que vous avez identifié nous a déjà été rapporté par un autre observateur.'.$details.'
 Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
 							}
 							sendMail($to, $subject, $message);
@@ -1673,21 +1701,21 @@ Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
 									$message = 'Bonjour !
 '.VELOBS_COLLECTIVITE1.' a effectué un changement de statut sur l\'observation n°'.$id_poi.' du pole '.$lib_pole.'
 Nouveau statut : '.$lib_status.'
-Veuillez consulter l\'interface d\'administration pour consulter les informations relatives.
+Veuillez consulter l\'interface d\'administration pour consulter les informations relatives.'.$details.'
 Cordialement, l\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE1.' :)';
 									break;
 								case 2:
 									$message = 'Bonjour !
 '.VELOBS_COLLECTIVITE2.' a effectué un changement de statut sur l\'observation n°'.$id_poi.' du pole '.$lib_pole.'
 Nouveau statut : '.$lib_status.'
-Veuillez consulter l\'interface d\'administration pour consulter les informations relatives.
+Veuillez consulter l\'interface d\'administration pour consulter les informations relatives.'.$details.'
 Cordialement, l\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE2.' :)';
 									break;
 								case 3:
 									$message = 'Bonjour !
 '.VELOBS_COLLECTIVITE3.' a effectué un changement de statut sur l\'observation n°'.$id_poi.' du pole '.$lib_pole.'
 Nouveau statut : '.$lib_status.'
-Veuillez consulter l\'interface d\'administration pour consulter les informations relatives.
+Veuillez consulter l\'interface d\'administration pour consulter les informations relatives.'.$details.'
 Cordialement, l\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE3.' :)';
 									break;
 							}
@@ -1695,7 +1723,7 @@ Cordialement, l\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE3.' 
 							$message = 'Bonjour !
 Un changement de statut a été effectué sur l\'observation n°'.$id_poi.' du pole '.$lib_pole.'
 Nouveau statut : '.$lib_status.'
-Veuillez consulter l\'interface d\'administration pour consulter les informations relatives.
+Veuillez consulter l\'interface d\'administration pour consulter les informations relatives.'.$details.'
 Lien vers la modération : '.URL.'/admin.php?id='.$id_poi.'
 Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
 						}
@@ -1720,7 +1748,7 @@ Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
 							$subject = 'Modification de l\'observation n°'.$id_poi.' par le pole '.$lib_pole;
 							$message = 'Bonjour !
 Le pole '.$lib_pole.' a modifié l\'observation n°'.$id_poi.'.
-Veuillez consulter l\'interface d\'administration pour voir cette modification.
+Veuillez consulter l\'interface d\'administration pour voir cette modification.'.$details.'
 Lien vers la modération : '.URL.'/admin.php?id='.$id_poi.'
 Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
 
@@ -3449,12 +3477,7 @@ Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
 					}
 				}
 
-// 				$sql = "SELECT lib_commune FROM commune WHERE id_commune = ".$commune_id_commune;
-// 				$result = mysql_query($sql);
-// 				while ($row = mysql_fetch_array($result)) {
-// 					$lib_commune = $row['lib_commune'];
-// 				}
-				//détermination du pole concerné par croisement du polygone de la commune ave latitude et longitude
+				//détermination du pole concerné par croisement du polygone de la commune avec latitude et longitude
 				$pole_id_pole = 9;
 				$sql = "SELECT id_pole, AsText(geom_pole) AS geom, lib_pole FROM pole";
 				$result = mysql_query($sql);
@@ -3481,57 +3504,43 @@ Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
 				$quartier_id_quartier = 99999;
 				
 				$datecreation_poi = date('Y-m-d');			
-				//TODO : supprimer le id_poi du lib_poi généré
-				$sql = "SELECT max(id_poi) + 1, lib_subcategory FROM poi INNER JOIN subcategory ON (poi.subcategory_id_subcategory = subcategory.id_subcategory) WHERE subcategory_id_subcategory = ".$subcategory_id_subcategory;
-				$result = mysql_query($sql);
-				$lib_poi = mysql_real_escape_string(mysql_result($result, 0, 0)." ".mysql_result($result, 0, 1));
+				
 				//si le mail de la personne qui soumet le POI est aussi un modérateur, on positionne moderation_poi à vrai
 				$sql2 = "SELECT mail_users FROM users WHERE (usertype_id_usertype = 1 OR usertype_id_usertype = 4) AND mail_users LIKE '".$mail_poi."'";
 				$result2 = mysql_query($sql2);
 				$num_rows2 = mysql_num_rows($result2);
 				if ($num_rows2 == 0) {
-					$sql = "INSERT INTO poi (priorite_id_priorite, quartier_id_quartier, pole_id_pole, lib_poi, mail_poi, tel_poi, num_poi, rue_poi, commune_id_commune, desc_poi, prop_poi, subcategory_id_subcategory, display_poi, fix_poi, datecreation_poi, geolocatemode_poi, moderation_poi, geom_poi, status_id_status) VALUES (4, $quartier_id_quartier, $pole_id_pole, '$lib_poi', '$mail_poi', '$tel_poi', '$num_poi', '$rue_poi', $commune_id_commune, '$desc_poi', '$prop_poi', $subcategory_id_subcategory , TRUE, FALSE, '$datecreation_poi', 1, FALSE, GeomFromText('POINT(".$longitude_poi." ".$latitude_poi.")'), 5)";
+					$sql = "INSERT INTO poi (priorite_id_priorite, quartier_id_quartier, pole_id_pole, lib_poi, mail_poi, tel_poi, num_poi, rue_poi, commune_id_commune, desc_poi, prop_poi, subcategory_id_subcategory, display_poi, fix_poi, datecreation_poi, geolocatemode_poi, moderation_poi, geom_poi, status_id_status) VALUES (4, $quartier_id_quartier, $pole_id_pole, '$lib_subcategory', '$mail_poi', '$tel_poi', '$num_poi', '$rue_poi', $commune_id_commune, '$desc_poi', '$prop_poi', $subcategory_id_subcategory , TRUE, FALSE, '$datecreation_poi', 1, FALSE, GeomFromText('POINT(".$longitude_poi." ".$latitude_poi.")'), 5)";
 				} else {
-					$sql = "INSERT INTO poi (priorite_id_priorite, quartier_id_quartier, pole_id_pole, lib_poi, mail_poi, tel_poi, num_poi, rue_poi, commune_id_commune, desc_poi, prop_poi, subcategory_id_subcategory, display_poi, fix_poi, datecreation_poi, geolocatemode_poi, moderation_poi, geom_poi, status_id_status) VALUES (1, $quartier_id_quartier, $pole_id_pole, '$lib_poi', '$mail_poi', '$tel_poi', '$num_poi', '$rue_poi', $commune_id_commune, '$desc_poi', '$prop_poi', $subcategory_id_subcategory , TRUE, FALSE, '$datecreation_poi', 1, TRUE, GeomFromText('POINT(".$longitude_poi." ".$latitude_poi.")'), 5)";
+					$sql = "INSERT INTO poi (priorite_id_priorite, quartier_id_quartier, pole_id_pole, lib_poi, mail_poi, tel_poi, num_poi, rue_poi, commune_id_commune, desc_poi, prop_poi, subcategory_id_subcategory, display_poi, fix_poi, datecreation_poi, geolocatemode_poi, moderation_poi, geom_poi, status_id_status) VALUES (1, $quartier_id_quartier, $pole_id_pole, '$lib_subcategory', '$mail_poi', '$tel_poi', '$num_poi', '$rue_poi', $commune_id_commune, '$desc_poi', '$prop_poi', $subcategory_id_subcategory , TRUE, FALSE, '$datecreation_poi', 1, TRUE, GeomFromText('POINT(".$longitude_poi." ".$latitude_poi.")'), 5)";
 				}
 
 				$result = mysql_query($sql);
-				
-				$sql = "SELECT max(id_poi) FROM poi";
-				$result = mysql_query($sql);
-				$max = mysql_result($result, 0, 0);
-				//echo $max;
-				
-				$sql = "SELECT subcategory.lib_subcategory FROM subcategory INNER JOIN poi ON (poi.subcategory_id_subcategory = subcategory.id_subcategory) WHERE poi.id_poi = ".$max;
-				//echo $sql;
-				$result = mysql_query($sql);
-				$libsubcat = mysql_result($result, 0, 0);
-				$lib = $max." ".$libsubcat;
-				
-				$sql = "UPDATE poi SET lib_poi = '$lib' WHERE id_poi = ".$max;
-				$result = mysql_query($sql);
-//TODO : mais c'est quoi ce max!!!!!!!!
-				$linktomoderation = URL.'/admin.php?id='.$max;
+				$poiId = mysql_insert_id();
+				if (DEBUG){
+					error_log("Dernier id genere = ".$poiId."\n", 3, LOG_FILE);
+				}
 
 				/* envoi d'un mail aux administrateurs de l'association */
 				$subject = 'Nouvelle observation à modérer';
 				$message = 'Bonjour !
 Une nouvelle observation a été ajoutée sur le pole - '.$lib_pole.' -. Veuillez vous connecter à l\'interface d\'administration pour le modérer.
-Lien vers la modération : '.URL.'/admin.php?id='.$max.'
+Lien vers la modération : '.URL.'/admin.php?id='.$poiId.'
 Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
 				$details = '
 				
 	------------- Détails de l\'observation -------------
-	 # pole : '.$lib_pole.'
-	 # repère : '.$num_poi.'
-	 # nom de la voie : '.$rue_poi.'
-	 # commune : '.$lib_commune.'
-	 # latitude : '.$latitude_poi.'
-	 # longitude : '.$longitude_poi.'
-	 # catégorie : '.$lib_subcategory.'
-	 # description du problème : '.$desc_poi.'
-	 # proposition : '.$prop_poi.'
-	 # soumis par : '.$mail_poi.'
+	 # Pôle : '.$lib_pole.'
+	 # Repère : '.$num_poi.'
+	 # Nom de la voie : '.$rue_poi.'
+	 # Commune : '.$lib_commune.'
+	 # Latitude : '.$latitude_poi.'
+	 # Longitude : '.$longitude_poi.'
+	 # Catégorie : '.$lib_subcategory.'
+	 # Description du problème : '.$desc_poi.'
+	 # Proposition : '.$prop_poi.'
+	 # Soumis par : '.$mail_poi.'
+	 # Lien vers l\'observation publique : '.URL.'?id='.$poiId.'
 				';
 				$message .= $details;
 				// si la personne qui soumet le POI n'est pas admin ou moderateur sur un pole, on envoie un mail aux admin
@@ -3540,7 +3549,7 @@ Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
 				$num_rows2 = mysql_num_rows($result2);
 				if ($num_rows2 == 0) {
 					// boucle sur les administrateurs généraux de l'association
-					$sql = "SELECT mail_users FROM users WHERE usertype_id_usertype = 1";
+					$sql = "SELECT mail_users FROM users WHERE usertype_id_usertype = 1 OR (usertype_id_usertype = 4 AND num_pole = ".$pole_id_pole.")";
 					$result = mysql_query($sql);
 					while ($row = mysql_fetch_array($result)) {
 						$to = $row['mail_users'];
@@ -3548,26 +3557,36 @@ Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
 							sendMail($to, $subject, $message);
 						}
 					}
-					$sql = "SELECT mail_users FROM users WHERE usertype_id_usertype = 4 AND num_pole = ".$pole_id_pole;
-					$result = mysql_query($sql);
-					while ($row = mysql_fetch_array($result)) {
-						$to = $row['mail_users'];
-						if ($to != '') {
-							sendMail($to, $subject, $message);
-						}
-					}
-					/* fin envoi d'un mail aux administrateurs de l'association */
-				} 
 
-				if (!$result) {
-					//echo $sql;
-					//echo '999999999';
-					echo $max;
-				} else {
-					//echo $sql;
-					//echo mysql_insert_id();
-					echo $max;
-				}
+					/* fin envoi d'un mail aux administrateurs de l'association */
+				
+					/* debut envoi d'un mail au contributeur */
+					$subject = 'Observation en attente de modération';
+					$message = 'Bonjour !
+Vous venez d\'ajouter une observation à VelObs et vous en remercions. Celle-ci devrait être administrée sous peu.
+Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
+					$details = '
+					
+	------------- Détails de l\'observation -------------
+	 # Pôle : '.$lib_pole.'
+	 # Repère : '.$num_poi.'
+	 # Nom de la voie : '.$rue_poi.'
+	 # Commune : '.$lib_commune.'
+	 # Latitude : '.$latitude_poi.'
+	 # Longitude : '.$longitude_poi.'
+	 # Catégorie : '.$lib_subcategory.'
+	 # Description du problème : '.$desc_poi.'
+	 # Proposition : '.$prop_poi.'
+	 # Lien vers l\'observation publique : '.URL.'?id='.$poiId.'
+				';
+					$message .= $details;
+					sendMail($mail_poi, $subject, $message);
+					/* fin envoi d'un mail au contributeur */
+				} 
+				
+					
+				
+				echo $poiId;
 
 				mysql_free_result($result);
 				mysql_close($link);
