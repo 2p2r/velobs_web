@@ -19,12 +19,7 @@
                     $sql = "INSERT INTO commentaires (text_commentaires, display_commentaires) VALUES ('$text_comment',false)";
                     $result = mysql_query($sql);
 
-                    $sql = "SELECT max(id_commentaires) AS maxi FROM commentaires";
-                    $result = mysql_query($sql);
-                    while ($row = mysql_fetch_array($result)) {
-                        $id_commentaire = $row['maxi'];
-                    }
-
+                    $id_commentaire = mysql_insert_id();
                     $sql = "INSERT INTO poi_commentaires (poi_id_poi, commentaires_id_commentaires) VALUES ($id_poi,$id_commentaire)";
                     $result = mysql_query($sql);
 
@@ -95,11 +90,7 @@ Cordialement, l\'application velobs)';
                     $sql = "INSERT INTO photos (url_photos, display_photos) VALUES ('$photo_poi',false)";
                     $result = mysql_query($sql);
 
-                    $sql = "SELECT max(id_photos) AS maxi FROM photos";
-                    $result = mysql_query($sql);
-                    while ($row = mysql_fetch_array($result)) {
-                        $id_photo = $row['maxi'];
-                    }
+                    $id_photo = mysql_insert_id();
                     $sql = "INSERT INTO poi_photos (poi_id_poi, photos_id_photos) VALUES ($id_poi,$id_photo)";
                     $result = mysql_query($sql);
 
@@ -110,12 +101,7 @@ Cordialement, l\'application velobs)';
                         $sql = "INSERT INTO commentaires (text_commentaires, display_commentaires) VALUES ('$text_comment',false)";
                         $result = mysql_query($sql);
 
-                        $sql = "SELECT max(id_commentaires) AS maxi FROM commentaires";
-                        $result = mysql_query($sql);
-                        while ($row = mysql_fetch_array($result)) {
-                            $id_commentaire = $row['maxi'];
-                        }
-
+                        $id_commentaire  = mysql_insert_id();
                         $sql = "INSERT INTO poi_commentaires (poi_id_poi, commentaires_id_commentaires) VALUES ($id_poi,$id_commentaire)";
                         $result = mysql_query($sql);
                     }

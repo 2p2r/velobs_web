@@ -1363,7 +1363,6 @@
 					$mailsent = stripslashes($row['mailsentuser_poi']);
 					$commune_id_commune = stripslashes($row['id_commune']);
 					$rowMailPOI = stripslashes($row['mail_poi']);
-					
 				}
 				$details = '
 				
@@ -1549,11 +1548,6 @@ Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
 						if ($priorite_id_priorite == 6) {
 							$to = $rowMailPOI;
 							
-							$sql5 = "SELECT commentfinal_poi FROM poi WHERE id_poi = ".$id_poi;
-							$result5 = mysql_query($sql5);
-							$row5 = mysql_fetch_array($result5);
-							$comment = $row5['commentfinal_poi'];
-							
 							$subject = 'Observation prise en compte';
 
 							if ($num_rows_territoire == 1) {
@@ -1561,26 +1555,26 @@ Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
 									case 1:
 										$message = 'Bonjour !
 L\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE1.' vous remercient. Le problème a bien été pris en compte et réglé par la collectivité.'.$details.'
-Voici le commentaire final de l\'association : '.$comment.'
+Voici le commentaire final de l\'association : '.$commentfinal_poi.'
 Cordialement, l\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE1.' :)';
 										break;
 									case 2:
 										$message = 'Bonjour !
 L\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE2.' vous remercient. Le problème a bien été pris en compte et réglé par la collectivité.'.$details.'
-Voici le commentaire final de l\'association : '.$comment.'
+Voici le commentaire final de l\'association : '.$commentfinal_poi.'
 Cordialement, l\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE2.' :)';
 										break;
 									case 3:
 										$message = 'Bonjour !
 L\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE3.' vous remercient. Le problème a bien été pris en compte et réglé par la collectivité.'.$details.'
-Voici le commentaire final de l\'association : '.$comment.'
+Voici le commentaire final de l\'association : '.$commentfinal_poi.'
 Cordialement, l\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE3.' :)';
 										break;
 								}
 							} else {
 								$message = 'Bonjour !
 L\'Association '.VELOBS_ASSOCIATION.' vous remercie. Le problème a bien été pris en compte et réglé par la collectivité.'.$details.'
-Voici le commentaire final de l\'association : '.$comment.'
+Voici le commentaire final de l\'association : '.$commentfinal_poi.'
 Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
 							}
 
@@ -1590,11 +1584,6 @@ Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
 						if ($priorite_id_priorite == 7 || $priorite_id_priorite == 12) {
 							$to = $rowMailPOI;
 							
-							$sql5 = "SELECT commentfinal_poi FROM poi WHERE id_poi = ".$id_poi;
-							$result5 = mysql_query($sql5);
-							$row5 = mysql_fetch_array($result5);
-							$comment = $row5['commentfinal_poi'];
-							
 							$subject = 'Observation non transmise à la collectivité';
 
 							if ($num_rows_territoire == 1) {
@@ -1603,21 +1592,21 @@ Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
 										$message = 'Bonjour !
 L\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE1.' vous remercient de votre participation.
 Cependant le problème rapporté a été refusé.'.$details.'
-Voici le commentaire final de l\'association : '.$comment.'
+Voici le commentaire final de l\'association : '.$commentfinal_poi.'
 Cordialement, l\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE1.' :)';
 										break;
 									case 2:
 										$message = 'Bonjour !
 L\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE2.' vous remercient de votre participation.
 Cependant le problème rapporté a été refusé.'.$details.'
-Voici le commentaire final de l\'association : '.$comment.'
+Voici le commentaire final de l\'association : '.$commentfinal_poi.'
 Cordialement, l\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE2.' :)';
 										break;
 									case 3:
 										$message = 'Bonjour !
 L\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE3.' vous remercient de votre participation.
 Cependant le problème rapporté a été refusé.'.$details.'
-Voici le commentaire final de l\'association : '.$comment.'
+Voici le commentaire final de l\'association : '.$commentfinal_poi.'
 Cordialement, l\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE3.' :)';
 										break;
 								}
@@ -1625,7 +1614,7 @@ Cordialement, l\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE3.' 
 								$message = 'Bonjour !
 L\'Association '.VELOBS_ASSOCIATION.' vous remercie de votre participation.
 Cependant le problème rapporté a été refusé.'.$details.'
-Voici le commentaire final de l\'association : '.$comment.'
+Voici le commentaire final de l\'association : '.$commentfinal_poi.'
 Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
 							}
 	
@@ -1636,41 +1625,32 @@ Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
 							$to = $rowMailPOI;
 							
 							$subject = 'Observation doublon';
-
+							$message = 'Bonjour !
+L\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE1.' vous remercient de votre participation.
+Le problème que vous avez identifié nous a déjà été rapporté par un autre observateur.'.$details;
 							if ($num_rows_territoire == 1) {
 								switch ($rowTerritoire[0]) {
 									case 1:
-										$message = 'Bonjour !
-L\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE1.' vous remercient de votre participation.
-Le problème que vous avez identifié nous a déjà été rapporté par un autre observateur.'.$details.'
+										$message.='
 Cordialement, l\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE1.' :)';
 										break;
 									case 2:
-										$message = 'Bonjour !
-L\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE2.' vous remercient de votre participation.
-Le problème que vous avez identifié nous a déjà été rapporté par un autre observateur.'.$details.'
+										$message.='
 Cordialement, l\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE2.' :)';
 										break;
 									case 3:
-										$message = 'Bonjour !
-L\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE3.' vous remercient de votre participation.
-Le problème que vous avez identifié nous a déjà été rapporté par un autre observateur.'.$details.'
+										$message.='
 Cordialement, l\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE3.' :)';
 										break;
 								}
 							} else {
-								$message = 'Bonjour !
-L\'Association '.VELOBS_ASSOCIATION.' vous remercie de votre participation.
-Le problème que vous avez identifié nous a déjà été rapporté par un autre observateur.'.$details.'
+								$message.='
 Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
 							}
 							sendMail($to, $subject, $message);
 
-							$sql7 = "UPDATE poi SET mailsentuser_poi = 1 WHERE id_poi = ".$id_poi;
+							$sql7 = "UPDATE poi SET mailsentuser_poi = 1, moderation_poi = 1 WHERE id_poi = ".$id_poi;
 							$result7 = mysql_query($sql7);
-
-							$sql8 = "UPDATE poi SET moderation_poi = 1 WHERE id_poi = $id_poi";
-							$result8 = mysql_query($sql8);
 						}
 						
 					} else if (is_numeric($_POST['status_id_status'])) {
@@ -3915,12 +3895,7 @@ Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
 
 				$sql = "INSERT INTO commentaires (text_commentaires, display_commentaires) VALUES ('$text', 0)";
 				$result = mysql_query($sql);
-
-				$sql = "SELECT max(id_commentaires) AS maxi FROM commentaires";
-				$result = mysql_query($sql);
-				while ($row = mysql_fetch_array($result)) {
-					$id_commentaire = $row['maxi'];
-				}
+				$id_commentaire = mysql_insert_id();
 
 				$sql = "INSERT INTO poi_commentaires (poi_id_poi, commentaires_id_commentaires) VALUES ($id_poi, $id_commentaire)";
 				$result = mysql_query($sql);
@@ -3985,11 +3960,7 @@ Cordialement, l\'application VelObs :)';
 				$sql = "INSERT INTO commentaires (text_commentaires, display_commentaires) VALUES ('$text', 0)";
 				$result = mysql_query($sql);
 
-				$sql = "SELECT max(id_commentaires) AS maxi FROM commentaires";
-				$result = mysql_query($sql);
-				while ($row = mysql_fetch_array($result)) {
-					$id_commentaire = $row['maxi'];
-				}
+				$id_commentaire = mysql_insert_id();
 
 				$sql = "INSERT INTO poi_commentaires (poi_id_poi, commentaires_id_commentaires) VALUES ($id_poi, $id_commentaire)";
 				$result = mysql_query($sql);

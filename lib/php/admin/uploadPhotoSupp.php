@@ -70,11 +70,7 @@
 					$sql = "INSERT INTO photos (url_photos, display_photos) VALUES ('$newnamefichier',1)";
 					$result = mysql_query($sql);
 
-					$sql = "SELECT max(id_photos) AS maxi FROM photos";
-                    $result = mysql_query($sql);
-                    while ($row = mysql_fetch_array($result)) {
-                        $id_photo = $row['maxi'];
-                    }
+                    $id_photo = mysql_insert_id();
 
                     $sql = "INSERT INTO poi_photos (poi_id_poi, photos_id_photos) VALUES (".$_POST['id_POI'].",".$id_photo.")";
                     $result = mysql_query($sql);
