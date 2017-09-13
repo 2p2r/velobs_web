@@ -58,9 +58,7 @@ Cordialement, l\'application velobs)';
                             sendMail($to, $subject, $message);
                         }
                         /* fin envoi d'un mail aux administrateurs #pole# de l'association */
-                    } else {
-                        // pas d'envoi de mail >> bypass
-                    }
+                    } 
                 }
             } else {
                 // photo présente
@@ -148,9 +146,7 @@ Cordialement, l\'application velobs)';
                             sendMail($to, $subject, $message);
                         }
                         /* fin envoi d'un mail aux administrateurs #pole# de l'association */
-                    } else {
-                        // pas d'envoi de mail >> bypass
-                    }
+                    } 
                 }
             }
             break;

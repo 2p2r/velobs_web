@@ -31,7 +31,7 @@
                     'Content-Type: text/plain; charset=UTF-8' . "\r\n" .
                     'X-Mailer: PHP/' . phpversion();
                     if (DEBUG){
-                    	error_log("Mail avec comme sujet = ".MAIL_SUBJECT_PREFIX . ' '.$subject ." et corps = ".$body. " envoyé à " . $to ."\n", 3, LOG_FILE);
+                    	error_log("Mail avec comme sujet = ".MAIL_SUBJECT_PREFIX . ' '.$subject ." et envoyé à " . $to ."\n", 3, LOG_FILE);
                     }
                     
                     mail($to, MAIL_SUBJECT_PREFIX . ' '.$subject, $body, $headers);

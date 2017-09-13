@@ -2,7 +2,13 @@
 	session_start();
 	include 'lib/php/key.php';
 	include 'lib/php/commonfunction.php';
+	if (DEBUG){
+		error_log("Tentative de connection\n", 3, LOG_FILE);
+	}
 	if (isset($_SESSION['user']) && isset($_SESSION['type'])) {
+		if (DEBUG){
+			error_log($_SESSION['user']." est connecté, utilisateur de type ".$_SESSION['type']."\n", 3, LOG_FILE);
+		}
 		switch ($_SESSION['type']) {
 			case '1':
 ?>

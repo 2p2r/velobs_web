@@ -102,7 +102,7 @@ Cordialement, l\'application velobs:)';
                         $result = mysql_query($sql);
                         while ($row = mysql_fetch_array($result)) {
                             $to = $row['mail_users'];
-				sendMail($to,'Photo à modérer sur l\'observation n°'.$id_poi,$message);
+							sendMail($to,'Photo à modérer sur l\'observation n°'.$id_poi,$message);
                         }
                     } 
                 }
