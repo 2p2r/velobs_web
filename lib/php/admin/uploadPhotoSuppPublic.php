@@ -2,7 +2,9 @@
 	session_start();
 	include '../key.php';
 	include '../commonfunction.php';
-
+	if (DEBUG){
+		error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - uploadPhotoSuppPublic \n", 3, LOG_FILE);
+	}
     switch (SGBD) {
         case 'mysql':
             if (isset($_FILES['photo-path']) && isset($_POST['id_POI'])){
@@ -72,41 +74,40 @@
 
                 $id_photo = mysql_insert_id();
 
-                $sql = "INSERT INTO poi_photos (poi_id_poi, photos_id_photos) VALUES (".$id_poi.",".$id_photo.")";
-                $result = mysql_query($sql);
+                $sql1 = "INSERT INTO poi_photos (poi_id_poi, photos_id_photos) VALUES (".$id_poi.",".$id_photo.")";
+                $result = mysql_query($sql1);
 
                 $lastdatemodif_poi = date("Y-m-d");
                 $sql3 = "UPDATE poi SET lastdatemodif_poi = '$lastdatemodif_poi' WHERE id_poi = ".$id_poi;
                 $result3 = mysql_query($sql3);
-
-                if (!isset($_SESSION['user']) || $_SESSION['role'] == 2 || $_SESSION['role'] == 3) {
-                    
-                   $subject = 'Photo à modérer sur l\'observation n°'.$id_poi;
+                if (DEBUG){
+                	error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - uploadPhotoSuppPublic - $sql $result \n", 3, LOG_FILE);
+                	error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " Erreur ". mysql_errno($link) . " : " . mysql_error($link)."\n", 3, LOG_FILE);
+                }
+                if (!isset($_SESSION['user'])) {
+                	$arrayObs = getObservationDetailsInArray($id_poi);
+                	$arrayDetailsAndUpdateSQL = getObservationDetailsInString($arrayObs);
+                	if (DEBUG){
+                		error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - Il y a ". count($arrayDetailsAndUpdateSQL) ." infos chargées pour l'update de l'obs $id_poi \n", 3, LOG_FILE);
+                		error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - updateObsBoolean ". $arrayDetailsAndUpdateSQL['updateObsBoolean'] ." pour l'update de l'obs $id_poi \n", 3, LOG_FILE);
+                		error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - sqlUpdate ". $arrayDetailsAndUpdateSQL['sqlUpdate'] ." pour l'update de l'obs $id_poi \n", 3, LOG_FILE);
+                		error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - detailObservationString ".$arrayDetailsAndUpdateSQL['detailObservationString'] ." pour l'update de l'obs $id_poi \n", 3, LOG_FILE);
+                	
+                	}
+                	
+                   $subject = 'Photo à modérer sur l\'observation n°'.$arrayObs['id_poi'];
                     $message = 'Bonjour !
-Une nouvelle photo a été ajoutée sur l\'observation n°'.$id_poi.'. Veuillez vous connecter à l\'interface d\'administration pour le modérer.
-Lien vers la modération : '.URL.'/admin.php?id='.$id_poi.'
+Une nouvelle photo a été ajoutée sur l\'observation n°'.$arrayObs['id_poi'].'. Veuillez vous connecter à l\'interface d\'administration pour le modérer.
+Lien vers la modération : '.URL.'/admin.php?id='.$arrayObs['id_poi']."\n".$arrayDetailsAndUpdateSQL['detailObservationString'].'
 Cordialement, l\'application velobs:)';
-		sendMail(MAIL_ALIAS_OBSERVATION_ADHERENTS,'Photo à modérer sur l\'observation n°'.$id_poi,$message);
-
-                    $sql = "SELECT pole_id_pole FROM poi WHERE id_poi = ".$id_poi;
-                    $res = mysql_query($sql);
-                    $row = mysql_fetch_row($res);
-                    $pole_id_pole = $row[0];
-
-                    $sql2 = "SELECT mail_users FROM users WHERE (usertype_id_usertype = 1 OR usertype_id_usertype = 4) AND mail_users LIKE '".$mail_poi."'";
-                    $result2 = mysql_query($sql2);
-                    $num_rows2 = mysql_num_rows($result2);
-                    if ($num_rows2 == 0) {
                         // boucle sur les administrateurs #pole# généraux de l'association
-                        $sql = "SELECT mail_users FROM users WHERE usertype_id_usertype = 4 AND num_pole = ".$pole_id_pole;
+                        $sql = "SELECT mail_users FROM users WHERE usertype_id_usertype = 1 OR (usertype_id_usertype = 4 AND num_pole = ".$arrayObs['pole_id_pole'].")";
                         $result = mysql_query($sql);
                         while ($row = mysql_fetch_array($result)) {
                             $to = $row['mail_users'];
-							sendMail($to,'Photo à modérer sur l\'observation n°'.$id_poi,$message);
+							sendMail($to,$subject,$message);
                         }
-                    } 
                 }
-
             } else {
                 $return['success'] = false;
                 $return['pb'] = getTranslation($_SESSION['id_language'],'ICONTRANSFERTFALSE');
@@ -121,69 +122,6 @@ Cordialement, l\'application velobs:)';
             break;
     }
 
-	/* 	Function name 	: generate_image_thumbnail
-	 * 	Input			: une url d'image en entrée, le path en sortie, la largeur et la hauteur
-	 * 	Output			: ---
-	 * 	Object			: génère les images medium et small
-	 * 	Date			: Jul. 11, 2012
-	 */
-	function generate_image_thumbnail($source_image_path, $thumbnail_image_path, $width, $height) {
-		list($source_image_width, $source_image_height, $source_image_type) = getimagesize($source_image_path);
-//	echo $source_image_path." ".$source_image_type;
-		switch ($source_image_type)	{
-			case IMAGETYPE_GIF:
-				$source_gd_image = imagecreatefromgif($source_image_path);
-				break;
-			case IMAGETYPE_JPEG:
-				$source_gd_image = imagecreatefromjpeg($source_image_path);
-				break;
-			case IMAGETYPE_PNG:
-				$source_gd_image = imagecreatefrompng($source_image_path);
-				imagealphablending($source_gd_image, true);
-				break;
-		}
 
-		if ($source_gd_image === false) {
-			return false;
-		}
-
-		$thumbnail_image_width = $width;
-		$thumbnail_image_height = $height;
-
-		$source_aspect_ratio = $source_image_width / $source_image_height;
-		$thumbnail_aspect_ratio = $thumbnail_image_width / $thumbnail_image_height;
-
-		if ($source_image_width <= $thumbnail_image_width && $source_image_height <= $thumbnail_image_height) {
-			$thumbnail_image_width = $source_image_width;
-			$thumbnail_image_height = $source_image_height;
-		} elseif ($thumbnail_aspect_ratio > $source_aspect_ratio) {
-			$thumbnail_image_width = (int) ($thumbnail_image_height * $source_aspect_ratio);
-		} else {
-			$thumbnail_image_height = (int) ($thumbnail_image_width / $source_aspect_ratio);
-		}
-//echo $thumbnail_image_width." ".$thumbnail_image_height;
-		$thumbnail_gd_image = imagecreatetruecolor($thumbnail_image_width, $thumbnail_image_height);
-
-		imagealphablending($thumbnail_gd_image, false);
-		imagesavealpha($thumbnail_gd_image, true);
-
-		imagecopyresampled($thumbnail_gd_image, $source_gd_image, 0, 0, 0, 0, $thumbnail_image_width, $thumbnail_image_height, $source_image_width, $source_image_height);
-		switch ($source_image_type)	{
-			case IMAGETYPE_GIF:
-				imagegif($thumbnail_gd_image, $thumbnail_image_path);
-				break;
-			case IMAGETYPE_JPEG:
-				imagejpeg($thumbnail_gd_image, $thumbnail_image_path, 100);
-				break;
-			case IMAGETYPE_PNG:
-				imagepng($thumbnail_gd_image, $thumbnail_image_path, 0);
-				break;
-		}
-		//imagejpeg($thumbnail_gd_image, $thumbnail_image_path, 100);
-		imagedestroy($source_gd_image);
-		imagedestroy($thumbnail_gd_image);
-
-		return true;
-	}
 
 ?>

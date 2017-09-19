@@ -46,19 +46,19 @@ Un nouveau commentaire a été ajouté sur l\'observation n°'.$id_poi.'. Veuill
 Lien vers la modération : '.URL.'/admin.php?id='.$id_poi.'
 Cordialement, l\'application velobs)';
 
-                    $sql2 = "SELECT mail_users FROM users WHERE (usertype_id_usertype = 1 OR usertype_id_usertype = 4) AND mail_users LIKE '".$mail_poi."'";
-                    $result2 = mysql_query($sql2);
-                    $num_rows2 = mysql_num_rows($result2);
-                    if ($num_rows2 == 0) {
+//                     $sql2 = "SELECT mail_users FROM users WHERE (usertype_id_usertype = 1 OR usertype_id_usertype = 4) AND mail_users LIKE '".$mail_poi."'";
+//                     $result2 = mysql_query($sql2);
+//                     $num_rows2 = mysql_num_rows($result2);
+//                     if ($num_rows2 == 0) {
                         // boucle sur les administrateurs #pole# généraux de l'association
-                        $sql = "SELECT mail_users FROM users WHERE usertype_id_usertype = 4 AND num_pole = ".$pole_id_pole;
+                        $sql = "SELECT mail_users FROM users WHERE usertype_id_usertype = 1 OR (usertype_id_usertype = 4 AND num_pole = ".$pole_id_pole.")";
                         $result = mysql_query($sql);
                         while ($row = mysql_fetch_array($result)) {
                             $to = $row['mail_users'];
                             sendMail($to, $subject, $message);
                         }
                         /* fin envoi d'un mail aux administrateurs #pole# de l'association */
-                    } 
+//                     } 
                 }
             } else {
                 // photo présente
@@ -92,6 +92,11 @@ Cordialement, l\'application velobs)';
                     $sql = "INSERT INTO poi_photos (poi_id_poi, photos_id_photos) VALUES ($id_poi,$id_photo)";
                     $result = mysql_query($sql);
 
+                    $sql = "SELECT pole_id_pole FROM poi WHERE id_poi = ".$id_poi;
+                    $res = mysql_query($sql);
+                    $row = mysql_fetch_row($res);
+                    $pole_id_pole = $row[0];
+                    
                     if ($_POST['comment'] != '') {
                         //$text_comment = $_POST['comment'];
                         $text_comment = mysql_real_escape_string($_POST['comment']);
@@ -102,6 +107,28 @@ Cordialement, l\'application velobs)';
                         $id_commentaire  = mysql_insert_id();
                         $sql = "INSERT INTO poi_commentaires (poi_id_poi, commentaires_id_commentaires) VALUES ($id_poi,$id_commentaire)";
                         $result = mysql_query($sql);
+                        
+                        /* envoi d'un mail aux administrateurs #pole# de l'association */
+                        $subject = 'Nouveau commentaire à modérer sur l\'observation n°'.$id_poi;
+                        $message = 'Bonjour !
+Une nouvelle photo a été ajoutée sur l\'observation n°'.$id_poi.'. Veuillez vous connecter à l\'interface d\'administration pour la modérer.
+Lien vers la modération : '.URL.'/admin.php?id='.$id_poi.'
+Cordialement, l\'application velobs)';
+                        
+//                         $sql2 = "SELECT mail_users FROM users WHERE (usertype_id_usertype = 1 OR usertype_id_usertype = 4) AND mail_users LIKE '".$mail_poi."'";
+//                         $result2 = mysql_query($sql2);
+//                         $num_rows2 = mysql_num_rows($result2);
+//                         if ($num_rows2 == 0) {
+                        	// boucle sur les administrateurs #pole# généraux de l'association
+                        	$sql = "SELECT mail_users FROM users WHERE usertype_id_usertype = 1 OR (usertype_id_usertype = 4 AND num_pole = ".$pole_id_pole.")";
+                        
+                        	$result = mysql_query($sql);
+                        	while ($row = mysql_fetch_array($result)) {
+                        		$to = $row['mail_users'];
+                        		sendMail($to, $subject, $message);
+                        	}
+                        	/* fin envoi d'un mail aux administrateurs #pole# de l'association */
+//                         }
                     }
 
                     /* envoi d'un mail aux administrateurs */
@@ -111,7 +138,7 @@ Une nouvelle photo a été ajoutée sur l\'observation n°'.$id_poi.'. Veuillez 
 Lien vers la modération : '.URL.'/admin.php?id='.$id_poi.'
 Cordialement, l\'application velobs)';
 
-                    $sql = "SELECT mail_users FROM users WHERE usertype_id_usertype = 1";
+                    $sql = "SELECT mail_users FROM users WHERE usertype_id_usertype = 1 OR (usertype_id_usertype = 4 AND num_pole = ".$pole_id_pole.")";
                     $result = mysql_query($sql);
                     while ($row = mysql_fetch_array($result)) {
                         $to = $row['mail_users'];
@@ -121,32 +148,10 @@ Cordialement, l\'application velobs)';
                     }
                     /* fin envoi d'un mail aux administrateurs */
 
-                    $sql = "SELECT pole_id_pole FROM poi WHERE id_poi = ".$id_poi;
-                    $res = mysql_query($sql);
-                    $row = mysql_fetch_row($res);
-                    $pole_id_pole = $row[0];
+                    
 
 
-                    /* envoi d'un mail aux administrateurs #pole# de l'association */
-                   $subject = 'Nouveau commentaire à modérer sur l\'observation n°'.$id_poi;
-                   $message = 'Bonjour !
-Une nouvelle photo a été ajoutée sur l\'observation n°'.$id_poi.'. Veuillez vous connecter à l\'interface d\'administration pour la modérer.
-Lien vers la modération : '.URL.'/admin.php?id='.$id_poi.'
-Cordialement, l\'application velobs)';
-
-                    $sql2 = "SELECT mail_users FROM users WHERE (usertype_id_usertype = 1 OR usertype_id_usertype = 4) AND mail_users LIKE '".$mail_poi."'";
-                    $result2 = mysql_query($sql2);
-                    $num_rows2 = mysql_num_rows($result2);
-                    if ($num_rows2 == 0) {
-                        // boucle sur les administrateurs #pole# généraux de l'association
-                        $sql = "SELECT mail_users FROM users WHERE usertype_id_usertype = 4 AND num_pole = ".$pole_id_pole;
-                        $result = mysql_query($sql);
-                        while ($row = mysql_fetch_array($result)) {
-                            $to = $row['mail_users'];
-                            sendMail($to, $subject, $message);
-                        }
-                        /* fin envoi d'un mail aux administrateurs #pole# de l'association */
-                    } 
+                    
                 }
             }
             break;

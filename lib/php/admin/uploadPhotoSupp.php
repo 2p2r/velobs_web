@@ -3,6 +3,10 @@
 	include '../key.php';
 	include '../commonfunction.php';
 
+	
+	if (DEBUG){
+		error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - uploadPhotoSupp \n", 3, LOG_FILE);
+	}
 	if (isset($_SESSION['user'])) {
 		switch (SGBD) {
 			case 'mysql':
@@ -94,69 +98,6 @@
 		}
 	}
 
-	/* 	Function name 	: generate_image_thumbnail
-	 * 	Input			: une url d'image en entrée, le path en sortie, la largeur et la hauteur
-	 * 	Output			: ---
-	 * 	Object			: génère les images medium et small
-	 * 	Date			: Jul. 11, 2012
-	 */
-	function generate_image_thumbnail($source_image_path, $thumbnail_image_path, $width, $height) {
-		list($source_image_width, $source_image_height, $source_image_type) = getimagesize($source_image_path);
-//	echo $source_image_path." ".$source_image_type;
-		switch ($source_image_type)	{
-			case IMAGETYPE_GIF:
-				$source_gd_image = imagecreatefromgif($source_image_path);
-				break;
-			case IMAGETYPE_JPEG:
-				$source_gd_image = imagecreatefromjpeg($source_image_path);
-				break;
-			case IMAGETYPE_PNG:
-				$source_gd_image = imagecreatefrompng($source_image_path);
-				imagealphablending($source_gd_image, true);
-				break;
-		}
-
-		if ($source_gd_image === false) {
-			return false;
-		}
-
-		$thumbnail_image_width = $width;
-		$thumbnail_image_height = $height;
-
-		$source_aspect_ratio = $source_image_width / $source_image_height;
-		$thumbnail_aspect_ratio = $thumbnail_image_width / $thumbnail_image_height;
-
-		if ($source_image_width <= $thumbnail_image_width && $source_image_height <= $thumbnail_image_height) {
-			$thumbnail_image_width = $source_image_width;
-			$thumbnail_image_height = $source_image_height;
-		} elseif ($thumbnail_aspect_ratio > $source_aspect_ratio) {
-			$thumbnail_image_width = (int) ($thumbnail_image_height * $source_aspect_ratio);
-		} else {
-			$thumbnail_image_height = (int) ($thumbnail_image_width / $source_aspect_ratio);
-		}
-//echo $thumbnail_image_width." ".$thumbnail_image_height;
-		$thumbnail_gd_image = imagecreatetruecolor($thumbnail_image_width, $thumbnail_image_height);
-
-		imagealphablending($thumbnail_gd_image, false);
-		imagesavealpha($thumbnail_gd_image, true);
-
-		imagecopyresampled($thumbnail_gd_image, $source_gd_image, 0, 0, 0, 0, $thumbnail_image_width, $thumbnail_image_height, $source_image_width, $source_image_height);
-		switch ($source_image_type)	{
-			case IMAGETYPE_GIF:
-				imagegif($thumbnail_gd_image, $thumbnail_image_path);
-				break;
-			case IMAGETYPE_JPEG:
-				imagejpeg($thumbnail_gd_image, $thumbnail_image_path, 100);
-				break;
-			case IMAGETYPE_PNG:
-				imagepng($thumbnail_gd_image, $thumbnail_image_path, 0);
-				break;
-		}
-		//imagejpeg($thumbnail_gd_image, $thumbnail_image_path, 100);
-		imagedestroy($source_gd_image);
-		imagedestroy($thumbnail_gd_image);
-
-		return true;
-	}
+	
 
 ?>
