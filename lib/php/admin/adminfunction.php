@@ -3095,7 +3095,7 @@ En cas de question, vous pouvez trouver des informations sur https://github.com/
 				$lib_pole = $locations[3];
 				
 				
-				$datecreation_poi = date('Y-m-d');			
+				$datecreation_poi = date('Y-m-d H:i:s');			
 				
 				//si le mail de la personne qui soumet le POI est aussi un modérateur ou un administrateur, on positionne moderation_poi à vrai et on met la priorité à 1
 				$sql2 = "SELECT mail_users FROM users WHERE (usertype_id_usertype = 1 OR usertype_id_usertype = 4) AND mail_users LIKE '".$mail_poi."'";
