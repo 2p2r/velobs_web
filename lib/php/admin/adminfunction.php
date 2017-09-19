@@ -1,6 +1,7 @@
 <?php
 	include '../key.php';
 	include '../commonfunction.php';	
+	
 	/*	List of functions
 	 * 		- getMarkerIcon
 	 * 		- updateMarkerIcon 
@@ -23,8 +24,6 @@
 	 * 		- getPoiComcom
 	 * 		- getPoiComcomPole
 	 * 		- getPoiPole
-	 * 		- findPoiGT
-	 * 		- findPoiPole
 	 * 		- updatePoi
 	 *	  - updatePoiComcomCarto
 	 *	  - updatePoiPoleTechCarto
@@ -586,29 +585,28 @@
 	function getPoi($start, $limit, $asc, $sort, $dir){
 		switch (SGBD) {
 			case 'mysql':
+				if (DEBUG){
+					error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - getPoi \n", 3, LOG_FILE);
+				}
 				$link = mysql_connect(HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
 				mysql_query("SET NAMES 'utf8'");
-
+				$sql = "SELECT poi.*, subcategory.lib_subcategory, commune.lib_commune, pole.lib_pole, quartier.lib_quartier, priorite.lib_priorite, status.lib_status, x(poi.geom_poi) AS X, y(poi.geom_poi) AS Y FROM poi INNER JOIN subcategory ON (subcategory.id_subcategory = poi.subcategory_id_subcategory) INNER JOIN commune ON (commune.id_commune = poi.commune_id_commune) INNER JOIN pole ON (pole.id_pole = poi.pole_id_pole) INNER JOIN quartier ON (quartier.id_quartier = poi.quartier_id_quartier) INNER JOIN priorite ON (priorite.id_priorite = poi.priorite_id_priorite) INNER JOIN status ON (status.id_status = poi.status_id_status) WHERE delete_poi = FALSE ORDER BY ";
+				
 				if ($sort == '0' && $dir == '0') {
 					switch ($asc) {
 						case 'subcategory':
-							$sql = "SELECT poi.*, subcategory.lib_subcategory, commune.lib_commune, pole.lib_pole, quartier.lib_quartier, priorite.lib_priorite, status.lib_status, x(poi.geom_poi) AS X, y(poi.geom_poi) AS Y FROM poi INNER JOIN subcategory ON (subcategory.id_subcategory = poi.subcategory_id_subcategory) INNER JOIN commune ON (commune.id_commune = poi.commune_id_commune) INNER JOIN pole ON (pole.id_pole = poi.pole_id_pole) INNER JOIN quartier ON (quartier.id_quartier = poi.quartier_id_quartier) INNER JOIN priorite ON (priorite.id_priorite = poi.priorite_id_priorite) INNER JOIN status ON (status.id_status = poi.status_id_status) WHERE delete_poi = FALSE ORDER BY lib_subcategory ASC";
+							$sql .= " lib_subcategory ASC";
 							break;
 						case 'lib':
-							$sql = "SELECT poi.*, subcategory.lib_subcategory, commune.lib_commune, pole.lib_pole, quartier.lib_quartier, priorite.lib_priorite, status.lib_status, x(poi.geom_poi) AS X, y(poi.geom_poi) AS Y FROM poi INNER JOIN subcategory ON (subcategory.id_subcategory = poi.subcategory_id_subcategory) INNER JOIN commune ON (commune.id_commune = poi.commune_id_commune) INNER JOIN pole ON (pole.id_pole = poi.pole_id_pole) INNER JOIN quartier ON (quartier.id_quartier = poi.quartier_id_quartier) INNER JOIN priorite ON (priorite.id_priorite = poi.priorite_id_priorite) INNER JOIN status ON (status.id_status = poi.status_id_status) WHERE delete_poi = FALSE ORDER BY lib_poi ASC";
-							break;
-						case 'default':
-							$sql = "SELECT poi.*, subcategory.lib_subcategory, commune.lib_commune, pole.lib_pole, quartier.lib_quartier, priorite.lib_priorite, status.lib_status, x(poi.geom_poi) AS X, y(poi.geom_poi) AS Y FROM poi INNER JOIN subcategory ON (subcategory.id_subcategory = poi.subcategory_id_subcategory) INNER JOIN commune ON (commune.id_commune = poi.commune_id_commune) INNER JOIN pole ON (pole.id_pole = poi.pole_id_pole) INNER JOIN quartier ON (quartier.id_quartier = poi.quartier_id_quartier) INNER JOIN priorite ON (priorite.id_priorite = poi.priorite_id_priorite) INNER JOIN status ON (status.id_status = poi.status_id_status) WHERE delete_poi = FALSE ORDER BY id_poi DESC";
-						case 'id':
-							$sql = "SELECT poi.*, subcategory.lib_subcategory, commune.lib_commune, pole.lib_pole, quartier.lib_quartier, priorite.lib_priorite, status.lib_status, x(poi.geom_poi) AS X, y(poi.geom_poi) AS Y FROM poi INNER JOIN subcategory ON (subcategory.id_subcategory = poi.subcategory_id_subcategory) INNER JOIN commune ON (commune.id_commune = poi.commune_id_commune) INNER JOIN pole ON (pole.id_pole = poi.pole_id_pole) INNER JOIN quartier ON (quartier.id_quartier = poi.quartier_id_quartier) INNER JOIN priorite ON (priorite.id_priorite = poi.priorite_id_priorite) INNER JOIN status ON (status.id_status = poi.status_id_status) WHERE delete_poi = FALSE ORDER BY id_poi DESC";
+							$sql .= " lib_poi ASC";
 							break;
 						default:
-							$sql = "SELECT poi.*, subcategory.lib_subcategory, commune.lib_commune, pole.lib_pole, quartier.lib_quartier, priorite.lib_priorite, status.lib_status, x(poi.geom_poi) AS X, y(poi.geom_poi) AS Y FROM poi INNER JOIN subcategory ON (subcategory.id_subcategory = poi.subcategory_id_subcategory) INNER JOIN commune ON (commune.id_commune = poi.commune_id_commune) INNER JOIN pole ON (pole.id_pole = poi.pole_id_pole) INNER JOIN quartier ON (quartier.id_quartier = poi.quartier_id_quartier) INNER JOIN priorite ON (priorite.id_priorite = poi.priorite_id_priorite) INNER JOIN status ON (status.id_status = poi.status_id_status) WHERE delete_poi = FALSE ORDER BY id_poi DESC";
+							$sql .= " id_poi DESC";
 							break;
 					}
 				} else {
-					$sql = "SELECT poi.*, subcategory.lib_subcategory, commune.lib_commune, pole.lib_pole, quartier.lib_quartier, priorite.lib_priorite, status.lib_status, x(poi.geom_poi) AS X, y(poi.geom_poi) AS Y FROM poi INNER JOIN subcategory ON (subcategory.id_subcategory = poi.subcategory_id_subcategory) INNER JOIN commune ON (commune.id_commune = poi.commune_id_commune) INNER JOIN pole ON (pole.id_pole = poi.pole_id_pole) INNER JOIN quartier ON (quartier.id_quartier = poi.quartier_id_quartier) INNER JOIN priorite ON (priorite.id_priorite = poi.priorite_id_priorite) INNER JOIN status ON (status.id_status = poi.status_id_status) WHERE delete_poi = FALSE ORDER BY ".$sort." ".$dir;
+					$sql .= $sort." ".$dir;
 				}
 
 				$result = mysql_query($sql);
@@ -693,21 +691,16 @@
 				$link = mysql_connect(HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
 				mysql_query("SET NAMES 'utf8'");
-				
+				$sql = "SELECT poi.*, subcategory.lib_subcategory, commune.lib_commune, pole.lib_pole, quartier.lib_quartier, priorite.lib_priorite, status.lib_status, x(poi.geom_poi) AS X, y(poi.geom_poi) AS Y FROM poi INNER JOIN subcategory ON (subcategory.id_subcategory = poi.subcategory_id_subcategory) INNER JOIN commune ON (commune.id_commune = poi.commune_id_commune) INNER JOIN pole ON (pole.id_pole = poi.pole_id_pole) INNER JOIN quartier ON (quartier.id_quartier = poi.quartier_id_quartier) INNER JOIN priorite ON (priorite.id_priorite = poi.priorite_id_priorite) INNER JOIN status ON (status.id_status = poi.status_id_status) WHERE delete_poi = TRUE ORDER BY ";
 				switch ($asc) {
 					case 'subcategory':
-						$sql = "SELECT poi.*, subcategory.lib_subcategory, commune.lib_commune, pole.lib_pole, quartier.lib_quartier, priorite.lib_priorite, status.lib_status, x(poi.geom_poi) AS X, y(poi.geom_poi) AS Y FROM poi INNER JOIN subcategory ON (subcategory.id_subcategory = poi.subcategory_id_subcategory) INNER JOIN commune ON (commune.id_commune = poi.commune_id_commune) INNER JOIN pole ON (pole.id_pole = poi.pole_id_pole) INNER JOIN quartier ON (quartier.id_quartier = poi.quartier_id_quartier) INNER JOIN priorite ON (priorite.id_priorite = poi.priorite_id_priorite) INNER JOIN status ON (status.id_status = poi.status_id_status) WHERE delete_poi = TRUE ORDER BY lib_subcategory ASC";
+						$sql .= " lib_subcategory ASC";
 						break;
 					case 'lib':
-						$sql = "SELECT poi.*, subcategory.lib_subcategory, commune.lib_commune, pole.lib_pole, quartier.lib_quartier, priorite.lib_priorite, status.lib_status, x(poi.geom_poi) AS X, y(poi.geom_poi) AS Y FROM poi INNER JOIN subcategory ON (subcategory.id_subcategory = poi.subcategory_id_subcategory) INNER JOIN commune ON (commune.id_commune = poi.commune_id_commune) INNER JOIN pole ON (pole.id_pole = poi.pole_id_pole) INNER JOIN quartier ON (quartier.id_quartier = poi.quartier_id_quartier) INNER JOIN priorite ON (priorite.id_priorite = poi.priorite_id_priorite) INNER JOIN status ON (status.id_status = poi.status_id_status) WHERE delete_poi = TRUE ORDER BY lib_poi ASC";
-						break;
-					case 'default':
-						$sql = "SELECT poi.*, subcategory.lib_subcategory, commune.lib_commune, pole.lib_pole, quartier.lib_quartier, priorite.lib_priorite, status.lib_status, x(poi.geom_poi) AS X, y(poi.geom_poi) AS Y FROM poi INNER JOIN subcategory ON (subcategory.id_subcategory = poi.subcategory_id_subcategory) INNER JOIN commune ON (commune.id_commune = poi.commune_id_commune) INNER JOIN pole ON (pole.id_pole = poi.pole_id_pole) INNER JOIN quartier ON (quartier.id_quartier = poi.quartier_id_quartier) INNER JOIN priorite ON (priorite.id_priorite = poi.priorite_id_priorite) INNER JOIN status ON (status.id_status = poi.status_id_status) WHERE delete_poi = TRUE ORDER BY id_poi ASC";
-					case 'id':
-						$sql = "SELECT poi.*, subcategory.lib_subcategory, commune.lib_commune, pole.lib_pole, quartier.lib_quartier, priorite.lib_priorite, status.lib_status, x(poi.geom_poi) AS X, y(poi.geom_poi) AS Y FROM poi INNER JOIN subcategory ON (subcategory.id_subcategory = poi.subcategory_id_subcategory) INNER JOIN commune ON (commune.id_commune = poi.commune_id_commune) INNER JOIN pole ON (pole.id_pole = poi.pole_id_pole) INNER JOIN quartier ON (quartier.id_quartier = poi.quartier_id_quartier) INNER JOIN priorite ON (priorite.id_priorite = poi.priorite_id_priorite) INNER JOIN status ON (status.id_status = poi.status_id_status) WHERE delete_poi = TRUE ORDER BY id_poi ASC";
+						$sql .= " lib_poi ASC";
 						break;
 					default:
-						$sql = "SELECT poi.*, subcategory.lib_subcategory, commune.lib_commune, pole.lib_pole, quartier.lib_quartier, priorite.lib_priorite, status.lib_status, x(poi.geom_poi) AS X, y(poi.geom_poi) AS Y FROM poi INNER JOIN subcategory ON (subcategory.id_subcategory = poi.subcategory_id_subcategory) INNER JOIN commune ON (commune.id_commune = poi.commune_id_commune) INNER JOIN pole ON (pole.id_pole = poi.pole_id_pole) INNER JOIN quartier ON (quartier.id_quartier = poi.quartier_id_quartier) INNER JOIN priorite ON (priorite.id_priorite = poi.priorite_id_priorite) INNER JOIN status ON (status.id_status = poi.status_id_status) WHERE delete_poi = TRUE ORDER BY id_poi ASC";
+						$sql .= " id_poi ASC";
 						break;
 				}
 				
@@ -780,21 +773,16 @@
 					$link = mysql_connect(HOST,DB_USER,DB_PASS);
 					mysql_select_db(DB_NAME);
 					mysql_query("SET NAMES 'utf8'");
-
+					$sql = "SELECT poi.*, subcategory.lib_subcategory, commune.lib_commune, pole.lib_pole, quartier.lib_quartier, priorite.lib_priorite, status.lib_status, x(poi.geom_poi) AS X, y(poi.geom_poi) AS Y FROM poi INNER JOIN subcategory ON (subcategory.id_subcategory = poi.subcategory_id_subcategory) INNER JOIN commune ON (commune.id_commune = poi.commune_id_commune) INNER JOIN pole ON (pole.id_pole = poi.pole_id_pole) INNER JOIN quartier ON (quartier.id_quartier = poi.quartier_id_quartier) INNER JOIN priorite ON (priorite.id_priorite = poi.priorite_id_priorite) INNER JOIN status ON (status.id_status = poi.status_id_status) WHERE pole_id_pole = ".$_SESSION['pole']." AND delete_poi = TRUE ORDER BY ";
 					switch ($asc) {
 						case 'subcategory':
-							$sql = "SELECT poi.*, subcategory.lib_subcategory, commune.lib_commune, pole.lib_pole, quartier.lib_quartier, priorite.lib_priorite, status.lib_status, x(poi.geom_poi) AS X, y(poi.geom_poi) AS Y FROM poi INNER JOIN subcategory ON (subcategory.id_subcategory = poi.subcategory_id_subcategory) INNER JOIN commune ON (commune.id_commune = poi.commune_id_commune) INNER JOIN pole ON (pole.id_pole = poi.pole_id_pole) INNER JOIN quartier ON (quartier.id_quartier = poi.quartier_id_quartier) INNER JOIN priorite ON (priorite.id_priorite = poi.priorite_id_priorite) INNER JOIN status ON (status.id_status = poi.status_id_status) WHERE pole_id_pole = ".$_SESSION['pole']." AND delete_poi = TRUE ORDER BY lib_subcategory ASC";
+							$sql .= " lib_subcategory ASC";
 							break;
 						case 'lib':
-							$sql = "SELECT poi.*, subcategory.lib_subcategory, commune.lib_commune, pole.lib_pole, quartier.lib_quartier, priorite.lib_priorite, status.lib_status, x(poi.geom_poi) AS X, y(poi.geom_poi) AS Y FROM poi INNER JOIN subcategory ON (subcategory.id_subcategory = poi.subcategory_id_subcategory) INNER JOIN commune ON (commune.id_commune = poi.commune_id_commune) INNER JOIN pole ON (pole.id_pole = poi.pole_id_pole) INNER JOIN quartier ON (quartier.id_quartier = poi.quartier_id_quartier) INNER JOIN priorite ON (priorite.id_priorite = poi.priorite_id_priorite) INNER JOIN status ON (status.id_status = poi.status_id_status) WHERE pole_id_pole = ".$_SESSION['pole']." AND delete_poi = TRUE ORDER BY lib_poi ASC";
-							break;
-						case 'default':
-							$sql = "SELECT poi.*, subcategory.lib_subcategory, commune.lib_commune, pole.lib_pole, quartier.lib_quartier, priorite.lib_priorite, status.lib_status, x(poi.geom_poi) AS X, y(poi.geom_poi) AS Y FROM poi INNER JOIN subcategory ON (subcategory.id_subcategory = poi.subcategory_id_subcategory) INNER JOIN commune ON (commune.id_commune = poi.commune_id_commune) INNER JOIN pole ON (pole.id_pole = poi.pole_id_pole) INNER JOIN quartier ON (quartier.id_quartier = poi.quartier_id_quartier) INNER JOIN priorite ON (priorite.id_priorite = poi.priorite_id_priorite) INNER JOIN status ON (status.id_status = poi.status_id_status) WHERE pole_id_pole = ".$_SESSION['pole']." AND delete_poi = TRUE ORDER BY id_poi ASC";
-						case 'id':
-							$sql = "SELECT poi.*, subcategory.lib_subcategory, commune.lib_commune, pole.lib_pole, quartier.lib_quartier, priorite.lib_priorite, status.lib_status, x(poi.geom_poi) AS X, y(poi.geom_poi) AS Y FROM poi INNER JOIN subcategory ON (subcategory.id_subcategory = poi.subcategory_id_subcategory) INNER JOIN commune ON (commune.id_commune = poi.commune_id_commune) INNER JOIN pole ON (pole.id_pole = poi.pole_id_pole) INNER JOIN quartier ON (quartier.id_quartier = poi.quartier_id_quartier) INNER JOIN priorite ON (priorite.id_priorite = poi.priorite_id_priorite) INNER JOIN status ON (status.id_status = poi.status_id_status) WHERE pole_id_pole = ".$_SESSION['pole']." AND delete_poi = TRUE ORDER BY id_poi ASC";
+							$sql .= " lib_poi ASC";
 							break;
 						default:
-							$sql = "SELECT poi.*, subcategory.lib_subcategory, commune.lib_commune, pole.lib_pole, quartier.lib_quartier, priorite.lib_priorite, status.lib_status, x(poi.geom_poi) AS X, y(poi.geom_poi) AS Y FROM poi INNER JOIN subcategory ON (subcategory.id_subcategory = poi.subcategory_id_subcategory) INNER JOIN commune ON (commune.id_commune = poi.commune_id_commune) INNER JOIN pole ON (pole.id_pole = poi.pole_id_pole) INNER JOIN quartier ON (quartier.id_quartier = poi.quartier_id_quartier) INNER JOIN priorite ON (priorite.id_priorite = poi.priorite_id_priorite) INNER JOIN status ON (status.id_status = poi.status_id_status) WHERE pole_id_pole = ".$_SESSION['pole']." AND delete_poi = TRUE ORDER BY id_poi ASC";
+							$sql .= " id_poi ASC";
 							break;
 					}
 
@@ -866,34 +854,27 @@
 	function getPoiComcom($start, $limit, $asc, $sort, $dir){
 		switch (SGBD) {
 			case 'mysql':
+				if (DEBUG){
+					error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - getPoiComcom \n", 3, LOG_FILE);
+				}
 				$link = mysql_connect(HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
 				mysql_query("SET NAMES 'utf8'");
-
+				$sql = "SELECT poi.*, subcategory.lib_subcategory, commune.lib_commune, pole.lib_pole, quartier.lib_quartier, priorite.lib_priorite, status.lib_status, x(poi.geom_poi) AS X, y(poi.geom_poi) AS Y FROM poi INNER JOIN subcategory ON (subcategory.id_subcategory = poi.subcategory_id_subcategory) INNER JOIN commune ON (commune.id_commune = poi.commune_id_commune) INNER JOIN pole ON (pole.id_pole = poi.pole_id_pole) INNER JOIN quartier ON (quartier.id_quartier = poi.quartier_id_quartier) INNER JOIN priorite ON (priorite.id_priorite = poi.priorite_id_priorite) INNER JOIN status ON (status.id_status = poi.status_id_status) WHERE moderation_poi = 1 AND commune_id_commune IN (".str_replace(';',',',$_SESSION['territoire']).") AND delete_poi = FALSE AND priorite.id_priorite <> 7 AND priorite.id_priorite <> 15 ORDER BY ";
 				if ($sort == '0' && $dir == '0') {
 					switch ($asc) {
 						case 'subcategory':
-							//$sql = "SELECT poi.*, subcategory.lib_subcategory, commune.lib_commune, pole.lib_pole, quartier.lib_quartier, priorite.lib_priorite, status.lib_status, x(poi.geom_poi) AS X, y(poi.geom_poi) AS Y FROM poi INNER JOIN subcategory ON (subcategory.id_subcategory = poi.subcategory_id_subcategory) INNER JOIN commune ON (commune.id_commune = poi.commune_id_commune) INNER JOIN pole ON (pole.id_pole = poi.pole_id_pole) INNER JOIN quartier ON (quartier.id_quartier = poi.quartier_id_quartier) INNER JOIN priorite ON (priorite.id_priorite = poi.priorite_id_priorite) INNER JOIN status ON (status.id_status = poi.status_id_status) WHERE moderation_poi = 1 AND pole_id_pole <> 9 AND delete_poi = FALSE AND priorite.id_priorite <> 7 AND priorite.id_priorite <> 15 ORDER BY lib_subcategory ASC";
-							$sql = "SELECT poi.*, subcategory.lib_subcategory, commune.lib_commune, pole.lib_pole, quartier.lib_quartier, priorite.lib_priorite, status.lib_status, x(poi.geom_poi) AS X, y(poi.geom_poi) AS Y FROM poi INNER JOIN subcategory ON (subcategory.id_subcategory = poi.subcategory_id_subcategory) INNER JOIN commune ON (commune.id_commune = poi.commune_id_commune) INNER JOIN pole ON (pole.id_pole = poi.pole_id_pole) INNER JOIN quartier ON (quartier.id_quartier = poi.quartier_id_quartier) INNER JOIN priorite ON (priorite.id_priorite = poi.priorite_id_priorite) INNER JOIN status ON (status.id_status = poi.status_id_status) WHERE moderation_poi = 1 AND commune_id_commune IN (".str_replace(';',',',$_SESSION['territoire']).") AND delete_poi = FALSE AND priorite.id_priorite <> 7 AND priorite.id_priorite <> 15 ORDER BY lib_subcategory ASC";
+							$sql .= " lib_subcategory ASC";
 							break;
 						case 'lib':
-							//$sql = "SELECT poi.*, subcategory.lib_subcategory, commune.lib_commune, pole.lib_pole, quartier.lib_quartier, priorite.lib_priorite, status.lib_status, x(poi.geom_poi) AS X, y(poi.geom_poi) AS Y FROM poi INNER JOIN subcategory ON (subcategory.id_subcategory = poi.subcategory_id_subcategory) INNER JOIN commune ON (commune.id_commune = poi.commune_id_commune) INNER JOIN pole ON (pole.id_pole = poi.pole_id_pole) INNER JOIN quartier ON (quartier.id_quartier = poi.quartier_id_quartier) INNER JOIN priorite ON (priorite.id_priorite = poi.priorite_id_priorite) INNER JOIN status ON (status.id_status = poi.status_id_status) WHERE moderation_poi = 1 AND pole_id_pole <> 9 AND delete_poi = FALSE AND priorite.id_priorite <> 7 AND priorite.id_priorite <> 15 ORDER BY lib_poi ASC";
-							$sql = "SELECT poi.*, subcategory.lib_subcategory, commune.lib_commune, pole.lib_pole, quartier.lib_quartier, priorite.lib_priorite, status.lib_status, x(poi.geom_poi) AS X, y(poi.geom_poi) AS Y FROM poi INNER JOIN subcategory ON (subcategory.id_subcategory = poi.subcategory_id_subcategory) INNER JOIN commune ON (commune.id_commune = poi.commune_id_commune) INNER JOIN pole ON (pole.id_pole = poi.pole_id_pole) INNER JOIN quartier ON (quartier.id_quartier = poi.quartier_id_quartier) INNER JOIN priorite ON (priorite.id_priorite = poi.priorite_id_priorite) INNER JOIN status ON (status.id_status = poi.status_id_status) WHERE moderation_poi = 1 AND commune_id_commune IN (".str_replace(';',',',$_SESSION['territoire']).") AND delete_poi = FALSE AND priorite.id_priorite <> 7 AND priorite.id_priorite <> 15 ORDER BY lib_poi ASC";
-							break;
-						case 'default':
-							//$sql = "SELECT poi.*, subcategory.lib_subcategory, commune.lib_commune, pole.lib_pole, quartier.lib_quartier, priorite.lib_priorite, status.lib_status, x(poi.geom_poi) AS X, y(poi.geom_poi) AS Y FROM poi INNER JOIN subcategory ON (subcategory.id_subcategory = poi.subcategory_id_subcategory) INNER JOIN commune ON (commune.id_commune = poi.commune_id_commune) INNER JOIN pole ON (pole.id_pole = poi.pole_id_pole) INNER JOIN quartier ON (quartier.id_quartier = poi.quartier_id_quartier) INNER JOIN priorite ON (priorite.id_priorite = poi.priorite_id_priorite) INNER JOIN status ON (status.id_status = poi.status_id_status) WHERE moderation_poi = 1 AND pole_id_pole <> 9 AND delete_poi = FALSE AND priorite.id_priorite <> 7 AND priorite.id_priorite <> 15 ORDER BY id_poi ASC";
-							$sql = "SELECT poi.*, subcategory.lib_subcategory, commune.lib_commune, pole.lib_pole, quartier.lib_quartier, priorite.lib_priorite, status.lib_status, x(poi.geom_poi) AS X, y(poi.geom_poi) AS Y FROM poi INNER JOIN subcategory ON (subcategory.id_subcategory = poi.subcategory_id_subcategory) INNER JOIN commune ON (commune.id_commune = poi.commune_id_commune) INNER JOIN pole ON (pole.id_pole = poi.pole_id_pole) INNER JOIN quartier ON (quartier.id_quartier = poi.quartier_id_quartier) INNER JOIN priorite ON (priorite.id_priorite = poi.priorite_id_priorite) INNER JOIN status ON (status.id_status = poi.status_id_status) WHERE moderation_poi = 1 AND commune_id_commune IN (".str_replace(';',',',$_SESSION['territoire']).") AND delete_poi = FALSE AND priorite.id_priorite <> 7 AND priorite.id_priorite <> 15 ORDER BY id_poi DESC";
-						case 'id':
-							//$sql = "SELECT poi.*, subcategory.lib_subcategory, commune.lib_commune, pole.lib_pole, quartier.lib_quartier, priorite.lib_priorite, status.lib_status, x(poi.geom_poi) AS X, y(poi.geom_poi) AS Y FROM poi INNER JOIN subcategory ON (subcategory.id_subcategory = poi.subcategory_id_subcategory) INNER JOIN commune ON (commune.id_commune = poi.commune_id_commune) INNER JOIN pole ON (pole.id_pole = poi.pole_id_pole) INNER JOIN quartier ON (quartier.id_quartier = poi.quartier_id_quartier) INNER JOIN priorite ON (priorite.id_priorite = poi.priorite_id_priorite) INNER JOIN status ON (status.id_status = poi.status_id_status) WHERE moderation_poi = 1 AND pole_id_pole <> 9 AND delete_poi = FALSE AND priorite.id_priorite <> 7 AND priorite.id_priorite <> 15 ORDER BY id_poi ASC";
-							$sql = "SELECT poi.*, subcategory.lib_subcategory, commune.lib_commune, pole.lib_pole, quartier.lib_quartier, priorite.lib_priorite, status.lib_status, x(poi.geom_poi) AS X, y(poi.geom_poi) AS Y FROM poi INNER JOIN subcategory ON (subcategory.id_subcategory = poi.subcategory_id_subcategory) INNER JOIN commune ON (commune.id_commune = poi.commune_id_commune) INNER JOIN pole ON (pole.id_pole = poi.pole_id_pole) INNER JOIN quartier ON (quartier.id_quartier = poi.quartier_id_quartier) INNER JOIN priorite ON (priorite.id_priorite = poi.priorite_id_priorite) INNER JOIN status ON (status.id_status = poi.status_id_status) WHERE moderation_poi = 1 AND commune_id_commune IN (".str_replace(';',',',$_SESSION['territoire']).") AND delete_poi = FALSE AND priorite.id_priorite <> 7 AND priorite.id_priorite <> 15 ORDER BY id_poi DESC";
+							$sql .= " lib_poi ASC";
 							break;
 						default:
-							//$sql = "SELECT poi.*, subcategory.lib_subcategory, commune.lib_commune, pole.lib_pole, quartier.lib_quartier, priorite.lib_priorite, status.lib_status, x(poi.geom_poi) AS X, y(poi.geom_poi) AS Y FROM poi INNER JOIN subcategory ON (subcategory.id_subcategory = poi.subcategory_id_subcategory) INNER JOIN commune ON (commune.id_commune = poi.commune_id_commune) INNER JOIN pole ON (pole.id_pole = poi.pole_id_pole) INNER JOIN quartier ON (quartier.id_quartier = poi.quartier_id_quartier) INNER JOIN priorite ON (priorite.id_priorite = poi.priorite_id_priorite) INNER JOIN status ON (status.id_status = poi.status_id_status) WHERE moderation_poi = 1 AND pole_id_pole <> 9 AND delete_poi = FALSE AND priorite.id_priorite <> 7 AND priorite.id_priorite <> 15 ORDER BY id_poi ASC";
-							$sql = "SELECT poi.*, subcategory.lib_subcategory, commune.lib_commune, pole.lib_pole, quartier.lib_quartier, priorite.lib_priorite, status.lib_status, x(poi.geom_poi) AS X, y(poi.geom_poi) AS Y FROM poi INNER JOIN subcategory ON (subcategory.id_subcategory = poi.subcategory_id_subcategory) INNER JOIN commune ON (commune.id_commune = poi.commune_id_commune) INNER JOIN pole ON (pole.id_pole = poi.pole_id_pole) INNER JOIN quartier ON (quartier.id_quartier = poi.quartier_id_quartier) INNER JOIN priorite ON (priorite.id_priorite = poi.priorite_id_priorite) INNER JOIN status ON (status.id_status = poi.status_id_status) WHERE moderation_poi = 1 AND commune_id_commune IN (".str_replace(';',',',$_SESSION['territoire']).") AND delete_poi = FALSE AND priorite.id_priorite <> 7 AND priorite.id_priorite <> 15 ORDER BY id_poi DESC";
+							$sql .= " id_poi DESC";
 							break;
 					}
 				} else {
-					$sql = "SELECT poi.*, subcategory.lib_subcategory, commune.lib_commune, pole.lib_pole, quartier.lib_quartier, priorite.lib_priorite, status.lib_status, x(poi.geom_poi) AS X, y(poi.geom_poi) AS Y FROM poi INNER JOIN subcategory ON (subcategory.id_subcategory = poi.subcategory_id_subcategory) INNER JOIN commune ON (commune.id_commune = poi.commune_id_commune) INNER JOIN pole ON (pole.id_pole = poi.pole_id_pole) INNER JOIN quartier ON (quartier.id_quartier = poi.quartier_id_quartier) INNER JOIN priorite ON (priorite.id_priorite = poi.priorite_id_priorite) INNER JOIN status ON (status.id_status = poi.status_id_status) WHERE moderation_poi = 1 AND commune_id_commune IN (".str_replace(';',',',$_SESSION['territoire']).") AND delete_poi = FALSE AND priorite.id_priorite <> 7 AND priorite.id_priorite <> 15 ORDER BY ".$sort." ".$dir;
+					$sql .= $sort." ".$dir;
 				}
 
 				
@@ -948,11 +929,12 @@
 
 						$i++;
 					}
+					if (DEBUG){
+						error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - getPoiComcom, $nbrows observations pour requete ".$sql."\n", 3, LOG_FILE);
+					}
 					echo '({"total":"'.$nbrows.'","results":'.json_encode($arr).'})';
-					//echo '({"total":"'.$sql.'","results":'.json_encode($arr).'})';
 				} else {
 					echo '({"total":"0", "results":""})';
-					//echo '({"total":"'.$sql.'", "results":""})';
 				}
 				mysql_free_result($result);
 				mysql_close($link);
@@ -978,36 +960,22 @@
 					$link = mysql_connect(HOST,DB_USER,DB_PASS);
 					mysql_select_db(DB_NAME);
 					mysql_query("SET NAMES 'utf8'");
-
+					$sql = "SELECT poi.*, subcategory.lib_subcategory, commune.lib_commune, pole.lib_pole, quartier.lib_quartier, priorite.lib_priorite, status.lib_status, x(poi.geom_poi) AS X, y(poi.geom_poi) AS Y FROM poi INNER JOIN subcategory ON (subcategory.id_subcategory = poi.subcategory_id_subcategory) INNER JOIN commune ON (commune.id_commune = poi.commune_id_commune) INNER JOIN pole ON (pole.id_pole = poi.pole_id_pole) INNER JOIN quartier ON (quartier.id_quartier = poi.quartier_id_quartier) INNER JOIN priorite ON (priorite.id_priorite = poi.priorite_id_priorite) INNER JOIN status ON (status.id_status = poi.status_id_status) WHERE pole_id_pole = ".$_SESSION['pole']." AND delete_poi = FALSE ORDER BY ";
 					if ($sort == '0' && $dir == '0') {
 						switch ($asc) {
 							case 'subcategory':
-								//$sql = "SELECT poi.*, subcategory.lib_subcategory, commune.lib_commune, pole.lib_pole, quartier.lib_quartier, priorite.lib_priorite, status.lib_status, x(poi.geom_poi) AS X, y(poi.geom_poi) AS Y FROM poi INNER JOIN subcategory ON (subcategory.id_subcategory = poi.subcategory_id_subcategory) INNER JOIN commune ON (commune.id_commune = poi.commune_id_commune) INNER JOIN pole ON (pole.id_pole = poi.pole_id_pole) INNER JOIN quartier ON (quartier.id_quartier = poi.quartier_id_quartier) INNER JOIN priorite ON (priorite.id_priorite = poi.priorite_id_priorite) INNER JOIN status ON (status.id_status = poi.status_id_status) WHERE moderation_poi = 1 AND pole_id_pole <> 9 AND delete_poi = FALSE AND priorite.id_priorite <> 7 AND priorite.id_priorite <> 15 ORDER BY lib_subcategory ASC";
-								$sql = "SELECT poi.*, subcategory.lib_subcategory, commune.lib_commune, pole.lib_pole, quartier.lib_quartier, priorite.lib_priorite, status.lib_status, x(poi.geom_poi) AS X, y(poi.geom_poi) AS Y FROM poi INNER JOIN subcategory ON (subcategory.id_subcategory = poi.subcategory_id_subcategory) INNER JOIN commune ON (commune.id_commune = poi.commune_id_commune) INNER JOIN pole ON (pole.id_pole = poi.pole_id_pole) INNER JOIN quartier ON (quartier.id_quartier = poi.quartier_id_quartier) INNER JOIN priorite ON (priorite.id_priorite = poi.priorite_id_priorite) INNER JOIN status ON (status.id_status = poi.status_id_status) WHERE pole_id_pole = ".$_SESSION['pole']." AND delete_poi = FALSE ORDER BY lib_subcategory ASC";
+								$sql .= " lib_subcategory ASC";
 								break;
 							case 'lib':
-								//$sql = "SELECT poi.*, subcategory.lib_subcategory, commune.lib_commune, pole.lib_pole, quartier.lib_quartier, priorite.lib_priorite, status.lib_status, x(poi.geom_poi) AS X, y(poi.geom_poi) AS Y FROM poi INNER JOIN subcategory ON (subcategory.id_subcategory = poi.subcategory_id_subcategory) INNER JOIN commune ON (commune.id_commune = poi.commune_id_commune) INNER JOIN pole ON (pole.id_pole = poi.pole_id_pole) INNER JOIN quartier ON (quartier.id_quartier = poi.quartier_id_quartier) INNER JOIN priorite ON (priorite.id_priorite = poi.priorite_id_priorite) INNER JOIN status ON (status.id_status = poi.status_id_status) WHERE moderation_poi = 1 AND pole_id_pole <> 9 AND delete_poi = FALSE AND priorite.id_priorite <> 7 AND priorite.id_priorite <> 15 ORDER BY lib_poi ASC";
-								$sql = "SELECT poi.*, subcategory.lib_subcategory, commune.lib_commune, pole.lib_pole, quartier.lib_quartier, priorite.lib_priorite, status.lib_status, x(poi.geom_poi) AS X, y(poi.geom_poi) AS Y FROM poi INNER JOIN subcategory ON (subcategory.id_subcategory = poi.subcategory_id_subcategory) INNER JOIN commune ON (commune.id_commune = poi.commune_id_commune) INNER JOIN pole ON (pole.id_pole = poi.pole_id_pole) INNER JOIN quartier ON (quartier.id_quartier = poi.quartier_id_quartier) INNER JOIN priorite ON (priorite.id_priorite = poi.priorite_id_priorite) INNER JOIN status ON (status.id_status = poi.status_id_status) WHERE pole_id_pole = ".$_SESSION['pole']." AND delete_poi = FALSE ORDER BY lib_poi ASC";
-								break;
-							case 'default':
-								//$sql = "SELECT poi.*, subcategory.lib_subcategory, commune.lib_commune, pole.lib_pole, quartier.lib_quartier, priorite.lib_priorite, status.lib_status, x(poi.geom_poi) AS X, y(poi.geom_poi) AS Y FROM poi INNER JOIN subcategory ON (subcategory.id_subcategory = poi.subcategory_id_subcategory) INNER JOIN commune ON (commune.id_commune = poi.commune_id_commune) INNER JOIN pole ON (pole.id_pole = poi.pole_id_pole) INNER JOIN quartier ON (quartier.id_quartier = poi.quartier_id_quartier) INNER JOIN priorite ON (priorite.id_priorite = poi.priorite_id_priorite) INNER JOIN status ON (status.id_status = poi.status_id_status) WHERE moderation_poi = 1 AND pole_id_pole <> 9 AND delete_poi = FALSE AND priorite.id_priorite <> 7 AND priorite.id_priorite <> 15 ORDER BY id_poi DESC";
-								$sql = "SELECT poi.*, subcategory.lib_subcategory, commune.lib_commune, pole.lib_pole, quartier.lib_quartier, priorite.lib_priorite, status.lib_status, x(poi.geom_poi) AS X, y(poi.geom_poi) AS Y FROM poi INNER JOIN subcategory ON (subcategory.id_subcategory = poi.subcategory_id_subcategory) INNER JOIN commune ON (commune.id_commune = poi.commune_id_commune) INNER JOIN pole ON (pole.id_pole = poi.pole_id_pole) INNER JOIN quartier ON (quartier.id_quartier = poi.quartier_id_quartier) INNER JOIN priorite ON (priorite.id_priorite = poi.priorite_id_priorite) INNER JOIN status ON (status.id_status = poi.status_id_status) WHERE pole_id_pole = ".$_SESSION['pole']." AND delete_poi = FALSE ORDER BY id_poi ASC";
-							case 'id':
-								//$sql = "SELECT poi.*, subcategory.lib_subcategory, commune.lib_commune, pole.lib_pole, quartier.lib_quartier, priorite.lib_priorite, status.lib_status, x(poi.geom_poi) AS X, y(poi.geom_poi) AS Y FROM poi INNER JOIN subcategory ON (subcategory.id_subcategory = poi.subcategory_id_subcategory) INNER JOIN commune ON (commune.id_commune = poi.commune_id_commune) INNER JOIN pole ON (pole.id_pole = poi.pole_id_pole) INNER JOIN quartier ON (quartier.id_quartier = poi.quartier_id_quartier) INNER JOIN priorite ON (priorite.id_priorite = poi.priorite_id_priorite) INNER JOIN status ON (status.id_status = poi.status_id_status) WHERE moderation_poi = 1 AND pole_id_pole <> 9 AND delete_poi = FALSE AND priorite.id_priorite <> 7 AND priorite.id_priorite <> 15 ORDER BY id_poi DESC";
-								$sql = "SELECT poi.*, subcategory.lib_subcategory, commune.lib_commune, pole.lib_pole, quartier.lib_quartier, priorite.lib_priorite, status.lib_status, x(poi.geom_poi) AS X, y(poi.geom_poi) AS Y FROM poi INNER JOIN subcategory ON (subcategory.id_subcategory = poi.subcategory_id_subcategory) INNER JOIN commune ON (commune.id_commune = poi.commune_id_commune) INNER JOIN pole ON (pole.id_pole = poi.pole_id_pole) INNER JOIN quartier ON (quartier.id_quartier = poi.quartier_id_quartier) INNER JOIN priorite ON (priorite.id_priorite = poi.priorite_id_priorite) INNER JOIN status ON (status.id_status = poi.status_id_status) WHERE pole_id_pole = ".$_SESSION['pole']." AND delete_poi = FALSE ORDER BY id_poi ASC";
+								$sql .= " lib_poi ASC";
 								break;
 							default:
-								$sql = "SELECT poi.*, subcategory.lib_subcategory, commune.lib_commune, pole.lib_pole, quartier.lib_quartier, priorite.lib_priorite, status.lib_status, x(poi.geom_poi) AS X, y(poi.geom_poi) AS Y FROM poi INNER JOIN subcategory ON (subcategory.id_subcategory = poi.subcategory_id_subcategory) INNER JOIN commune ON (commune.id_commune = poi.commune_id_commune) INNER JOIN pole ON (pole.id_pole = poi.pole_id_pole) INNER JOIN quartier ON (quartier.id_quartier = poi.quartier_id_quartier) INNER JOIN priorite ON (priorite.id_priorite = poi.priorite_id_priorite) INNER JOIN status ON (status.id_status = poi.status_id_status) WHERE pole_id_pole = ".$_SESSION['pole']." AND delete_poi = FALSE ORDER BY id_poi DESC";
-								//$sql = "SELECT poi.*, subcategory.lib_subcategory, commune.lib_commune, pole.lib_pole, quartier.lib_quartier, priorite.lib_priorite, status.lib_status, x(poi.geom_poi) AS X, y(poi.geom_poi) AS Y FROM poi INNER JOIN subcategory ON (subcategory.id_subcategory = poi.subcategory_id_subcategory) INNER JOIN commune ON (commune.id_commune = poi.commune_id_commune) INNER JOIN pole ON (pole.id_pole = poi.pole_id_pole) INNER JOIN quartier ON (quartier.id_quartier = poi.quartier_id_quartier) INNER JOIN priorite ON (priorite.id_priorite = poi.priorite_id_priorite) INNER JOIN status ON (status.id_status = poi.status_id_status) WHERE moderation_poi = 1 AND pole_id_pole = ".$_SESSION['pole']." AND delete_poi = FALSE AND priorite.id_priorite <> 7 AND priorite.id_priorite <> 15 ORDER BY id_poi DESC";
-								//$sql = "SELECT poi.*, subcategory.lib_subcategory, commune.lib_commune, pole.lib_pole, quartier.lib_quartier, priorite.lib_priorite, status.lib_status, x(poi.geom_poi) AS X, y(poi.geom_poi) AS Y FROM poi INNER JOIN subcategory ON (subcategory.id_subcategory = poi.subcategory_id_subcategory) INNER JOIN commune ON (commune.id_commune = poi.commune_id_commune) INNER JOIN pole ON (pole.id_pole = poi.pole_id_pole) INNER JOIN quartier ON (quartier.id_quartier = poi.quartier_id_quartier) INNER JOIN priorite ON (priorite.id_priorite = poi.priorite_id_priorite) INNER JOIN status ON (status.id_status = poi.status_id_status) WHERE delete_poi = FALSE ORDER BY id_poi DESC";
-								//$sql = "SELECT poi.*, subcategory.lib_subcategory, commune.lib_commune, pole.lib_pole, quartier.lib_quartier, priorite.lib_priorite, status.lib_status, x(poi.geom_poi) AS X, y(poi.geom_poi) AS Y FROM poi INNER JOIN subcategory ON (subcategory.id_subcategory = poi.subcategory_id_subcategory) INNER JOIN commune ON (commune.id_commune = poi.commune_id_commune) INNER JOIN pole ON (pole.id_pole = poi.pole_id_pole) INNER JOIN quartier ON (quartier.id_quartier = poi.quartier_id_quartier) INNER JOIN priorite ON (priorite.id_priorite = poi.priorite_id_priorite) INNER JOIN status ON (status.id_status = poi.status_id_status) WHERE moderation_poi = 1 AND commune_id_commune IN (".str_replace(';',',',$_SESSION['territoire']).") AND delete_poi = FALSE AND priorite.id_priorite <> 7 AND priorite.id_priorite <> 15 ORDER BY id_poi ASC";
+								$sql .= " id_poi DESC";
 								break;
 						}
 					} else {
-						$sql = "SELECT poi.*, subcategory.lib_subcategory, commune.lib_commune, pole.lib_pole, quartier.lib_quartier, priorite.lib_priorite, status.lib_status, x(poi.geom_poi) AS X, y(poi.geom_poi) AS Y FROM poi INNER JOIN subcategory ON (subcategory.id_subcategory = poi.subcategory_id_subcategory) INNER JOIN commune ON (commune.id_commune = poi.commune_id_commune) INNER JOIN pole ON (pole.id_pole = poi.pole_id_pole) INNER JOIN quartier ON (quartier.id_quartier = poi.quartier_id_quartier) INNER JOIN priorite ON (priorite.id_priorite = poi.priorite_id_priorite) INNER JOIN status ON (status.id_status = poi.status_id_status) WHERE pole_id_pole = ".$_SESSION['pole']." AND delete_poi = FALSE ORDER BY ".$sort." ".$dir;
+						$sql .= $sort." ".$dir;
 					}
-
-
 
 					$result = mysql_query($sql);
 					$nbrows = mysql_num_rows($result);
@@ -1061,8 +1029,10 @@
 
 							$i++;
 						}
+						if (DEBUG){
+							error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - getPoiComcomPole, $nbrows observations pour requete ".$sql."\n", 3, LOG_FILE);
+						}
 						echo '({"total":"'.$nbrows.'","results":'.json_encode($arr).'})';
-						//echo '({"total":"'.$sql.'","results":'.json_encode($arr).'})';
 					} else {
 						echo '({"total":"0", "results":""})';
 					}
@@ -1090,26 +1060,21 @@
 				$link = mysql_connect(HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
 				mysql_query("SET NAMES 'utf8'");
-
+				$sql = "SELECT poi.*, subcategory.lib_subcategory, commune.lib_commune, pole.lib_pole, quartier.lib_quartier, priorite.lib_priorite, x(poi.geom_poi) AS X, y(poi.geom_poi) AS Y FROM poi INNER JOIN subcategory ON (subcategory.id_subcategory = poi.subcategory_id_subcategory) INNER JOIN commune ON (commune.id_commune = poi.commune_id_commune) INNER JOIN pole ON (pole.id_pole = poi.pole_id_pole) INNER JOIN quartier ON (quartier.id_quartier = poi.quartier_id_quartier) INNER JOIN priorite ON (priorite.id_priorite = poi.priorite_id_priorite) WHERE moderation_poi = 1 AND pole_id_pole = ".$num_pole." AND transmission_poi = 1 AND delete_poi = FALSE ORDER BY ";
 				if ($sort == '0' && $dir == '0') {
 					switch ($asc) {
 						case 'subcategory':
-							$sql = "SELECT poi.*, subcategory.lib_subcategory, commune.lib_commune, pole.lib_pole, quartier.lib_quartier, priorite.lib_priorite, x(poi.geom_poi) AS X, y(poi.geom_poi) AS Y FROM poi INNER JOIN subcategory ON (subcategory.id_subcategory = poi.subcategory_id_subcategory) INNER JOIN commune ON (commune.id_commune = poi.commune_id_commune) INNER JOIN pole ON (pole.id_pole = poi.pole_id_pole) INNER JOIN quartier ON (quartier.id_quartier = poi.quartier_id_quartier) INNER JOIN priorite ON (priorite.id_priorite = poi.priorite_id_priorite) WHERE moderation_poi = 1 AND pole_id_pole = ".$num_pole." AND transmission_poi = 1 AND delete_poi = FALSE ORDER BY lib_subcategory ASC";
+							$sql .= " lib_subcategory ASC";
 							break;
 						case 'lib':
-							$sql = "SELECT poi.*, subcategory.lib_subcategory, commune.lib_commune, pole.lib_pole, quartier.lib_quartier, priorite.lib_priorite, x(poi.geom_poi) AS X, y(poi.geom_poi) AS Y FROM poi INNER JOIN subcategory ON (subcategory.id_subcategory = poi.subcategory_id_subcategory) INNER JOIN commune ON (commune.id_commune = poi.commune_id_commune) INNER JOIN pole ON (pole.id_pole = poi.pole_id_pole) INNER JOIN quartier ON (quartier.id_quartier = poi.quartier_id_quartier) INNER JOIN priorite ON (priorite.id_priorite = poi.priorite_id_priorite) WHERE moderation_poi = 1 AND pole_id_pole = ".$num_pole." AND transmission_poi = 1 AND delete_poi = FALSE ORDER BY lib_poi ASC";
-							break;
-						case 'default':
-							$sql = "SELECT poi.*, subcategory.lib_subcategory, commune.lib_commune, pole.lib_pole, quartier.lib_quartier, priorite.lib_priorite, x(poi.geom_poi) AS X, y(poi.geom_poi) AS Y FROM poi INNER JOIN subcategory ON (subcategory.id_subcategory = poi.subcategory_id_subcategory) INNER JOIN commune ON (commune.id_commune = poi.commune_id_commune) INNER JOIN pole ON (pole.id_pole = poi.pole_id_pole) INNER JOIN quartier ON (quartier.id_quartier = poi.quartier_id_quartier) INNER JOIN priorite ON (priorite.id_priorite = poi.priorite_id_priorite) WHERE moderation_poi = 1 AND pole_id_pole = ".$num_pole." AND transmission_poi = 1 AND delete_poi = FALSE ORDER BY id_poi DESC";
-						case 'id':
-							$sql = "SELECT poi.*, subcategory.lib_subcategory, commune.lib_commune, pole.lib_pole, quartier.lib_quartier, priorite.lib_priorite, x(poi.geom_poi) AS X, y(poi.geom_poi) AS Y FROM poi INNER JOIN subcategory ON (subcategory.id_subcategory = poi.subcategory_id_subcategory) INNER JOIN commune ON (commune.id_commune = poi.commune_id_commune) INNER JOIN pole ON (pole.id_pole = poi.pole_id_pole) INNER JOIN quartier ON (quartier.id_quartier = poi.quartier_id_quartier) INNER JOIN priorite ON (priorite.id_priorite = poi.priorite_id_priorite) WHERE moderation_poi = 1 AND pole_id_pole = ".$num_pole." AND transmission_poi = 1 AND delete_poi = FALSE ORDER BY id_poi DESC";
+							$sql .= " lib_poi ASC";
 							break;
 						default:
-							$sql = "SELECT poi.*, subcategory.lib_subcategory, commune.lib_commune, pole.lib_pole, quartier.lib_quartier, priorite.lib_priorite, x(poi.geom_poi) AS X, y(poi.geom_poi) AS Y FROM poi INNER JOIN subcategory ON (subcategory.id_subcategory = poi.subcategory_id_subcategory) INNER JOIN commune ON (commune.id_commune = poi.commune_id_commune) INNER JOIN pole ON (pole.id_pole = poi.pole_id_pole) INNER JOIN quartier ON (quartier.id_quartier = poi.quartier_id_quartier) INNER JOIN priorite ON (priorite.id_priorite = poi.priorite_id_priorite) WHERE moderation_poi = 1 AND pole_id_pole = ".$num_pole." AND transmission_poi = 1 AND delete_poi = FALSE ORDER BY id_poi DESC";
-							break;
+							$sql .= " id_poi DESC";
+						
 					}
 				} else {
-					$sql = "SELECT poi.*, subcategory.lib_subcategory, commune.lib_commune, pole.lib_pole, quartier.lib_quartier, priorite.lib_priorite, x(poi.geom_poi) AS X, y(poi.geom_poi) AS Y FROM poi INNER JOIN subcategory ON (subcategory.id_subcategory = poi.subcategory_id_subcategory) INNER JOIN commune ON (commune.id_commune = poi.commune_id_commune) INNER JOIN pole ON (pole.id_pole = poi.pole_id_pole) INNER JOIN quartier ON (quartier.id_quartier = poi.quartier_id_quartier) INNER JOIN priorite ON (priorite.id_priorite = poi.priorite_id_priorite) WHERE moderation_poi = 1 AND pole_id_pole = ".$num_pole." AND transmission_poi = 1 AND delete_poi = FALSE ORDER BY ".$sort." ".$dir;
+					$sql .= $sort." ".$dir;
 				}
 				
 				$result = mysql_query($sql);
@@ -1162,9 +1127,14 @@
 
 						$i++;
 					}
+					if (DEBUG){
+							error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - getPoiPole, $nbrows observations pour requete ".$sql."\n", 3, LOG_FILE);
+						}
 					echo '({"total":"'.$nbrows.'","results":'.json_encode($arr).'})';
-					//echo '({"total":"'.$sql.'","results":'.json_encode($arr).'})';
 				} else {
+					if (DEBUG){
+						error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - getPoiPole, $nbrows observations pour requete ".$sql."\n", 3, LOG_FILE);
+					}
 					echo '({"total":"0", "results":""})';
 				}
 				mysql_free_result($result);
@@ -1195,7 +1165,6 @@
 				mysql_query("SET NAMES 'utf8'");
 				
 				$sql = "SELECT poi.*, subcategory.lib_subcategory, commune.lib_commune, pole.lib_pole, quartier.lib_quartier, priorite.lib_priorite, status.lib_status, x(poi.geom_poi) AS X, y(poi.geom_poi) AS Y FROM poi INNER JOIN subcategory ON (subcategory.id_subcategory = poi.subcategory_id_subcategory) INNER JOIN commune ON (commune.id_commune = poi.commune_id_commune) INNER JOIN pole ON (pole.id_pole = poi.pole_id_pole) INNER JOIN quartier ON (quartier.id_quartier = poi.quartier_id_quartier) INNER JOIN priorite ON (priorite.id_priorite = poi.priorite_id_priorite) INNER JOIN status ON (status.id_status = poi.status_id_status) WHERE LOWER(poi.lib_poi) LIKE LOWER('%".$query."%') OR LOWER(poi.mail_poi) LIKE LOWER('%".$query."%') OR LOWER(poi.adherent_poi) LIKE LOWER('%".$query."%') OR LOWER(commune.lib_commune) LIKE LOWER('%".$query."%') OR LOWER(pole.lib_pole) LIKE LOWER('%".$query."%') OR LOWER(quartier.lib_quartier) LIKE LOWER('%".$query."%') OR OR LOWER(priorite.lib_priorite) LIKE LOWER('%".$query."%') LOWER(poi.rue_poi) LIKE LOWER('%".$query."%') OR LOWER(poi.tel_poi) LIKE LOWER('%".$query."%') WHERE delete_poi = FALSE ORDER BY id_poi ASC";
-				//$sql = "SELECT poi.*, subcategory.lib_subcategory, x(poi.geom_poi) AS X, y(poi.geom_poi) AS Y FROM poi INNER JOIN subcategory ON (subcategory.id_subcategory = poi.subcategory_id_subcategory) INNER JOIN commune ON (commune.id_commune = poi.commune_id_commune) WHERE LOWER(poi.lib_poi) LIKE LOWER('%".$query."%') OR LOWER(poi.mail_poi) LIKE LOWER('%".$query."%') OR LOWER(commune.lib_commune) LIKE LOWER('%".$query."%') OR LOWER(poi.adresse_poi) LIKE LOWER('%".$query."%') OR LOWER(poi.tel_poi) LIKE LOWER('%".$query."%') ORDER BY id_poi ASC";
 
 				$result = mysql_query($sql);
 				$nbrows = mysql_num_rows($result);
@@ -1239,6 +1208,9 @@
 						
 						$i++;
 					}
+					if (DEBUG){
+						error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - findPoi, $nbrows observations pour requete ".$sql."\n", 3, LOG_FILE);
+					}
 					echo '({"total":"'.$nbrows.'","results":'.json_encode($arr).'})';
 				} else {
 					echo '({"total":"0", "results":""})';
@@ -1271,7 +1243,6 @@
 				mysql_query("SET NAMES 'utf8'");
 				
 				$sql = "SELECT poi.*, subcategory.lib_subcategory, commune.lib_commune, pole.lib_pole, quartier.lib_quartier, priorite.lib_priorite, status.lib_status, x(poi.geom_poi) AS X, y(poi.geom_poi) AS Y FROM poi INNER JOIN subcategory ON (subcategory.id_subcategory = poi.subcategory_id_subcategory) INNER JOIN commune ON (commune.id_commune = poi.commune_id_commune) INNER JOIN pole ON (pole.id_pole = poi.pole_id_pole) INNER JOIN quartier ON (quartier.id_quartier = poi.quartier_id_quartier) INNER JOIN priorite ON (priorite.id_priorite = poi.priorite_id_priorite) INNER JOIN status ON (status.id_status = poi.status_id_status) WHERE LOWER(poi.lib_poi) LIKE LOWER('%".$query."%') OR LOWER(poi.mail_poi) LIKE LOWER('%".$query."%') OR LOWER(poi.adherent_poi) LIKE LOWER('%".$query."%') OR LOWER(commune.lib_commune) LIKE LOWER('%".$query."%') OR LOWER(pole.lib_pole) LIKE LOWER('%".$query."%') OR LOWER(quartier.lib_quartier) LIKE LOWER('%".$query."%') OR OR LOWER(priorite.lib_priorite) LIKE LOWER('%".$query."%') LOWER(poi.rue_poi) LIKE LOWER('%".$query."%') OR LOWER(poi.tel_poi) LIKE LOWER('%".$query."%') WHERE delete_poi = TRUE ORDER BY id_poi ASC";
-				//$sql = "SELECT poi.*, subcategory.lib_subcategory, x(poi.geom_poi) AS X, y(poi.geom_poi) AS Y FROM poi INNER JOIN subcategory ON (subcategory.id_subcategory = poi.subcategory_id_subcategory) INNER JOIN commune ON (commune.id_commune = poi.commune_id_commune) WHERE LOWER(poi.lib_poi) LIKE LOWER('%".$query."%') OR LOWER(poi.mail_poi) LIKE LOWER('%".$query."%') OR LOWER(commune.lib_commune) LIKE LOWER('%".$query."%') OR LOWER(poi.adresse_poi) LIKE LOWER('%".$query."%') OR LOWER(poi.tel_poi) LIKE LOWER('%".$query."%') ORDER BY id_poi ASC";
 
 				$result = mysql_query($sql);
 				$nbrows = mysql_num_rows($result);
@@ -1332,430 +1303,177 @@
 
 
 	/* 	Function name 	: updatePoi
+	 * //methode appelée par poi1 à 4, quand quelqu'un modifie une information via la datatable sur l'interface d'administration
 	 * 	Input			:  
-	 * 	Output			: success => '1' / failed => '2'
+	 * 	Output			: success => '1' / pas de modification => 2 : failed => '3'
 	 * 	Object			: update poi grid
 	 * 	Date			: July 13, 2015
 	 */
 	
 	function updatePoi() {
-		$id_poi = $_POST['id_poi'];
+		$id_poi = stripslashes($_POST['id_poi']);
 		switch (SGBD) {
 			case 'mysql':
 				$link = mysql_connect(HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
 				mysql_query("SET NAMES 'utf8'");
-				// on regarde dans quelle comcom le POI appartient et on switch le contenu du mail en fonction
-				$sqlCommune = "SELECT commune_id_commune FROM poi WHERE id_poi LIKE ".$id_poi;
-				$res = mysql_query($sqlCommune);
-				$row = mysql_fetch_row($res);
-				$commune_id_commune = $row[0];
-
-				$sqlTerritoire = "SELECT id_territoire FROM territoire WHERE ids_territoire LIKE '%".$commune_id_commune."%'";
-				$res = mysql_query($sqlTerritoire);
-				$rowTerritoire = mysql_fetch_row($res);
-				$num_rows_territoire = mysql_num_rows($res);
 				
-				$sqlMailPOI = "SELECT mail_poi FROM poi WHERE id_poi = ".$id_poi;
-				$result4 = mysql_query($sqlMailPOI);
-				$rowMailPOI = mysql_fetch_array($result4);
-
-				if (isset($_POST['display_poi'])) {
-					$display_poi = $_POST['display_poi'];
-					$sql = "UPDATE poi SET display_poi = $display_poi WHERE id_poi = $id_poi";
-				} else if (isset($_POST['fix_poi'])) {
-					$fix_poi = $_POST['fix_poi'];
-					$sql = "UPDATE poi SET fix_poi = $fix_poi WHERE id_poi = $id_poi";
-				} else if (isset($_POST['delete_poi'])) {
-					$delete_poi = $_POST['delete_poi'];
-					$sql = "UPDATE poi SET delete_poi = $delete_poi WHERE id_poi = $id_poi";
-				} else if (isset($_POST['traiteparpole_poi'])) {
-					$traiteparpole_poi = $_POST['traiteparpole_poi'];
-					$sql = "UPDATE poi SET traiteparpole_poi = $traiteparpole_poi WHERE id_poi = $id_poi";
-				} else if (isset($_POST['moderation_poi'])) {
-					
-					$sql2 = "SELECT id_priorite FROM priorite INNER JOIN poi ON (poi.priorite_id_priorite = priorite.id_priorite) WHERE id_poi = ".$id_poi;
-					$result2 = mysql_query($sql2);
-					$row2 = mysql_fetch_array($result2);
-					$id_priorite = $row2['id_priorite'];
-					
-					if ($id_priorite == 4) {
-						$temp = "notmoderate";
-					} else {
-						$fix_poi = $_POST['moderation_poi'];
-						$sql = "UPDATE poi SET moderation_poi = $fix_poi WHERE id_poi = $id_poi";
-						
-						// gestion du champ mailsentuser_poi + envoi de mail dès que modéré
-						$sql2 = "SELECT mailsentuser_poi FROM poi WHERE id_poi = ".$id_poi;
-						$result2 = mysql_query($sql2);
-						$row2 = mysql_fetch_array($result2);
-						$mailsent = $row2['mailsentuser_poi'];
-						
-						if ($id_priorite == 8) {
-							if (($mailsent == 0) && ($fix_poi == true)) {
-								/* envoi d'un mail à l'observateur */
-								$to = $rowMailPOI['mail_poi'];	
-								$subject = 'Merci pour votre participation';
-
-								if ($num_rows_territoire == 1) {
-									switch ($rowTerritoire[0]) {
-										case 1:
-											$message = 'Bonjour !
-L\'observation que vous avez envoyée a été modérée par l\'association. Le problème identifié est une urgence qui nécessite une intervention rapide des services techniques.
-'.VELOBS_EMERGENCY_MAIL1.'.
-Cordialement, l\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE1.':)';
-											break;
-										case 2:
-											$message = 'Bonjour !
-L\'observation que vous avez envoyée a été modérée par l\'association. Le problème identifié est une urgence qui nécessite une intervention rapide des services techniques.
-Veuillez contacter les services techniques de la communauté de communes.
-Cordialement, l\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE2.':)';
-											break;
-										case 3:
-											$message = 'Bonjour !
-L\'observation que vous avez envoyée a été modérée par l\'association. Le problème identifié est une urgence qui nécessite une intervention rapide des services techniques.
-Veuillez contacter les services techniques de la communauté de communes.
-Cordialement, l\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE3.':)';
-											break;
-									}
-								} else {
-									$message = 'Bonjour !
-L\'observation que vous avez envoyée a été modérée par l\'association. Le problème identifié est une urgence qui nécessite une intervention rapide des services techniques.
-Veuillez contacter les services techniques de votre commune.
-Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
-								}
-
-								sendMail($to, $subject, $message);
-
-								// et on fixe à true le champ mailsentuser_poi
-								$sql3 = "UPDATE poi SET mailsentuser_poi = 1 WHERE id_poi = ".$id_poi;
-								$result3 = mysql_query($sql3);
-
-							}
-						} else {
-							if (($mailsent == 0) && ($fix_poi == true)) {
-
-								/* envoi d'un mail à l'observateur */
-								$to = $rowMailPOI['mail_poi'];
-								$subject = 'Merci pour votre participation';
-
-								if ($num_rows_territoire == 1) {
-									switch ($rowTerritoire[0]) {
-										case 1:
-											$message = 'Bonjour !
-L\'observation que vous avez envoyée a été modérée par l\'association. Le problème identifié a été envoyé aux services municipaux.
-Cordialement, l\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE1.' :)';
-											break;
-										case 2:
-											$message = 'Bonjour !
-L\'observation que vous avez envoyée a été modérée par l\'association. Le problème identifié a été envoyé aux services municipaux.
-Cordialement, l\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE2.' :)';
-											break;
-										case 3:
-											$message = 'Bonjour !
-L\'observation que vous avez envoyée a été modérée par l\'association. Le problème identifié a été envoyé aux services municipaux.
-Cordialement, l\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE3.' :)';
-											break;
-									}
-								} else {
-									$message = 'Bonjour !
-L\'observation que vous avez envoyée a été modérée par l\'association. Le problème identifié a été envoyé aux services municipaux.
-Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
-								}
-								sendMail($to, $subject, $message);
-
-								// on fixe à true le champ mailsentuser_poi
-								$sql3 = "UPDATE poi SET mailsentuser_poi = 1 WHERE id_poi = ".$id_poi;
-								$result3 = mysql_query($sql3);
-							}
-						}
-					}
-					
-				} else if (isset($_POST['transmission_poi'])) {
-					$transmission_poi = $_POST['transmission_poi'];
-					$sql = "UPDATE poi SET transmission_poi = $transmission_poi WHERE id_poi = $id_poi";
-				} else {
-					$lib_poi = mysql_real_escape_string($_POST['lib_poi']);
-					$adherent_poi = mysql_real_escape_string($_POST['adherent_poi']);
-					$num_poi = mysql_real_escape_string($_POST['num_poi']);
-					$rue_poi = mysql_real_escape_string($_POST['rue_poi']);
-					$mail_poi = mysql_real_escape_string($_POST['mail_poi']);
-					$tel_poi = mysql_real_escape_string($_POST['tel_poi']);
-					$desc_poi = mysql_real_escape_string($_POST['desc_poi']);
-					$prop_poi = mysql_real_escape_string($_POST['prop_poi']);
-					$observationterrain_poi = mysql_real_escape_string($_POST['observationterrain_poi']);
-					$reponsegrandtoulouse_poi = mysql_real_escape_string($_POST['reponsegrandtoulouse_poi']);
-					$reponsepole_poi = mysql_real_escape_string($_POST['reponsepole_poi']);
-					$commentfinal_poi = mysql_real_escape_string($_POST['commentfinal_poi']);
-					$datecreation_poi = mysql_real_escape_string($_POST['datecreation_poi']);
-					$datefix_poi = mysql_real_escape_string($_POST['datefix_poi']);
-					$poleedit = mysql_real_escape_string($_POST['poleedit']);
-					
-					if (is_numeric($_POST['subcategory_id_subcategory'])) {	
-						$subcategory_id_subcategory = $_POST['subcategory_id_subcategory'];
-						$sql = "UPDATE poi SET adherent_poi = '$adherent_poi', lib_poi = '$lib_poi', rue_poi = '$rue_poi', num_poi = '$num_poi', tel_poi = '$tel_poi', mail_poi = '$mail_poi', desc_poi = '$desc_poi', prop_poi = '$prop_poi', observationterrain_poi = '$observationterrain_poi', reponsepole_poi = '$reponsepole_poi', reponsegrandtoulouse_poi = '$reponsegrandtoulouse_poi', commentfinal_poi = '$commentfinal_poi', datecreation_poi = '$datecreation_poi', datefix_poi = '$datefix_poi', subcategory_id_subcategory = $subcategory_id_subcategory WHERE id_poi = $id_poi";
-					} else if (is_numeric($_POST['commune_id_commune'])) {	
-						$commune_id_commune = $_POST['commune_id_commune'];
-						$sql = "UPDATE poi SET adherent_poi = '$adherent_poi', lib_poi = '$lib_poi', rue_poi = '$rue_poi', num_poi = '$num_poi', tel_poi = '$tel_poi', mail_poi = '$mail_poi', desc_poi = '$desc_poi', prop_poi = '$prop_poi', observationterrain_poi = '$observationterrain_poi', reponsepole_poi = '$reponsepole_poi', reponsegrandtoulouse_poi = '$reponsegrandtoulouse_poi', commentfinal_poi = '$commentfinal_poi', datecreation_poi = '$datecreation_poi', datefix_poi = '$datefix_poi', commune_id_commune = $commune_id_commune WHERE id_poi = $id_poi";
-					} else if (is_numeric($_POST['pole_id_pole'])) {	
-						$pole_id_pole = $_POST['pole_id_pole'];
-						$sql = "UPDATE poi SET adherent_poi = '$adherent_poi', lib_poi = '$lib_poi', rue_poi = '$rue_poi', num_poi = '$num_poi', tel_poi = '$tel_poi', mail_poi = '$mail_poi', desc_poi = '$desc_poi', prop_poi = '$prop_poi', observationterrain_poi = '$observationterrain_poi', reponsepole_poi = '$reponsepole_poi', reponsegrandtoulouse_poi = '$reponsegrandtoulouse_poi', commentfinal_poi = '$commentfinal_poi', datecreation_poi = '$datecreation_poi', datefix_poi = '$datefix_poi', pole_id_pole = $pole_id_pole WHERE id_poi = $id_poi";
-					} else if (is_numeric($_POST['quartier_id_quartier'])) {	
-						$quartier_id_quartier = $_POST['quartier_id_quartier'];
-						$sql = "UPDATE poi SET adherent_poi = '$adherent_poi', lib_poi = '$lib_poi', rue_poi = '$rue_poi', num_poi = '$num_poi', tel_poi = '$tel_poi', mail_poi = '$mail_poi', desc_poi = '$desc_poi', prop_poi = '$prop_poi', observationterrain_poi = '$observationterrain_poi', reponsepole_poi = '$reponsepole_poi', reponsegrandtoulouse_poi = '$reponsegrandtoulouse_poi', commentfinal_poi = '$commentfinal_poi', datecreation_poi = '$datecreation_poi', datefix_poi = '$datefix_poi', quartier_id_quartier = $quartier_id_quartier WHERE id_poi = $id_poi";
-					} else if (is_numeric($_POST['priorite_id_priorite']) && $_POST['priorite_id_priorite'] != 3101) {
-						$priorite_id_priorite = $_POST['priorite_id_priorite'];
-						$sql = "UPDATE poi SET adherent_poi = '$adherent_poi', lib_poi = '$lib_poi', rue_poi = '$rue_poi', num_poi = '$num_poi', tel_poi = '$tel_poi', mail_poi = '$mail_poi', desc_poi = '$desc_poi', prop_poi = '$prop_poi', observationterrain_poi = '$observationterrain_poi', reponsepole_poi = '$reponsepole_poi', reponsegrandtoulouse_poi = '$reponsegrandtoulouse_poi', commentfinal_poi = '$commentfinal_poi', datecreation_poi = '$datecreation_poi', datefix_poi = '$datefix_poi', priorite_id_priorite = $priorite_id_priorite WHERE id_poi = $id_poi";
-
-						// changement du workflow : si priorite == 1 ou priorite == 2 alors on modère par défaut
-						if ($priorite_id_priorite == 1 || $priorite_id_priorite == 2) {
-							$sqlbis = "UPDATE poi SET moderation_poi = 1 WHERE id_poi = $id_poi";
-							$resultbis = mysql_query($sqlbis);
-							$moderatebydefault = 1;
-						}
-
-						// mail à la personne qui a envoyé la proposition pour le prévenir que son intervention a été prise en compte par la comcom et par l'asso
-						if ($priorite_id_priorite == 6) {
-							$to = $rowMailPOI['mail_poi'];
-							
-							$sql5 = "SELECT commentfinal_poi FROM poi WHERE id_poi = ".$id_poi;
-							$result5 = mysql_query($sql5);
-							$row5 = mysql_fetch_array($result5);
-							$comment = $row5['commentfinal_poi'];
-							
-							$subject = 'Observation prise en compte';
-
-							if ($num_rows_territoire == 1) {
-								switch ($rowTerritoire[0]) {
-									case 1:
-										$message = 'Bonjour !
-L\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE1.' vous remercient. Le problème a bien été pris en compte et réglé par la collectivité.
-Voici le commentaire final de l\'association : '.$comment.'
-Cordialement, l\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE1.' :)';
-										break;
-									case 2:
-										$message = 'Bonjour !
-L\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE2.' vous remercient. Le problème a bien été pris en compte et réglé par la collectivité.
-Voici le commentaire final de l\'association : '.$comment.'
-Cordialement, l\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE2.' :)';
-										break;
-									case 3:
-										$message = 'Bonjour !
-L\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE3.' vous remercient. Le problème a bien été pris en compte et réglé par la collectivité.
-Voici le commentaire final de l\'association : '.$comment.'
-Cordialement, l\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE3.' :)';
-										break;
-								}
-							} else {
-								$message = 'Bonjour !
-L\'Association '.VELOBS_ASSOCIATION.' vous remercie. Le problème a bien été pris en compte et réglé par la collectivité.
-Voici le commentaire final de l\'association : '.$comment.'
-Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
-							}
-
-						sendMail($to, $subject, $message);
-						}
-
-						if ($priorite_id_priorite == 7 || $priorite_id_priorite == 12) {
-							$to = $rowMailPOI['mail_poi'];
-							
-							$sql5 = "SELECT commentfinal_poi FROM poi WHERE id_poi = ".$id_poi;
-							$result5 = mysql_query($sql5);
-							$row5 = mysql_fetch_array($result5);
-							$comment = $row5['commentfinal_poi'];
-							
-							$subject = 'Observation non transmise à la collectivité';
-
-							if ($num_rows_territoire == 1) {
-								switch ($rowTerritoire[0]) {
-									case 1:
-										$message = 'Bonjour !
-L\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE1.' vous remercient de votre participation.
-Cependant le problème rapporté a été refusé.
-Voici le commentaire final de l\'association : '.$comment.'
-Cordialement, l\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE1.' :)';
-										break;
-									case 2:
-										$message = 'Bonjour !
-L\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE2.' vous remercient de votre participation.
-Cependant le problème rapporté a été refusé.
-Voici le commentaire final de l\'association : '.$comment.'
-Cordialement, l\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE2.' :)';
-										break;
-									case 3:
-										$message = 'Bonjour !
-L\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE3.' vous remercient de votre participation.
-Cependant le problème rapporté a été refusé.
-Voici le commentaire final de l\'association : '.$comment.'
-Cordialement, l\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE3.' :)';
-										break;
-								}
-							} else {
-								$message = 'Bonjour !
-L\'Association '.VELOBS_ASSOCIATION.' vous remercie de votre participation.
-Cependant le problème rapporté a été refusé.
-Voici le commentaire final de l\'association : '.$comment.'
-Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
-							}
-	
-							sendMail($to, $subject, $message);
-						}
-
-						if ($priorite_id_priorite == 15) {
-							$sql6 = "SELECT mail_poi FROM poi WHERE id_poi = ".$id_poi;
-							$result6 = mysql_query($sql6);
-							$row6 = mysql_fetch_array($result6);
-							$to = $row6['mail_poi'];
-							
-							$subject = 'Observation doublon';
-
-							if ($num_rows_territoire == 1) {
-								switch ($rowTerritoire[0]) {
-									case 1:
-										$message = 'Bonjour !
-L\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE1.' vous remercient de votre participation.
-Le problème que vous avez identifié nous a déjà été rapporté par un autre observateur.
-Cordialement, l\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE1.' :)';
-										break;
-									case 2:
-										$message = 'Bonjour !
-L\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE2.' vous remercient de votre participation.
-Le problème que vous avez identifié nous a déjà été rapporté par un autre observateur.
-Cordialement, l\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE2.' :)';
-										break;
-									case 3:
-										$message = 'Bonjour !
-L\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE3.' vous remercient de votre participation.
-Le problème que vous avez identifié nous a déjà été rapporté par un autre observateur.
-Cordialement, l\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE3.' :)';
-										break;
-								}
-							} else {
-								$message = 'Bonjour !
-L\'Association '.VELOBS_ASSOCIATION.' vous remercie de votre participation.
-Le problème que vous avez identifié nous a déjà été rapporté par un autre observateur.
-Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
-							}
-							sendMail($to, $subject, $message);
-
-							$sql7 = "UPDATE poi SET mailsentuser_poi = 1 WHERE id_poi = ".$id_poi;
-							$result7 = mysql_query($sql7);
-
-							$sql8 = "UPDATE poi SET moderation_poi = 1 WHERE id_poi = $id_poi";
-							$result8 = mysql_query($sql8);
-						}
-						
-					} else if (is_numeric($_POST['status_id_status'])) {
-						$status_id_status = $_POST['status_id_status'];
-						
-						$sql3 = "SELECT lib_status FROM status WHERE id_status = ".$status_id_status;
-						$result3 = mysql_query($sql3);
-						$row3 = mysql_fetch_array($result3);
-						$lib_status = $row3['lib_status'];
-						
-						
-						$sql2 = "SELECT pole.* FROM pole INNER JOIN poi ON (id_pole = pole_id_pole) WHERE id_poi = ".$id_poi;
-						$result2 = mysql_query($sql2);
-						$row2 = mysql_fetch_array($result2);
-						$lib_pole = $row2['lib_pole'];
-						$id_pole = $row2['id_pole'];
-						$territoire_id_territoire = $row2['territoire_id_territoire'];
-						
-						
-						$sql = "UPDATE poi SET adherent_poi = '$adherent_poi', lib_poi = '$lib_poi', rue_poi = '$rue_poi', num_poi = '$num_poi', tel_poi = '$tel_poi', mail_poi = '$mail_poi', desc_poi = '$desc_poi', prop_poi = '$prop_poi', observationterrain_poi = '$observationterrain_poi', reponsepole_poi = '$reponsepole_poi', reponsegrandtoulouse_poi = '$reponsegrandtoulouse_poi', commentfinal_poi = '$commentfinal_poi', datecreation_poi = '$datecreation_poi', datefix_poi = '$datefix_poi', status_id_status = $status_id_status WHERE id_poi = $id_poi";
-
-						// mail à l'association vélo pour prévenir d'un changement de statut + mail au(x) responsable(s) du pole
-						$subject = 'Changement de statut de l\'observation n°'.$id_poi.' - '.$lib_pole;
-
-						if ($num_rows_territoire == 1) {
-							switch ($rowTerritoire[0]) {
-								case 1:
-									$message = 'Bonjour !
-'.VELOBS_COLLECTIVITE1.' a effectué un changement de statut sur l\'observation n°'.$id_poi.' du pole '.$lib_pole.'
-Nouveau statut : '.$lib_status.'
-Veuillez consulter l\'interface d\'administration pour consulter les informations relatives.
-Cordialement, l\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE1.' :)';
-									break;
-								case 2:
-									$message = 'Bonjour !
-'.VELOBS_COLLECTIVITE2.' a effectué un changement de statut sur l\'observation n°'.$id_poi.' du pole '.$lib_pole.'
-Nouveau statut : '.$lib_status.'
-Veuillez consulter l\'interface d\'administration pour consulter les informations relatives.
-Cordialement, l\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE2.' :)';
-									break;
-								case 3:
-									$message = 'Bonjour !
-'.VELOBS_COLLECTIVITE3.' a effectué un changement de statut sur l\'observation n°'.$id_poi.' du pole '.$lib_pole.'
-Nouveau statut : '.$lib_status.'
-Veuillez consulter l\'interface d\'administration pour consulter les informations relatives.
-Cordialement, l\'Association '.VELOBS_ASSOCIATION.' et '.VELOBS_COLLECTIVITE3.' :)';
-									break;
-							}
-						} else {
-							$message = 'Bonjour !
-Un changement de statut a été effectué sur l\'observation n°'.$id_poi.' du pole '.$lib_pole.'
-Nouveau statut : '.$lib_status.'
-Veuillez consulter l\'interface d\'administration pour consulter les informations relatives.
-Lien vers la modération : '.URL.'/admin.php?id='.$id_poi.'
-Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
-						}
-
-						$sql2 = "SELECT mail_users FROM users WHERE usertype_id_usertype = 1 OR (usertype_id_usertype = 4 AND num_pole = ".$id_pole.")";
-						$result2 = mysql_query($sql2);
-						while ($row2 = mysql_fetch_array($result2)) {
-							$to = $row2['mail_users'];
-							sendMail($to, $subject, $message);
-						}
-					} else {
-						// mail à la comcom si un pole a édité le champ 'Réponse pole'
-						if ($poleedit == 1) {
-
-							$sql2 = "SELECT pole.* FROM pole INNER JOIN poi ON (id_pole = pole_id_pole) WHERE id_poi = ".$id_poi;
-							$result2 = mysql_query($sql2);
-							$row2 = mysql_fetch_array($result2);
-							$lib_pole = $row2['lib_pole'];
-							$territoire_id_territoire = $row2['territoire_id_territoire'];
-							
-
-							$subject = 'Modification de l\'observation n°'.$id_poi.' par le pole '.$lib_pole;
-							$message = 'Bonjour !
-Le pole '.$lib_pole.' a modifié l\'observation n°'.$id_poi.'.
-Veuillez consulter l\'interface d\'administration pour voir cette modification.
-Lien vers la modération : '.URL.'/admin.php?id='.$id_poi.'
-Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
-
-							$sql3 = "SELECT mail_users FROM users WHERE usertype_id_usertype = 2 AND territoire_id_territoire = ".$territoire_id_territoire;
-							$result3 = mysql_query($sql3);
-							while ($row3 = mysql_fetch_array($result3)) {
-								$to = $row3['mail_users'];
-								sendMail($to, $subject, $message);
-							}
-						}
-
-						$sql = "UPDATE poi SET adherent_poi = '$adherent_poi', lib_poi = '$lib_poi', rue_poi = '$rue_poi', num_poi = '$num_poi', tel_poi = '$tel_poi', mail_poi = '$mail_poi', desc_poi = '$desc_poi', prop_poi = '$prop_poi', observationterrain_poi = '$observationterrain_poi', reponsepole_poi = '$reponsepole_poi', reponsegrandtoulouse_poi = '$reponsegrandtoulouse_poi', commentfinal_poi = '$commentfinal_poi', datecreation_poi = '$datecreation_poi', datefix_poi = '$datefix_poi' WHERE id_poi = $id_poi";
-					}
+				$arrayObs = getObservationDetailsInArray($id_poi);
+				$arrayDetailsAndUpdateSQL = getObservationDetailsInString($arrayObs);
+				if (DEBUG){
+					error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - Il y a ". count($arrayDetailsAndUpdateSQL) ." infos chargées pour l'update de l'obs $id_poi \n", 3, LOG_FILE);
+					error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - updateObsBoolean ". $arrayDetailsAndUpdateSQL['updateObsBoolean'] ." pour l'update de l'obs $id_poi \n", 3, LOG_FILE);
+					error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - sqlUpdate ". $arrayDetailsAndUpdateSQL['sqlUpdate'] ." pour l'update de l'obs $id_poi \n", 3, LOG_FILE);
+					error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - detailObservationString ".$arrayDetailsAndUpdateSQL['detailObservationString'] ." pour l'update de l'obs $id_poi \n", 3, LOG_FILE);
+				
 				}
-
-				// ajout date de dernière modification du poi
-				$lastdatemodif_poi = date("Y-m-d");
-				$sql3 = "UPDATE poi SET lastdatemodif_poi = '$lastdatemodif_poi' WHERE id_poi = $id_poi";
-				$result3 = mysql_query($sql3);
-
-				if ($temp == "notmoderate") {
-					echo '3';
-				} else {
+				if ($arrayDetailsAndUpdateSQL['updateObsBoolean']){
+					$sql = "UPDATE poi SET " . $arrayDetailsAndUpdateSQL['sqlUpdate'] . " WHERE id_poi = ".$id_poi ;
+						
+					if (DEBUG){
+						error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - sql ". $sql ." pour l'update de l'obs $id_poi \n", 3, LOG_FILE);
+					}
 					$result = mysql_query($sql);
 					if (!$result) {
-						echo '2';
+						if (DEBUG){
+							error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " Erreur ". mysql_errno($link) . " : " . mysql_error($link), 3, LOG_FILE);
+						}
+						sendMail(MAIL_FROM,"Erreur méthode updatePoiComcomCarto", "Erreur = " .  mysql_error($link) . ", requête = " . $sql);
+						echo '3';
 					} else {
-						if ($moderatebydefault == 1) {
-							echo '4';
-						} else {
-							echo '1';
+						
+						
+						$mails = array();
+						$poleedit = mysql_real_escape_string($_POST['poleedit']);
+						// mail à la comcom si un pole a édité le champ 'Réponse pole'
+						//usertype_id_usertype : 1=Admin, 2=comcom, 3=pole tech, 4=moderateur
+						//mail aux comptes comcom du territoire concerné par l'observation et aux modérateurs
+						if ($poleedit == 1) {
+							$subject = 'Modification de l\'observation n°'.$arrayObs['id_poi'].' par le pole '.$arrayObs['lib_pole'];
+							$message = 'Bonjour !
+Le pole '.$arrayObs['lib_pole'].' a modifié l\'observation n°'.$arrayObs['id_poi']."\n";
+							$message .= "Lien vers la modération : ".URL.'/admin.php?id='.$arrayObs['id_poi']."\n".$arrayDetailsAndUpdateSQL['detailObservationString']."\n";
+						
+							$message .= "Cordialement, l'Association ".VELOBS_ASSOCIATION." :)";
+							$whereClause = "(u.usertype_id_usertype = 2 AND u.territoire_id_territoire = ".$arrayObs['territoire_id_territoire'].") OR (u.usertype_id_usertype = 4 AND u.num_pole = ".$arrayObs['pole_id_pole'].")";
+							$mailsComComModo = getMailsToSend($whereClause, $subject, $message );
+							$succes = sendMails($mailsComComModo);
+						}
+						
+									
+						//Priorités et leur iD
+						// 				"1","Un"
+						// 				"2","Deux"
+						// 					"4","A modérer"
+						// 				"6","DONE"
+						// 				"7","Refusé par 2p2r"
+						// 				"8","3101"
+						// 				"12","Refusé par TM"
+						// 				"15","Doublon"
+						//on ne traite priorite_id_priorite que si il a été mis à jour
+						$checkModerateBoxOnPOIGred = 0;
+						if (isset($_POST['priorite_id_priorite']) 
+								&& is_numeric($_POST['priorite_id_priorite']) 
+								&& $arrayObs['priorite_id_priorite'] <> $_POST['priorite_id_priorite']) {
+							$checkModerateBoxOnPOIGred = 1;
+							$new_id_priorite = $_POST['priorite_id_priorite'];
+							// changement du workflow : si priorite == 1 ou priorite == 2 alors on modère par défaut, mais on n'envoie pas de mail si ça a déjà été fait un autre fois
+							if (($new_id_priorite == 1 || $new_id_priorite == 2)) {
+								//TODO : regroupé la requete plus bas, près de l'echo
+								/* envoi d'un mail à l'observateur si aucun mail n'a déjà été envoyé et si $moderation_poi passe à true*/
+									
+								$subject = 'Merci pour votre participation';
+								$message = "Bonjour !
+L'observation que vous avez envoyée sur VelObs a changé de statut. Le problème identifié a été transmis aux services municipaux.\n".$arrayDetailsAndUpdateSQL['detailObservationString']
+							.$signature;
+									
+							}
+							
+							// mail à la personne qui a envoyé la proposition pour le prévenir que son intervention a été prise en compte par la comcom et par l'asso
+							//Priorité DONE
+							if ($new_id_priorite == 6) {
+								$subject = 'Observation prise en compte';
+								$message = "Bonjour !
+L'Association ".VELOBS_ASSOCIATION." vous remercie. Le problème a bien été pris en compte et réglé par la collectivité.\n".$arrayDetailsAndUpdateSQL['detailObservationString'].'
+'.$signature;
+							}
+							// mail à la personne qui a envoyé la proposition pour le prévenir que son intervention ne sera pas prise en compte par la comcom ou par l'asso
+							//Priorité Refusé par TM - Refusé par 2p2r
+							if ($new_id_priorite == 7 || $new_id_priorite == 12) {
+								$subject = 'Observation non transmise à la collectivité';
+								$message = "Bonjour !
+L'Association ".VELOBS_ASSOCIATION." et la collectivité vous remercient de votre participation.
+Cependant le problème rapporté a été refusé.\n".$arrayDetailsAndUpdateSQL['detailObservationString'].'
+							
+'.$signature;
+									
+							}
+							// mail à la personne qui a envoyé la proposition pour le prévenir que son intervention ne sera pas prise en compte par la comcom ou par l'asso
+							//Priorité DOUBLON
+							if ($new_id_priorite == 15) {
+								$subject = 'Observation doublon';
+								$message = "Bonjour !
+L'Association ".VELOBS_ASSOCIATION." et la collectivité vous remercient de votre participation.
+Le problème que vous avez identifié nous a déjà été rapporté par un autre observateur.\n".$arrayDetailsAndUpdateSQL['detailObservationString'].'
+							
+Vous pouvez ajouter de nouvelles photos et ou commentaires à l\'observation existante.
+'.$signature;
+							}
+							//URGENCE
+							if ($new_id_priorite == 8) {
+								/* envoi d'un mail à l'observateur*/
+								$subject = 'Merci pour votre participation';
+								$message = 'Bonjour !
+L\'observation que vous avez envoyée a été modérée par l\'association. Le problème identifié est une urgence qui nécessite une intervention rapide des services techniques.';
+								//si la commune fait partie d'un territoire
+								//premier territoire
+								switch ($arrayObs['territoire_id_territoire']) {
+									case 1:
+										$message .= '
+'.VELOBS_EMERGENCY_MAIL1."\n".$arrayDetailsAndUpdateSQL['detailObservationString'].$signature;
+										break;
+									default:
+										$message .= "\n".$arrayDetailsAndUpdateSQL['detailObservationString'].$signature;
+										break;
+								}
+							}
+							$mailArray = [$arrayObs['mail_poi'],'Contributeur',$subject, $message ];
+							array_push($mails,$mailArray);
+							$succes = sendMails($mails);
+						}
+						//si la modif a été faite par la comcom ou un pole technique
+						if (isset($_SESSION['type']) && ($_SESSION['type'] == 2 || $_SESSION['type'] == 3) ){
+							// mail à l'association vélo pour prévenir d'une modif + mail au(x) responsable(s) du pole
+							$subject = 'Modification sur l\'observation n°'.$arrayObs['id_poi'].' - '.$arrayObs['lib_pole'];
+							$message = 'Bonjour !
+La collectivité ou un pôle technique (compte '.$_SESSION['user'].') a modifié l\'observation n°'.$arrayObs['id_poi'].' du pole '.$arrayObs['lib_pole']."\n
+Veuillez consulter l'interface d'administration pour consulter les informations relatives.
+Lien vers la modération : ".URL.'/admin.php?id='.$arrayObs['id_poi']."\n".
+							$arrayDetailsAndUpdateSQL['detailObservationString'].'
+'.$signature;
+							//usertype_id_usertype : 1=Admin, 2=comcom, 3=pole tech, 4=moderateur
+							//mail aux admins velobs et aux modérateurs du pole concerné par l'observation
+							$whereClause = " u.usertype_id_usertype = 1 OR (u.usertype_id_usertype = 4 AND u.num_pole = ".$arrayObs['pole_id_pole'].")";
+							$mailsAsso = getMailsToSend($whereClause, $subject, $message );
+							$succes = sendMails($mailsAsso);
+						}
+						
+							
+							
+						
+						if (DEBUG){
+							error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " Il y a ". count($mails) . " mails à envoyer \n", 3, LOG_FILE);
+						}
+						if ($checkModerateBoxOnPOIGred){
+							echo 4;
+						}else{
+							echo 1;
 						}
 					}
-				}
-
+				}else{
+					//aucune mise à jour n'a été effectuée, car aucune information n'a été modifiée
+					echo 2;
+				}		
 				mysql_free_result($result);
 				mysql_close($link);
 				break;
@@ -1781,46 +1499,50 @@ Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
 				$link = mysql_connect(HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
 				mysql_query("SET NAMES 'utf8'");
-
-				$reponsegrandtoulouse_poi = mysql_real_escape_string($_POST['reponsegrandtoulouse_poi']);
-				$reponsepole_poi = mysql_real_escape_string($_POST['reponsepole_poi']);
-				$lastdatemodif_poi = date("Y-m-d");
-
-				$sql = "UPDATE poi SET reponsepole_poi = '$reponsepole_poi', reponsegrandtoulouse_poi = '$reponsegrandtoulouse_poi', lastdatemodif_poi = '$lastdatemodif_poi'";
-
-				if (is_numeric($_POST['commune_id_commune'])) {
-					$commune_id_commune = $_POST['commune_id_commune'];
-					$sql .= ", commune_id_commune = $commune_id_commune";
+				
+				$arrayObs = getObservationDetailsInArray($id_poi);
+				$arrayDetailsAndUpdateSQL = getObservationDetailsInString($arrayObs);
+				if (DEBUG){
+					error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - Il y a ". count($arrayDetailsAndUpdateSQL) ." infos chargées pour l'update de l'obs $id_poi \n", 3, LOG_FILE);
+					error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - updateObsBoolean ". $arrayDetailsAndUpdateSQL['updateObsBoolean'] ." pour l'update de l'obs $id_poi \n", 3, LOG_FILE);
+					error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - sqlUpdate ". $arrayDetailsAndUpdateSQL['sqlUpdate'] ." pour l'update de l'obs $id_poi \n", 3, LOG_FILE);
+					error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - detailObservationString ".$arrayDetailsAndUpdateSQL['detailObservationString'] ." pour l'update de l'obs $id_poi \n", 3, LOG_FILE);
+						
 				}
-
-				if (is_numeric($_POST['pole_id_pole'])) {
-					$pole_id_pole = $_POST['pole_id_pole'];
-					$sql .= ", pole_id_pole = $pole_id_pole";
+				if ($arrayDetailsAndUpdateSQL['updateObsBoolean']){
+					$sql = "UPDATE poi SET " . $arrayDetailsAndUpdateSQL['sqlUpdate'] . " WHERE id_poi = ".$id_poi ;
+					
+					if (DEBUG){
+						error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - sql ". $sql ." pour l'update de l'obs $id_poi \n", 3, LOG_FILE);
+					
+					}
+					$result = mysql_query($sql);
+					if (!$result) {
+						if (DEBUG){
+							error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " Erreur ". mysql_errno($link) . " : " . mysql_error($link), 3, LOG_FILE);
+						}
+						sendMail(MAIL_FROM,"Erreur méthode updatePoiComcomCarto", "Erreur = " .  mysql_error($link) . ", requête = " . $sql);
+						echo '3';
+					} else {
+						echo 1;
+						$whereClause = "u.usertype_id_usertype = 1 OR (u.usertype_id_usertype = 4 AND u.num_pole = ".$arrayObs['pole_id_pole'].")";
+						$subject = "La collectivité a mis à jour la fiche " . $arrayObs['id_poi'];
+						$message = "Bonjour!
+La collectivité a mis à jour l'observation ".$arrayObs['id_poi']."\n";
+						$message .= "Lien vers la modération : ".URL.'/admin.php?id='.$arrayObs['id_poi']."\n".$arrayDetailsAndUpdateSQL['detailObservationString']."\n";
+						$mails = array();
+						$mails = getMailsToSend($whereClause, $subject, $message );
+						if (DEBUG){
+							error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " Il y a ". count($mails) . " mails à envoyer \n", 3, LOG_FILE);
+						}
+						$succes = sendMails($mails);
+						
+					}
+				}else{
+					//aucune mise à jour n'a été effectuée, car aucune information n'a été modifiée
+					echo 2;
 				}
-
-				if (is_numeric($_POST['status_id_status'])) {
-					$status_id_status = $_POST['status_id_status'];
-					$sql .= ", status_id_status = $status_id_status";
-				}
-
-				if (isset($_POST['transmission_poi'])) {
-					$transmission_poi = $_POST['transmission_poi'];
-					$sql .= ", transmission_poi = $transmission_poi";
-				}
-
-				if (isset($_POST['traiteparpole_poi'])) {
-					$traiteparpole_poi = $_POST['traiteparpole_poi'];
-					$sql .= ", traiteparpole_poi = $traiteparpole_poi";
-				}
-
-				$sql .= " WHERE id_poi = $id_poi";
-				$result = mysql_query($sql);
-				if (!$result) {
-					echo '2';
-				} else {
-					echo '1';
-				}
-
+				
 				break;
 			case 'postgresql':
 				// TODO
@@ -1844,22 +1566,47 @@ Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
 				mysql_select_db(DB_NAME);
 				mysql_query("SET NAMES 'utf8'");
 
-				$reponsepole_poi = mysql_real_escape_string($_POST['reponsepole_poi']);
-				$lastdatemodif_poi = date("Y-m-d");
-
-				$sql = "UPDATE poi SET reponsepole_poi = '$reponsepole_poi', lastdatemodif_poi = '$lastdatemodif_poi'";
-
-				if (isset($_POST['traiteparpole_poi'])) {
-					$traiteparpole_poi = $_POST['traiteparpole_poi'];
-					$sql .= ", traiteparpole_poi = $traiteparpole_poi";
+				$arrayObs = getObservationDetailsInArray($id_poi);
+				$arrayDetailsAndUpdateSQL = getObservationDetailsInString($arrayObs);
+				if (DEBUG){
+					error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - Il y a ". count($arrayDetailsAndUpdateSQL) ." infos chargées pour l'update de l'obs $id_poi \n", 3, LOG_FILE);
+					error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - updateObsBoolean ". $arrayDetailsAndUpdateSQL['updateObsBoolean'] ." pour l'update de l'obs $id_poi \n", 3, LOG_FILE);
+					error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - sqlUpdate ". $arrayDetailsAndUpdateSQL['sqlUpdate'] ." pour l'update de l'obs $id_poi \n", 3, LOG_FILE);
+					error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - detailObservationString ".$arrayDetailsAndUpdateSQL['detailObservationString'] ." pour l'update de l'obs $id_poi \n", 3, LOG_FILE);
+						
 				}
-
-				$sql .= " WHERE id_poi = $id_poi";
-				$result = mysql_query($sql);
-				if (!$result) {
-					echo $sql;
-				} else {
-					echo '1';
+				if ($arrayDetailsAndUpdateSQL['updateObsBoolean']){
+					$sql = "UPDATE poi SET " . $arrayDetailsAndUpdateSQL['sqlUpdate'] . " WHERE id_poi = ".$id_poi ;
+					
+					if (DEBUG){
+						error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - sql ". $sql ." pour l'update de l'obs $id_poi \n", 3, LOG_FILE);
+					
+					}
+					$result = mysql_query($sql);
+					if (!$result) {
+						if (DEBUG){
+							error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " Erreur ". mysql_errno($link) . " : " . mysql_error($link), 3, LOG_FILE);
+						}
+						sendMail(MAIL_FROM,"Erreur méthode updatePoiComcomCarto", "Erreur = " .  mysql_error($link) . ", requête = " . $sql);
+						echo '3';
+					} else {
+						echo 1;
+						$whereClause = "u.usertype_id_usertype = 1 OR (u.usertype_id_usertype = 4 AND u.num_pole = ".$arrayObs['pole_id_pole'].")";
+						$subject = "La collectivité a mis à jour la fiche " . $arrayObs['id_poi'];
+						$message = "Bonjour!
+La collectivité a mis à jour l'observation ".$arrayObs['id_poi']."\n";
+						$message .= "Lien vers la modération : ".URL.'/admin.php?id='.$arrayObs['id_poi']."\n".$arrayDetailsAndUpdateSQL['detailObservationString']."\n";
+						$mails = array();
+						$mails = getMailsToSend($whereClause, $subject, $message );
+						if (DEBUG){
+							error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " Il y a ". count($mails) . " mails à envoyer \n", 3, LOG_FILE);
+						}
+						$succes = sendMails($mails);
+						
+					}
+				}else{
+					//aucune mise à jour n'a été effectuée, car aucune information n'a été modifiée
+					echo 2;
 				}
 
 				break;
@@ -1885,53 +1632,36 @@ Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
 				mysql_select_db(DB_NAME);
 				mysql_query("SET NAMES 'utf8'");
 
-				$reponsegrandtoulouse_poi = mysql_real_escape_string($_POST['reponsegrandtoulouse_poi']);
-				$reponsepole_poi = mysql_real_escape_string($_POST['reponsepole_poi']);
-				$observationterrain_poi = mysql_real_escape_string($_POST['observationterrain_poi']);
-				$num_poi = mysql_real_escape_string($_POST['num_poi']);
-				$rue_poi = mysql_real_escape_string($_POST['rue_poi']);
-				$longitude_poi = $_POST['longitude_poi'];
-				$latitude_poi = $_POST['latitude_poi'];
-				$lastdatemodif_poi = date("Y-m-d");
-				$desc_poi = mysql_real_escape_string($_POST['desc_poi']);
-				$prop_poi = mysql_real_escape_string($_POST['prop_poi']);
-				$commentfinal_poi = mysql_real_escape_string($_POST['commentfinal_poi']);
-				$moderation_poi = $_POST['moderation_poi'];
-				$display_poi = $_POST['display_poi'];
-
-				$sql = "UPDATE poi SET display_poi = $display_poi, moderation_poi = $moderation_poi, commentfinal_poi = '$commentfinal_poi',desc_poi = '$desc_poi', prop_poi = '$prop_poi', geom_poi = GeomFromText('POINT(".$longitude_poi." ".$latitude_poi.")'), observationterrain_poi = '$observationterrain_poi', num_poi = '$num_poi', rue_poi = '$rue_poi', reponsepole_poi = '$reponsepole_poi', reponsegrandtoulouse_poi = '$reponsegrandtoulouse_poi', lastdatemodif_poi = '$lastdatemodif_poi'";
-
-				if (is_numeric($_POST['subcategory_id_subcategory'])) {
-					$subcategory_id_subcategory = $_POST['subcategory_id_subcategory'];
-					$sql .= ", subcategory_id_subcategory = $subcategory_id_subcategory";
+			$arrayObs = getObservationDetailsInArray($id_poi);
+				$arrayDetailsAndUpdateSQL = getObservationDetailsInString($arrayObs);
+				if (DEBUG){
+					error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - Il y a ". count($arrayDetailsAndUpdateSQL) ." infos chargées pour l'update de l'obs $id_poi \n", 3, LOG_FILE);
+					error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - updateObsBoolean ". $arrayDetailsAndUpdateSQL['updateObsBoolean'] ." pour l'update de l'obs $id_poi \n", 3, LOG_FILE);
+					error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - sqlUpdate ". $arrayDetailsAndUpdateSQL['sqlUpdate'] ." pour l'update de l'obs $id_poi \n", 3, LOG_FILE);
+					error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - detailObservationString ".$arrayDetailsAndUpdateSQL['detailObservationString'] ." pour l'update de l'obs $id_poi \n", 3, LOG_FILE);
+						
 				}
-
-				if (is_numeric($_POST['priorite_id_priorite'])) {
-					$priorite_id_priorite = $_POST['priorite_id_priorite'];
-					$sql .= ", priorite_id_priorite = $priorite_id_priorite";
-				}
-
-				if (is_numeric($_POST['commune_id_commune'])) {
-					$commune_id_commune = $_POST['commune_id_commune'];
-					$sql .= ", commune_id_commune = $commune_id_commune";
-				}
-
-				if (is_numeric($_POST['pole_id_pole'])) {
-					$pole_id_pole = $_POST['pole_id_pole'];
-					$sql .= ", pole_id_pole = $pole_id_pole";
-				}
-
-				if (is_numeric($_POST['status_id_status'])) {
-					$status_id_status = $_POST['status_id_status'];
-					$sql .= ", status_id_status = $status_id_status";
-				}
-
-				$sql .= " WHERE id_poi = $id_poi";
-				$result = mysql_query($sql);
-				if (!$result) {
-					echo $sql;
-				} else {
-					echo '1';
+				if ($arrayDetailsAndUpdateSQL['updateObsBoolean']){
+					$sql = "UPDATE poi SET " . $arrayDetailsAndUpdateSQL['sqlUpdate'] . " WHERE id_poi = ".$id_poi ;
+					
+					if (DEBUG){
+						error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - sql ". $sql ." pour l'update de l'obs $id_poi \n", 3, LOG_FILE);
+					
+					}
+					$result = mysql_query($sql);
+					if (!$result) {
+						if (DEBUG){
+							error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " Erreur ". mysql_errno($link) . " : " . mysql_error($link), 3, LOG_FILE);
+						}
+						sendMail(MAIL_FROM,"Erreur méthode ".__FUNCTION__, "Erreur = " .  mysql_error($link) . ", requête = " . $sql);
+						echo '3';
+					} else {
+						echo 1;
+						
+					}
+				}else{
+					//aucune mise à jour n'a été effectuée, car aucune information n'a été modifiée
+					echo 2;
 				}
 
 				break;
@@ -1957,54 +1687,36 @@ Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
 				mysql_select_db(DB_NAME);
 				mysql_query("SET NAMES 'utf8'");
 
-				$reponsegrandtoulouse_poi = mysql_real_escape_string($_POST['reponsegrandtoulouse_poi']);
-				$reponsepole_poi = mysql_real_escape_string($_POST['reponsepole_poi']);
-				$observationterrain_poi = mysql_real_escape_string($_POST['observationterrain_poi']);
-				$commentfinal_poi = mysql_real_escape_string($_POST['commentfinal_poi']);
-				$num_poi = mysql_real_escape_string($_POST['num_poi']);
-				$rue_poi = mysql_real_escape_string($_POST['rue_poi']);
-				$longitude_poi = $_POST['longitude_poi'];
-				$latitude_poi = $_POST['latitude_poi'];
-				$lastdatemodif_poi = date("Y-m-d");
-				$desc_poi = mysql_real_escape_string($_POST['desc_poi']);
-				$prop_poi = mysql_real_escape_string($_POST['prop_poi']);
-
-				$moderation_poi = $_POST['moderation_poi'];
-				$display_poi = $_POST['display_poi'];
-
-				$sql = "UPDATE poi SET display_poi = $display_poi, moderation_poi = $moderation_poi, commentfinal_poi = '$commentfinal_poi', desc_poi = '$desc_poi', prop_poi = '$prop_poi', geom_poi = GeomFromText('POINT(".$longitude_poi." ".$latitude_poi.")'), observationterrain_poi = '$observationterrain_poi', num_poi = '$num_poi', rue_poi = '$rue_poi', reponsepole_poi = '$reponsepole_poi', reponsegrandtoulouse_poi = '$reponsegrandtoulouse_poi', lastdatemodif_poi = '$lastdatemodif_poi'";
-
-				if (is_numeric($_POST['subcategory_id_subcategory'])) {
-					$subcategory_id_subcategory = $_POST['subcategory_id_subcategory'];
-					$sql .= ", subcategory_id_subcategory = $subcategory_id_subcategory";
+		$arrayObs = getObservationDetailsInArray($id_poi);
+				$arrayDetailsAndUpdateSQL = getObservationDetailsInString($arrayObs);
+				if (DEBUG){
+					error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - Il y a ". count($arrayDetailsAndUpdateSQL) ." infos chargées pour l'update de l'obs $id_poi \n", 3, LOG_FILE);
+					error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - updateObsBoolean ". $arrayDetailsAndUpdateSQL['updateObsBoolean'] ." pour l'update de l'obs $id_poi \n", 3, LOG_FILE);
+					error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - sqlUpdate ". $arrayDetailsAndUpdateSQL['sqlUpdate'] ." pour l'update de l'obs $id_poi \n", 3, LOG_FILE);
+					error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - detailObservationString ".$arrayDetailsAndUpdateSQL['detailObservationString'] ." pour l'update de l'obs $id_poi \n", 3, LOG_FILE);
+						
 				}
-
-				if (is_numeric($_POST['priorite_id_priorite'])) {
-					$priorite_id_priorite = $_POST['priorite_id_priorite'];
-					$sql .= ", priorite_id_priorite = $priorite_id_priorite";
-				}
-
-				if (is_numeric($_POST['commune_id_commune'])) {
-					$commune_id_commune = $_POST['commune_id_commune'];
-					$sql .= ", commune_id_commune = $commune_id_commune";
-				}
-
-				if (is_numeric($_POST['pole_id_pole'])) {
-					$pole_id_pole = $_POST['pole_id_pole'];
-					$sql .= ", pole_id_pole = $pole_id_pole";
-				}
-
-				if (is_numeric($_POST['status_id_status'])) {
-					$status_id_status = $_POST['status_id_status'];
-					$sql .= ", status_id_status = $status_id_status";
-				}
-
-				$sql .= " WHERE id_poi = $id_poi";
-				$result = mysql_query($sql);
-				if (!$result) {
-					echo $sql;
-				} else {
-					echo '1';
+				if ($arrayDetailsAndUpdateSQL['updateObsBoolean']){
+					$sql = "UPDATE poi SET " . $arrayDetailsAndUpdateSQL['sqlUpdate'] . " WHERE id_poi = ".$id_poi ;
+					
+					if (DEBUG){
+						error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - sql ". $sql ." pour l'update de l'obs $id_poi \n", 3, LOG_FILE);
+					
+					}
+					$result = mysql_query($sql);
+					if (!$result) {
+						if (DEBUG){
+							error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " Erreur ". mysql_errno($link) . " : " . mysql_error($link), 3, LOG_FILE);
+						}
+						sendMail(MAIL_FROM,"Erreur méthode ".__FUNCTION__, "Erreur = " .  mysql_error($link) . ", requête = " . $sql);
+						echo '3';
+					} else {
+						echo 1;
+						
+					}
+				}else{
+					//aucune mise à jour n'a été effectuée, car aucune information n'a été modifiée
+					echo 2;
 				}
 
 				break;
@@ -2022,49 +1734,52 @@ Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
 	 * 	Date			: Jan. 23, 2012
 	 */
 
-	function createPoi() {		
-		switch (SGBD) {
-			case 'mysql':
-				$link = mysql_connect(HOST,DB_USER,DB_PASS);
-				mysql_select_db(DB_NAME);
-				mysql_query("SET NAMES 'utf8'");
+// 	function createPoi() {		
+// 		switch (SGBD) {
+// 			case 'mysql':
+// 				$link = mysql_connect(HOST,DB_USER,DB_PASS);
+// 				mysql_select_db(DB_NAME);
+// 				mysql_query("SET NAMES 'utf8'");
 				
-				$lib_poi = mysql_real_escape_string($_POST['lib_poi']);
-				$adherent_poi = mysql_real_escape_string($_POST['adherent_poi']);
-				$num_poi = mysql_real_escape_string($_POST['num_poi']);
-				$rue_poi = mysql_real_escape_string($_POST['rue_poi']);
-				$desc_poi = mysql_real_escape_string($_POST['desc_poi']);
-				$prop_poi = mysql_real_escape_string($_POST['prop_poi']);
-				$observationterrain_poi = mysql_real_escape_string($_POST['observationterrain_poi']);
-				$subcategory_id_subcategory = $_POST['subcategory_id_subcategory'];
-				$commune_id_commune = $_POST['commune_id_commune'];
-				$pole_id_pole = $_POST['pole_id_pole'];
-				$priorite_id_priorite = $_POST['priorite_id_priorite'];
-				if (isset($_POST['status_id_status'])) {
-					$status_id_status = $_POST['status_id_status'];
-				} else {
-					$status_id_status = 5;
-				}
-				$quartier_id_quartier = $_POST['quartier_id_quartier'];
-				$display_poi = $_POST['display_poi'];
-				$datecreation_poi = date('Y-m-d');		
+// 				$lib_poi = mysql_real_escape_string($_POST['lib_poi']);
+// 				$adherent_poi = mysql_real_escape_string($_POST['adherent_poi']);
+// 				$num_poi = mysql_real_escape_string($_POST['num_poi']);
+// 				$rue_poi = mysql_real_escape_string($_POST['rue_poi']);
+// 				$desc_poi = mysql_real_escape_string($_POST['desc_poi']);
+// 				$prop_poi = mysql_real_escape_string($_POST['prop_poi']);
+// 				$observationterrain_poi = mysql_real_escape_string($_POST['observationterrain_poi']);
+// 				$subcategory_id_subcategory = $_POST['subcategory_id_subcategory'];
+// 				$commune_id_commune = $_POST['commune_id_commune'];
+// 				$pole_id_pole = $_POST['pole_id_pole'];
+// 				$priorite_id_priorite = $_POST['priorite_id_priorite'];
+// 				if (isset($_POST['status_id_status'])) {
+// 					$status_id_status = $_POST['status_id_status'];
+// 				} else {
+// 					$status_id_status = 5;
+// 				}
+// 				$quartier_id_quartier = $_POST['quartier_id_quartier'];
+// 				$display_poi = $_POST['display_poi'];
+// 				$datecreation_poi = date('Y-m-d');		
 						
-				$sql = "INSERT INTO poi (lib_poi, adherent_poi, num_poi, rue_poi, commune_id_commune, pole_id_pole, priorite_id_priorite, status_id_status, quartier_id_quartier, desc_poi, prop_poi, observationterrain_poi, subcategory_id_subcategory, display_poi, fix_poi, datecreation_poi, geolocatemode_poi, moderation_poi) VALUES ('$lib_poi', '$adherent_poi', '$num_poi', '$rue_poi', $commune_id_commune, $pole_id_pole, $priorite_id_priorite, $status_id_status, $quartier_id_quartier, '$desc_poi', '$prop_poi', '$observationterrain_poi', $subcategory_id_subcategory , $display_poi, FALSE, '$datecreation_poi', 1, 1)";
-				$result = mysql_query($sql);
-				if (!$result) {
-					echo '2';
-				} else {
-					echo '1';
-				}
+// 				$sql = "INSERT INTO poi (lib_poi, adherent_poi, num_poi, rue_poi, commune_id_commune, pole_id_pole, priorite_id_priorite, status_id_status, quartier_id_quartier, desc_poi, prop_poi, observationterrain_poi, subcategory_id_subcategory, display_poi, fix_poi, datecreation_poi, geolocatemode_poi, moderation_poi) VALUES ('$lib_poi', '$adherent_poi', '$num_poi', '$rue_poi', $commune_id_commune, $pole_id_pole, $priorite_id_priorite, $status_id_status, $quartier_id_quartier, '$desc_poi', '$prop_poi', '$observationterrain_poi', $subcategory_id_subcategory , $display_poi, FALSE, '$datecreation_poi', 1, 1)";
+// 				$result = mysql_query($sql);
+// 				if (DEBUG){
+// 					error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - createPoi - ".$sql."\n", 3, LOG_FILE);
+// 				}
+// 				if (!$result) {
+// 					echo '2';
+// 				} else {
+// 					echo '1';
+// 				}
 				
-				mysql_free_result($result);
-				mysql_close($link);
-				break;
-			case 'postgresql':
-				// TODO
-				break;
-		}
-	}
+// 				mysql_free_result($result);
+// 				mysql_close($link);
+// 				break;
+// 			case 'postgresql':
+// 				// TODO
+// 				break;
+// 		}
+// 	}
 
 
 	/* 	Function name 	: deletePois
@@ -2392,8 +2107,8 @@ Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
 	
 				$sql = "UPDATE pole SET lib_pole = '$lib_pole' WHERE id_pole = $id_pole";
 				$result = mysql_query($sql);
-				$sql = "UPDATE pole SET id_pole = $id_pole WHERE lib_pole = '$lib_pole'";
-				$result = mysql_query($sql);
+// 				$sql = "UPDATE pole SET id_pole = $id_pole WHERE lib_pole = '$lib_pole'";
+// 				$result = mysql_query($sql);
 				if (!$result) {
 					echo '2';
 				} else {
@@ -2544,33 +2259,33 @@ Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
 	 * 	Date			: May 2, 2012
 	 */
 	
-	function updateQuartier() {
-		switch (SGBD) {
-			case 'mysql':
-				$link = mysql_connect(HOST,DB_USER,DB_PASS);
-				mysql_select_db(DB_NAME);
-				mysql_query("SET NAMES 'utf8'");
+// 	function updateQuartier() {
+// 		switch (SGBD) {
+// 			case 'mysql':
+// 				$link = mysql_connect(HOST,DB_USER,DB_PASS);
+// 				mysql_select_db(DB_NAME);
+// 				mysql_query("SET NAMES 'utf8'");
 				
-				$id_quartier = $_POST['id_quartier'];
-				$lib_quartier = $_POST['lib_quartier'];		
+// 				$id_quartier = $_POST['id_quartier'];
+// 				$lib_quartier = $_POST['lib_quartier'];		
 	
-				$sql = "UPDATE quartier SET lib_quartier = '$lib_quartier' WHERE id_quartier = $id_quartier";
-				$result = mysql_query($sql);
-				if (!$result) {
-					echo '2';
-				} else {
-					echo '1';
-				}
+// 				$sql = "UPDATE quartier SET lib_quartier = '$lib_quartier' WHERE id_quartier = $id_quartier";
+// 				$result = mysql_query($sql);
+// 				if (!$result) {
+// 					echo '2';
+// 				} else {
+// 					echo '1';
+// 				}
 				
-				mysql_free_result($result);
-				mysql_close($link);
-				break;
-			case 'postgresql':
-				// TODO
-				break;
-		}
+// 				mysql_free_result($result);
+// 				mysql_close($link);
+// 				break;
+// 			case 'postgresql':
+// 				// TODO
+// 				break;
+// 		}
 		
-	}
+// 	}
 	
 	
 	/* 	Function name 	: createQuartier
@@ -2580,31 +2295,31 @@ Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
 	 * 	Date			: May 2, 2012
 	 */
 
-	function createQuartier() {
-		switch (SGBD) {
-			case 'mysql':
-				$link = mysql_connect(HOST,DB_USER,DB_PASS);
-				mysql_select_db(DB_NAME);
-				mysql_query("SET NAMES 'utf8'");
+// 	function createQuartier() {
+// 		switch (SGBD) {
+// 			case 'mysql':
+// 				$link = mysql_connect(HOST,DB_USER,DB_PASS);
+// 				mysql_select_db(DB_NAME);
+// 				mysql_query("SET NAMES 'utf8'");
 				
-				$lib_quartier = mysql_real_escape_string($_POST['lib_quartier']);		
+// 				$lib_quartier = mysql_real_escape_string($_POST['lib_quartier']);		
 					
-				$sql = "INSERT INTO quartier (lib_quartier) VALUES ('$lib_quartier')";
-				$result = mysql_query($sql);
-				if (!$result) {
-					echo '2';
-				} else {
-					echo '1';
-				}
+// 				$sql = "INSERT INTO quartier (lib_quartier) VALUES ('$lib_quartier')";
+// 				$result = mysql_query($sql);
+// 				if (!$result) {
+// 					echo '2';
+// 				} else {
+// 					echo '1';
+// 				}
 				
-				mysql_free_result($result);
-				mysql_close($link);
-				break;
-			case 'postgresql':
-				// TODO
-				break;
-		}
-	}
+// 				mysql_free_result($result);
+// 				mysql_close($link);
+// 				break;
+// 			case 'postgresql':
+// 				// TODO
+// 				break;
+// 		}
+// 	}
 	
 	/* 	Function name 	: deleteQuartiers
 	 * 	Input			:  
@@ -2613,46 +2328,46 @@ Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
 	 * 	Date			: May 2, 2012
 	 */
 	
-	function deleteQuartiers() {
-		$ids = $_POST['ids'];
-		$idquartiers = json_decode(stripslashes($ids));
+// 	function deleteQuartiers() {
+// 		$ids = $_POST['ids'];
+// 		$idquartiers = json_decode(stripslashes($ids));
 		
-		switch (SGBD) {
-			case 'mysql':
-				$link = mysql_connect(HOST,DB_USER,DB_PASS);
-				mysql_select_db(DB_NAME);
-				mysql_query("SET NAMES 'utf8'");
+// 		switch (SGBD) {
+// 			case 'mysql':
+// 				$link = mysql_connect(HOST,DB_USER,DB_PASS);
+// 				mysql_select_db(DB_NAME);
+// 				mysql_query("SET NAMES 'utf8'");
 	
-				if (sizeof($idquartiers) < 1){
-					echo '0';
-				} else if (sizeof($idquartiers) == 1){
-					$sql = "DELETE FROM quartier WHERE id_quartier = ".$idquartiers[0];
-					$result = mysql_query($sql);
-				} else {
-					$sql = "DELETE FROM quartier WHERE ";
-					for ($i = 0; $i < sizeof($idquartiers); $i++){
-						$sql = $sql . "id_quartier = ".$idquartiers[$i];
-						if ($i < sizeof($idquartiers) - 1){
-							$sql = $sql . " OR ";
-						}	 
-					}
-					$result = mysql_query($sql);
-				}
-				if (!$result) {
-					echo '2';
-				} else {
-					echo '1';
-				}
+// 				if (sizeof($idquartiers) < 1){
+// 					echo '0';
+// 				} else if (sizeof($idquartiers) == 1){
+// 					$sql = "DELETE FROM quartier WHERE id_quartier = ".$idquartiers[0];
+// 					$result = mysql_query($sql);
+// 				} else {
+// 					$sql = "DELETE FROM quartier WHERE ";
+// 					for ($i = 0; $i < sizeof($idquartiers); $i++){
+// 						$sql = $sql . "id_quartier = ".$idquartiers[$i];
+// 						if ($i < sizeof($idquartiers) - 1){
+// 							$sql = $sql . " OR ";
+// 						}	 
+// 					}
+// 					$result = mysql_query($sql);
+// 				}
+// 				if (!$result) {
+// 					echo '2';
+// 				} else {
+// 					echo '1';
+// 				}
 				
-				mysql_free_result($result);
-				mysql_close($link);
-				break;
-			case 'postgresql':
-				// TODO
-				break;
-		}	
+// 				mysql_free_result($result);
+// 				mysql_close($link);
+// 				break;
+// 			case 'postgresql':
+// 				// TODO
+// 				break;
+// 		}	
 		
-	}
+// 	}
 	
 	/* 	Function name 	: getPriorite
 	 * 	Input			: start, limit 
@@ -3105,7 +2820,14 @@ Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
 				} else {
 					echo '1';
 				}
-
+				$message = "Bonjour,
+Vous disposez maintenant d'un compte sur velobs vous permettant de mettre à jour les observations enregistrées dans le système. Vous pouvez vous connecter à l'interface d'administration à l'adresse : 
+".URL."/admin.php
+Vos identifiants sont :
+	- Login : $lib_users
+	- Mot de passe : $pass_users
+En cas de question, vous pouvez trouver des informations sur https://github.com/2p2r/velobs_web. N'hésitez pas à envoyer un courriel à ". MAIL_ALIAS_OBSERVATION_ADHERENTS . " pour toute question sur VelObs.";
+				sendMail($mail_users, "Création compte sur VelObs", $message);
 				mysql_free_result($result);
 				mysql_close($link);
 				break;
@@ -3205,40 +2927,6 @@ Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
 	}
 	
 	
-	/* 	Function name 	: isModerate
-	 * 	Input			:  
-	 * 	Output			: success => '1' / failed => '2'
-	 * 	Object			: alert if new record
-	 * 	Date			: Jan. 22, 2012
-	 */
-	
-	function isModerate() {
-		$id_poi = $_POST['id_poi'];
-		switch (SGBD) {
-			case 'mysql':
-				$link = mysql_connect(HOST,DB_USER,DB_PASS);
-				mysql_select_db(DB_NAME);
-				mysql_query("SET NAMES 'utf8'");
-	
-				$sql = "SELECT id_poi FROM poi WHERE moderation_poi = 0 OR moderation_poi IS NULL";
-				$result = mysql_query($sql);
-				$nbrows = mysql_num_rows($result);
-		
-				if ($nbrows > 0){
-					echo '1';
-				} else {
-					echo '2';
-				}
-				
-				mysql_free_result($result);
-				mysql_close($link);
-				break;
-			case 'postgresql':
-				// TODO
-				break;
-		}
-	}
-
 
 	/* 	Function name 	: updateGeoPoi
 	 * 	Input			:  
@@ -3256,53 +2944,19 @@ Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
 				$link = mysql_connect(HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
 				mysql_query("SET NAMES 'utf8'");
-				
-				$sql = "SELECT id_commune, AsText(geom_commune) AS geom FROM commune";
-				$result = mysql_query($sql);
-				while ($row = mysql_fetch_array($result)) {
-					$commune = $row['geom'];
-					$temp = substr($commune,9,-2);
-					$tab = explode(',',$temp);
-					$vertices_x = array();
-					$vertices_y = array();
-					for ($i = 0; $i < count($tab) - 1; $i++) {
-						$temp = explode(" ",$tab[$i]);
-						array_push($vertices_x,$temp[0]);
-						array_push($vertices_y,$temp[1]);
-					}
-					$points_polygon = count($vertices_x) - 1;
-					if (is_in_polygon($points_polygon, $vertices_x, $vertices_y, $longitude_poi, $latitude_poi)) {
-						//echo "Is in polygon!";
-						$commune_id_commune = $row['id_commune'];
-					}
+				$locations = getLocations($latitude_poi,$longitude_poi);
+				if (DEBUG){
+					//error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - " . getLocations($latitude_poi,$longitude_poi)[1]."\n", 3, LOG_FILE);
+					error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - locations - ".$locations[0].", " .$locations[1].", " .$locations[2].", " .$locations[3]."\n", 3, LOG_FILE);
 				}
+				$commune_id_commune =$locations[0];
+				$lib_commune = $locations[1];
+				$pole_id_pole = $locations[2];
+				$lib_pole = $locations[3];
 				
-				$pole_id_pole = 9;
-				$sql = "SELECT id_pole, AsText(geom_pole) AS geom FROM pole";
-				$result = mysql_query($sql);
-				while ($row = mysql_fetch_array($result)) {
-					$pole = $row['geom'];
-					$temp = substr($pole,9,-2);
-					$tab = explode(',',$temp);
-					$vertices_x = array();
-					$vertices_y = array();
-					for ($i = 0; $i < count($tab) - 1; $i++) {
-						$temp = explode(" ",$tab[$i]);
-						array_push($vertices_x,$temp[0]);
-						array_push($vertices_y,$temp[1]);
-					}
-					$points_polygon = count($vertices_x) - 1;
-					if (is_in_polygon($points_polygon, $vertices_x, $vertices_y, $longitude_poi, $latitude_poi)) {
-						//echo "Is in polygon!";
-						$pole_id_pole = $row['id_pole'];
-					}
-				}
-				
-				$sql2 = "UPDATE poi SET commune_id_commune = ".$commune_id_commune.", pole_id_pole = ".$pole_id_pole." WHERE id_poi = $id_poi";
-				$result2 = mysql_query($sql2);
 				
 				$lastdatemodif_poi = date("Y-m-d");
-				$sql = "UPDATE poi SET geom_poi = GeomFromText('POINT(".$longitude_poi." ".$latitude_poi.")'), geolocatemode_poi = 1, lastdatemodif_poi = '$lastdatemodif_poi' WHERE id_poi = $id_poi";
+				$sql = "UPDATE poi SET commune_id_commune = ".$commune_id_commune.", pole_id_pole = ".$pole_id_pole.", geom_poi = GeomFromText('POINT(".$longitude_poi." ".$latitude_poi.")'), geolocatemode_poi = 1, lastdatemodif_poi = '$lastdatemodif_poi' WHERE id_poi = $id_poi";
 				$result = mysql_query($sql);
 
 				if (!$result) {
@@ -3417,158 +3071,102 @@ Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
 				$rue_poi = mysql_real_escape_string($_POST['rue_poi']);
 				$desc_poi = mysql_real_escape_string($_POST['desc_poi']);
 				$prop_poi = mysql_real_escape_string($_POST['prop_poi']);
+				$adherent_poi = mysql_real_escape_string($_POST['adherent_poi']);
 				$latitude_poi = $_POST['latitude_poi'];
 				$longitude_poi = $_POST['longitude_poi'];
 				$subcategory_id_subcategory = $_POST['subcategory_id_subcategory'];
-
+				
 				$sql = "SELECT lib_subcategory FROM subcategory WHERE id_subcategory = ".$subcategory_id_subcategory;
 				$result = mysql_query($sql);
-				while ($row = mysql_fetch_array($result)) {
-					$lib_subcategory = $row['lib_subcategory'];
-				}
-				//détermination de la commune concernée par croisement du polygone de la commune ave latitude et longitude
+				$row = mysql_fetch_assoc( $result );
+				$lib_subcategory = mysql_real_escape_string($row['lib_subcategory']);
+				
+				//détermination de la commune et du pole concernés par croisement du polygone de la commune ave latitude et longitude
 				$commune_id_commune = 99999;
-				$sql = "SELECT id_commune, AsText(geom_commune) AS geom, lib_commune FROM commune";
-				$result = mysql_query($sql);
-				while ($row = mysql_fetch_array($result)) {
-					$commune = $row['geom'];
-					$temp = substr($commune,9,-2);
-					$tab = explode(',',$temp);
-					$vertices_x = array();
-					$vertices_y = array();
-					for ($i = 0; $i < count($tab) - 1; $i++) {
-						$temp = explode(" ",$tab[$i]);
-						array_push($vertices_x,$temp[0]);
-						array_push($vertices_y,$temp[1]);
-					}
-					$points_polygon = count($vertices_x) - 1;
-					if (is_in_polygon($points_polygon, $vertices_x, $vertices_y, $longitude_poi, $latitude_poi)) {
-						//echo "Is in polygon!";
-						$commune_id_commune = $row['id_commune'];
-						$lib_commune = $row['lib_commune'];
-					}
-				}
-
-// 				$sql = "SELECT lib_commune FROM commune WHERE id_commune = ".$commune_id_commune;
-// 				$result = mysql_query($sql);
-// 				while ($row = mysql_fetch_array($result)) {
-// 					$lib_commune = $row['lib_commune'];
-// 				}
-				//détermination du pole concerné par croisement du polygone de la commune ave latitude et longitude
 				$pole_id_pole = 9;
-				$sql = "SELECT id_pole, AsText(geom_pole) AS geom, lib_pole FROM pole";
-				$result = mysql_query($sql);
-				while ($row = mysql_fetch_array($result)) {
-					$pole = $row['geom'];
-					$temp = substr($pole,9,-2);
-					$tab = explode(',',$temp);
-					$vertices_x = array();
-					$vertices_y = array();
-					for ($i = 0; $i < count($tab) - 1; $i++) {
-						$temp = explode(" ",$tab[$i]);
-						array_push($vertices_x,$temp[0]);
-						array_push($vertices_y,$temp[1]);
-					}
-					$points_polygon = count($vertices_x) - 1;
-					if (is_in_polygon($points_polygon, $vertices_x, $vertices_y, $longitude_poi, $latitude_poi)) {
-						//echo "Is in polygon!";
-						$pole_id_pole = $row['id_pole'];
-						$lib_pole = $row['lib_pole'];
-					}
-				}
-				
-				
 				$quartier_id_quartier = 99999;
-				
-				$datecreation_poi = date('Y-m-d');			
-				//TODO : supprimer le id_poi du lib_poi généré
-				$sql = "SELECT max(id_poi) + 1, lib_subcategory FROM poi INNER JOIN subcategory ON (poi.subcategory_id_subcategory = subcategory.id_subcategory) WHERE subcategory_id_subcategory = ".$subcategory_id_subcategory;
-				$result = mysql_query($sql);
-				$lib_poi = mysql_real_escape_string(mysql_result($result, 0, 0)." ".mysql_result($result, 0, 1));
-				//si le mail de la personne qui soumet le POI est aussi un modérateur, on positionne moderation_poi à vrai
-				$sql2 = "SELECT mail_users FROM users WHERE (usertype_id_usertype = 1 OR usertype_id_usertype = 4) AND mail_users LIKE '".$mail_poi."'";
-				$result2 = mysql_query($sql2);
-				$num_rows2 = mysql_num_rows($result2);
-				if ($num_rows2 == 0) {
-					$sql = "INSERT INTO poi (priorite_id_priorite, quartier_id_quartier, pole_id_pole, lib_poi, mail_poi, tel_poi, num_poi, rue_poi, commune_id_commune, desc_poi, prop_poi, subcategory_id_subcategory, display_poi, fix_poi, datecreation_poi, geolocatemode_poi, moderation_poi, geom_poi, status_id_status) VALUES (4, $quartier_id_quartier, $pole_id_pole, '$lib_poi', '$mail_poi', '$tel_poi', '$num_poi', '$rue_poi', $commune_id_commune, '$desc_poi', '$prop_poi', $subcategory_id_subcategory , TRUE, FALSE, '$datecreation_poi', 1, FALSE, GeomFromText('POINT(".$longitude_poi." ".$latitude_poi.")'), 5)";
-				} else {
-					$sql = "INSERT INTO poi (priorite_id_priorite, quartier_id_quartier, pole_id_pole, lib_poi, mail_poi, tel_poi, num_poi, rue_poi, commune_id_commune, desc_poi, prop_poi, subcategory_id_subcategory, display_poi, fix_poi, datecreation_poi, geolocatemode_poi, moderation_poi, geom_poi, status_id_status) VALUES (1, $quartier_id_quartier, $pole_id_pole, '$lib_poi', '$mail_poi', '$tel_poi', '$num_poi', '$rue_poi', $commune_id_commune, '$desc_poi', '$prop_poi', $subcategory_id_subcategory , TRUE, FALSE, '$datecreation_poi', 1, TRUE, GeomFromText('POINT(".$longitude_poi." ".$latitude_poi.")'), 5)";
+				$locations = getLocations($latitude_poi,$longitude_poi);
+				if (DEBUG){
+					error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - locations - ".$locations[0].", " .$locations[1].", " .$locations[2].", " .$locations[3]."\n", 3, LOG_FILE);
 				}
-
-				$result = mysql_query($sql);
+				$commune_id_commune =$locations[0];
+				$lib_commune = $locations[1];
+				$pole_id_pole = $locations[2];
+				$lib_pole = $locations[3];
 				
-				$sql = "SELECT max(id_poi) FROM poi";
-				$result = mysql_query($sql);
-				$max = mysql_result($result, 0, 0);
-				//echo $max;
 				
-				$sql = "SELECT subcategory.lib_subcategory FROM subcategory INNER JOIN poi ON (poi.subcategory_id_subcategory = subcategory.id_subcategory) WHERE poi.id_poi = ".$max;
-				//echo $sql;
-				$result = mysql_query($sql);
-				$libsubcat = mysql_result($result, 0, 0);
-				$lib = $max." ".$libsubcat;
+				$datecreation_poi = date('Y-m-d H:i:s');			
 				
-				$sql = "UPDATE poi SET lib_poi = '$lib' WHERE id_poi = ".$max;
-				$result = mysql_query($sql);
-//TODO : mais c'est quoi ce max!!!!!!!!
-				$linktomoderation = URL.'/admin.php?id='.$max;
-
-				/* envoi d'un mail aux administrateurs de l'association */
-				$subject = 'Nouvelle observation à modérer';
-				$message = 'Bonjour !
-Une nouvelle observation a été ajoutée sur le pole - '.$lib_pole.' -. Veuillez vous connecter à l\'interface d\'administration pour le modérer.
-Lien vers la modération : '.URL.'/admin.php?id='.$max.'
-Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
-				$details = '
-				
-	------------- Détails de l\'observation -------------
-	 # pole : '.$lib_pole.'
-	 # repère : '.$num_poi.'
-	 # nom de la voie : '.$rue_poi.'
-	 # commune : '.$lib_commune.'
-	 # latitude : '.$latitude_poi.'
-	 # longitude : '.$longitude_poi.'
-	 # catégorie : '.$lib_subcategory.'
-	 # description du problème : '.$desc_poi.'
-	 # proposition : '.$prop_poi.'
-	 # soumis par : '.$mail_poi.'
-				';
-				$message .= $details;
-				// si la personne qui soumet le POI n'est pas admin ou moderateur sur un pole, on envoie un mail aux admin
+				//si le mail de la personne qui soumet le POI est aussi un modérateur ou un administrateur, on positionne moderation_poi à vrai et on met la priorité à 1
 				$sql2 = "SELECT mail_users FROM users WHERE (usertype_id_usertype = 1 OR usertype_id_usertype = 4) AND mail_users LIKE '".$mail_poi."'";
 				$result2 = mysql_query($sql2);
 				$num_rows2 = mysql_num_rows($result2);
+				$priorityId = 1;
+				$moderationFlag = 1;
 				if ($num_rows2 == 0) {
-					// boucle sur les administrateurs généraux de l'association
-					$sql = "SELECT mail_users FROM users WHERE usertype_id_usertype = 1";
-					$result = mysql_query($sql);
-					while ($row = mysql_fetch_array($result)) {
-						$to = $row['mail_users'];
-						if ($to != '') {
-							sendMail($to, $subject, $message);
-						}
-					}
-					$sql = "SELECT mail_users FROM users WHERE usertype_id_usertype = 4 AND num_pole = ".$pole_id_pole;
-					$result = mysql_query($sql);
-					while ($row = mysql_fetch_array($result)) {
-						$to = $row['mail_users'];
-						if ($to != '') {
-							sendMail($to, $subject, $message);
-						}
-					}
-					/* fin envoi d'un mail aux administrateurs de l'association */
+					$priorityId = 4;
+					$moderationFlag = 0;
 				} 
-
-				if (!$result) {
-					//echo $sql;
-					//echo '999999999';
-					echo $max;
-				} else {
-					//echo $sql;
-					//echo mysql_insert_id();
-					echo $max;
+				$sql = "INSERT INTO poi (adherent_poi, priorite_id_priorite, quartier_id_quartier, pole_id_pole, lib_poi, mail_poi, tel_poi, num_poi, rue_poi, commune_id_commune, desc_poi, prop_poi, subcategory_id_subcategory, display_poi, fix_poi, datecreation_poi, geolocatemode_poi, moderation_poi, geom_poi, status_id_status) VALUES ('$adherent_poi', $priorityId, $quartier_id_quartier, $pole_id_pole, '$lib_subcategory', '$mail_poi', '$tel_poi', '$num_poi', '$rue_poi', $commune_id_commune, '$desc_poi', '$prop_poi', $subcategory_id_subcategory , TRUE, FALSE, '$datecreation_poi', 1, $moderationFlag, GeomFromText('POINT(".$longitude_poi." ".$latitude_poi.")'), 5)";
+					
+				if (DEBUG){
+					error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - createPublicPoi - Requete d'insertion sql = ".$sql."\n", 3, LOG_FILE);
+					error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - createPublicPoi - Dernier id genere = ".$poiId."\n", 3, LOG_FILE);
+					error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " Erreur ". mysql_errno($link) . " : " . mysql_error($link)."\n", 3, LOG_FILE);
 				}
-
+				$result = mysql_query($sql);
+				if ($result){
+					$poiId = mysql_insert_id();
+					echo $poiId;
+					$arrayObs = getObservationDetailsInArray($poiId);
+					$arrayDetailsAndUpdateSQL = getObservationDetailsInString($arrayObs);
+					if (DEBUG){
+						error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - Il y a ". count($arrayDetailsAndUpdateSQL) ." infos chargées pour l'update de l'obs $id_poi \n", 3, LOG_FILE);
+						error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - updateObsBoolean ". $arrayDetailsAndUpdateSQL['updateObsBoolean'] ." pour l'update de l'obs $id_poi \n", 3, LOG_FILE);
+						error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - sqlUpdate ". $arrayDetailsAndUpdateSQL['sqlUpdate'] ." pour l'update de l'obs $id_poi \n", 3, LOG_FILE);
+						error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - detailObservationString ".$arrayDetailsAndUpdateSQL['detailObservationString'] ." pour l'update de l'obs $id_poi \n", 3, LOG_FILE);
+					
+					}
+					if ($num_rows2 == 0){
+						/* envoi d'un mail aux administrateurs de l'association et modérateurs */
+						$whereClause = "u.usertype_id_usertype = 1 OR (u.usertype_id_usertype = 4 AND u.num_pole = ".$arrayObs['pole_id_pole'].")";
+						$subject = 'Nouvelle observation à modérer sur le pole '.$arrayObs['lib_pole'];
+						$message = "Bonjour !
+Une nouvelle observation a été ajoutée sur le pole ".$arrayObs['lib_pole'].". Veuillez vous connecter à l'interface d'administration pour la modérer.
+Lien vers la modération : ".URL.'/admin.php?id='.$arrayObs['id_poi']."\n".$arrayDetailsAndUpdateSQL['detailObservationString']."\n";
+						$mails = array();
+						$mails = getMailsToSend($whereClause, $subject, $message );
+						if (DEBUG){
+							error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " Il y a ". count($mails) . " mails à envoyer \n", 3, LOG_FILE);
+						}
+						$succes = sendMails($mails);
+						
+						/* debut envoi d'un mail au contributeur */
+						$subject = 'Observation en attente de modération';
+						$message = "Bonjour !
+Vous venez d'ajouter une observation à VelObs et vous en remercions. Celle-ci devrait être administrée sous peu.\n".
+$arrayDetailsAndUpdateSQL['detailObservationString']."\n
+Cordialement, l'Association ".VELOBS_ASSOCIATION." :)";
+						$mailArray = [$arrayObs['mail_poi'],"Soumetteur", $subject, $message ];
+						array_push($mails,$mailArray);
+				
+					}
+					if (DEBUG){
+						error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - Il y a ". count($mails) ." mails à envoyer\n", 3, LOG_FILE);
+					}
+					foreach ($mails as $key => $value) {
+						if (DEBUG){
+							error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - Clé : $key; Valeur : $value[0],  $value[1],  $value[2]\n", 3, LOG_FILE);
+						}
+						sendMail($value[0], $value[2], $value[3]);
+					}
+				}else{
+					if (DEBUG){
+						error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " Erreur ". mysql_errno($link) . " : " . mysql_error($link)."\n", 3, LOG_FILE);
+					}
+					sendMail(MAIL_FROM,"Erreur méthode createPublicPoi", "Erreur = " .  mysql_error($link) . ", requête = " . $sql);
+					echo -1;
+				}
 				mysql_free_result($result);
 				mysql_close($link);
 
@@ -3896,12 +3494,7 @@ Cordialement, l\'Association '.VELOBS_ASSOCIATION.' :)';
 
 				$sql = "INSERT INTO commentaires (text_commentaires, display_commentaires) VALUES ('$text', 0)";
 				$result = mysql_query($sql);
-
-				$sql = "SELECT max(id_commentaires) AS maxi FROM commentaires";
-				$result = mysql_query($sql);
-				while ($row = mysql_fetch_array($result)) {
-					$id_commentaire = $row['maxi'];
-				}
+				$id_commentaire = mysql_insert_id();
 
 				$sql = "INSERT INTO poi_commentaires (poi_id_poi, commentaires_id_commentaires) VALUES ($id_poi, $id_commentaire)";
 				$result = mysql_query($sql);
@@ -3966,11 +3559,7 @@ Cordialement, l\'application VelObs :)';
 				$sql = "INSERT INTO commentaires (text_commentaires, display_commentaires) VALUES ('$text', 0)";
 				$result = mysql_query($sql);
 
-				$sql = "SELECT max(id_commentaires) AS maxi FROM commentaires";
-				$result = mysql_query($sql);
-				while ($row = mysql_fetch_array($result)) {
-					$id_commentaire = $row['maxi'];
-				}
+				$id_commentaire = mysql_insert_id();
 
 				$sql = "INSERT INTO poi_commentaires (poi_id_poi, commentaires_id_commentaires) VALUES ($id_poi, $id_commentaire)";
 				$result = mysql_query($sql);

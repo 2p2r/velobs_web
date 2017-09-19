@@ -1,0 +1,66 @@
+#!/bin/bash
+#Script de mise à jour de velobs.
+#besoin d'un répertoire contenant les sources à passer en production
+#copie les fichiers d'intérêts pour la production (key.php et key.js + répertoire resources/pictures) dans le répertoire des sources à paser en production
+#renomme le dossier de production en le suffixant avec un timestamp
+#renomme le dossier des sources à passer en production avec le nom du répertoire de production
+
+echo "$(tput setaf 1)Ce script doit se trouver au même niveau que les répertoires source de velobs, de production comme la version à mettre en production. Si ce n'est pas le cas, veuillez quitter et déplacer ce script et le répertoire contenant la nouvelle version de velobs au même niveau que le répertoire de velobs en production SVP.$(tput sgr 0)"
+echo ""
+echo -n "$(tput setaf 2)Nom du répertoire contenant les sources de velobs à passer en production? $(tput sgr 0)"
+read velobsDev
+echo -n "$(tput setaf 2)Nom du répertoire contenant les sources de velobs actuellement en production? $(tput sgr 0)"
+read velobsProd
+
+timestamp=$(date +%s)
+if [  -z $velobsDev ]
+then
+        echo "$(tput setaf 1)Le répertoire des sources à mettre en production n'a pas été spécifié, on sort$(tput sgr 0)"
+        exit
+fi
+
+if [ ! -d $velobsDev ]
+then
+        echo "$(tput setaf 1)"$velobsDev " n'existe pas, on sort$(tput sgr 0)"
+        exit
+fi
+phpKeyVelobsDev=$velobsDev"/lib/php/key.php"
+jsKeyVelobsDev=$velobsDev"/lib/js/key.js"
+
+if [ -e $phpKeyVelobsDev ]
+then
+        echo "$(tput setaf 1)Le fichier "$phpKeyVelobsDev" existe dans les sources de la nouvelle version de velobs. Etes-vous sûr(e) de ne pas avoir inversé les noms des répertoires? Dans le doute, on ne fait rien et on annule la mise à jour. Veuillez supprimer le fichier "$phpKeyVelobsDev" avant de recommencer la mise à jour SVP.$(tput sgr 0)"
+        exit
+fi
+if [ -e $jsKeyVelobsDev ]
+then
+        echo "$(tput setaf 1)Le fichier "$jsKeyVelobsDev" existe dans les sources de la nouvelle version de velobs. Etes-vous sûr(e) de ne pas avoir inversé les noms des répertoires? Dans le doute, on ne fait rien et on annule la mise à jour. Veuillez supprimer le fichier "$jsKeyVelobsDev" avant de recommencer la mise à jour SVP.$(tput sgr 0)"
+        exit
+fi
+if [ ! -d $velobsProd ]
+then
+        echo "$(tput setaf 1)"$velobsProd " n'existe pas, on sort$(tput sgr 0)"
+        exit
+fi
+
+echo "$(tput setaf 4)Toutes les conditions semblent réunies pour passer la nouvelle version de velobs en production$(tput sgr 0)"
+
+echo "Copie des photos de "$velobsProd"/resources/pictures/ dans "$velobsDev"/resources"
+cp -r $velobsProd/resources/pictures/ $velobsDev/resources/
+
+echo "Copie de "$velobsProd"/lib/php/key.php dans "$velobsDev"/lib/php/"
+cp $velobsProd/lib/php/key.php $velobsDev/lib/php/
+
+echo "Copie de "$velobsProd"/lib/js/key.js dans "$velobsDev"/lib/js/"
+cp $velobsProd/lib/js/key.js $velobsDev/lib/js/
+
+echo -n "$(tput setaf 2)Merci de modifier "$velobsDev"/lib/js/key.js et "$velobsDev"/lib/php/key.php si nécessaire pour être raccord avec le contenu de "$velobsDev"/lib/js/key.js.template et "$velobsDev"/lib/php/key.php.template. Appuyez sur une touche quand vous avez fait les éventuelles modifications$(tput sgr 0)"
+read
+
+echo "Application des droits d'écriture sur le répertoire de sortie où sont générés les fichiers csv d'export de velobs : chmod 775 "$velobsDev"/resources/csv "$velobsDev"/resources/pictures"
+chmod 775 $velobsDev/resources/csv $velobsDev/resources/pictures
+
+echo "switch des version de velobs pour le passage en production : mv $velobsProd $velobsProd$timestamp; mv $velobsDev $velobsProd"
+mv $velobsProd $velobsProd.$timestamp;mv $velobsDev $velobsProd
+
+echo "$(tput setaf 5)La nouvelle version de velobs est installée. Merci de la tester.$(tput sgr 0)"

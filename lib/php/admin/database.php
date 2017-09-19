@@ -145,6 +145,9 @@
 				}
 				break;
 			case "LISTINGPOIPOLECOM":
+				if (DEBUG){
+					error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - LISTINGPOIPOLECOM ".$_POST." \n", 3, LOG_FILE);
+				}
 				if (isset($query)) {
 					if ($query != '') {
 						if (strlen($query) >= 3) {

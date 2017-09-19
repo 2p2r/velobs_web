@@ -25,7 +25,6 @@
 					$sql .= $sqlappend;
 				}
 				$result = mysql_query($sql);
-
 				$i = 0;
 				while ($row = mysql_fetch_array($result)) {
 				$arr[$i]['id'] = $row['id_poi'];
