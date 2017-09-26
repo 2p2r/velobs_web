@@ -1,24 +1,33 @@
 <?php header('Content-Type: text/html; charset=UTF-8');
 
     include '../key.php';
-	include '../commonfunction.php';
-	include '../admin/adminfunction.php';
+
+ 	include '../admin/adminfunction.php';
 
 	switch (SGBD) {
         case 'mysql':
             $link = mysql_connect(HOST,DB_USER,DB_PASS);
             mysql_select_db(DB_NAME);
+            
+            if (DEBUG){
+            	error_log(date("Y-m-d H:i:s") . "  - velObsRecord.php \n", 3, LOG_FILE);
+            }
             //mysql_query("SET NAMES 'utf8'");
 			//TODO : ne faire qu'un traitement et exclusre la photo s'il n'y en a pas....
             $createObservation = 1;
-            if (!isset($_POST['lat']) || !isset($_POST['lng']) || !isset($_POST['date']) || !isset($_POST['desc']) || !isset($_POST['prop']) || !isset($_POST['subcat']) || !isset($_POST['mail']) || !isset($_POST['tel']) || !isset($_POST['rue']) || !isset($_POST['num'])) {
+            if (!isset($_POST['lat']) || !isset($_POST['lng']) || !isset($_POST['datecreation_poi']) || !isset($_POST['desc']) || !isset($_POST['prop']) || !isset($_POST['subcat']) || !isset($_POST['mail']) || !isset($_POST['tel']) || !isset($_POST['rue']) || !isset($_POST['num'])) {
+            	if (DEBUG){
+            		error_log(date("Y-m-d H:i:s") . "  - velObsRecord.php, manque des infos\n", 3, LOG_FILE);
+            	}
             	echo 'dataKOfile';
             	
             }elseif (isset($_FILES["photo1"])) {
+            	if (DEBUG){
+            		error_log(date("Y-m-d H:i:s") . "  - velObsRecord.php, photo1 is set\n", 3, LOG_FILE);
+            	}
             	$allowedExts = array("gif", "jpeg", "jpg", "png", "GIF", "JPEG", "JPG", "PNG");
             	$temp = explode(".", $_FILES["photo1"]["name"]);
             	$extension = end($temp);
-            	$createObservation = 0;
             	
             		if (!in_array($extension, $allowedExts)) {
             			echo 'dataOKfileKO';
@@ -49,20 +58,22 @@
             		}
             }
             if ($createObservation){
-            	
+            	if (DEBUG){
+            		error_log(date("Y-m-d H:i:s") . "  - velObsRecord.php, createObservation = $createObservation\n", 3, LOG_FILE);
+            	}
 
                     /*
                         ICI ON INSERE EN BASE SANS METTRE LA PHOTO
                     */
 
-                    $latitude_poi = $_POST['lat'];
-                    $longitude_poi = $_POST['lng'];
+                    $latitude_poi = $_POST['latitude_poi'];
+                    $longitude_poi = $_POST['longitude_poi'];
 
-                    $date_poi = $_POST['date'];
-                    $desc_poi = mysql_real_escape_string($_POST['desc']);
-                    $prop_poi = mysql_real_escape_string($_POST['prop']);
+                    $date_poi = date("Y-m-d H:i:s");
+                    $desc_poi = mysql_real_escape_string($_POST['desc_poi']);
+                    $prop_poi = mysql_real_escape_string($_POST['prop_poi']);
 
-                    $subcategory_id_subcategory = $_POST['subcat'];
+                    $subcategory_id_subcategory = $_POST['subcategory_id_subcategory'];
 
                     $sql = "SELECT lib_subcategory FROM subcategory WHERE id_subcategory = ".$subcategory_id_subcategory;
                     $result = mysql_query($sql);
@@ -71,7 +82,7 @@
                     }
                     $lib_poi = mysql_real_escape_string($lib_subcategory);
                     
-                    switch ($_POST['typegeoloc']) {
+                    switch ($_POST['geolocatemode_poi']) {
                         case 'gps':
                             $geolocatemode_poi = 2;
                             break;
@@ -80,11 +91,11 @@
                             break;
                     }
 
-                    $mail_poi = mysql_real_escape_string($_POST['mail']);
-                    $tel_poi = mysql_real_escape_string($_POST['tel']);
+                    $mail_poi = mysql_real_escape_string($_POST['mail_poi']);
+                    $tel_poi = mysql_real_escape_string($_POST['tel_poi']);
 
-                    $rue_poi = mysql_real_escape_string($_POST['rue']);
-                    $num_poi = mysql_real_escape_string($_POST['num']);
+                    $rue_poi = mysql_real_escape_string($_POST['rue_poi']);
+                    $num_poi = mysql_real_escape_string($_POST['num_poi']);
                     
                     $commune_id_commune = 99999;
 					$pole_id_pole = 9;
@@ -120,8 +131,7 @@
                     }
                     $id_poi = mysql_insert_id();
 
-                    mysql_free_result($result);
-                    mysql_close($link);
+
 
                     echo 'dataOK';
 

@@ -11,10 +11,10 @@
 
             if (!isset($_FILES["photo1"])) {
                 // pas de photo et commentaire non vide
-                if ($_POST['comment'] != '') {
-                    $id_poi = $_POST['id'];
-                    //$text_comment = $_POST['comment'];
-                    $text_comment = mysql_real_escape_string($_POST['comment']);
+                if ($_POST['text_comment'] != '') {
+                    $id_poi = $_POST['id_poi'];
+                    //$text_comment = $_POST['text_comment'];
+                    $text_comment = mysql_real_escape_string($_POST['text_comment']);
 
                     $sql = "INSERT INTO commentaires (text_commentaires, display_commentaires) VALUES ('$text_comment',false)";
                     $result = mysql_query($sql);
@@ -71,7 +71,7 @@ Cordialement, l\'application velobs)';
                 } else if (($_FILES["photo1"]["type"] != "image/gif") && ($_FILES["photo1"]["type"] != "image/jpeg") && ($_FILES["photo1"]["type"] != "image/jpg") && ($_FILES["photo1"]["type"] != "image/png")) {
                     //echo 'dataOKfileKO';
                 } else {
-                    $id_poi = $_POST['id'];
+                    $id_poi = $_POST['id_poi'];
                     $dossier = '../../../resources/pictures/';
                     $fichier = basename($_FILES['photo1']['name']);
                     $pathphoto = $dossier.$fichier;
@@ -97,9 +97,9 @@ Cordialement, l\'application velobs)';
                     $row = mysql_fetch_row($res);
                     $pole_id_pole = $row[0];
                     
-                    if ($_POST['comment'] != '') {
-                        //$text_comment = $_POST['comment'];
-                        $text_comment = mysql_real_escape_string($_POST['comment']);
+                    if ($_POST['text_comment'] != '') {
+                        //$text_comment = $_POST['text_comment'];
+                        $text_comment = mysql_real_escape_string($_POST['text_comment']);
 
                         $sql = "INSERT INTO commentaires (text_commentaires, display_commentaires) VALUES ('$text_comment',false)";
                         $result = mysql_query($sql);
