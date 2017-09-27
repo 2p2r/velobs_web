@@ -649,15 +649,11 @@
 						$arr[$i]['latitude_poi'] = $row['Y'];
 						$arr[$i]['lastdatemodif_poi'] = $row['lastdatemodif_poi'];
 
-						$sql2 = "SELECT * FROM poi_commentaires WHERE poi_id_poi = ".$row['id_poi'];
+						$sql2 = "SELECT * FROM commentaires WHERE poi_id_poi = ".$row['id_poi'];
 						$res2 = mysql_query($sql2);
 						$nb2 = mysql_num_rows($res2);
 						$arr[$i]['num_comments'] = $nb2;
 
-						$sql2 = "SELECT * FROM poi_photos WHERE poi_id_poi = ".$row['id_poi'];
-						$res2 = mysql_query($sql2);
-						$nb2 = mysql_num_rows($res2);
-						$arr[$i]['num_photos'] = $nb2;
 
 						$i++;
 					}
@@ -917,15 +913,10 @@
 						$arr[$i]['latitude_poi'] = $row['Y'];
 						$arr[$i]['lib_status'] = stripslashes($row['lib_status']);
 
-						$sql2 = "SELECT * FROM poi_commentaires INNER JOIN commentaires ON (poi_commentaires.commentaires_id_commentaires = commentaires.id_commentaires) WHERE poi_id_poi = ".$row['id_poi']." AND commentaires.display_commentaires = 1";
+						$sql2 = "SELECT * FROM commentaires WHERE poi_id_poi = ".$row['id_poi']." AND commentaires.display_commentaires = 1";
 						$res2 = mysql_query($sql2);
 						$nb2 = mysql_num_rows($res2);
 						$arr[$i]['num_comments'] = $nb2;
-
-						$sql2 = "SELECT * FROM poi_photos INNER JOIN photos ON (poi_photos.photos_id_photos = photos.id_photos) WHERE poi_id_poi = ".$row['id_poi']." AND display_photos = 1";
-						$res2 = mysql_query($sql2);
-						$nb2 = mysql_num_rows($res2);
-						$arr[$i]['num_photos'] = $nb2;
 
 						$i++;
 					}
@@ -1017,15 +1008,10 @@
 							$arr[$i]['lib_status'] = stripslashes($row['lib_status']);
 							$arr[$i]['lastdatemodif_poi'] = $row['lastdatemodif_poi'];
 
-							$sql2 = "SELECT * FROM poi_commentaires WHERE poi_id_poi = ".$row['id_poi'];
+							$sql2 = "SELECT * FROM commentaires WHERE poi_id_poi = ".$row['id_poi'];
 							$res2 = mysql_query($sql2);
 							$nb2 = mysql_num_rows($res2);
 							$arr[$i]['num_comments'] = $nb2;
-
-							$sql2 = "SELECT * FROM poi_photos WHERE poi_id_poi = ".$row['id_poi'];
-							$res2 = mysql_query($sql2);
-							$nb2 = mysql_num_rows($res2);
-							$arr[$i]['num_photos'] = $nb2;
 
 							$i++;
 						}
@@ -1114,16 +1100,11 @@
 						$arr[$i]['geolocatemode_poi'] = $row['geolocatemode_poi'];
 						$arr[$i]['longitude_poi'] = $row['X'];
 						$arr[$i]['latitude_poi'] = $row['Y'];
-
-						$sql2 = "SELECT * FROM poi_commentaires INNER JOIN commentaires ON (poi_commentaires.commentaires_id_commentaires = commentaires.id_commentaires) WHERE poi_id_poi = ".$row['id_poi']." AND commentaires.display_commentaires = 1";
+						//TODO remplacer par un select count()
+						$sql2 = "SELECT * FROM commentaires WHERE poi_id_poi = ".$row['id_poi']." AND commentaires.display_commentaires = 1";
 						$res2 = mysql_query($sql2);
 						$nb2 = mysql_num_rows($res2);
 						$arr[$i]['num_comments'] = $nb2;
-
-						$sql2 = "SELECT * FROM poi_photos INNER JOIN photos ON (poi_photos.photos_id_photos = photos.id_photos) WHERE poi_id_poi = ".$row['id_poi']." AND display_photos = 1";
-						$res2 = mysql_query($sql2);
-						$nb2 = mysql_num_rows($res2);
-						$arr[$i]['num_photos'] = $nb2;
 
 						$i++;
 					}
@@ -3373,7 +3354,7 @@ Cordialement, l'Association ".VELOBS_ASSOCIATION." :)";
 				mysql_select_db(DB_NAME);
 				mysql_query("SET NAMES 'utf8'");
 
-				$sql = "SELECT * FROM commentaires WHERE id_commentaires IN (SELECT commentaires_id_commentaires FROM poi_commentaires WHERE poi_id_poi = ".$id_poi.")";
+				$sql = "SELECT * FROM commentaires WHERE poi_id_poi = ".$id_poi;
 				$result = mysql_query($sql);
 				$nbrows = mysql_num_rows($result);
 
@@ -3383,6 +3364,9 @@ Cordialement, l'Association ".VELOBS_ASSOCIATION." :)";
 						$arr[$i]['id_commentaires'] = $row['id_commentaires'];
 						$arr[$i]['text_commentaires'] = stripslashes($row['text_commentaires']);
 						$arr[$i]['display_commentaires'] = $row['display_commentaires'];
+						$arr[$i]['url_photo'] = $row['url_photo'];
+						$arr[$i]['datecreation'] = $row['datecreation'];
+						$arr[$i]['mail_commentaires'] = $row['mail_commentaires'];
 						$i++;
 					}
 					echo '({"total":"'.$nbrows.'","results":'.json_encode($arr).'})';
@@ -3452,7 +3436,7 @@ Cordialement, l'Association ".VELOBS_ASSOCIATION." :)";
 				$result = mysql_query($sql);
 
 
-				$sql = "SELECT poi_id_poi FROM poi_commentaires WHERE commentaires_id_commentaires = ".$id_comment;
+				$sql = "SELECT poi_id_poi FROM commentaires WHERE id_commentaires = ".$id_comment;
 				$res = mysql_query($sql);
 				$row = mysql_fetch_row($res);
 				$id_poi = $row[0];
@@ -3489,15 +3473,16 @@ Cordialement, l'Association ".VELOBS_ASSOCIATION." :)";
 				$link = mysql_connect(HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
 				mysql_query("SET NAMES 'utf8'");
-
-				$text = mysql_real_escape_string($text_comment);
-
-				$sql = "INSERT INTO commentaires (text_commentaires, display_commentaires) VALUES ('$text', 0)";
+				
+				$id_poi = $_POST['id_poi'];
+				$text = mysql_real_escape_string($_POST['text_comment']);
+				$mail_commentaires = mysql_real_escape_string($_POST['mail_commentaires']);
+				$url_photo = mysql_real_escape_string($_POST['url_photo']);
+				
+				
+				$sql = "INSERT INTO commentaires (text_commentaires, display_commentaires, mail_commentaires, poi_id_poi) VALUES ('$text', 0, '$mail_commentaires',$id_poi)";
 				$result = mysql_query($sql);
 				$id_commentaire = mysql_insert_id();
-
-				$sql = "INSERT INTO poi_commentaires (poi_id_poi, commentaires_id_commentaires) VALUES ($id_poi, $id_commentaire)";
-				$result = mysql_query($sql);
 
 				$lastdatemodif_poi = date("Y-m-d");
 				$sql3 = "UPDATE poi SET lastdatemodif_poi = '$lastdatemodif_poi' WHERE id_poi = $id_poi";
@@ -3554,15 +3539,15 @@ Cordialement, l\'application VelObs :)';
 				mysql_select_db(DB_NAME);
 				mysql_query("SET NAMES 'utf8'");
 
-				$text = mysql_real_escape_string($text_comment);
-
-				$sql = "INSERT INTO commentaires (text_commentaires, display_commentaires) VALUES ('$text', 0)";
+				$id_poi = $_POST['id_poi'];
+				$text = mysql_real_escape_string($_POST['text_comment']);
+				$mail_commentaires = mysql_real_escape_string($_POST['mail_commentaires']);
+				$url_photo = mysql_real_escape_string($_POST['url_photo']);
+				
+				
+				$sql = "INSERT INTO commentaires (text_commentaires, display_commentaires, mail_commentaires, poi_id_poi) VALUES ('$text', 0, '$mail_commentaires',$id_poi)";
 				$result = mysql_query($sql);
-
 				$id_commentaire = mysql_insert_id();
-
-				$sql = "INSERT INTO poi_commentaires (poi_id_poi, commentaires_id_commentaires) VALUES ($id_poi, $id_commentaire)";
-				$result = mysql_query($sql);
 
 				$lastdatemodif_poi = date("Y-m-d");
 				$sql3 = "UPDATE poi SET lastdatemodif_poi = '$lastdatemodif_poi' WHERE id_poi = $id_poi";
@@ -3582,116 +3567,4 @@ Cordialement, l\'application VelObs :)';
 				break;
 		}
 	}
-
-   /* 	Function name 	: getPhotos
-		 * 	Input			: id
-		 * 	Output			: json
-		 * 	Object			: get photos per ID
-		 * 	Date			: Dec. 14, 2015
-		 */
-
-		function getPhotos($id_poi) {
-			switch (SGBD) {
-				case 'mysql':
-					$link = mysql_connect(HOST,DB_USER,DB_PASS);
-					mysql_select_db(DB_NAME);
-					mysql_query("SET NAMES 'utf8'");
-
-					$sql = "SELECT * FROM photos WHERE id_photos IN (SELECT photos_id_photos FROM poi_photos WHERE poi_id_poi = ".$id_poi.")";
-					$result = mysql_query($sql);
-					$nbrows = mysql_num_rows($result);
-
-					$i = 0;
-					if ($nbrows > 0) {
-						while ($row = mysql_fetch_array($result)) {
-							$arr[$i]['id_photos'] = $row['id_photos'];
-							$arr[$i]['url_photos'] = stripslashes($row['url_photos']);
-							$arr[$i]['display_photos'] = $row['display_photos'];
-							$i++;
-						}
-						echo '({"total":"'.$nbrows.'","results":'.json_encode($arr).'})';
-					} else {
-						echo '({"total":"0", "results":""})';
-					}
-
-					mysql_free_result($result);
-					mysql_close($link);
-					break;
-				case 'postgresql':
-					// TODO
-					break;
-			}
-		}
-
-		/* 	Function name 	: getPhotosCom
-		 * 	Input			: id
-		 * 	Output			: json
-		 * 	Object			: get photos per ID
-		 * 	Date			: Dec. 14, 2015
-		 */
-
-		function getPhotosCom($id_poi) {
-			switch (SGBD) {
-				case 'mysql':
-					$link = mysql_connect(HOST,DB_USER,DB_PASS);
-					mysql_select_db(DB_NAME);
-					mysql_query("SET NAMES 'utf8'");
-
-					$sql = "SELECT * FROM photos WHERE id_photos IN (SELECT photos_id_photos FROM poi_photos WHERE poi_id_poi = ".$id_poi.") AND display_photos = 1";
-					$result = mysql_query($sql);
-					$nbrows = mysql_num_rows($result);
-
-					$i = 0;
-					if ($nbrows > 0) {
-						while ($row = mysql_fetch_array($result)) {
-							$arr[$i]['id_photos'] = $row['id_photos'];
-							$arr[$i]['url_photos'] = stripslashes($row['url_photos']);
-							$arr[$i]['display_photos'] = $row['display_photos'];
-							$i++;
-						}
-						echo '({"total":"'.$nbrows.'","results":'.json_encode($arr).'})';
-					} else {
-						echo '({"total":"0", "results":""})';
-					}
-
-					mysql_free_result($result);
-					mysql_close($link);
-					break;
-				case 'postgresql':
-					// TODO
-					break;
-			}
-		}
-
-		/* 	Function name 	: displayPhoto
-			 * 	Input			: id_photo, display_photo
-			 * 	Output			: json
-			 * 	Object			: display photo per ID
-			 * 	Date			: Dec. 13, 2015
-			 */
-
-			function displayPhoto($id_photo, $display_photo) {
-				switch (SGBD) {
-					case 'mysql':
-						$link = mysql_connect(HOST,DB_USER,DB_PASS);
-						mysql_select_db(DB_NAME);
-						mysql_query("SET NAMES 'utf8'");
-
-						$sql = "UPDATE photos SET display_photos = $display_photo WHERE id_photos = $id_photo";
-						$result = mysql_query($sql);
-
-						if (!$result) {
-							echo '2';
-						} else {
-							echo '1';
-						}
-
-						mysql_free_result($result);
-						mysql_close($link);
-						break;
-					case 'postgresql':
-						// TODO
-						break;
-				}
-			}
 ?>

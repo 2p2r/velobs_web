@@ -315,13 +315,13 @@
 
 
             case "LISTINGPHOTOS":
-                getPhotos($id_poi);
+                getComments($id_poi);
                 break;
             case "LISTINGPHOTOSCOM":
-                getPhotosCom($id_poi);
+                getCommentsCom($id_poi);
                 break;
             case "UPDATEPHOTOS":
-                displayPhoto($_POST['id_photo'],$_POST['display_photo']);
+                //displayPhoto($_POST['id_photo'],$_POST['display_photo']);
                 break;
 
 				
