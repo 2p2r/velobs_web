@@ -37,7 +37,7 @@ $sql = "ALTER TABLE poi_commentaires RENAME TO poi_commentairesToDelete";
 $result = mysql_query($sql);
 echo $sql . " : ".$result."\n";
 
-echo "insère dans la table commentaires les enregistrements des tables photos et poi_photos\n";
+echo "Insère dans la table commentaires les enregistrements des tables photos et poi_photos\n";
 $sql = "SELECT pp.poi_id_poi, pp.photos_id_photos, p.* FROM poi_photos pp INNER JOIN photos p ON p.id_photos = pp.photos_id_photos";
 $result = mysql_query($sql);
 while ($row = mysql_fetch_array($result)) {
