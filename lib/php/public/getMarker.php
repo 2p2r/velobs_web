@@ -100,7 +100,7 @@
 				$arr[$i]['num'] = stripslashes($row['num_poi']);
 				$arr[$i]['rue'] = stripslashes($row['rue_poi']);
 				$arr[$i]['commune'] = stripslashes($row['lib_commune']);
-				
+				//TODO : combiner icone de subcategory + priorité
 				if ($row['lib_priorite'] == 'DONE') {
 					$arr[$i]['icon'] = 'resources/icon/marker/done.png';
 					$arr[$i]['iconCls'] = 'done';
@@ -115,21 +115,16 @@
 				$arr[$i]['lat'] = $row['Y'];
 				$arr[$i]['lon'] = $row['X'];
 
-				$sql2 = "SELECT * FROM commentaires WHERE id_commentaires IN (SELECT commentaires_id_commentaires FROM poi_commentaires WHERE poi_id_poi = ".$row['id_poi'].") AND display_commentaires = 1";
+				$sql2 = "SELECT * FROM commentaires WHERE poi_id_poi = ".$row['id_poi']." AND display_commentaires = 1";
 				$result2 = mysql_query($sql2);
 				$j = 0;
 				while ($row2 = mysql_fetch_array($result2)) {
                     $arr[$i]['commentaires'][$j] = stripslashes($row2['text_commentaires']);
+                    $arr[$i]['photos'][$j] = stripslashes($row2['url_photo']);
+                    $arr[$i]['mail_commentaires'][$j] = stripslashes($row2['mail_commentaires']);
+                    $arr[$i]['datecreation'][$j] = stripslashes($row2['datecreation']);
                     $j++;
 				}
-
-				$sql2 = "SELECT * FROM photos WHERE id_photos IN (SELECT photos_id_photos FROM poi_photos WHERE poi_id_poi = ".$row['id_poi'].") AND display_photos = 1";
-                $result2 = mysql_query($sql2);
-                $j = 0;
-                while ($row2 = mysql_fetch_array($result2)) {
-                    $arr[$i]['photos'][$j] = stripslashes($row2['url_photos']);
-                    $j++;
-                }
 		
 				$i++;
 			}
