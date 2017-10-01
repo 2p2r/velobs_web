@@ -510,7 +510,7 @@
   }
   
   if( !extension_loaded('mysql') ){
-      include('mysql2i.func.php');
+      include_once('mysql2i.func.php');
   }
   
 ?>

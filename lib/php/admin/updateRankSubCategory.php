@@ -1,6 +1,6 @@
 <?php
 	session_start();
-	include '../key.php';
+	include_once '../key.php';
 	
 	if (isset($_SESSION['user'])) {
 		switch (SGBD) {

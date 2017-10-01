@@ -1,6 +1,6 @@
 <?php
-	include '../key.php';
-	include '../admin/adminfunction.php';
+	include_once '../key.php';
+	include_once '../admin/adminfunction.php';
 	
 	switch (SGBD) {
 		case 'mysql':

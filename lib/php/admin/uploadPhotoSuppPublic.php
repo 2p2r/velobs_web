@@ -1,7 +1,7 @@
 <?php
 	session_start();
-	include '../key.php';
-	include '../commonfunction.php';
+	include_once '../key.php';
+	include_once '../commonfunction.php';
 	if (DEBUG){
 		error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - uploadPhotoSuppPublic \n", 3, LOG_FILE);
 	}

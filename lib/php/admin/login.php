@@ -1,6 +1,6 @@
 <?php header('Content-Type: text/html; charset=UTF-8');
 	session_start();
-	include '../key.php';
+	include_once '../key.php';
 	
 	switch (SGBD) {
 		case 'mysql':

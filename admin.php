@@ -1,7 +1,7 @@
 <?php header('Content-Type: text/html; charset=UTF-8');
 	session_start();
-	include 'lib/php/key.php';
-	include 'lib/php/commonfunction.php';
+	include_once 'lib/php/key.php';
+	include_once 'lib/php/commonfunction.php';
 	if (DEBUG){
 		error_log("Tentative de connection\n", 3, LOG_FILE);
 	}
