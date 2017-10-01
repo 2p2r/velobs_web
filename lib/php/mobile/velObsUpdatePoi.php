@@ -1,14 +1,15 @@
 <?php header('Content-Type: text/html; charset=UTF-8');
 
-    include '../key.php';
-	include '../admin/adminfunction.php';
+    include_once '../key.php';
+	include_once '../admin/adminfunction.php';
 
 	switch (SGBD) {
         case 'mysql':
             $link = mysql_connect(HOST,DB_USER,DB_PASS);
             mysql_select_db(DB_NAME);
             //mysql_query("SET NAMES 'utf8'");
-
+            $photo_poi = '';
+            $createObservation = 1;
             if (isset($_FILES["photo1"])) {
                 // photo présente
                 $allowedExts = array("gif", "jpeg", "jpg", "png", "GIF", "JPEG", "JPG", "PNG");
@@ -16,9 +17,11 @@
                 $extension = end($temp);
 
                 if (!in_array($extension, $allowedExts)) {
-                    //echo 'dataOKfileKO';
+                    echo 'dataOKfileKO';
+                    $createObservation = 0;
                 } else if (($_FILES["photo1"]["type"] != "image/gif") && ($_FILES["photo1"]["type"] != "image/jpeg") && ($_FILES["photo1"]["type"] != "image/jpg") && ($_FILES["photo1"]["type"] != "image/png")) {
-                    //echo 'dataOKfileKO';
+                    echo 'dataOKfileKO';
+                    $createObservation = 0;
                 } else {
                     $id_poi = $_POST['id_poi'];
                     $dossier = '../../../resources/pictures/';
@@ -33,12 +36,11 @@
                         echo "pictureKO";
                     }
                     $photo_poi = $newnamefichier;
-                }else{
-                	$photo_poi = '';
                 }
-                    $id_poi = $_POST['id_poi'];
-                    $text = mysql_real_escape_string($_POST['text_comment']);
-                    $mail_commentaires = mysql_real_escape_string($_POST['mail_commentaires']);
+                if ($createObservation){
+                    $id_poi = mysql_real_escape_string($_POST['id_poi']);
+                    $text = mysql_real_escape_string($_POST['comment_poi']);
+                    $mail_commentaires = mysql_real_escape_string($_POST['mail_poi']);
                     
                     $sql = "INSERT INTO commentaires (text_commentaires, display_commentaires, mail_commentaires, poi_id_poi, url_photo) VALUES ('$text', 0, '$mail_commentaires',$id_poi, '$photo_poi')";
                     $result = mysql_query($sql);
@@ -48,7 +50,7 @@
                     $res = mysql_query($sql);
                     $row = mysql_fetch_row($res);
                     $pole_id_pole = $row[0];
-                    
+                    echo 'dataOK';
                         /* envoi d'un mail aux administrateurs #pole# de l'association */
                         $subject = 'Nouveau commentaire/photo à modérer sur l\'observation n°'.$id_poi;
                         $message = 'Bonjour !

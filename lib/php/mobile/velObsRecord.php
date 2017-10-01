@@ -1,27 +1,29 @@
 <?php header('Content-Type: text/html; charset=UTF-8');
 
-    include '../key.php';
+    include_once '../key.php';
 
- 	include '../admin/adminfunction.php';
+ 	include_once '../admin/adminfunction.php';
 
 	switch (SGBD) {
         case 'mysql':
             $link = mysql_connect(HOST,DB_USER,DB_PASS);
             mysql_select_db(DB_NAME);
-            
+            $output = var_export($_POST, true);
             if (DEBUG){
-            	error_log(date("Y-m-d H:i:s") . "  - velObsRecord.php \n", 3, LOG_FILE);
+            	error_log(date("Y-m-d H:i:s") . "  - velObsRecord.php $output\n", 3, LOG_FILE);
             }
             //mysql_query("SET NAMES 'utf8'");
 			//TODO : ne faire qu'un traitement et exclusre la photo s'il n'y en a pas....
             $createObservation = 1;
-            if (!isset($_POST['lat']) || !isset($_POST['lng']) || !isset($_POST['datecreation_poi']) || !isset($_POST['desc']) || !isset($_POST['prop']) || !isset($_POST['subcat']) || !isset($_POST['mail']) || !isset($_POST['tel']) || !isset($_POST['rue']) || !isset($_POST['num'])) {
+            if (!isset($_POST['latitude_poi']) || !isset($_POST['longitude_poi']) || !isset($_POST['desc_poi']) || !isset($_POST['prop_poi']) || !isset($_POST['subcategory_id_subcategory']) || !isset($_POST['mail_poi']) || !isset($_POST['tel_poi']) || !isset($_POST['rue_poi']) || !isset($_POST['num_poi'])) {
             	if (DEBUG){
             		error_log(date("Y-m-d H:i:s") . "  - velObsRecord.php, manque des infos\n", 3, LOG_FILE);
             	}
+            	$createObservation = 0;
             	echo 'dataKOfile';
             	
-            }elseif (isset($_FILES["photo1"])) {
+            }
+            if (isset($_FILES["photo1"]) && $createObservation) {
             	if (DEBUG){
             		error_log(date("Y-m-d H:i:s") . "  - velObsRecord.php, photo1 is set\n", 3, LOG_FILE);
             	}
@@ -40,7 +42,9 @@
             			/*
             			 ICI ON INSERE EN BASE AVEC LA PHOTO
             			*/
-            	
+            			if (DEBUG){
+            				error_log(date("Y-m-d H:i:s") . "  - velObsRecord.php, photo1 is set, tout a l'air OK on enregistre la photo sur le serveur\n", 3, LOG_FILE);
+            			}
             			$dossier = '../../../resources/pictures/';
             			$fichier = basename($_FILES['photo1']['name']);
             			$pathphoto = $dossier.$fichier;
@@ -59,7 +63,7 @@
             }
             if ($createObservation){
             	if (DEBUG){
-            		error_log(date("Y-m-d H:i:s") . "  - velObsRecord.php, createObservation = $createObservation\n", 3, LOG_FILE);
+            		error_log(date("Y-m-d H:i:s") . "  - velObsRecord.php, createObservation = $createObservation \n $photo_poi\n", 3, LOG_FILE);
             	}
 
                     /*
@@ -123,15 +127,13 @@
                     	$priorityId = 4;
                     	$moderationFlag = 0;
                     }
-                        $sql = "INSERT INTO poi (priorite_id_priorite, quartier_id_quartier, pole_id_pole, lib_poi, desc_poi, prop_poi, datecreation_poi, subcategory_id_subcategory, display_poi, geom_poi, geolocatemode_poi, commune_id_commune, num_poi, rue_poi, mail_poi, tel_poi, moderation_poi, fix_poi, status_id_status) VALUES ($priorityId, $quartier_id_quartier, $pole_id_pole, '$lib_poi', '$desc_poi', '$prop_poi', '$date_poi', $subcategory_id_subcategory, 1, GeomFromText('POINT(".$longitude_poi." ".$latitude_poi.")'), $geolocatemode_poi, $commune_id_commune, '$num_poi', '$rue_poi', '$mail_poi', '$tel_poi', $moderationFlag, 0, 5)";
+                        $sql = "INSERT INTO poi (priorite_id_priorite, quartier_id_quartier, pole_id_pole, lib_poi, desc_poi, prop_poi, datecreation_poi, subcategory_id_subcategory, display_poi, geom_poi, geolocatemode_poi, commune_id_commune, num_poi, rue_poi, mail_poi, tel_poi, moderation_poi, fix_poi, status_id_status, photo_poi) VALUES ($priorityId, $quartier_id_quartier, $pole_id_pole, '$lib_poi', '$desc_poi', '$prop_poi', '$date_poi', $subcategory_id_subcategory, 1, GeomFromText('POINT(".$longitude_poi." ".$latitude_poi.")'), $geolocatemode_poi, $commune_id_commune, '$num_poi', '$rue_poi', '$mail_poi', '$tel_poi', $moderationFlag, 0, 5, '$photo_poi')";
                     	
                     $result = mysql_query($sql);
                     if (!$result) {
                         die("sqlKO");
                     }
                     $id_poi = mysql_insert_id();
-
-
 
                     echo 'dataOK';
 
@@ -156,26 +158,20 @@ Lien vers la modération : ".URL.'/admin.php?id='.$arrayObs['id_poi']."\n".$arra
                     	if (DEBUG){
                     		error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " Il y a ". count($mails) . " mails à envoyer \n", 3, LOG_FILE);
                     	}
-                    	$succes = sendMails($mails);
+                    	//
                     
                     	/* debut envoi d'un mail au contributeur */
                     	$subject = 'Observation en attente de modération';
                     	$message = "Bonjour !
-Vous venez d'ajouter une observation à VelObs et vous en remercions. Celle-ci devrait être administrée sous peu.\n".
+Vous venez d'ajouter une observation à VelObs et nous vous en remercions. Celle-ci devrait être administrée sous peu.\n".
                     $arrayDetailsAndUpdateSQL['detailObservationString']."\n
 Cordialement, l'Association ".VELOBS_ASSOCIATION." :)";
                     	$mailArray = [$arrayObs['mail_poi'],"Soumetteur", $subject, $message ];
                     	array_push($mails,$mailArray);
-                    
-                    }
-                    if (DEBUG){
-                    	error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - Il y a ". count($mails) ." mails à envoyer\n", 3, LOG_FILE);
-                    }
-                    foreach ($mails as $key => $value) {
                     	if (DEBUG){
-                    		error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - Clé : $key; Valeur : $value[0],  $value[1],  $value[2]\n", 3, LOG_FILE);
+                    		error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - Il y a ". count($mails) ." mails à envoyer\n", 3, LOG_FILE);
                     	}
-                    	sendMail($value[0], $value[2], $value[3]);
+                    	$succes = sendMails($mails);
                     }
             }
             mysql_free_result($result);
