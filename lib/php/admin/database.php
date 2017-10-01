@@ -1,6 +1,6 @@
 <?php
 	session_start();
-	include 'adminfunction.php';
+	include_once 'adminfunction.php';
 
 	if (isset($_SESSION['user'])) {
 		$task = '';
@@ -306,14 +306,8 @@
                 editComment($_POST['id_comment'],$_POST['text_comment']);
                 break;
             case "CREATEPUBLICCOMMENTS":
-                if ($_SESSION['role'] == 2 || $_SESSION['role'] == 3) {
-                     createPublicComment($_POST['id_poi'],$_POST['text_comment']);
-                } else {
-                     createPublicCommentSession($_POST['id_poi'],$_POST['text_comment']);
-                }
+                createPublicComment();
                 break;
-
-
             case "LISTINGPHOTOS":
                 getComments($id_poi);
                 break;
@@ -336,7 +330,7 @@
 				createPublicPoi();
 				break;
 			case "CREATEPUBLICCOMMENTS":
-                createPublicComment($_POST['id_poi'],$_POST['text_comment']);
+                createPublicComment();
                 break;
 		}
 	}
