@@ -71,6 +71,7 @@
 			<script type="text/javascript" src="lib/js/admin/pole1.js"></script>
 			<script type="text/javascript" src="lib/js/admin/quartier1.js"></script>
 			<script type="text/javascript" src="lib/js/admin/basket1.js"></script>
+			<script type="text/javascript" src="lib/js/admin/poiCommon.js"></script>
 			<script type="text/javascript" src="lib/js/admin/poi1.js"></script>
 			<script type="text/javascript" src="lib/js/admin/subcategory1.js"></script>			
 			<script type="text/javascript" src="lib/js/admin/category1.js"></script>
@@ -141,6 +142,8 @@
 			
 			<script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Loading application...';</script>
 			<script type="text/javascript" src="lib/js/admin/modeemploi2.js"></script>
+			
+			<script type="text/javascript" src="lib/js/admin/poiCommon.js"></script>
 			<script type="text/javascript" src="lib/js/admin/poi2.js"></script>
 			<script type="text/javascript" src="lib/js/admin/main2.js"></script>
 	 
@@ -219,6 +222,8 @@
 			<script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Loading application...';</script>
 			<script type="text/javascript" src="lib/js/admin/modeemploi3.js"></script>
 			<script type="text/javascript" src="lib/js/admin/mapadmin3.js"></script>
+			
+			<script type="text/javascript" src="lib/js/admin/poiCommon.js"></script>
 			<script type="text/javascript" src="lib/js/admin/poi3.js"></script>
 
 			<script type="text/javascript" src="lib/js/admin/main3.js"></script>
@@ -301,6 +306,8 @@
             <script type="text/javascript" src="lib/js/admin/commune1.js"></script>
             <script type="text/javascript" src="lib/js/admin/pole1.js"></script>
             <script type="text/javascript" src="lib/js/admin/basket4.js"></script>
+            
+			<script type="text/javascript" src="lib/js/admin/poiCommon.js"></script>
             <script type="text/javascript" src="lib/js/admin/poi4.js"></script>
             <script type="text/javascript" src="lib/js/admin/mapadmin1.js"></script>
             <script type="text/javascript" src="lib/js/admin/main4.js"></script>
