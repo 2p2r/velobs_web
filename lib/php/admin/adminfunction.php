@@ -585,10 +585,10 @@
 				}
 				
 				if ($_SESSION["type"] == 2){
-					$whereClause .= ' AND moderation_poi = 1 AND commune_id_commune IN ('.str_replace(';',',',$_SESSION['territoire']).') AND delete_poi = FALSE AND priorite.id_priorite <> 7 AND priorite.id_priorite <> 15 ';
+					$whereClause .= ' AND moderation_poi = 1 AND display_poi = 1 AND commune_id_commune IN ('.str_replace(';',',',$_SESSION['territoire']).') AND delete_poi = FALSE AND priorite.id_priorite <> 7 AND priorite.id_priorite <> 15 ';
 					
 				}elseif($_SESSION["type"] == 3){
-					$whereClause .= ' AND moderation_poi = 1 AND transmission_poi = 1 AND delete_poi = FALSE AND poi.pole_id_pole = ' . $_SESSION["pole"] . ' ';
+					$whereClause .= ' AND moderation_poi = 1 AND display_poi = 1 AND transmission_poi = 1 AND delete_poi = FALSE AND poi.pole_id_pole = ' . $_SESSION["pole"] . ' AND priorite.id_priorite <> 7 AND priorite.id_priorite <> 15 ';
 				}elseif($_SESSION["type"] == 4){
 					$whereClause .= ' AND poi.pole_id_pole = ' . $_SESSION["pole"] . ' ';
 				}
@@ -615,7 +615,9 @@
 				$nbrows = mysql_num_rows($result);
 				$sql .= " LIMIT ".$limit." OFFSET ".$start;
 				$result = mysql_query($sql);
-				
+				if (DEBUG){
+					error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - getPoi sql $sql retourne $nbrows (s'il n'y avait pas de limites)\n", 3, LOG_FILE);
+				}
 				$i = 0;
 				if ($nbrows > 0) {
 					while ($row = mysql_fetch_array($result)) {
