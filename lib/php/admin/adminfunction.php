@@ -18,11 +18,6 @@
 	 * 
 	 * 		- getPoi
 	 * 		- updatePoi
-	 *	  - updatePoiComcomCarto
-	 *	  - updatePoiPoleTechCarto
-	 *	  - updateAssoPoleCartoPoi
-	 *	  - updateAdminPoi
-	 * 		- createPoi
 	 * 		- deletePois
 	 * 		- deletePoisCorbeille
 	 * 
@@ -725,9 +720,10 @@
 						
 						
 						$mails = array();
-						$poleedit = mysql_real_escape_string($_POST['poleedit']);
-						// mail à la comcom si un pole a édité le champ 'Réponse pole'
 						//usertype_id_usertype : 1=Admin, 2=comcom, 3=pole tech, 4=moderateur
+						
+						// mail à la comcom si un pole a édité le champ 'Réponse pole'
+						$poleedit = mysql_real_escape_string($_POST['poleedit']);
 						//mail aux comptes comcom du territoire concerné par l'observation et aux modérateurs
 						if ($poleedit == 1) {
 							$subject = 'Modification de l\'observation n°'.$arrayObs['id_poi'].' par le pole '.$arrayObs['lib_pole'];
@@ -752,11 +748,12 @@ Le pole '.$arrayObs['lib_pole'].' a modifié l\'observation n°'.$arrayObs['id_p
 						// 				"12","Refusé par TM"
 						// 				"15","Doublon"
 						//on ne traite priorite_id_priorite que si il a été mis à jour
-						$checkModerateBoxOnPOIGred = 0;
+						// mail au contributeur dans ce cas
+						$checkModerateBoxOnPOIGrid = 0;
 						if (isset($_POST['priorite_id_priorite']) 
 								&& is_numeric($_POST['priorite_id_priorite']) 
 								&& $arrayObs['priorite_id_priorite'] <> $_POST['priorite_id_priorite']) {
-							$checkModerateBoxOnPOIGred = 1;
+							$checkModerateBoxOnPOIGrid = 1;
 							$new_id_priorite = $_POST['priorite_id_priorite'];
 							// changement du workflow : si priorite == 1 ou priorite == 2 alors on modère par défaut, mais on n'envoie pas de mail si ça a déjà été fait un autre fois
 							if (($new_id_priorite == 1 || $new_id_priorite == 2)) {
@@ -845,7 +842,7 @@ Lien vers la modération : ".URL.'/admin.php?id='.$arrayObs['id_poi']."\n".
 						if (DEBUG){
 							error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " Il y a ". count($mails) . " mails à envoyer \n", 3, LOG_FILE);
 						}
-						if ($checkModerateBoxOnPOIGred){
+						if ($checkModerateBoxOnPOIGrid){
 							echo 4;
 						}else{
 							echo 1;
@@ -866,301 +863,9 @@ Lien vers la modération : ".URL.'/admin.php?id='.$arrayObs['id_poi']."\n".
 	}
 
 
-	/* 	Function name 	: updatePoiComcomCarto
-	 * 	Input			:
-	 * 	Output			: success => '1' / failed => '2'
-	 * 	Object			: update poi via carto from comcom
-	 * 	Date			: July 19, 2015
-	 */
-
-	function updatePoiComcomCarto() {
-		$id_poi = $_POST['id_poi'];
-		switch (SGBD) {
-			case 'mysql':
-				$link = mysql_connect(HOST,DB_USER,DB_PASS);
-				mysql_select_db(DB_NAME);
-				mysql_query("SET NAMES 'utf8'");
-				
-				$arrayObs = getObservationDetailsInArray($id_poi);
-				$arrayDetailsAndUpdateSQL = getObservationDetailsInString($arrayObs);
-				if (DEBUG){
-					error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - Il y a ". count($arrayDetailsAndUpdateSQL) ." infos chargées pour l'update de l'obs $id_poi \n", 3, LOG_FILE);
-					error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - updateObsBoolean ". $arrayDetailsAndUpdateSQL['updateObsBoolean'] ." pour l'update de l'obs $id_poi \n", 3, LOG_FILE);
-					error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - sqlUpdate ". $arrayDetailsAndUpdateSQL['sqlUpdate'] ." pour l'update de l'obs $id_poi \n", 3, LOG_FILE);
-					error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - detailObservationString ".$arrayDetailsAndUpdateSQL['detailObservationString'] ." pour l'update de l'obs $id_poi \n", 3, LOG_FILE);
-						
-				}
-				if ($arrayDetailsAndUpdateSQL['updateObsBoolean']){
-					$sql = "UPDATE poi SET " . $arrayDetailsAndUpdateSQL['sqlUpdate'] . " WHERE id_poi = ".$id_poi ;
-					
-					if (DEBUG){
-						error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - sql ". $sql ." pour l'update de l'obs $id_poi \n", 3, LOG_FILE);
-					
-					}
-					$result = mysql_query($sql);
-					if (!$result) {
-						if (DEBUG){
-							error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " Erreur ". mysql_errno($link) . " : " . mysql_error($link), 3, LOG_FILE);
-						}
-						sendMail(MAIL_FROM,"Erreur méthode updatePoiComcomCarto", "Erreur = " .  mysql_error($link) . ", requête = " . $sql);
-						echo '3';
-					} else {
-						echo 1;
-						$whereClause = "u.usertype_id_usertype = 1 OR (u.usertype_id_usertype = 4 AND u.num_pole = ".$arrayObs['pole_id_pole'].")";
-						$subject = "La collectivité a mis à jour la fiche " . $arrayObs['id_poi'];
-						$message = "Bonjour!
-La collectivité a mis à jour l'observation ".$arrayObs['id_poi']."\n";
-						$message .= "Lien vers la modération : ".URL.'/admin.php?id='.$arrayObs['id_poi']."\n".$arrayDetailsAndUpdateSQL['detailObservationString']."\n";
-						$mails = array();
-						$mails = getMailsToSend($whereClause, $subject, $message );
-						if (DEBUG){
-							error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " Il y a ". count($mails) . " mails à envoyer \n", 3, LOG_FILE);
-						}
-						$succes = sendMails($mails);
-						
-					}
-				}else{
-					//aucune mise à jour n'a été effectuée, car aucune information n'a été modifiée
-					echo 2;
-				}
-				
-				break;
-			case 'postgresql':
-				// TODO
-				break;
-		}
-	}
+	
 
 
-	/* 	Function name 	: updatePoiPoleTechCarto
-	 * 	Input			:
-	 * 	Output			: success => '1' / failed => '2'
-	 * 	Object			: update poi via carto from comcom
-	 * 	Date			: July 19, 2015
-	 */
-
-	function updatePoiPoleTechCarto() {
-		$id_poi = $_POST['id_poi'];
-		switch (SGBD) {
-			case 'mysql':
-				$link = mysql_connect(HOST,DB_USER,DB_PASS);
-				mysql_select_db(DB_NAME);
-				mysql_query("SET NAMES 'utf8'");
-
-				$arrayObs = getObservationDetailsInArray($id_poi);
-				$arrayDetailsAndUpdateSQL = getObservationDetailsInString($arrayObs);
-				if (DEBUG){
-					error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - Il y a ". count($arrayDetailsAndUpdateSQL) ." infos chargées pour l'update de l'obs $id_poi \n", 3, LOG_FILE);
-					error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - updateObsBoolean ". $arrayDetailsAndUpdateSQL['updateObsBoolean'] ." pour l'update de l'obs $id_poi \n", 3, LOG_FILE);
-					error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - sqlUpdate ". $arrayDetailsAndUpdateSQL['sqlUpdate'] ." pour l'update de l'obs $id_poi \n", 3, LOG_FILE);
-					error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - detailObservationString ".$arrayDetailsAndUpdateSQL['detailObservationString'] ." pour l'update de l'obs $id_poi \n", 3, LOG_FILE);
-						
-				}
-				if ($arrayDetailsAndUpdateSQL['updateObsBoolean']){
-					$sql = "UPDATE poi SET " . $arrayDetailsAndUpdateSQL['sqlUpdate'] . " WHERE id_poi = ".$id_poi ;
-					
-					if (DEBUG){
-						error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - sql ". $sql ." pour l'update de l'obs $id_poi \n", 3, LOG_FILE);
-					
-					}
-					$result = mysql_query($sql);
-					if (!$result) {
-						if (DEBUG){
-							error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " Erreur ". mysql_errno($link) . " : " . mysql_error($link), 3, LOG_FILE);
-						}
-						sendMail(MAIL_FROM,"Erreur méthode updatePoiComcomCarto", "Erreur = " .  mysql_error($link) . ", requête = " . $sql);
-						echo '3';
-					} else {
-						echo 1;
-						$whereClause = "u.usertype_id_usertype = 1 OR (u.usertype_id_usertype = 4 AND u.num_pole = ".$arrayObs['pole_id_pole'].")";
-						$subject = "La collectivité a mis à jour la fiche " . $arrayObs['id_poi'];
-						$message = "Bonjour!
-La collectivité a mis à jour l'observation ".$arrayObs['id_poi']."\n";
-						$message .= "Lien vers la modération : ".URL.'/admin.php?id='.$arrayObs['id_poi']."\n".$arrayDetailsAndUpdateSQL['detailObservationString']."\n";
-						$mails = array();
-						$mails = getMailsToSend($whereClause, $subject, $message );
-						if (DEBUG){
-							error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " Il y a ". count($mails) . " mails à envoyer \n", 3, LOG_FILE);
-						}
-						$succes = sendMails($mails);
-						
-					}
-				}else{
-					//aucune mise à jour n'a été effectuée, car aucune information n'a été modifiée
-					echo 2;
-				}
-
-				break;
-			case 'postgresql':
-				// TODO
-				break;
-		}
-	}
-
-
-	/* 	Function name 	: updateAssoPoleCartoPoi
-	 * 	Input			:
-	 * 	Output			: success => '1' / failed => '2'
-	 * 	Object			: update poi via carto from modo
-	 * 	Date			: July 20, 2015
-	 */
-
-	function updateAssoPoleCartoPoi() {
-		$id_poi = $_POST['id_poi'];
-		switch (SGBD) {
-			case 'mysql':
-				$link = mysql_connect(HOST,DB_USER,DB_PASS);
-				mysql_select_db(DB_NAME);
-				mysql_query("SET NAMES 'utf8'");
-
-			$arrayObs = getObservationDetailsInArray($id_poi);
-				$arrayDetailsAndUpdateSQL = getObservationDetailsInString($arrayObs);
-				if (DEBUG){
-					error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - Il y a ". count($arrayDetailsAndUpdateSQL) ." infos chargées pour l'update de l'obs $id_poi \n", 3, LOG_FILE);
-					error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - updateObsBoolean ". $arrayDetailsAndUpdateSQL['updateObsBoolean'] ." pour l'update de l'obs $id_poi \n", 3, LOG_FILE);
-					error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - sqlUpdate ". $arrayDetailsAndUpdateSQL['sqlUpdate'] ." pour l'update de l'obs $id_poi \n", 3, LOG_FILE);
-					error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - detailObservationString ".$arrayDetailsAndUpdateSQL['detailObservationString'] ." pour l'update de l'obs $id_poi \n", 3, LOG_FILE);
-						
-				}
-				if ($arrayDetailsAndUpdateSQL['updateObsBoolean']){
-					$sql = "UPDATE poi SET " . $arrayDetailsAndUpdateSQL['sqlUpdate'] . " WHERE id_poi = ".$id_poi ;
-					
-					if (DEBUG){
-						error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - sql ". $sql ." pour l'update de l'obs $id_poi \n", 3, LOG_FILE);
-					
-					}
-					$result = mysql_query($sql);
-					if (!$result) {
-						if (DEBUG){
-							error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " Erreur ". mysql_errno($link) . " : " . mysql_error($link), 3, LOG_FILE);
-						}
-						sendMail(MAIL_FROM,"Erreur méthode ".__FUNCTION__, "Erreur = " .  mysql_error($link) . ", requête = " . $sql);
-						echo '3';
-					} else {
-						echo 1;
-						
-					}
-				}else{
-					//aucune mise à jour n'a été effectuée, car aucune information n'a été modifiée
-					echo 2;
-				}
-
-				break;
-			case 'postgresql':
-				// TODO
-				break;
-		}
-	}
-
-
-	/* 	Function name 	: updateAdminPoi
-	 * 	Input			:
-	 * 	Output			: success => '1' / failed => '2'
-	 * 	Object			: update poi via carto from comcom
-	 * 	Date			: July 21, 2015
-	 */
-
-	function updateAdminPoi() {
-		$id_poi = $_POST['id_poi'];
-		switch (SGBD) {
-			case 'mysql':
-				$link = mysql_connect(HOST,DB_USER,DB_PASS);
-				mysql_select_db(DB_NAME);
-				mysql_query("SET NAMES 'utf8'");
-
-		$arrayObs = getObservationDetailsInArray($id_poi);
-				$arrayDetailsAndUpdateSQL = getObservationDetailsInString($arrayObs);
-				if (DEBUG){
-					error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - Il y a ". count($arrayDetailsAndUpdateSQL) ." infos chargées pour l'update de l'obs $id_poi \n", 3, LOG_FILE);
-					error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - updateObsBoolean ". $arrayDetailsAndUpdateSQL['updateObsBoolean'] ." pour l'update de l'obs $id_poi \n", 3, LOG_FILE);
-					error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - sqlUpdate ". $arrayDetailsAndUpdateSQL['sqlUpdate'] ." pour l'update de l'obs $id_poi \n", 3, LOG_FILE);
-					error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - detailObservationString ".$arrayDetailsAndUpdateSQL['detailObservationString'] ." pour l'update de l'obs $id_poi \n", 3, LOG_FILE);
-						
-				}
-				if ($arrayDetailsAndUpdateSQL['updateObsBoolean']){
-					$sql = "UPDATE poi SET " . $arrayDetailsAndUpdateSQL['sqlUpdate'] . " WHERE id_poi = ".$id_poi ;
-					
-					if (DEBUG){
-						error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - sql ". $sql ." pour l'update de l'obs $id_poi \n", 3, LOG_FILE);
-					
-					}
-					$result = mysql_query($sql);
-					if (!$result) {
-						if (DEBUG){
-							error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " Erreur ". mysql_errno($link) . " : " . mysql_error($link), 3, LOG_FILE);
-						}
-						sendMail(MAIL_FROM,"Erreur méthode ".__FUNCTION__, "Erreur = " .  mysql_error($link) . ", requête = " . $sql);
-						echo '3';
-					} else {
-						echo 1;
-						
-					}
-				}else{
-					//aucune mise à jour n'a été effectuée, car aucune information n'a été modifiée
-					echo 2;
-				}
-
-				break;
-			case 'postgresql':
-				// TODO
-				break;
-		}
-	}
-
-
-	/* 	Function name 	: createPoi
-	 * 	Input			: 
-	 * 	Output			: success => '1' / failed => '2'
-	 * 	Object			: create poi
-	 * 	Date			: Jan. 23, 2012
-	 */
-
-// 	function createPoi() {		
-// 		switch (SGBD) {
-// 			case 'mysql':
-// 				$link = mysql_connect(HOST,DB_USER,DB_PASS);
-// 				mysql_select_db(DB_NAME);
-// 				mysql_query("SET NAMES 'utf8'");
-				
-// 				$lib_poi = mysql_real_escape_string($_POST['lib_poi']);
-// 				$adherent_poi = mysql_real_escape_string($_POST['adherent_poi']);
-// 				$num_poi = mysql_real_escape_string($_POST['num_poi']);
-// 				$rue_poi = mysql_real_escape_string($_POST['rue_poi']);
-// 				$desc_poi = mysql_real_escape_string($_POST['desc_poi']);
-// 				$prop_poi = mysql_real_escape_string($_POST['prop_poi']);
-// 				$observationterrain_poi = mysql_real_escape_string($_POST['observationterrain_poi']);
-// 				$subcategory_id_subcategory = $_POST['subcategory_id_subcategory'];
-// 				$commune_id_commune = $_POST['commune_id_commune'];
-// 				$pole_id_pole = $_POST['pole_id_pole'];
-// 				$priorite_id_priorite = $_POST['priorite_id_priorite'];
-// 				if (isset($_POST['status_id_status'])) {
-// 					$status_id_status = $_POST['status_id_status'];
-// 				} else {
-// 					$status_id_status = 5;
-// 				}
-// 				$quartier_id_quartier = $_POST['quartier_id_quartier'];
-// 				$display_poi = $_POST['display_poi'];
-// 				$datecreation_poi = date('Y-m-d');		
-						
-// 				$sql = "INSERT INTO poi (lib_poi, adherent_poi, num_poi, rue_poi, commune_id_commune, pole_id_pole, priorite_id_priorite, status_id_status, quartier_id_quartier, desc_poi, prop_poi, observationterrain_poi, subcategory_id_subcategory, display_poi, fix_poi, datecreation_poi, geolocatemode_poi, moderation_poi) VALUES ('$lib_poi', '$adherent_poi', '$num_poi', '$rue_poi', $commune_id_commune, $pole_id_pole, $priorite_id_priorite, $status_id_status, $quartier_id_quartier, '$desc_poi', '$prop_poi', '$observationterrain_poi', $subcategory_id_subcategory , $display_poi, FALSE, '$datecreation_poi', 1, 1)";
-// 				$result = mysql_query($sql);
-// 				if (DEBUG){
-// 					error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - createPoi - ".$sql."\n", 3, LOG_FILE);
-// 				}
-// 				if (!$result) {
-// 					echo '2';
-// 				} else {
-// 					echo '1';
-// 				}
-				
-// 				mysql_free_result($result);
-// 				mysql_close($link);
-// 				break;
-// 			case 'postgresql':
-// 				// TODO
-// 				break;
-// 		}
-// 	}
 
 
 	/* 	Function name 	: deletePois
