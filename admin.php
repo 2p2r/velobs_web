@@ -70,7 +70,7 @@
 			<script type="text/javascript" src="lib/js/admin/commune1.js"></script>
 			<script type="text/javascript" src="lib/js/admin/pole1.js"></script>
 			<script type="text/javascript" src="lib/js/admin/quartier1.js"></script>
-			<script type="text/javascript" src="lib/js/admin/basket1.js"></script>
+			<script type="text/javascript" src="lib/js/admin/basket.js"></script>
 			<script type="text/javascript" src="lib/js/admin/poiCommon.js"></script>
 			<script type="text/javascript" src="lib/js/admin/poi1.js"></script>
 			<script type="text/javascript" src="lib/js/admin/subcategory1.js"></script>			
@@ -305,7 +305,7 @@
             <script type="text/javascript" src="lib/js/admin/modeemploi4.js"></script>
             <script type="text/javascript" src="lib/js/admin/commune1.js"></script>
             <script type="text/javascript" src="lib/js/admin/pole1.js"></script>
-            <script type="text/javascript" src="lib/js/admin/basket4.js"></script>
+            <script type="text/javascript" src="lib/js/admin/basket.js"></script>
             
 			<script type="text/javascript" src="lib/js/admin/poiCommon.js"></script>
             <script type="text/javascript" src="lib/js/admin/poi4.js"></script>
