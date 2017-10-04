@@ -1,7 +1,10 @@
 <?php
 	session_start();
 	include_once 'adminfunction.php';
-
+	if (DEBUG){
+		error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - dans database.php \n", 3, LOG_FILE);
+	}
+	
 	if (isset($_SESSION['user'])) {
 		$task = '';
 		if (isset($_POST['task'])) {
@@ -24,6 +27,9 @@
             }
 
 
+		}
+		if (DEBUG){
+			error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - dans database.php, task = $task \n", 3, LOG_FILE);
 		}
 		switch ($task) {
 			case "LISTINGICO":
@@ -72,18 +78,18 @@
 			case "UPDATEPOI":
 				updatePoi();
 				break;
-            case "UPDATEPOICOMCOMCARTO":
-                updatePoiComcomCarto();
-                break;
-            case "UPDATEPOIPOLETECHCARTO":
-                updatePoiPoleTechCarto();
-                break;
-            case "UPDATEASSOPOLECARTOPOI":
-                updateAssoPoleCartoPoi();
-                break;
-            case "UPDATEADMINPOI":
-                updateAdminPoi();
-                break;
+//             case "UPDATEPOICOMCOMCARTO":
+//                 updatePoiComcomCarto();
+//                 break;
+//             case "UPDATEPOIPOLETECHCARTO":
+//                 updatePoiPoleTechCarto();
+//                 break;
+//             case "UPDATEASSOPOLECARTOPOI":
+//                 updateAssoPoleCartoPoi();
+//                 break;
+//             case "UPDATEADMINPOI":
+//                 updateAdminPoi();
+//                 break;
 			case "CREATEPOI":
 				createPoi();
 				break;

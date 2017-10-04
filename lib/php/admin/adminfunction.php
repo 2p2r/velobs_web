@@ -725,9 +725,10 @@
 						
 						
 						$mails = array();
-						$poleedit = mysql_real_escape_string($_POST['poleedit']);
-						// mail à la comcom si un pole a édité le champ 'Réponse pole'
 						//usertype_id_usertype : 1=Admin, 2=comcom, 3=pole tech, 4=moderateur
+						
+						// mail à la comcom si un pole a édité le champ 'Réponse pole'
+						$poleedit = mysql_real_escape_string($_POST['poleedit']);
 						//mail aux comptes comcom du territoire concerné par l'observation et aux modérateurs
 						if ($poleedit == 1) {
 							$subject = 'Modification de l\'observation n°'.$arrayObs['id_poi'].' par le pole '.$arrayObs['lib_pole'];
@@ -752,11 +753,12 @@ Le pole '.$arrayObs['lib_pole'].' a modifié l\'observation n°'.$arrayObs['id_p
 						// 				"12","Refusé par TM"
 						// 				"15","Doublon"
 						//on ne traite priorite_id_priorite que si il a été mis à jour
-						$checkModerateBoxOnPOIGred = 0;
+						// mail au contributeur dans ce cas
+						$checkModerateBoxOnPOIGrid = 0;
 						if (isset($_POST['priorite_id_priorite']) 
 								&& is_numeric($_POST['priorite_id_priorite']) 
 								&& $arrayObs['priorite_id_priorite'] <> $_POST['priorite_id_priorite']) {
-							$checkModerateBoxOnPOIGred = 1;
+							$checkModerateBoxOnPOIGrid = 1;
 							$new_id_priorite = $_POST['priorite_id_priorite'];
 							// changement du workflow : si priorite == 1 ou priorite == 2 alors on modère par défaut, mais on n'envoie pas de mail si ça a déjà été fait un autre fois
 							if (($new_id_priorite == 1 || $new_id_priorite == 2)) {
@@ -845,7 +847,7 @@ Lien vers la modération : ".URL.'/admin.php?id='.$arrayObs['id_poi']."\n".
 						if (DEBUG){
 							error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " Il y a ". count($mails) . " mails à envoyer \n", 3, LOG_FILE);
 						}
-						if ($checkModerateBoxOnPOIGred){
+						if ($checkModerateBoxOnPOIGrid){
 							echo 4;
 						}else{
 							echo 1;
