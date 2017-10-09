@@ -8,7 +8,7 @@
             $link = mysql_connect(HOST,DB_USER,DB_PASS);
             mysql_select_db(DB_NAME);
             //mysql_query("SET NAMES 'utf8'");
-            $photo_poi = '';
+            $url_photo = '';
             $createObservation = 1;
             if (isset($_FILES["photo1"])) {
                 // photo présente
@@ -35,14 +35,14 @@
                     } else {
                         echo "pictureKO";
                     }
-                    $photo_poi = $newnamefichier;
+                    $url_photo = $newnamefichier;
                 }
                 if ($createObservation){
                     $id_poi = mysql_real_escape_string($_POST['id_poi']);
-                    $text = mysql_real_escape_string($_POST['comment_poi']);
-                    $mail_commentaires = mysql_real_escape_string($_POST['mail_poi']);
+                    $text = mysql_real_escape_string($_POST['text_comment']);
+                    $mail_commentaires = mysql_real_escape_string($_POST['mail_comment']);
                     
-                    $sql = "INSERT INTO commentaires (text_commentaires, display_commentaires, mail_commentaires, poi_id_poi, url_photo) VALUES ('$text', 0, '$mail_commentaires',$id_poi, '$photo_poi')";
+                    $sql = "INSERT INTO commentaires (text_commentaires, display_commentaires, mail_commentaires, poi_id_poi, url_photo) VALUES ('$text', 0, '$mail_commentaires',$id_poi, '$url_photo')";
                     $result = mysql_query($sql);
                     $id_commentaire = mysql_insert_id();
 
@@ -51,22 +51,46 @@
                     $row = mysql_fetch_row($res);
                     $pole_id_pole = $row[0];
                     echo 'dataOK';
-                        /* envoi d'un mail aux administrateurs #pole# de l'association */
-                        $subject = 'Nouveau commentaire/photo à modérer sur l\'observation n°'.$id_poi;
-                        $message = 'Bonjour !
-Une nouvelle photo a été ajoutée sur l\'observation n°'.$id_poi.'. Veuillez vous connecter à l\'interface d\'administration pour la modérer.
-Lien vers la modération : '.URL.'/admin.php?id='.$id_poi.'
-Cordialement, l\'application velobs)';
-                        
-                        	$sql = "SELECT mail_users FROM users WHERE usertype_id_usertype = 1 OR (usertype_id_usertype = 4 AND num_pole = ".$pole_id_pole.")";
-                        
-                        	$result = mysql_query($sql);
-                        	while ($row = mysql_fetch_array($result)) {
-                        		$to = $row['mail_users'];
-                        		sendMail($to, $subject, $message);
-                        	}
-                        	/* fin envoi d'un mail aux administrateurs #pole# de l'association */
-//                         }
+                    
+                    
+                    
+                    $arrayObs = getObservationDetailsInArray($id_poi);
+                    $arrayDetailsAndUpdateSQL = getObservationDetailsInString($arrayObs);
+                    if (DEBUG){
+                    	error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - Il y a ". count($arrayDetailsAndUpdateSQL) ." infos chargées pour l'update de l'obs $id_poi \n", 3, LOG_FILE);
+                    	error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - updateObsBoolean ". $arrayDetailsAndUpdateSQL['updateObsBoolean'] ." pour l'update de l'obs $id_poi \n", 3, LOG_FILE);
+                    	error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - sqlUpdate ". $arrayDetailsAndUpdateSQL['sqlUpdate'] ." pour l'update de l'obs $id_poi \n", 3, LOG_FILE);
+                    	error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - detailObservationString ".$arrayDetailsAndUpdateSQL['detailObservationString'] ." pour l'update de l'obs $id_poi \n", 3, LOG_FILE);
+                    		
+                    }
+                    if ($num_rows2 == 0){
+                    	$newCommentInfo = "Nouveau commentaire : ". $_POST['text_comment']."\nPosté par $mail_commentaires \n";
+						if ($url_photo != ""){
+							$newCommentInfo .= "Photo associée : ".URL."/resources/pictures/".$url_photo."\n";
+						}
+						/* envoi d'un mail aux administrateurs de l'association et modérateurs */
+						$whereClause = "u.usertype_id_usertype = 1 OR (u.usertype_id_usertype = 4 AND u.num_pole = ".$arrayObs['pole_id_pole'].")";
+						$subject = 'Nouveau commentaire à modérer sur le pole '.$arrayObs['lib_pole'];
+						$message = "Bonjour !
+Un nouveau commentaire a été ajouté sur le pole ".$arrayObs['lib_pole'].". Veuillez vous connecter à l'interface d'administration pour le modérer (cliquer sur le bouton \"Commentaires\", en bas à droite, une fois les détails de l'observation affichés).
+Lien vers la modération : ".URL.'/admin.php?id='.$arrayObs['id_poi']."\n".
+$newCommentInfo. $arrayDetailsAndUpdateSQL['detailObservationString']."\n";
+						$mails = array();
+						$mails = getMailsToSend($whereClause, $subject, $message );
+					
+						/* debut envoi d'un mail au contributeur */
+						$subject = 'Commentaire en attente de modération';
+						$message = "Bonjour !
+Vous venez d'ajouter un commentaire à l'observation ".$arrayObs['id_poi']." sur VelObs et nous vous en remercions. Celui-ci devrait être administré sous peu.\n".
+$newCommentInfo.$arrayDetailsAndUpdateSQL['detailObservationString']."\n
+Cordialement, l'Association ".VELOBS_ASSOCIATION." :)";
+					$mailArray = [$mail_commentaires,"Soumetteur", $subject, $message ];
+					array_push($mails,$mailArray);
+					if (DEBUG){
+						error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - Il y a ". count($mails) ." mails à envoyer\n", 3, LOG_FILE);
+					}
+					$succes = sendMails($mails);
+                }
                 }
             }
             break;
