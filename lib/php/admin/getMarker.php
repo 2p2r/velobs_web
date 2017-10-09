@@ -52,6 +52,18 @@
 		
 				$arr[$i]['lat'] = $row['Y'];
 				$arr[$i]['lon'] = $row['X'];
+				$arr[$i]['lastdatemodif_poi'] = $row['lastdatemodif_poi'];
+				$sql2 = "SELECT * FROM commentaires WHERE poi_id_poi = ".$row['id_poi'];
+				$result2 = mysql_query($sql2);
+				$j = 0;
+				while ($row2 = mysql_fetch_array($result2)) {
+					$arr[$i]['commentaires'][$j] = stripslashes($row2['text_commentaires']);
+					$arr[$i]['photos'][$j] = stripslashes($row2['url_photo']);
+					$arr[$i]['mail_commentaires'][$j] = stripslashes($row2['mail_commentaires']);
+					$arr[$i]['datecreation'][$j] = stripslashes($row2['datecreation']);
+					$arr[$i]['affiche'][$j] = stripslashes($row2['display_commentaires']);
+					$j++;
+				}
 			
 					$i++;
 				}
