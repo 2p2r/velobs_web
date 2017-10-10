@@ -683,8 +683,8 @@
 			error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - commonfunction.php - Mail avec comme sujet = ".MAIL_SUBJECT_PREFIX . ' '.$subject ." et envoyé à " . $to ."\n", 3, LOG_FILE);
 		}
 	
-		//                     mail($to, MAIL_SUBJECT_PREFIX . ' '.$subject, $body, $headers);
-		mail($to, MAIL_SUBJECT_PREFIX . ' '.$subject, $body);
+		mail($to, MAIL_SUBJECT_PREFIX . ' '.$subject, $body, $headers);
+		//mail($to, MAIL_SUBJECT_PREFIX . ' '.$subject, $body);
 	
 	}
 ?>

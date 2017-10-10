@@ -2043,7 +2043,7 @@ En cas de question, vous pouvez trouver des informations sur https://github.com/
 				$lib_pole = $locations[3];
 				
 				
-				$lastdatemodif_poi = date("Y-m-d");
+				$lastdatemodif_poi = date("Y-m-d H:i:s");
 				$sql = "UPDATE poi SET commune_id_commune = ".$commune_id_commune.", pole_id_pole = ".$pole_id_pole.", geom_poi = GeomFromText('POINT(".$longitude_poi." ".$latitude_poi.")'), geolocatemode_poi = 1, lastdatemodif_poi = '$lastdatemodif_poi' WHERE id_poi = $id_poi";
 				$result = mysql_query($sql);
 
@@ -2138,7 +2138,6 @@ En cas de question, vous pouvez trouver des informations sur https://github.com/
 
 	}
 
-
 	/* 	Function name 	: createPublicPoi
 	 * 	Input			: 
 	 * 	Output			: success => '1' / failed => '2'
@@ -2175,13 +2174,91 @@ En cas de question, vous pouvez trouver des informations sur https://github.com/
 				$quartier_id_quartier = 99999;
 				$locations = getLocations($latitude_poi,$longitude_poi);
 				if (DEBUG){
-					error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - locations - ".$locations[0].", " .$locations[1].", " .$locations[2].", " .$locations[3]."\n", 3, LOG_FILE);
+					error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - place locations - ".$locations[0].", " .$locations[1].", " .$locations[2].", " .$locations[3]."\n", 3, LOG_FILE);
 				}
-				$commune_id_commune =$locations[0];
+				
+				$commune_id_commune = $locations[0];
 				$lib_commune = $locations[1];
 				$pole_id_pole = $locations[2];
 				$lib_pole = $locations[3];
-				
+				if (DEBUG){
+					error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - isset(_FILES['photo-path']) - ".isset($_FILES['photo-path'])."\n", 3, LOG_FILE);
+				}
+				//si une photo a été associée au commentaire, on la traite
+				if (isset($_FILES['photo-path']) && $_FILES['photo-path']['name'] != ""){
+					if (DEBUG){
+						error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " photo-path isset " . $_FILES['photo-path'] . "\n", 3, LOG_FILE);
+					}
+					$dossier = '../../../resources/pictures/';
+					$fichier = basename($_FILES['photo-path']['name']);
+					$taille_maxi = 6291456;
+					$taille = filesize($_FILES['photo-path']['tmp_name']);
+					$extensions = array('.png', '.gif', '.jpg', '.jpeg', '.PNG', '.GIF', '.JPG', '.JPEG');
+					$extension = strrchr($_FILES['photo-path']['name'], '.');
+					if (DEBUG){
+						error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " l'extension du fichier est  " . $extension . "\n", 3, LOG_FILE);
+					}	
+					if (!in_array($extension, $extensions)) {
+						if (DEBUG){
+							error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " l'extension !in_array \n", 3, LOG_FILE);
+						}
+						$erreur = getTranslation(1,'ERROR');
+						$return['success'] = false;
+						$return['pb'] = getTranslation(1,'PICTUREPNGGIFJPGJPEG');
+					}
+						
+					if ($taille > $taille_maxi) {
+						$erreur = getTranslation(1,'ERROR');
+						$return['success'] = false;
+						$return['pb'] = getTranslation(1,'PICTURESIZE');
+					}
+						
+					if ($erreur == '') {
+						if (DEBUG){
+							error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " pas d'erreur, on continue \n", 3, LOG_FILE);
+						}
+						$fichier = strtr($fichier,
+								'ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïðòóôõöùúûüýÿ_',
+								'AAAAAACEEEEIIIIOOOOOUUUUYaaaaaaceeeeiiiioooooouuuuyy-');
+						$fichier = preg_replace('/([^.a-z0-9]+)/i', '-', $fichier);
+						$fichier = 'poi_'.$fichier;
+						$pathphoto = $dossier.$fichier;
+						if (move_uploaded_file($_FILES['photo-path']['tmp_name'], $pathphoto)) {
+							if (DEBUG){
+								error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " dans move_uploaded_file \n", 3, LOG_FILE);
+							}
+							$size = getimagesize($pathphoto);
+								
+							if ($size[0] > 1024 || $size[1] > 1024) {
+								if ($size[0] > $size[1]) {
+									generate_image_thumbnail($pathphoto, $pathphoto, 1024, 768);
+								} else {
+									generate_image_thumbnail($pathphoto, $pathphoto, 768, 1024);
+								}
+							}
+								
+							$size = getimagesize($pathphoto);
+							$newnamefichier = $size[0].'x'.$size[1].'x'.$fichier;
+							$newpathphoto = $dossier.$newnamefichier;
+							rename($pathphoto, $newpathphoto);
+							$url_photo = $newnamefichier;
+							
+							$return['success'] = true;
+							$return['ok'] = getTranslation($_SESSION['id_language'],'PHOTOTRANSFERTDONE');
+						} else {
+							$return['success'] = false;
+							$return['pb'] = "Erreur lors du traitement de la photo.";
+						}
+					}
+				}
+				if (DEBUG){
+					error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - entre 2 $erreur ".$return['success'] . " " .$return['pb']."\n", 3, LOG_FILE);
+				}
+				//si une photo a été associée au commentaire et que tout s'est bien passé, ou bien s'il n'y avait pas de photo, on peut créer l'observation dans la base de données
+				if ((isset($_FILES['photo-path']['name']) && $return['success'] ==  true) || (!isset($_FILES['photo-path']['name']))){
+					if (DEBUG){
+						error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - place locations - ".$commune_id_commune.", " .$lib_commune.", " .$pole_id_pole.", " .$lib_pole."\n", 3, LOG_FILE);
+					}
 				
 				$datecreation_poi = date('Y-m-d H:i:s');			
 				
@@ -2195,17 +2272,18 @@ En cas de question, vous pouvez trouver des informations sur https://github.com/
 					$priorityId = 4;
 					$moderationFlag = 0;
 				} 
-				$sql = "INSERT INTO poi (adherent_poi, priorite_id_priorite, quartier_id_quartier, pole_id_pole, lib_poi, mail_poi, tel_poi, num_poi, rue_poi, commune_id_commune, desc_poi, prop_poi, subcategory_id_subcategory, display_poi, fix_poi, datecreation_poi, geolocatemode_poi, moderation_poi, geom_poi, status_id_status) VALUES ('$adherent_poi', $priorityId, $quartier_id_quartier, $pole_id_pole, '$lib_subcategory', '$mail_poi', '$tel_poi', '$num_poi', '$rue_poi', $commune_id_commune, '$desc_poi', '$prop_poi', $subcategory_id_subcategory , TRUE, FALSE, '$datecreation_poi', 1, $moderationFlag, GeomFromText('POINT(".$longitude_poi." ".$latitude_poi.")'), 5)";
-					
+				if (DEBUG){
+					error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - place locations - ".$commune_id_commune.", " .$lib_commune.", " .$pole_id_pole.", " .$lib_pole."\n", 3, LOG_FILE);
+				}
+				$sql = "INSERT INTO poi (adherent_poi, priorite_id_priorite, quartier_id_quartier, pole_id_pole, lib_poi, mail_poi, tel_poi, num_poi, rue_poi, commune_id_commune, desc_poi, prop_poi, subcategory_id_subcategory, display_poi, fix_poi, datecreation_poi, geolocatemode_poi, moderation_poi, geom_poi, status_id_status, photo_poi) VALUES ('$adherent_poi', $priorityId, $quartier_id_quartier, $pole_id_pole, '$lib_subcategory', '$mail_poi', '$tel_poi', '$num_poi', '$rue_poi', $commune_id_commune, '$desc_poi', '$prop_poi', $subcategory_id_subcategory , TRUE, FALSE, '$datecreation_poi', 1, $moderationFlag, GeomFromText('POINT(".$longitude_poi." ".$latitude_poi.")'), 5, '$url_photo')";
+				
 				if (DEBUG){
 					error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - createPublicPoi - Requete d'insertion sql = ".$sql."\n", 3, LOG_FILE);
-					error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - createPublicPoi - Dernier id genere = ".$poiId."\n", 3, LOG_FILE);
 					error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " Erreur ". mysql_errno($link) . " : " . mysql_error($link)."\n", 3, LOG_FILE);
 				}
 				$result = mysql_query($sql);
 				if ($result){
 					$poiId = mysql_insert_id();
-					echo $poiId;
 					$arrayObs = getObservationDetailsInArray($poiId);
 					$arrayDetailsAndUpdateSQL = getObservationDetailsInString($arrayObs);
 					if (DEBUG){
@@ -2215,7 +2293,13 @@ En cas de question, vous pouvez trouver des informations sur https://github.com/
 						error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - detailObservationString ".$arrayDetailsAndUpdateSQL['detailObservationString'] ." pour l'update de l'obs $id_poi \n", 3, LOG_FILE);
 					
 					}
+					$return['success'] = true;
+					$return['ok'] = "L'observation a été correctement ajoutée sous le numéro $poiId et est directement affichée (après rechargement de la page) puisque vous êtes référencé(e) comme modérateur ou administrateur de VelObs.";
+						
+					//si le contributeur n'est pas un modérateur ni un administrateur par ailleurs, on envoie des mails
 					if ($num_rows2 == 0){
+						$return['ok'] = "L'observation a bien été créée et est en attente de modération. Un courriel reprenant l'ensemble des informations de cette observation vous a été envoyé.";
+							
 						/* envoi d'un mail aux administrateurs de l'association et modérateurs */
 						$whereClause = "u.usertype_id_usertype = 1 OR (u.usertype_id_usertype = 4 AND u.num_pole = ".$arrayObs['pole_id_pole'].")";
 						$subject = 'Nouvelle observation à modérer sur le pole '.$arrayObs['lib_pole'];
@@ -2249,12 +2333,22 @@ Cordialement, l'Association ".VELOBS_ASSOCIATION." :)";
 						sendMail($value[0], $value[2], $value[3]);
 					}
 				}else{
+					
 					if (DEBUG){
 						error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " Erreur ". mysql_errno($link) . " : " . mysql_error($link)."\n", 3, LOG_FILE);
 					}
 					sendMail(MAIL_FROM,"Erreur méthode createPublicPoi", "Erreur = " .  mysql_error($link) . ", requête = " . $sql);
-					echo -1;
+					$return['success'] = false;
+					$return['pb'] = "Erreur lors de l'ajout de l'observation, un mail a été envoyé aux administrateurs. Veuillez nous excuser pour ce dysfonctionnement.";
 				}
+				}else{
+					sendMail(MAIL_FROM,"Erreur méthode createPublicPoi", "Erreur = " .  mysql_error($link) . ", requête = " . $sql .". Il y a sans doute eu une erreur lors du traitement de l'image. cf les logs sur le serveur");
+					$return['success'] = false;
+					$return['pb'] = "Erreur lors de l'ajout de l'observation : " . $return['pb'];
+				
+				}
+				//retourne le résultat du traitement du commentaire
+				echo json_encode($return);
 				mysql_free_result($result);
 				mysql_close($link);
 
@@ -2548,7 +2642,7 @@ Cordialement, l'Association ".VELOBS_ASSOCIATION." :)";
 				$row = mysql_fetch_row($res);
 				$id_poi = $row[0];
 
-				$lastdatemodif_poi = date("Y-m-d");
+				$lastdatemodif_poi = date("Y-m-d H:i:s");
 				$sql3 = "UPDATE poi SET lastdatemodif_poi = '$lastdatemodif_poi' WHERE id_poi = $id_poi";
 				$result3 = mysql_query($sql3);
 
@@ -2576,6 +2670,9 @@ Cordialement, l'Association ".VELOBS_ASSOCIATION." :)";
 	function createPublicComment() {
 		switch (SGBD) {
 			case 'mysql':
+				if (DEBUG){
+					error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . "\n", 3, LOG_FILE);
+				}
 				$link = mysql_connect(HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
 				mysql_query("SET NAMES 'utf8'");
@@ -2584,10 +2681,10 @@ Cordialement, l'Association ".VELOBS_ASSOCIATION." :)";
 				$text = mysql_real_escape_string($_POST['text_comment']);
 				$mail_commentaires = mysql_real_escape_string($_POST['mail_comment']);
 				
-				
-				if (isset($_FILES['photo-path'])){
+				//si une photo a été associée au commentaire, on la traite
+				if (isset($_FILES['photo-path']) && $_FILES['photo-path']['name'] != ""){
 					if (DEBUG){
-						error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " photo-path isset\n", 3, LOG_FILE);
+						error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " photo-path isset " . $_FILES['photo-path']['name'] . "\n", 3, LOG_FILE);
 					}
 					$dossier = '../../../resources/pictures/';
 					$fichier = basename($_FILES['photo-path']['name']);
@@ -2609,6 +2706,9 @@ Cordialement, l'Association ".VELOBS_ASSOCIATION." :)";
 					}
 						
 					if (!isset($erreur)) {
+						if (DEBUG){
+							error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " pas d'erreur, on continue \n", 3, LOG_FILE);
+						}
 						$fichier = strtr($fichier,
 								'ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïðòóôõöùúûüýÿ_',
 								'AAAAAACEEEEIIIIOOOOOUUUUYaaaaaaceeeeiiiioooooouuuuyy-');
@@ -2616,9 +2716,9 @@ Cordialement, l'Association ".VELOBS_ASSOCIATION." :)";
 						$fichier = 'poi_'.$id_poi.'_'.$fichier;
 						$pathphoto = $dossier.$fichier;
 						if (move_uploaded_file($_FILES['photo-path']['tmp_name'], $pathphoto)) {
-							$return['success'] = true;
-							$return['ok'] = getTranslation($_SESSION['id_language'],'PHOTOTRANSFERTDONE');
-								
+							if (DEBUG){
+								error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " dans move_uploaded_file \n", 3, LOG_FILE);
+							}
 							$size = getimagesize($pathphoto);
 								
 							if ($size[0] > 1024 || $size[1] > 1024) {
@@ -2634,6 +2734,9 @@ Cordialement, l'Association ".VELOBS_ASSOCIATION." :)";
 							$newpathphoto = $dossier.$newnamefichier;
 							rename($pathphoto, $newpathphoto);
 							$url_photo = $newnamefichier;
+							
+							$return['success'] = true;
+							$return['ok'] = getTranslation($_SESSION['id_language'],'PHOTOTRANSFERTDONE');
 						} else {
 							$return['success'] = false;
 							$return['pb'] = "Erreur lors du traitement de la photo.";
@@ -2641,70 +2744,73 @@ Cordialement, l'Association ".VELOBS_ASSOCIATION." :)";
 					}
 				}
 				
-				
-				
-				// si le mail est un administrateur ou un modérateur alors on bypasse la modération
-				$sql2 = "SELECT id_users FROM users WHERE (usertype_id_usertype = 1 OR usertype_id_usertype = 4) AND mail_users LIKE '".$mail_poi."'";
-				$result2 = mysql_query($sql2);
-				$num_rows2 = mysql_num_rows($result2);
-				$displayFlag = 1;
-				if ($num_rows2 == 0) {
-					$displayFlag = 0;
-				}
-				$sql = "INSERT INTO commentaires (text_commentaires, display_commentaires, mail_commentaires, poi_id_poi,url_photo) VALUES ('$text', $displayFlag, '$mail_commentaires',$id_poi,'$url_photo')";
-				$result = mysql_query($sql);
-				if (DEBUG){
-					error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " " . $_POST['task'] ." sql $sql\n", 3, LOG_FILE);
-					error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " Erreur ". mysql_errno($link) . " : " . mysql_error($link)."\n", 3, LOG_FILE);
-				}
-				$id_commentaire = mysql_insert_id();
-				
-				$lastdatemodif_poi = date("Y-m-d");
-				$sql3 = "UPDATE poi SET lastdatemodif_poi = '$lastdatemodif_poi' WHERE id_poi = $id_poi";
-				if (DEBUG){
-					error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " sql $sql3 \n", 3, LOG_FILE);
-					error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " Erreur ". mysql_errno($link) . " : " . mysql_error($link)."\n", 3, LOG_FILE);
-				}
-				$result3 = mysql_query($sql3);
-				
-				
-				if (!$result) {
-					$return['success'] = false;
-					$return['pb'] = "Erreur lors de l'ajout du commentaire.";
-				} else {
-					$return['success'] = true;
-					$return['ok'] = "Le commentaire a été correctement ajouté et est en attente de modération. Merci pour votre aide.";
-					if ($num_rows2 == 0){
-						$arrayObs = getObservationDetailsInArray($id_poi);
-						$arrayDetailsAndUpdateSQL = getObservationDetailsInString($arrayObs);
-						$newCommentInfo = "Nouveau commentaire : $text \nPosté par $mail_commentaires \n";
-						if ($url_photo != ""){
-							$newCommentInfo .= "Photo : ".URL."/resources/pictures/".$url_photo."\n";
+				//si une photo a été associée au commentaire et que tout s'est bien passé, ou bien s'il n'y avaotr pas de photo, on peut crer le commentaire dans la base de données
+				if ((isset($_FILES['photo-path']['name']) && $return['success'] ==  true) || (isset($_FILES['photo-path']['name']) && $_FILES['photo-path']['name'] == "")){
+					// si le mail est un administrateur ou un modérateur alors on bypasse la modération
+					$sql2 = "SELECT id_users FROM users WHERE (usertype_id_usertype = 1 OR usertype_id_usertype = 4) AND mail_users LIKE '".$mail_commentaires."'";
+					$result2 = mysql_query($sql2);
+					$num_rows2 = mysql_num_rows($result2);
+					$displayFlag = 1;
+					if ($num_rows2 == 0) {
+						$displayFlag = 0;
+					}
+					$sql = "INSERT INTO commentaires (text_commentaires, display_commentaires, mail_commentaires, poi_id_poi,url_photo) VALUES ('$text', $displayFlag, '$mail_commentaires',$id_poi,'$url_photo')";
+					$result = mysql_query($sql);
+					if (DEBUG){
+						error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " " . $_POST['task'] .", sql : $sql\n", 3, LOG_FILE);
+						error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " Erreur ". mysql_errno($link) . " : " . mysql_error($link)."\n", 3, LOG_FILE);
+					}
+					$id_commentaire = mysql_insert_id();
+					
+					if (!$result) {
+						$return['success'] = false;
+						$return['pb'] = "Erreur lors de l'ajout du commentaire.";
+					} else {
+						$lastdatemodif_poi = date("Y-m-d H:i:s");
+						$sql3 = "UPDATE poi SET lastdatemodif_poi = '$lastdatemodif_poi' WHERE id_poi = $id_poi";
+						if (DEBUG){
+							error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " sql $sql3 \n", 3, LOG_FILE);
+							error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " Erreur ". mysql_errno($link) . " : " . mysql_error($link)."\n", 3, LOG_FILE);
 						}
-						/* envoi d'un mail aux administrateurs de l'association et modérateurs */
-						$whereClause = "u.usertype_id_usertype = 1 OR (u.usertype_id_usertype = 4 AND u.num_pole = ".$arrayObs['pole_id_pole'].")";
-						$subject = 'Nouveau commentaire à modérer sur le pole '.$arrayObs['lib_pole'];
-						$message = "Bonjour !
+						$result3 = mysql_query($sql3);
+						$return['success'] = true;
+						$return['ok'] = "Le commentaire a été correctement ajouté et est directement affiché (après rechargement de la page) puisque vous êtes référencé(e) comme modérateur ou administrateur de VelObs.";
+						//si le contributeur n'est pas un modérateur ni un administrateur par ailleurs, on envoie des mails
+						if ($num_rows2 == 0){
+							$return['ok'] = "Le commentaire a été correctement ajouté et est en attente de modération. Merci pour votre aide.";
+							$arrayObs = getObservationDetailsInArray($id_poi);
+							$arrayDetailsAndUpdateSQL = getObservationDetailsInString($arrayObs);
+							$newCommentInfo = "Nouveau commentaire : $text \nPosté par $mail_commentaires \n";
+							if ($url_photo != ""){
+								$newCommentInfo .= "Photo : ".URL."/resources/pictures/".$url_photo."\n";
+							}
+							/* envoi d'un mail aux administrateurs de l'association et modérateurs */
+							$whereClause = "u.usertype_id_usertype = 1 OR (u.usertype_id_usertype = 4 AND u.num_pole = ".$arrayObs['pole_id_pole'].")";
+							$subject = 'Nouveau commentaire à modérer sur le pole '.$arrayObs['lib_pole'];
+							$message = "Bonjour !
 Un nouveau commentaire a été ajouté sur le pole ".$arrayObs['lib_pole'].". Veuillez vous connecter à l'interface d'administration pour le modérer (cliquer sur le bouton \"Commentaires\", en bas à droite, une fois les détails de l'observation affichés).
 Lien vers la modération : ".URL.'/admin.php?id='.$arrayObs['id_poi']."\n".
 $newCommentInfo. $arrayDetailsAndUpdateSQL['detailObservationString']."\n";
-						$mails = array();
-						$mails = getMailsToSend($whereClause, $subject, $message );
+							$mails = array();
+							$mails = getMailsToSend($whereClause, $subject, $message );
 					
-						/* debut envoi d'un mail au contributeur */
-						$subject = 'Commentaire en attente de modération';
-						$message = "Bonjour !
+							/* debut envoi d'un mail au contributeur */
+							$subject = 'Commentaire en attente de modération';
+							$message = "Bonjour !
 Vous venez d'ajouter un commentaire à l'observation ".$arrayObs['id_poi']." sur VelObs et nous vous en remercions. Celui-ci devrait être administré sous peu.\n".
 $newCommentInfo.$arrayDetailsAndUpdateSQL['detailObservationString']."\n
 Cordialement, l'Association ".VELOBS_ASSOCIATION." :)";
-					$mailArray = [$mail_commentaires,"Soumetteur", $subject, $message ];
-					array_push($mails,$mailArray);
-					if (DEBUG){
-						error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - Il y a ". count($mails) ." mails à envoyer\n", 3, LOG_FILE);
-					}
-					$succes = sendMails($mails);
+							$mailArray = [$mail_commentaires,"Soumetteur", $subject, $message ];
+							array_push($mails,$mailArray);
+							if (DEBUG){
+								error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - Il y a ". count($mails) ." mails à envoyer\n", 3, LOG_FILE);
+							}
+							$succes = sendMails($mails);
+						}
 					}
 				}
+				
+				//retourne le résultat du traitement du commentaire
 				echo json_encode($return);
 				mysql_free_result($result);
 				mysql_close($link);
