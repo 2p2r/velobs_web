@@ -697,6 +697,7 @@
 				mysql_query("SET NAMES 'utf8'");
 				
 				$arrayObs = getObservationDetailsInArray($id_poi);
+				
 				$arrayDetailsAndUpdateSQL = getObservationDetailsInString($arrayObs);
 				if (DEBUG){
 					error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - Il y a ". count($arrayDetailsAndUpdateSQL) ." infos chargées pour l'update de l'obs $id_poi \n", 3, LOG_FILE);
@@ -708,22 +709,8 @@
 				if ($arrayDetailsAndUpdateSQL['updateObsBoolean']){
 					$sql = "UPDATE poi SET " . $arrayDetailsAndUpdateSQL['sqlUpdate'] . " WHERE id_poi = ".$id_poi ;
 						
-					if (DEBUG){
-						error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - sql ". $sql ." pour l'update de l'obs $id_poi \n", 3, LOG_FILE);
-					}
-					$result = mysql_query($sql);
-					if (!$result) {
-						if (DEBUG){
-							error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " Erreur ". mysql_errno($link) . " : " . mysql_error($link), 3, LOG_FILE);
-						}
-						sendMail(MAIL_FROM,"Erreur méthode updatePoiComcomCarto", "Erreur = " .  mysql_error($link) . ", requête = " . $sql);
-						echo '3';
-					} else {
-						
-						
 						$mails = array();
 						//usertype_id_usertype : 1=Admin, 2=comcom, 3=pole tech, 4=moderateur
-						
 						// mail à la comcom si un pole a édité le champ 'Réponse pole'
 						$poleedit = mysql_real_escape_string($_POST['poleedit']);
 						//mail aux comptes comcom du territoire concerné par l'observation et aux modérateurs
@@ -736,32 +723,28 @@ Le pole '.$arrayObs['lib_pole'].' a modifié l\'observation n°'.$arrayObs['id_p
 							$message .= "Cordialement, l'Association ".VELOBS_ASSOCIATION." :)";
 							$whereClause = "(u.usertype_id_usertype = 2 AND u.territoire_id_territoire = ".$arrayObs['territoire_id_territoire'].") OR (u.usertype_id_usertype = 4 AND u.num_pole = ".$arrayObs['pole_id_pole'].")";
 							$mailsComComModo = getMailsToSend($whereClause, $subject, $message );
-							$succes = sendMails($mailsComComModo);
+							
 						}
-						
-									
 						//Priorités et leur iD
-						// 				"1","Un"
-						// 				"2","Deux"
+						// 				"1","Priorité 1"
+						// 				"2","Priorité 2"
 						// 					"4","A modérer"
-						// 				"6","DONE"
-						// 				"7","Refusé par 2p2r"
-						// 				"8","3101"
-						// 				"12","Refusé par TM"
+						// 				"6","Clôturé"
+						// 				"7","Refusé par l'association" : non affiché sur l'interface publique
+						// 				"8","Urgence" : non affiché sur l'interface publique
+						// 				"12","Refusé par la collectivité"
 						// 				"15","Doublon"
 						//on ne traite priorite_id_priorite que si il a été mis à jour
-						// mail au contributeur dans ce cas
 						$checkModerateBoxOnPOIGrid = 0;
+						$updatePOI = 1; //flag permettant de savoir si on doit mettre à jour l'observation (en fonction de règles définies ci-dessous) et envoyer un mail au contributeur
+						$returnCode = 0;
 						if (isset($_POST['priorite_id_priorite']) 
 								&& is_numeric($_POST['priorite_id_priorite']) 
 								&& $arrayObs['priorite_id_priorite'] <> $_POST['priorite_id_priorite']) {
 							$checkModerateBoxOnPOIGrid = 1;
 							$new_id_priorite = $_POST['priorite_id_priorite'];
-							// changement du workflow : si priorite == 1 ou priorite == 2 alors on modère par défaut, mais on n'envoie pas de mail si ça a déjà été fait un autre fois
+							// changement du workflow : si priorite == 1 ou priorite == 2 alors on modère par défaut
 							if (($new_id_priorite == 1 || $new_id_priorite == 2)) {
-								//TODO : regroupé la requete plus bas, près de l'echo
-								/* envoi d'un mail à l'observateur si aucun mail n'a déjà été envoyé et si $moderation_poi passe à true*/
-									
 								$subject = 'Merci pour votre participation';
 								$message = "Bonjour !
 L'observation que vous avez envoyée sur VelObs a changé de statut. Le problème identifié a été transmis aux services municipaux.\n".$arrayDetailsAndUpdateSQL['detailObservationString']
@@ -769,28 +752,55 @@ L'observation que vous avez envoyée sur VelObs a changé de statut. Le problèm
 									
 							}
 							
-							// mail à la personne qui a envoyé la proposition pour le prévenir que son intervention a été prise en compte par la comcom et par l'asso
-							//Priorité DONE
-							if ($new_id_priorite == 6) {
+							// mail à la personne qui a envoyé la proposition pour le prévenir que son intervention a été prise en compte par la comcom et par l'asso, que si le champ commentfinal_poi n'est pas vide, sinon erreur
+							//Priorité Cloturé
+							if ($new_id_priorite == 6 ) {
+								if ($arrayObs['commentfinal_poi'] == '' && $_POST['commentfinal_poi'] == '' ){
+									$updatePOI  = 0;
+									$returnCode = 10; // pour cloturer il faut que le commentaire final ne soit pas vide
+								}
 								$subject = 'Observation prise en compte';
 								$message = "Bonjour !
 L'Association ".VELOBS_ASSOCIATION." vous remercie. Le problème a bien été pris en compte et réglé par la collectivité.\n".$arrayDetailsAndUpdateSQL['detailObservationString'].'
 '.$signature;
 							}
-							// mail à la personne qui a envoyé la proposition pour le prévenir que son intervention ne sera pas prise en compte par la comcom ou par l'asso
-							//Priorité Refusé par TM - Refusé par 2p2r
-							if ($new_id_priorite == 7 || $new_id_priorite == 12) {
+							// mail à la personne qui a envoyé la proposition pour le prévenir que son intervention ne sera pas prise en compte par l'asso, que si le champ commentfinal_poi n'est pas vide, sinon erreur
+							//Priorité Refusé par l'association
+							if ($new_id_priorite == 7) {
+								if ($arrayObs['commentfinal_poi'] == '' && $_POST['commentfinal_poi'] == '' ){
+									$updatePOI  = 0;
+									$returnCode = 10; // pour cloturer il faut que le commentaire final ne soit pas vide
+								}
 								$subject = 'Observation non transmise à la collectivité';
 								$message = "Bonjour !
 L'Association ".VELOBS_ASSOCIATION." et la collectivité vous remercient de votre participation.
-Cependant le problème rapporté a été refusé.\n".$arrayDetailsAndUpdateSQL['detailObservationString'].'
+Cependant le problème rapporté a été refusé par l'association et n'a pas été transmis à la collectivité.\n".$arrayDetailsAndUpdateSQL['detailObservationString'].'
 							
 '.$signature;
 									
 							}
-							// mail à la personne qui a envoyé la proposition pour le prévenir que son intervention ne sera pas prise en compte par la comcom ou par l'asso
+							// mail à la personne qui a envoyé la proposition pour le prévenir que son intervention ne sera pas prise en compte par l'asso, que si le champ commentfinal_poi n'est pas vide, sinon erreur
+							//Priorité Refusé par la collectivité
+							if ($new_id_priorite == 12) {
+								if ($arrayObs['commentfinal_poi'] == '' && $_POST['commentfinal_poi'] == '' ){
+									$updatePOI  = 0;
+									$returnCode = 10; // pour cloturer il faut que le commentaire final ne soit pas vide
+								}
+								$subject = 'Observation refusée par la collectivité';
+								$message = "Bonjour !
+L'Association ".VELOBS_ASSOCIATION." et la collectivité vous remercient de votre participation.
+Cependant le problème rapporté a été refusé par la collectivité.\n".$arrayDetailsAndUpdateSQL['detailObservationString'].'
+				
+'.$signature;
+									
+							}
+							// mail à la personne qui a envoyé la proposition pour le prévenir que son intervention est en doublon, que si le champ commentfinal_poi n'est pas vide, sinon erreur
 							//Priorité DOUBLON
 							if ($new_id_priorite == 15) {
+								if ($arrayObs['commentfinal_poi'] == '' && $_POST['commentfinal_poi'] == '' ){
+									$updatePOI  = 0;
+									$returnCode = 11; // pour cloturer il faut que le commentaire final ne soit pas vide, et donner le numero du doublon
+								}
 								$subject = 'Observation doublon';
 								$message = "Bonjour !
 L'Association ".VELOBS_ASSOCIATION." et la collectivité vous remercient de votre participation.
@@ -799,12 +809,17 @@ Le problème que vous avez identifié nous a déjà été rapporté par un autre
 Vous pouvez ajouter de nouvelles photos et ou commentaires à l\'observation existante.
 '.$signature;
 							}
+							// mail à la personne qui a envoyé la proposition pour le prévenir que son intervention est une urgence, que si le champ commentfinal_poi n'est pas vide, sinon erreur
 							//URGENCE
 							if ($new_id_priorite == 8) {
+								if ($arrayObs['commentfinal_poi'] == '' && $_POST['commentfinal_poi'] == '' ){
+									$updatePOI  = 0;
+									$returnCode = 10; // pour cloturer il faut que le commentaire final ne soit pas vide
+								}
 								/* envoi d'un mail à l'observateur*/
 								$subject = 'Merci pour votre participation';
 								$message = 'Bonjour !
-L\'observation que vous avez envoyée a été modérée par l\'association. Le problème identifié est une urgence qui nécessite une intervention rapide des services techniques.';
+L\'observation que vous avez envoyée a été modérée par l\'association. Le problème identifié est une urgence qui nécessite une intervention rapide des services techniques de la collectivité. Merci de faire le nécessaire.';
 								//si la commune fait partie d'un territoire
 								//premier territoire
 								switch ($arrayObs['territoire_id_territoire']) {
@@ -817,9 +832,12 @@ L\'observation que vous avez envoyée a été modérée par l\'association. Le p
 										break;
 								}
 							}
-							$mailArray = [$arrayObs['mail_poi'],'Contributeur',$subject, $message ];
-							array_push($mails,$mailArray);
-							$succes = sendMails($mails);
+							
+							if ($updatePOI == 1){
+								$mailArray = [$arrayObs['mail_poi'],'Contributeur',$subject, $message ];
+								array_push($mails,$mailArray);
+								
+							}
 						}
 						//si la modif a été faite par la comcom ou un pole technique
 						if (isset($_SESSION['type']) && ($_SESSION['type'] == 2 || $_SESSION['type'] == 3) ){
@@ -835,21 +853,46 @@ Lien vers la modération : ".URL.'/admin.php?id='.$arrayObs['id_poi']."\n".
 							//mail aux admins velobs et aux modérateurs du pole concerné par l'observation
 							$whereClause = " u.usertype_id_usertype = 1 OR (u.usertype_id_usertype = 4 AND u.num_pole = ".$arrayObs['pole_id_pole'].")";
 							$mailsAsso = getMailsToSend($whereClause, $subject, $message );
-							$succes = sendMails($mailsAsso);
+							
 						}
 						
 							
-							
-						
-						if (DEBUG){
-							error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " Il y a ". count($mails) . " mails à envoyer \n", 3, LOG_FILE);
-						}
-						if ($checkModerateBoxOnPOIGrid){
-							echo 4;
+						//si une règle de modération n'est pas respectée, on ne met pas à jour l'observation et on n'evoie pas de mail, et on retourne un code d'erreur
+						if ($updatePOI == 0){
+							echo $returnCode;
 						}else{
-							echo 1;
+							//on met à jour l'observation
+							if (DEBUG){
+								error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - sql ". $sql ." pour l'update de l'obs $id_poi \n", 3, LOG_FILE);
+							}
+							$result = mysql_query($sql);
+							//en cas d'erreur sur la requête,; on envoie un mail d'information à l'administrateur
+							if (!$result) {
+								if (DEBUG){
+									error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " Erreur ". mysql_errno($link) . " : " . mysql_error($link), 3, LOG_FILE);
+								}
+								sendMail(MAIL_FROM,"Erreur méthode updatePoi", "Erreur = " .  mysql_error($link) . ", requête = " . $sql);
+								echo '3';
+							}else{
+								//si la mise à jour de l'observation s'est bien déroulée, on envoie les mails
+								if ($mailsComComModo){
+									$succes = sendMails($mailsComComModo);
+								}
+								if ($mailsAsso){
+									$succes = sendMails($mailsAsso);
+								}
+								if ($mails){
+									$succes = sendMails($mails);
+								}
+								//on retourne un code de succès à l'interface
+								if ($checkModerateBoxOnPOIGrid){
+									echo 4;
+								}else{
+									echo 1;
+								}
+							}
 						}
-					}
+					//}
 				}else{
 					//aucune mise à jour n'a été effectuée, car aucune information n'a été modifiée
 					echo 2;
@@ -2181,11 +2224,19 @@ En cas de question, vous pouvez trouver des informations sur https://github.com/
 				$lib_commune = $locations[1];
 				$pole_id_pole = $locations[2];
 				$lib_pole = $locations[3];
+				if ($commune_id_commune == ''){
+					if (DEBUG){
+						error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " L'observation semble être dans une zone non couverte par velobs\n", 3, LOG_FILE);
+						$erreur = "L'observation semble être dans une zone non couverte par VelObs, si ce n'est pas le cas, merci de nous contacter.";
+						$return['success'] = false;
+						$return['pb'] = $erreur;
+					}
+				}
 				if (DEBUG){
-					error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - isset(_FILES['photo-path']) - ".isset($_FILES['photo-path'])."\n", 3, LOG_FILE);
+					error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - isset(_FILES['photo-path']) - ".isset($_FILES['photo-path']['name'])."\n", 3, LOG_FILE);
 				}
 				//si une photo a été associée au commentaire, on la traite
-				if (isset($_FILES['photo-path']) && $_FILES['photo-path']['name'] != ""){
+				if ($erreur == '' && isset($_FILES['photo-path']) && $_FILES['photo-path']['name'] != ""){
 					if (DEBUG){
 						error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " photo-path isset " . $_FILES['photo-path'] . "\n", 3, LOG_FILE);
 					}
@@ -2255,7 +2306,7 @@ En cas de question, vous pouvez trouver des informations sur https://github.com/
 					error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - entre 2 $erreur ".$return['success'] . " " .$return['pb']."\n", 3, LOG_FILE);
 				}
 				//si une photo a été associée au commentaire et que tout s'est bien passé, ou bien s'il n'y avait pas de photo, on peut créer l'observation dans la base de données
-				if ((isset($_FILES['photo-path']['name']) && $return['success'] ==  true) || (!isset($_FILES['photo-path']['name']))){
+				if ($erreur =='' && ((isset($_FILES['photo-path']['name']) && $return['success'] ==  true) || (isset($_FILES['photo-path']['name']) && $_FILES['photo-path']['name'] == ''))){
 					if (DEBUG){
 						error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - place locations - ".$commune_id_commune.", " .$lib_commune.", " .$pole_id_pole.", " .$lib_pole."\n", 3, LOG_FILE);
 					}
@@ -2342,7 +2393,9 @@ Cordialement, l'Association ".VELOBS_ASSOCIATION." :)";
 					$return['pb'] = "Erreur lors de l'ajout de l'observation, un mail a été envoyé aux administrateurs. Veuillez nous excuser pour ce dysfonctionnement.";
 				}
 				}else{
-					sendMail(MAIL_FROM,"Erreur méthode createPublicPoi", "Erreur = " .  mysql_error($link) . ", requête = " . $sql .". Il y a sans doute eu une erreur lors du traitement de l'image. cf les logs sur le serveur");
+					
+					$infoPOI = "Repere : $num_poi\nMail : $mail_poi\nTel : $tel_poi\nRue : $rue_poi\nDescription : $desc_poi\nProposition : $prop_poi\nNom : $adherent_poi\nLatitude : $latitude_poi\nLongitude : $longitude_poi\n Categorie : $subcategory_id_subcategory";
+					sendMail(MAIL_FROM,"Erreur méthode createPublicPoi", "Erreur = " .  $return['pb'] . "\n" . $infoPOI);
 					$return['success'] = false;
 					$return['pb'] = "Erreur lors de l'ajout de l'observation : " . $return['pb'];
 				
