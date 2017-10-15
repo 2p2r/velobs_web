@@ -78,18 +78,6 @@
 			case "UPDATEPOI":
 				updatePoi();
 				break;
-//             case "UPDATEPOICOMCOMCARTO":
-//                 updatePoiComcomCarto();
-//                 break;
-//             case "UPDATEPOIPOLETECHCARTO":
-//                 updatePoiPoleTechCarto();
-//                 break;
-//             case "UPDATEASSOPOLECARTOPOI":
-//                 updateAssoPoleCartoPoi();
-//                 break;
-//             case "UPDATEADMINPOI":
-//                 updateAdminPoi();
-//                 break;
 			case "CREATEPOI":
 				createPoi();
 				break;

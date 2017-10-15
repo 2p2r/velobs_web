@@ -56,10 +56,9 @@ $result = mysql_query($sql);
 echo $sql . " : ".$result."\n";
 $sql = "ALTER TABLE photos RENAME TO photosToDelete";
 $result = mysql_query($sql);
-echo $sql . " : ".$result."\n";
+echo $sql . " : ".$result."\n\n";
 
-// $sql = "ALTER TABLE commentaires ADD CONSTRAINT commentaires_ibfk_1 FOREIGN KEY (poi_id_poi) REFERENCES poi (id_poi)";
-// $result = mysql_query($sql);
-// echo $sql . " : ".$result."\n";
+echo "Après test, vous pourrez supprimer les tables photosToDelete, poi_photosToDelete et poi_commentairesToDelete\n";
+
 
 ?>
