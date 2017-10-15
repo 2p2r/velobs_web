@@ -101,10 +101,10 @@
 				$arr[$i]['rue'] = stripslashes($row['rue_poi']);
 				$arr[$i]['commune'] = stripslashes($row['lib_commune']);
 				//TODO : combiner icone de subcategory + priorité
-				if ($row['lib_priorite'] == 'DONE') {
+				if ($row['priorite_id_priorite'] == 6) {
 					$arr[$i]['icon'] = 'resources/icon/marker/done.png';
 					$arr[$i]['iconCls'] = 'done';
-				} else if ($row['lib_priorite'] == 'Refusé par TM') {
+				} else if ($row['priorite_id_priorite'] == 12) {
                     $arr[$i]['icon'] = 'resources/icon/marker/refuse.png';
                     $arr[$i]['iconCls'] = 'refuse';
                 } else {
