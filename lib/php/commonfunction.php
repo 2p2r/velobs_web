@@ -213,11 +213,11 @@
 			//clés étrangères
 			$observationArray['commune_id_commune'] = stripslashes($row['commune_id_commune']);
 			$observationArray['subcategory_id_subcategory'] = stripslashes($row['subcategory_id_subcategory']);
-			$observationArray['priorite_id_priorite'] = stripslashes($row['prorite_id_priorite']);
+			$observationArray['priorite_id_priorite'] = stripslashes($row['priorite_id_priorite']);
 			$observationArray['pole_id_pole'] = stripslashes($row['pole_id_pole']);
 			$observationArray['quartier_id_quartier'] = stripslashes($row['quartier_id_quartier']);
 			$observationArray['status_id_status'] = stripslashes($row['status_id_status']);
-			//donnees de tables autres que poi, sur clé étrangères
+			//donnees de tables autres que poi, sur clés étrangères
 			$observationArray['lib_priorite'] = stripslashes($row['lib_priorite']);
 			$observationArray['lib_commune'] = stripslashes($row['lib_commune']);
 			$observationArray['lib_subcategory'] = stripslashes($row['lib_subcategory']);
@@ -231,7 +231,7 @@
 	/*	Function name	: getObservationDetailsInString
 	 * 	Input			: $arrayObservation : array containaing data linked to a POI
 	* 	Output			: $arrayDetailsAndUpdateSQL with SQL update request, details about the data linked to a POI and a n flag telling if the POI needs to be updated
-	* 	Object			: get the sql update requets, determined by comparing data from a persisted poi and data contained in $_POST, and detailed message to be sent in an e-mail
+	* 	Object			: get the sql update request, determined by comparing data from a persisted poi and data contained in $_POST, and detailed message to be sent in an e-mail
 	* 	Date			: septembre 19 2017
 	*/
 	
