@@ -3,66 +3,71 @@
 	
 	switch (SGBD) {
 		case 'mysql':
+			if (DEBUG) {
+				error_log(date("Y-m-d H:i:s") . " - public/getMarker.php \n", 3, LOG_FILE );
+			}
 			$link = mysql_connect(HOST,DB_USER,DB_PASS);
 			mysql_select_db(DB_NAME);
 			mysql_query("SET NAMES 'utf8'");
 			
-			if ($_GET['date'] == NULL) {
-				$datesqlappend = '';
-				//$datesqlappend = ' AND (TO_DAYS(NOW()) - TO_DAYS(datecreation_poi)) <= 365';
-			} else {
-				switch ($_GET['date']) {
-					case '1year':
-						$datesqlappend = ' AND (TO_DAYS(NOW()) - TO_DAYS(datecreation_poi)) <= 365';
-						break;
-					case '2year':
-						$datesqlappend = ' AND (TO_DAYS(NOW()) - TO_DAYS(datecreation_poi)) > 365 AND (TO_DAYS(NOW()) - TO_DAYS(datecreation_poi)) <= 730';
-						break;
-					case '3year':
-						$datesqlappend = ' AND (TO_DAYS(NOW()) - TO_DAYS(datecreation_poi)) > 730';
-						break;
-					case 'all':
-						$datesqlappend = '';
-						break;
-					default:
-						$datesqlappend = '';
-						//$datesqlappend = ' AND (TO_DAYS(NOW()) - TO_DAYS(datecreation_poi)) <= 365';
-						break;
-				}
-			}
-
-			if ($_GET['status'] == NULL) {
-			    $statussqlappend = '';
-			} else {
-			    switch ($_GET['status']) {
-			        case '1':
-                        $statussqlappend = ' AND status_id_status = 1 ';
-			            break;
-			        case '2':
-                        $statussqlappend = ' AND status_id_status = 2 ';
-                        break;
-                    case '3':
-                        $statussqlappend = ' AND status_id_status = 3 ';
-                        break;
-                    case '4':
-                        $statussqlappend = ' AND status_id_status = 4 ';
-                        break;
-                    case '5':
-                        $statussqlappend = ' AND status_id_status = 5 ';
-                        break;
-                    case 'all':
-                        $statussqlappend = '';
-                        break;
-                    default:
-                        $statussqlappend = '';
-                        break;
-
-			    }
-			}
+			
 			
 			if (isset($_GET['id'])) {
 				$sql = "SELECT *, commune.lib_commune, x(poi.geom_poi) AS X, y(poi.geom_poi) AS Y, subcategory.icon_subcategory, subcategory.lib_subcategory FROM poi INNER JOIN subcategory ON (subcategory.id_subcategory = poi.subcategory_id_subcategory) INNER JOIN commune ON (commune.id_commune = poi.commune_id_commune) INNER JOIN priorite ON (poi.priorite_id_priorite = priorite.id_priorite) WHERE poi.moderation_poi = TRUE AND delete_poi = FALSE AND poi.id_poi = ".$_GET['id'];
 			} else {
+				
+				if ($_GET['date'] == NULL) {
+					$datesqlappend = '';
+					//$datesqlappend = ' AND (TO_DAYS(NOW()) - TO_DAYS(datecreation_poi)) <= 365';
+				} else {
+					switch ($_GET['date']) {
+						case '1year':
+							$datesqlappend = ' AND (TO_DAYS(NOW()) - TO_DAYS(datecreation_poi)) <= 365';
+							break;
+						case '2year':
+							$datesqlappend = ' AND (TO_DAYS(NOW()) - TO_DAYS(datecreation_poi)) > 365 AND (TO_DAYS(NOW()) - TO_DAYS(datecreation_poi)) <= 730';
+							break;
+						case '3year':
+							$datesqlappend = ' AND (TO_DAYS(NOW()) - TO_DAYS(datecreation_poi)) > 730';
+							break;
+						case 'all':
+							$datesqlappend = '';
+							break;
+						default:
+							$datesqlappend = '';
+							//$datesqlappend = ' AND (TO_DAYS(NOW()) - TO_DAYS(datecreation_poi)) <= 365';
+							break;
+					}
+				}
+				
+				if ($_GET['status'] == NULL) {
+					$statussqlappend = '';
+				} else {
+					switch ($_GET['status']) {
+						case '1':
+							$statussqlappend = ' AND status_id_status = 1 ';
+							break;
+						case '2':
+							$statussqlappend = ' AND status_id_status = 2 ';
+							break;
+						case '3':
+							$statussqlappend = ' AND status_id_status = 3 ';
+							break;
+						case '4':
+							$statussqlappend = ' AND status_id_status = 4 ';
+							break;
+						case '5':
+							$statussqlappend = ' AND status_id_status = 5 ';
+							break;
+						case 'all':
+							$statussqlappend = '';
+							break;
+						default:
+							$statussqlappend = '';
+							break;
+				
+					}
+				}
 				$listType = $_GET['listType'];
 				$tabListType = preg_split('#,#', $listType);
 					$sqlappend = " WHERE poi.geom_poi IS NOT NULL AND ( ";
@@ -84,7 +89,9 @@
 				$sql .= $statussqlappend;
 			}
 			$result = mysql_query($sql);
-
+			if (DEBUG) {
+				error_log(date("Y-m-d H:i:s") . " - public/getMarker.php sql = $sql\n", 3, LOG_FILE );
+			}
 			$i = 0;
 			while ($row = mysql_fetch_array($result)) {
 				$arr[$i]['id'] = $row['id_poi'];
