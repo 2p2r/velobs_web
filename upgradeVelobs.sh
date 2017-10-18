@@ -64,11 +64,11 @@ cp $velobsProd/lib/php/key.php $velobsDev/lib/php/
 echo "Copie de "$velobsProd"/lib/js/key.js dans "$velobsDev"/lib/js/"
 cp $velobsProd/lib/js/key.js $velobsDev/lib/js/
 
-echo -n "$(tput setaf 2)Merci de modifier "$velobsDev"/lib/js/key.js et "$velobsDev"/lib/php/key.php si nécessaire pour être raccord avec le contenu de "$velobsDev"/lib/js/key.js.template et "$velobsDev"/lib/php/key.php.template. Appuyez sur une touche quand vous avez fait les éventuelles modifications$(tput sgr 0)"
+echo -n "$(tput setaf 2)Merci de modifier "$velobsDev"/lib/js/key.js et "$velobsDev"/lib/php/key.php si nécessaire pour être raccord avec le contenu de "$velobsDev"/lib/js/key.js.template et "$velobsDev"/lib/php/key.php.template (dans le cas où des clés auraient été ajoutées ou modifiées). Appuyez sur une touche quand vous avez fait les éventuelles modifications$(tput sgr 0)"
 read
 
 echo "Application des droits d'écriture sur le répertoire de sortie où sont générés les fichiers csv d'export de velobs : chmod 775 "$velobsDev"/resources/csv "$velobsDev"/resources/pictures"
-chmod 775 $velobsDev/resources/csv $velobsDev/resources/pictures
+chmod 775 $velobsDev/resources/csv $velobsDev/resources/pictures $velobsDev/resources/icon/marker
 
 echo "switch des version de velobs pour le passage en production : mv $velobsProd $velobsProd$timestamp; mv $velobsDev $velobsProd"
 mv $velobsProd $velobsProd.$timestamp;mv $velobsDev $velobsProd
@@ -78,9 +78,9 @@ PHP=`which php`
 if [ -e $velobsProd/resources/upgrade/upgradeSQL-$velobsVersion.php ]
 then
         echo "Exécution de la commande $PHP $velobsProd/resources/upgrade/upgradeSQL-$velobsVersion.php"
-        #$PHP $velobsProd/resources/upgrade/upgradeSQL-$velobsVersion.php
+        $PHP $velobsProd/resources/upgrade/upgradeSQL-$velobsVersion.php
 else
         echo "$(tput setaf 1)Le fichier $velobsProd/resources/upgrade/upgradeSQL-$velobsVersion.php n'existe pas. Il se peut qu'aucun script SQL n'existe pour ce changement de version, mais vérifiez que vous avez spécifié fidèlement la version de velobs à laquelle vous passez (de la forme Vx_y). Si vous vous êtes trompé(e), vous devrez exécuter le script en ligne de commande.$(tput sgr 0)"
 fi
 
-echo "$(tput setaf 5)La nouvelle version de velobs est installée. Merci de la tester.$(tput sgr 0)"
+echo "$(tput setaf 5)La nouvelle version de velobs est installée. Merci de la tester SVP.$(tput sgr 0)"
