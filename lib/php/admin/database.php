@@ -1,14 +1,16 @@
 <?php
 	session_start();
-	include 'adminfunction.php';
-
+	include_once 'adminfunction.php';
+	if (DEBUG){
+		error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - dans database.php \n", 3, LOG_FILE);
+	}
+	
 	if (isset($_SESSION['user'])) {
 		$task = '';
 		if (isset($_POST['task'])) {
 			$task = $_POST['task'];
 			$start = (integer) (isset($_POST['start']) ? $_POST['start'] : $_GET['start']);
 			$end = (integer) (isset($_POST['limit']) ? $_POST['limit'] : $_GET['limit']);
-			$query = $_POST['query'];
 			$asc = $_POST['asc'];
 
 			$usertype = $_POST['usertype'];
@@ -25,6 +27,9 @@
             }
 
 
+		}
+		if (DEBUG){
+			error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - dans database.php, task = $task \n", 3, LOG_FILE);
 		}
 		switch ($task) {
 			case "LISTINGICO":
@@ -64,121 +69,15 @@
 				break;
 				
 			case "LISTINGPOI":
-				if (isset($query)) {
-					if ($query != '') {
-						if (strlen($query) >= 3) {
-							findPoi($query);
-						} else {
-							break;
-						}
-					} else {
-						getPoi(0,200, 'default', 0, 0);
-					}
-				} else if (isset($_POST['sort']) && isset($_POST['dir'])) {
+				if (isset($_POST['sort']) && isset($_POST['dir'])) {
                     getPoi($start, $end, $asc, $sort, $dir);
 				} else {
 				    getPoi($start, $end, $asc, 0, 0);
 				}
 				break;
-		    case "LISTINGPOIPOLEASSO":
-                if (isset($query)) {
-                    if ($query != '') {
-                        if (strlen($query) >= 3) {
-                            findPoiGT($query);
-                        } else {
-                            break;
-                        }
-                    } else {
-                        getPoiComcomPole(0,200, 'default', 0, 0);
-                    }
-                } else if (isset($_POST['sort']) && isset($_POST['dir'])) {
-                    getPoiComcomPole($start, $end, $asc, $sort, $dir);
-                } else {
-                    getPoiComcomPole($start, $end, $asc, 0, 0);
-                }
-                break;
-			case "LISTINGPOIBASKET":
-				if (isset($query)) {
-					if ($query != '') {
-						if (strlen($query) >= 3) {
-							findPoiBasket($query);
-						} else {
-							break;
-						}
-					} else {
-						getPoiBasket(0,200, 'default');
-					}
-				} else {
-					getPoiBasket($start, $end, $asc);
-				}
-				break;
-			case "LISTINGPOIBASKETPOLE":
-                if (isset($query)) {
-                    if ($query != '') {
-                        if (strlen($query) >= 3) {
-                            findPoiBasket($query);
-                        } else {
-                            break;
-                        }
-                    } else {
-                        getPoiBasketPole(0,200, 'default');
-                    }
-                } else {
-                    getPoiBasketPole($start, $end, $asc);
-                }
-                break;
-			case "LISTINGPOICOM":
-				if (isset($query)) {
-					if ($query != '') {
-						if (strlen($query) >= 3) {
-							findPoiGT($query);
-						} else {
-							break;
-						}
-					} else {
-						getPoiComcom(0,200, 'default');
-					}
-				} else if (isset($_POST['sort']) && isset($_POST['dir'])) {
-				    getPoiComcom($start, $end, $asc, $sort, $dir);
-				} else {
-					getPoiComcom($start, $end, $asc, 0, 0);
-				}
-				break;
-			case "LISTINGPOIPOLECOM":
-				if (DEBUG){
-					error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - LISTINGPOIPOLECOM ".$_POST." \n", 3, LOG_FILE);
-				}
-				if (isset($query)) {
-					if ($query != '') {
-						if (strlen($query) >= 3) {
-							findPoiPole($query);
-						} else {
-							break;
-						}
-					} else {
-						getPoiPole(0,200, 'default', $_SESSION['pole'], 0, 0);
-					}
-				} else if (isset($_POST['sort']) && isset($_POST['dir'])) {
-					getPoiPole($start, $end, $asc, $_SESSION['pole'], $sort, $dir);
-				} else {
-                    getPoiPole($start, $end, $asc, $_SESSION['pole'], 0, 0);
-				}
-				break;
 			case "UPDATEPOI":
 				updatePoi();
 				break;
-            case "UPDATEPOICOMCOMCARTO":
-                updatePoiComcomCarto();
-                break;
-            case "UPDATEPOIPOLETECHCARTO":
-                updatePoiPoleTechCarto();
-                break;
-            case "UPDATEASSOPOLECARTOPOI":
-                updateAssoPoleCartoPoi();
-                break;
-            case "UPDATEADMINPOI":
-                updateAdminPoi();
-                break;
 			case "CREATEPOI":
 				createPoi();
 				break;
@@ -306,22 +205,13 @@
                 editComment($_POST['id_comment'],$_POST['text_comment']);
                 break;
             case "CREATEPUBLICCOMMENTS":
-                if ($_SESSION['role'] == 2 || $_SESSION['role'] == 3) {
-                     createPublicComment($_POST['id_poi'],$_POST['text_comment']);
-                } else {
-                     createPublicCommentSession($_POST['id_poi'],$_POST['text_comment']);
-                }
+                createPublicComment();
                 break;
-
-
             case "LISTINGPHOTOS":
-                getPhotos($id_poi);
-                break;
-            case "LISTINGPHOTOSCOM":
-                getPhotosCom($id_poi);
+                getComments($id_poi);
                 break;
             case "UPDATEPHOTOS":
-                displayPhoto($_POST['id_photo'],$_POST['display_photo']);
+                //displayPhoto($_POST['id_photo'],$_POST['display_photo']);
                 break;
 
 				
@@ -336,7 +226,7 @@
 				createPublicPoi();
 				break;
 			case "CREATEPUBLICCOMMENTS":
-                createPublicComment($_POST['id_poi'],$_POST['text_comment']);
+                createPublicComment();
                 break;
 		}
 	}

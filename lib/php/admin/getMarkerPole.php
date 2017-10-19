@@ -1,6 +1,6 @@
 <?php header('Content-Type: text/html; charset=UTF-8');
 	session_start();
-	include '../key.php';
+	include_once '../key.php';
 
 	if (isset($_SESSION['user'])) {
 		switch (SGBD) {
@@ -8,21 +8,28 @@
 				$link = mysql_connect(HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
 				mysql_query("SET NAMES 'utf8'");
-
+				if (DEBUG) {
+					error_log(date("Y-m-d H:i:s") . " - getMarkerPole.php, listType " . $_GET['listType'] . " , ou id = ".$_GET['id']."\n", 3, LOG_FILE );
+				}
+				$sql = "SELECT *, commune.lib_commune, x(poi.geom_poi) AS X, y(poi.geom_poi) AS Y, subcategory.icon_subcategory FROM poi INNER JOIN subcategory ON (subcategory.id_subcategory = poi.subcategory_id_subcategory) INNER JOIN commune ON (commune.id_commune = poi.commune_id_commune) INNER JOIN priorite ON (poi.priorite_id_priorite = priorite.id_priorite) WHERE ";
+				$whereClause = '';
 				if (isset($_GET['id'])) {
-					$sql = "SELECT *, commune.lib_commune, x(poi.geom_poi) AS X, y(poi.geom_poi) AS Y, subcategory.icon_subcategory FROM poi INNER JOIN subcategory ON (subcategory.id_subcategory = poi.subcategory_id_subcategory) INNER JOIN commune ON (commune.id_commune = poi.commune_id_commune) INNER JOIN priorite ON (poi.priorite_id_priorite = priorite.id_priorite) WHERE delete_poi = FALSE AND poi.id_poi = ".$_GET['id'];
+					 $whereClause .= " delete_poi = FALSE AND poi.id_poi = ".$_GET['id'];
 				} else {
 					$listType = $_GET['listType'];
-					$tabListType = preg_split('#,#', $listType);
-						$sqlappend = " WHERE poi.geom_poi IS NOT NULL AND ( ";
-					for ($i = 0; $i < count($tabListType); $i++) {
-						$sqlappend .= " subcategory_id_subcategory = ".$tabListType[$i]." OR";
-					}
-					$sqlappend = substr($sqlappend, 0, strlen($sqlappend)-3);
-					$sqlappend .= " ) AND poi.display_poi = TRUE AND poi.fix_poi = FALSE AND poi.transmission_poi = TRUE AND poi.pole_id_pole = ".$_SESSION['pole']." AND poi.delete_poi = FALSE ";
+// 					$tabListType = preg_split('#,#', $listType);
+// 						$whereClause = "  poi.geom_poi IS NOT NULL AND ( ";
+// 					for ($i = 0; $i < count($tabListType); $i++) {
+// 						$whereClause .= " subcategory_id_subcategory = ".$tabListType[$i]." OR";
+// 					}
+// 					$whereClause .= substr($whereClause, 0, strlen($whereClause)-3);
+					$whereClause .= " priorite.id_priorite <> 7 AND priorite.id_priorite <> 15 AND delete_poi = FALSE AND poi.geom_poi IS NOT NULL AND subcategory_id_subcategory IN (".$listType.")" ;
+					$whereClause .= " AND moderation_poi = 1 AND poi.display_poi = TRUE AND poi.fix_poi = FALSE AND poi.transmission_poi = TRUE AND poi.pole_id_pole = ".$_SESSION['pole']." AND poi.delete_poi = FALSE ";
 
-					$sql = "SELECT *, commune.lib_commune, x(poi.geom_poi) AS X, y(poi.geom_poi) AS Y, subcategory.icon_subcategory FROM poi INNER JOIN subcategory ON (subcategory.id_subcategory = poi.subcategory_id_subcategory) INNER JOIN commune ON (commune.id_commune = poi.commune_id_commune) INNER JOIN priorite ON (poi.priorite_id_priorite = priorite.id_priorite)";
-					$sql .= $sqlappend;
+				}
+				$sql .= $whereClause;
+				if (DEBUG) {
+					error_log(date("Y-m-d H:i:s") . " - getMarkerPole.php, sql " . $sql."\n", 3, LOG_FILE );
 				}
 				$result = mysql_query($sql);
 
@@ -58,6 +65,9 @@
 				$arr[$i]['lon'] = $row['X'];
 
 					$i++;
+				}
+				if (DEBUG) {
+					error_log(date("Y-m-d H:i:s") . " - getMarkerPole.php, $i observations retournées \n", 3, LOG_FILE );
 				}
 				echo '{"markers":'.json_encode($arr).'}';
 

@@ -1,5 +1,5 @@
 <?php
-	include '../key.php';
+	include_once '../key.php';
 
 	$temp = array();
 	$tab = array(); 

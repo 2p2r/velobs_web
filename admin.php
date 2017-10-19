@@ -1,7 +1,7 @@
 <?php header('Content-Type: text/html; charset=UTF-8');
 	session_start();
-	include 'lib/php/key.php';
-	include 'lib/php/commonfunction.php';
+	include_once 'lib/php/key.php';
+	include_once 'lib/php/commonfunction.php';
 	if (DEBUG){
 		error_log("Tentative de connection\n", 3, LOG_FILE);
 	}
@@ -22,7 +22,7 @@
 	<body onunload="setCookie()">
 		<div id="loading"> 
 			<div class="loading-indicator">
-				<img alt="2P2R" src="resources/images/2p2r.png" width="99" height="64" style="margin-right:8px;float:left;vertical-align:top;"/>VelObs - <a href="https://www.2p2r.org/" target="_blank">2P2R</a><br /><span id="loading-msg">Loading styles and images ...</span>
+				<img alt="VelObs" src="resources/images/velobs.jpg" width="99" height="64" style="margin-right:8px;float:left;vertical-align:top;"/>VelObs - <a href="https://www.2p2r.org/" target="_blank">2P2R</a><br /><span id="loading-msg">Loading styles and images ...</span>
 			</div>
 			<link rel="stylesheet" type="text/css" href="resources/css/icon.css" />
 			<link rel="stylesheet" type="text/css" href="lib/js/framework/ext-3.4.0/resources/css/ext-all.css" />
@@ -47,8 +47,8 @@
 	
 			<script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Loading language...';</script>
 			<script type="text/javascript" src="lib/js/framework/ext-3.4.0/src/locale/ext-lang-<?php echo $_SESSION['extension_language']; ?>.js"></script>
-			<script type="text/javascript" src="lib/js/translation_<?php echo $_SESSION['extension_language']; ?>.js"></script>
-			<script type="text/javascript" src="lib/js/key.js"></script>
+			<script type="text/javascript" src="lib/js/translation_<?php echo $_SESSION['extension_language']; ?>.js?v1.3"></script>
+			<script type="text/javascript" src="lib/js/key.js?v1.3"></script>
 			
 			<script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Loading extensions...';</script>
 			<script type="text/javascript" src="lib/js/framework/ux/GeoNamesSearchCombo.js"></script>
@@ -61,21 +61,22 @@
 			<script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Loading geometry...';</script>
 			
 			<script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Loading application...';</script>
-			<script type="text/javascript" src="lib/js/admin/modeemploi1.js"></script>
-			<script type="text/javascript" src="lib/js/admin/icon1.js"></script>
-			<script type="text/javascript" src="lib/js/admin/config1.js"></script>
-			<script type="text/javascript" src="lib/js/admin/status1.js"></script>
-			<script type="text/javascript" src="lib/js/admin/users1.js"></script>
-			<script type="text/javascript" src="lib/js/admin/priorite1.js"></script>
-			<script type="text/javascript" src="lib/js/admin/commune1.js"></script>
-			<script type="text/javascript" src="lib/js/admin/pole1.js"></script>
-			<script type="text/javascript" src="lib/js/admin/quartier1.js"></script>
-			<script type="text/javascript" src="lib/js/admin/basket1.js"></script>
-			<script type="text/javascript" src="lib/js/admin/poi1.js"></script>
-			<script type="text/javascript" src="lib/js/admin/subcategory1.js"></script>			
-			<script type="text/javascript" src="lib/js/admin/category1.js"></script>
-			<script type="text/javascript" src="lib/js/admin/mapadmin1.js"></script>
-			<script type="text/javascript" src="lib/js/admin/main1.js"></script>
+			<script type="text/javascript" src="lib/js/admin/modeemploi1.js?v1.3"></script>
+			<script type="text/javascript" src="lib/js/admin/icon1.js?v1.3"></script>
+			<script type="text/javascript" src="lib/js/admin/config1.js?v1.3"></script>
+			<script type="text/javascript" src="lib/js/admin/status1.js?v1.3"></script>
+			<script type="text/javascript" src="lib/js/admin/users1.js?v1.3"></script>
+			<script type="text/javascript" src="lib/js/admin/priorite1.js?v1.3"></script>
+			<script type="text/javascript" src="lib/js/admin/commune1.js?v1.3"></script>
+			<script type="text/javascript" src="lib/js/admin/pole1.js?v1.3"></script>
+			<script type="text/javascript" src="lib/js/admin/quartier1.js?v1.3"></script>
+			<script type="text/javascript" src="lib/js/admin/basket.js?v1.3"></script>
+			<script type="text/javascript" src="lib/js/admin/poiCommon.js?v1.3"></script>
+			<script type="text/javascript" src="lib/js/admin/poi1.js?v1.3"></script>
+			<script type="text/javascript" src="lib/js/admin/subcategory1.js?v1.3"></script>			
+			<script type="text/javascript" src="lib/js/admin/category1.js?v1.3"></script>
+			<script type="text/javascript" src="lib/js/admin/mapadmin1.js?v1.3"></script>
+			<script type="text/javascript" src="lib/js/admin/main1.js?v1.3"></script>
 	 
 			<script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Initialization...';</script> 
 		</div>
@@ -126,8 +127,8 @@
 	
 			<script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Loading language...';</script>
 			<script type="text/javascript" src="lib/js/framework/ext-3.4.0/src/locale/ext-lang-<?php echo $_SESSION['extension_language']; ?>.js"></script>
-			<script type="text/javascript" src="lib/js/translation_<?php echo $_SESSION['extension_language']; ?>.js"></script>
-			<script type="text/javascript" src="lib/js/key.js"></script>
+			<script type="text/javascript" src="lib/js/translation_<?php echo $_SESSION['extension_language']; ?>.js?v1.3"></script>
+			<script type="text/javascript" src="lib/js/key.js?v1.3"></script>
 			
 			<script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Loading extensions...';</script>
 			<script type="text/javascript" src="lib/js/framework/ux/GeoNamesSearchCombo.js"></script>
@@ -140,9 +141,11 @@
 			<script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Loading geometry...';</script>
 			
 			<script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Loading application...';</script>
-			<script type="text/javascript" src="lib/js/admin/modeemploi2.js"></script>
-			<script type="text/javascript" src="lib/js/admin/poi2.js"></script>
-			<script type="text/javascript" src="lib/js/admin/main2.js"></script>
+			<script type="text/javascript" src="lib/js/admin/modeemploi2.js?v1.3"></script>
+			
+			<script type="text/javascript" src="lib/js/admin/poiCommon.js?v1.3"></script>
+			<script type="text/javascript" src="lib/js/admin/poi2.js?v1.3"></script>
+			<script type="text/javascript" src="lib/js/admin/main2.js?v1.3"></script>
 	 
 			<script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Initialization...';</script> 
 		</div>
@@ -203,8 +206,8 @@
 	
 			<script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Loading language...';</script>
 			<script type="text/javascript" src="lib/js/framework/ext-3.4.0/src/locale/ext-lang-<?php echo $_SESSION['extension_language']; ?>.js"></script>
-			<script type="text/javascript" src="lib/js/translation_<?php echo $_SESSION['extension_language']; ?>.js"></script>
-			<script type="text/javascript" src="lib/js/key.js"></script>
+			<script type="text/javascript" src="lib/js/translation_<?php echo $_SESSION['extension_language']; ?>.js?v1.3"></script>
+			<script type="text/javascript" src="lib/js/key.js?v1.3"></script>
 			
 			<script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Loading extensions...';</script>
 			<script type="text/javascript" src="lib/js/framework/ux/GeoNamesSearchCombo.js"></script>
@@ -217,11 +220,13 @@
 			<script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Loading geometry...';</script>
 			
 			<script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Loading application...';</script>
-			<script type="text/javascript" src="lib/js/admin/modeemploi3.js"></script>
-			<script type="text/javascript" src="lib/js/admin/mapadmin3.js"></script>
-			<script type="text/javascript" src="lib/js/admin/poi3.js"></script>
+			<script type="text/javascript" src="lib/js/admin/modeemploi3.js?v1.3"></script>
+			<script type="text/javascript" src="lib/js/admin/mapadmin3.js?v1.3"></script>
+			
+			<script type="text/javascript" src="lib/js/admin/poiCommon.js?v1.3"></script>
+			<script type="text/javascript" src="lib/js/admin/poi3.js?v1.3"></script>
 
-			<script type="text/javascript" src="lib/js/admin/main3.js"></script>
+			<script type="text/javascript" src="lib/js/admin/main3.js?v1.3"></script>
 	 
 			<script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Initialization...';</script> 
 		</div>
@@ -283,8 +288,8 @@
 
 			<script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Loading language...';</script>
 			<script type="text/javascript" src="lib/js/framework/ext-3.4.0/src/locale/ext-lang-<?php echo $_SESSION['extension_language']; ?>.js"></script>
-			<script type="text/javascript" src="lib/js/translation_<?php echo $_SESSION['extension_language']; ?>.js"></script>
-			<script type="text/javascript" src="lib/js/key.js"></script>
+			<script type="text/javascript" src="lib/js/translation_<?php echo $_SESSION['extension_language']; ?>.js?v1.3"></script>
+			<script type="text/javascript" src="lib/js/key.js?v1.3"></script>
 			
 			<script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Loading extensions...';</script>
 			<script type="text/javascript" src="lib/js/framework/ux/GeoNamesSearchCombo.js"></script>
@@ -297,13 +302,15 @@
 			<script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Loading geometry...';</script>
 
 			<script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Loading application...';</script>
-            <script type="text/javascript" src="lib/js/admin/modeemploi4.js"></script>
-            <script type="text/javascript" src="lib/js/admin/commune1.js"></script>
-            <script type="text/javascript" src="lib/js/admin/pole1.js"></script>
-            <script type="text/javascript" src="lib/js/admin/basket4.js"></script>
-            <script type="text/javascript" src="lib/js/admin/poi4.js"></script>
-            <script type="text/javascript" src="lib/js/admin/mapadmin1.js"></script>
-            <script type="text/javascript" src="lib/js/admin/main4.js"></script>
+            <script type="text/javascript" src="lib/js/admin/modeemploi4.js?v1.3"></script>
+            <script type="text/javascript" src="lib/js/admin/commune1.js?v1.3"></script>
+            <script type="text/javascript" src="lib/js/admin/pole1.js?v1.3"></script>
+            <script type="text/javascript" src="lib/js/admin/basket.js?v1.3"></script>
+            
+			<script type="text/javascript" src="lib/js/admin/poiCommon.js?v1.3"></script>
+            <script type="text/javascript" src="lib/js/admin/poi4.js?v1.3"></script>
+            <script type="text/javascript" src="lib/js/admin/mapadmin1.js?v1.3"></script>
+            <script type="text/javascript" src="lib/js/admin/main4.js?v1.3"></script>
 
 			<script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Initialization...';</script>
 		</div>

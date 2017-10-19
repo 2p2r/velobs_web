@@ -1,5 +1,5 @@
 <?php
-	include 'key.php';
+	include_once 'key.php';
 	/* 	Function name 	: getTranslation
 	 * 	Input			: language id, string
 	 * 	Output			: string translation
@@ -29,6 +29,9 @@
 	function getLocations($latitude_poi, $longitude_poi){
 		switch (SGBD) {
 			case 'mysql':
+				if (DEBUG){
+					error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - commonfunction.php -  ".$latitude_poi.", ".$longitude_poi."\n", 3, LOG_FILE);
+				}
 				$sql = "SELECT id_commune, AsText(geom_commune) AS geom, lib_commune FROM commune";
 				$result = mysql_query($sql);
 				while ($row = mysql_fetch_array($result)) {
@@ -81,25 +84,7 @@
 				break;
 		}
 	}
-	/*	Function name	: sendMail
-	 * 	Input			: $to : e-mail address
-	 * 	Input			: $subject : subject of the e-mail 
-	 * 	Input			: $body : body of the e-mail 
-	* 	Object			: sends simple e-mails
-	* 	Date			: septembre 19 2017
-	*/
-	function sendMail ($to, $subject, $body){
-                    $headers = 'From: '. MAIL_FROM . "\r\n" .
-                    'Reply-To: ' . MAIL_REPLY_TO ."\r\n" .
-                    'Content-Type: text/plain; charset=UTF-8' . "\r\n" .
-                    'X-Mailer: PHP/' . phpversion();
-                    if (DEBUG){
-                    	error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - commonfunction.php - Mail avec comme sujet = ".MAIL_SUBJECT_PREFIX . ' '.$subject ." et envoyé à " . $to ."\n", 3, LOG_FILE);
-                    }
-                    
-                    mail($to, MAIL_SUBJECT_PREFIX . ' '.$subject, $body, $headers);
-
-	}
+	
 	
 	
 	/* 	Function name 	: generate_image_thumbnail
@@ -228,11 +213,11 @@
 			//clés étrangères
 			$observationArray['commune_id_commune'] = stripslashes($row['commune_id_commune']);
 			$observationArray['subcategory_id_subcategory'] = stripslashes($row['subcategory_id_subcategory']);
-			$observationArray['priorite_id_priorite'] = stripslashes($row['prorite_id_priorite']);
+			$observationArray['priorite_id_priorite'] = stripslashes($row['priorite_id_priorite']);
 			$observationArray['pole_id_pole'] = stripslashes($row['pole_id_pole']);
 			$observationArray['quartier_id_quartier'] = stripslashes($row['quartier_id_quartier']);
 			$observationArray['status_id_status'] = stripslashes($row['status_id_status']);
-			//donnees de tables autres que poi, sur clé étrangères
+			//donnees de tables autres que poi, sur clés étrangères
 			$observationArray['lib_priorite'] = stripslashes($row['lib_priorite']);
 			$observationArray['lib_commune'] = stripslashes($row['lib_commune']);
 			$observationArray['lib_subcategory'] = stripslashes($row['lib_subcategory']);
@@ -246,7 +231,7 @@
 	/*	Function name	: getObservationDetailsInString
 	 * 	Input			: $arrayObservation : array containaing data linked to a POI
 	* 	Output			: $arrayDetailsAndUpdateSQL with SQL update request, details about the data linked to a POI and a n flag telling if the POI needs to be updated
-	* 	Object			: get the sql update requets, determined by comparing data from a persisted poi and data contained in $_POST, and detailed message to be sent in an e-mail
+	* 	Object			: get the sql update request, determined by comparing data from a persisted poi and data contained in $_POST, and detailed message to be sent in an e-mail
 	* 	Date			: septembre 19 2017
 	*/
 	
@@ -675,11 +660,31 @@
 	*/
 	function sendMails($mailsArray){
 		foreach ($mailsArray as $key => $value) {
-			if (DEBUG){
-				error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - Clé : $key; Valeur : $value[0],  $value[1],  $value[2]\n", 3, LOG_FILE);
-			}
+// 			if (DEBUG){
+// 				error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - Clé : $key; Valeur : $value[0],  $value[1],  $value[2]\n", 3, LOG_FILE);
+// 			}
 			sendMail($value[0], $value[2], $value[3]);
 		}
 		return true;
+	}
+	/*	Function name	: sendMail
+	 * 	Input			: $to : e-mail address
+	* 	Input			: $subject : subject of the e-mail
+	* 	Input			: $body : body of the e-mail
+	* 	Object			: sends simple e-mails
+	* 	Date			: septembre 19 2017
+	*/
+	function sendMail ($to, $subject, $body){
+		$headers = 'From: '. MAIL_FROM . "\r\n" .
+				'Reply-To: ' . MAIL_REPLY_TO ."\r\n" .
+				'Content-Type: text/plain; charset=UTF-8' . "\r\n" .
+				'X-Mailer: PHP/' . phpversion();
+		if (DEBUG){
+			error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - commonfunction.php - Mail avec comme sujet = ".MAIL_SUBJECT_PREFIX . ' '.$subject ." et envoyé à " . $to ."\n", 3, LOG_FILE);
+		}
+	
+		mail($to, MAIL_SUBJECT_PREFIX . ' '.$subject, $body, $headers);
+		//mail($to, MAIL_SUBJECT_PREFIX . ' '.$subject, $body);
+	
 	}
 ?>

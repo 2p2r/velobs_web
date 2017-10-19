@@ -1,6 +1,6 @@
 <?php
-	include '../key.php';
-	include '../commonfunction.php';
+	include_once '../key.php';
+	include_once '../commonfunction.php';
 	$_SESSION['id_language'] = 1;	
 	
 	switch (SGBD) {
