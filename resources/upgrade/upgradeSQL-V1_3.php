@@ -58,7 +58,7 @@ $sql = "ALTER TABLE photos RENAME TO photosToDelete";
 $result = mysql_query($sql);
 echo $sql . " : ".$result."\n\n";
 echo "\n";
-echo "##################################################"
+echo "##################################################\n";
 echo "Après test, vous pourrez supprimer les tables photosToDelete, poi_photosToDelete et poi_commentairesToDelete\n\n";
 
 

@@ -77,8 +77,12 @@ mv $velobsProd $velobsProd.$timestamp;mv $velobsDev $velobsProd
 PHP=`which php`
 if [ -e $velobsProd/resources/upgrade/upgradeSQL-$velobsVersion.php ]
 then
+        cd $velobsProd/resources/upgrade
         echo "Exécution de la commande $PHP $velobsProd/resources/upgrade/upgradeSQL-$velobsVersion.php"
-        $PHP $velobsProd/resources/upgrade/upgradeSQL-$velobsVersion.php
+        $PHP upgradeSQL-$velobsVersion.php > ../../../sortie_upgradeSQL-$velobsVersion.log
+        echo ""
+        echo "$(tput setaf 1)Le script php a été exécuté. Vérifiez les logs sortie_upgradeSQL-$velobsVersion.log pour vérifier qu'il n'y a pas d'erreur. On affiche la fin de ce fichier de log ci-dessous : $(tput sgr 0)"
+        tail ../../../sortie_upgradeSQL-$velobsVersion.log
 else
         echo "$(tput setaf 1)Le fichier $velobsProd/resources/upgrade/upgradeSQL-$velobsVersion.php n'existe pas. Il se peut qu'aucun script SQL n'existe pour ce changement de version, mais vérifiez que vous avez spécifié fidèlement la version de velobs à laquelle vous passez (de la forme Vx_y). Si vous vous êtes trompé(e), vous devrez exécuter le script en ligne de commande.$(tput sgr 0)"
 fi
