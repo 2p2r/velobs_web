@@ -57,15 +57,20 @@ C'est en production à Toulouse pour 2 pieds 2 roues sur : http://velobs.2p2r.or
     * définir la constante URL : url de l'application
     * définir les constantes  MAIL_* pour l'envoi des mails de VélObs
     * définir les constantes VELOBS_* en fonction des institutions avec lesquelles vous travaillez
- * modifier les droits en écriture pour les répertoires :
+ * modifier les droits en écriture pour les fichiers/répertoires :
     * resources/pictures
     * resources/icon/marker
     * resources/icon/marker/16x18
+    * resources/css/icon.css
     * resources/csv
- * modifier les droits en écriture pour le fichier resources/css/icon.css
+    * Commande : chmod -R 770 resources/pictures resources/icon/marker resources/icon/marker/16x18 resources/css/icon.css resources/csv
+ 
  * créer une base de données MySQL (ex. velobs) :
     * interclassement : utf8_general_ci
- * importer dans l'ordre de la numérotation les 19 scripts SQL du répertoire resources/sql
+ * importer le script resources/sql/install.sql
+ * se connecter à l'interface d'administration de VelObs avec le compte admin (mot de passe : admin) : URL_VelObs/admin.php
+     * cliquer sur l'onglet Utilisateurs
+     * modifier le mot de passe du compte admin en cliquant dans la cellule correspondante (dès que la cellule perd le focus, le mot de passe se met à jour dans la base de données)
  
 #   Notice d'adaptation à d'autres territoires pour l'application VelObs :
 
@@ -75,9 +80,8 @@ C'est en production à Toulouse pour 2 pieds 2 roues sur : http://velobs.2p2r.or
      * T_header_main : contenu du panneau supérieur de la page principale
      * T_textHowToParticipate : contenu du pop up "comment participer"
   * adapter les logos dans resources/images en respectant les dimensions    
-  * adapter les tables
+  * adapter les tables en suivant le protocole dédié (nécessite quelques compétences en Système d'Information Géographique)
      * configmap: coordonnees GPS du centre de la carte
      * territoire: liste des territoires caracterisés par les codes INSEE des communes du territoire  
      * commune:  liste des communes caractérisées par leur code INSEE et leur contour géographique
      * pole:  liste des poles  caractérisés par leur nom et leur contour géographique
-     * quartier: liste des quartiers de la metropole caractérisés par leur nom
