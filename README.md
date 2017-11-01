@@ -1,9 +1,11 @@
 VelObs
 ========
 
-Application web permettant aux cyclistes de signaler les problèmes sur les aménagements cyclables ; puis aux collectivités territoriales compétentes de les traiter.
+Application web permettant aux cyclistes de signaler les problèmes sur les aménagements cyclables ; puis aux collectivités territoriales compétentes de les traiter (sans obligation de prise en compte, ni de résultat).
 
-C'est en production à Toulouse pour 2 pieds 2 roues sur : http://velobs.2p2r.org/
+VelObs est en  production à 
+* Toulouse pour 2 pieds 2 roues sur : http://velobs.2p2r.org/
+* Montpellier pour VéloCité : http://www.velocite-montpellier.fr/velobs/
 
 # Quelques commentaires sur l'application :
 
@@ -80,7 +82,7 @@ C'est en production à Toulouse pour 2 pieds 2 roues sur : http://velobs.2p2r.or
      * T_header_main : contenu du panneau supérieur de la page principale
      * T_textHowToParticipate : contenu du pop up "comment participer"
   * adapter les logos dans resources/images en respectant les dimensions    
-  * adapter les tables en suivant le protocole dédié (nécessite quelques compétences en Système d'Information Géographique)
+  * adapter les tables en suivant le protocole dédié (nécessite quelques compétences en Système d'Information Géographique - documentation complète à venir)
      * configmap: coordonnees GPS du centre de la carte
      * territoire: liste des territoires caracterisés par les codes INSEE des communes du territoire  
      * commune:  liste des communes caractérisées par leur code INSEE et leur contour géographique
