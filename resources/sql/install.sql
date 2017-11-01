@@ -373,14 +373,15 @@ ALTER TABLE `poi`
   ADD CONSTRAINT `poi_ibfk_6` FOREIGN KEY (`status_id_status`) REFERENCES `status` (`id_status`);
 
 CREATE TABLE IF NOT EXISTS `commentaires` (
-  `id_commentaires` int(11) NOT NULL,
+  `id_commentaires` int(11) NOT NULL AUTO_INCREMENT,
   `text_commentaires` varchar(1000) DEFAULT NULL,
   `display_commentaires` tinyint(1) DEFAULT NULL,
   `datecreation` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `url_photo` varchar(500) DEFAULT NULL,
   `mail_commentaires` varchar(100) DEFAULT NULL,
-  `poi_id_poi` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `poi_id_poi` int(11) NOT NULL,
+PRIMARY KEY (`id_commentaires`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
 
 
 ALTER TABLE `commentaires`
