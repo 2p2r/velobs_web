@@ -3,33 +3,28 @@ SET time_zone = "+00:00";
 
 
 CREATE TABLE `category` (
-`id_category` int(11) NOT NULL,
+`id_category` int(11) NOT NULL AUTO_INCREMENT,
   `lib_category` varchar(100) DEFAULT NULL,
   `icon_category` varchar(100) DEFAULT NULL,
   `treerank_category` int(11) DEFAULT NULL,
-  `display_category` tinyint(1) DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+  `display_category` tinyint(1) DEFAULT NULL,
+  PRIMARY KEY (`id_category`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 
 INSERT INTO `category` (`id_category`, `lib_category`, `icon_category`, `treerank_category`, `display_category`) VALUES
 (1, 'Observations', 'iconmarker2', 1, 1);
 
-ALTER TABLE `category`
- ADD PRIMARY KEY (`id_category`);
-
-
-ALTER TABLE `category`
-MODIFY `id_category` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
-
-
 CREATE TABLE `subcategory` (
-`id_subcategory` int(11) NOT NULL,
+`id_subcategory` int(11) NOT NULL AUTO_INCREMENT,
   `lib_subcategory` varchar(100) DEFAULT NULL,
   `icon_subcategory` varchar(100) DEFAULT NULL,
   `treerank_subcategory` int(11) DEFAULT NULL,
   `display_subcategory` tinyint(1) DEFAULT NULL,
   `proppublic_subcategory` tinyint(1) DEFAULT NULL,
-  `category_id_category` int(11) DEFAULT NULL
+  `category_id_category` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id_subcategory`), 
+  KEY `category_id_category` (`category_id_category`)
 ) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8;
 
 
@@ -46,81 +41,60 @@ INSERT INTO `subcategory` (`id_subcategory`, `lib_subcategory`, `icon_subcategor
 
 
 ALTER TABLE `subcategory`
- ADD PRIMARY KEY (`id_subcategory`), ADD KEY `category_id_category` (`category_id_category`);
-
-
-ALTER TABLE `subcategory`
-MODIFY `id_subcategory` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=20;
-
-ALTER TABLE `subcategory`
 ADD CONSTRAINT `subcategory_ibfk_1` FOREIGN KEY (`category_id_category`) REFERENCES `category` (`id_category`);
 
 
 CREATE TABLE `territoire` (
-  `id_territoire` int(11) NOT NULL,
+  `id_territoire` int(11) NOT NULL AUTO_INCREMENT,
   `lib_territoire` varchar(255) NOT NULL,
   `type_territoire` int(11) NOT NULL,
-  `ids_territoire` varchar(4096) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `ids_territoire` varchar(4096) NOT NULL,
+  PRIMARY KEY (`id_territoire`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 
 INSERT INTO `territoire` (`id_territoire`, `lib_territoire`, `type_territoire`, `ids_territoire`) VALUES
 (0, 'Zone couverte par VelObs', 0, '');
 
-ALTER TABLE `territoire`
- ADD PRIMARY KEY (`id_territoire`);
-
 CREATE TABLE `pole` (
-  `id_pole` int(11) NOT NULL DEFAULT '0',
+  `id_pole` int(11) NOT NULL AUTO_INCREMENT,
   `lib_pole` varchar(100) DEFAULT NULL,
   `geom_pole` geometry DEFAULT NULL,
-  `territoire_id_territoire` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `territoire_id_territoire` int(11) NOT NULL,
+  PRIMARY KEY (`id_pole`)
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
 
 INSERT INTO `pole` (`id_pole`, `lib_pole`, `geom_pole`, `territoire_id_territoire`) VALUES
 (9, 'Hors zone urbaine', NULL, 0),
 (12, 'Administrateur ou comcom', NULL, 0);
-ALTER TABLE `pole`
- ADD PRIMARY KEY (`id_pole`);
-ALTER TABLE `pole`
-MODIFY `id_pole` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=13;
-
 
 CREATE TABLE `configmap` (
-`id_configmap` int(11) NOT NULL,
+`id_configmap` int(11) NOT NULL AUTO_INCREMENT,
   `lat_configmap` float DEFAULT NULL,
   `lon_configmap` float DEFAULT NULL,
   `zoom_configmap` int(11) DEFAULT NULL,
-  `baselayer_configmap` int(11) DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
-
-ALTER TABLE `configmap`
- ADD PRIMARY KEY (`id_configmap`);
-
-ALTER TABLE `configmap`
-MODIFY `id_configmap` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
+  `baselayer_configmap` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id_configmap`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `language` (
-`id_language` int(11) NOT NULL,
+`id_language` int(11) NOT NULL AUTO_INCREMENT,
   `lib_language` varchar(100) DEFAULT NULL,
-  `extension_language` varchar(10) DEFAULT NULL
+  `extension_language` varchar(10) DEFAULT NULL,
+  PRIMARY KEY (`id_language`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 INSERT INTO `language` (`id_language`, `lib_language`, `extension_language`) VALUES
 (1, 'France', 'fr'),
 (2, 'English', 'en');
 
-ALTER TABLE `language`
- ADD PRIMARY KEY (`id_language`);
-
-ALTER TABLE `language`
-MODIFY `id_language` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
-
 CREATE TABLE `translation` (
-`id_translation` int(11) NOT NULL,
+`id_translation` int(11) NOT NULL AUTO_INCREMENT,
   `code_translation` varchar(50) DEFAULT NULL,
   `lib_translation` varchar(250) DEFAULT NULL,
-  `language_id_language` int(11) DEFAULT NULL
+  `language_id_language` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id_translation`), 
+  KEY `language_id_language` (`language_id_language`)
 ) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8;
 
 
@@ -156,29 +130,22 @@ INSERT INTO `translation` (`id_translation`, `code_translation`, `lib_translatio
 
 
 ALTER TABLE `translation`
- ADD PRIMARY KEY (`id_translation`), ADD KEY `language_id_language` (`language_id_language`);
-
-ALTER TABLE `translation`
-MODIFY `id_translation` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=29;
-
-ALTER TABLE `translation`
 ADD CONSTRAINT `translation_ibfk_1` FOREIGN KEY (`language_id_language`) REFERENCES `language` (`id_language`);
 
 
 CREATE TABLE `commune` (
-  `id_commune` int(11) NOT NULL DEFAULT '0',
+  `id_commune` int(11) NOT NULL AUTO_INCREMENT,
   `lib_commune` varchar(100) DEFAULT NULL,
-  `geom_commune` geometry DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `geom_commune` geometry DEFAULT NULL,
+  PRIMARY KEY (`id_commune`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 INSERT INTO `commune` (`id_commune`, `lib_commune`, `geom_commune`) VALUES (99999, 'Autre commune', NULL);
 
-ALTER TABLE `commune`
- ADD PRIMARY KEY (`id_commune`);
-
 CREATE TABLE `usertype` (
-`id_usertype` int(11) NOT NULL,
-  `lib_usertype` varchar(100) DEFAULT NULL
+`id_usertype` int(11) NOT NULL AUTO_INCREMENT,
+  `lib_usertype` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`id_usertype`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 
 INSERT INTO `usertype` (`id_usertype`, `lib_usertype`) VALUES
@@ -187,15 +154,8 @@ INSERT INTO `usertype` (`id_usertype`, `lib_usertype`) VALUES
 (3, 'Pôle technique'),
 (4, 'Responsable pôle modérateur');
 
-ALTER TABLE `usertype`
- ADD PRIMARY KEY (`id_usertype`);
-
-ALTER TABLE `usertype`
-MODIFY `id_usertype` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5;
-
-
 CREATE TABLE `users` (
-`id_users` int(11) NOT NULL,
+`id_users` int(11) NOT NULL AUTO_INCREMENT,
   `lib_users` varchar(100) DEFAULT NULL,
   `pass_users` varchar(100) DEFAULT NULL,
   `num_pole` int(11) NOT NULL,
@@ -203,18 +163,15 @@ CREATE TABLE `users` (
   `language_id_language` int(11) DEFAULT NULL,
   `territoire_id_territoire` int(11) DEFAULT NULL,
   `mail_users` varchar(255) NOT NULL,
-  `nom_users` varchar(255) NOT NULL
+  `nom_users` varchar(255) NOT NULL,
+  PRIMARY KEY (`id_users`), 
+  KEY `usertype_id_usertype` (`usertype_id_usertype`), 
+  KEY `language_id_language` (`language_id_language`), 
+  KEY `territoire_id_territoire` (`territoire_id_territoire`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 INSERT INTO `users` (`id_users`, `lib_users`, `pass_users`, `num_pole`, `usertype_id_usertype`, `language_id_language`, `territoire_id_territoire`, `mail_users`, `nom_users`) VALUES
 (1, 'admin', 'admin', 12, 1, 1, 0, 'test@velobs.org', 'Administrateur VelObs');
-
-ALTER TABLE `users`
- ADD PRIMARY KEY (`id_users`), ADD KEY `usertype_id_usertype` (`usertype_id_usertype`), ADD KEY `language_id_language` (`language_id_language`), ADD KEY `territoire_id_territoire` (`territoire_id_territoire`);
-
-
-ALTER TABLE `users`
-MODIFY `id_users` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
 
 ALTER TABLE `users`
 ADD CONSTRAINT `users_ibfk_1` FOREIGN KEY (`usertype_id_usertype`) REFERENCES `usertype` (`id_usertype`) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -223,8 +180,9 @@ ADD CONSTRAINT `users_ibfk_3` FOREIGN KEY (`territoire_id_territoire`) REFERENCE
 
 
 CREATE TABLE `priorite` (
-`id_priorite` int(11) NOT NULL,
-  `lib_priorite` varchar(100) DEFAULT NULL
+`id_priorite` int(11) NOT NULL AUTO_INCREMENT,
+  `lib_priorite` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`id_priorite`)
 ) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
 
 
@@ -238,35 +196,18 @@ INSERT INTO `priorite` (`id_priorite`, `lib_priorite`) VALUES
 (12, 'Refusé par la collectivité'),
 (15, 'Doublon');
 
-ALTER TABLE `priorite`
- ADD PRIMARY KEY (`id_priorite`);
-
-ALTER TABLE `priorite`
-MODIFY `id_priorite` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=16;
-
-
 CREATE TABLE `quartier` (
-`id_quartier` int(11) NOT NULL,
-  `lib_quartier` varchar(100) DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=100000 DEFAULT CHARSET=utf8;
-
-
-
+`id_quartier` int(11) NOT NULL AUTO_INCREMENT,
+  `lib_quartier` varchar(100) DEFAULT NULL,
+ PRIMARY KEY (`id_quartier`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 INSERT INTO `quartier` (`id_quartier`, `lib_quartier`) VALUES (99999, 'Inutile');
 
-
-ALTER TABLE `quartier`
- ADD PRIMARY KEY (`id_quartier`);
-
-
-ALTER TABLE `quartier`
-MODIFY `id_quartier` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=100000;
-
 CREATE TABLE `status` (
-`id_status` int(11) NOT NULL,
-  `lib_status` varchar(100) DEFAULT NULL
+`id_status` int(11) NOT NULL AUTO_INCREMENT,
+  `lib_status` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`id_status`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
-
 
 INSERT INTO `status` (`id_status`, `lib_status`) VALUES
 (1, 'En cours'),
@@ -276,19 +217,12 @@ INSERT INTO `status` (`id_status`, `lib_status`) VALUES
 (5, 'A définir');
 
 
-ALTER TABLE `status`
- ADD PRIMARY KEY (`id_status`);
-
-
-ALTER TABLE `status`
-MODIFY `id_status` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=6;
-
-
 CREATE TABLE `iconmarker` (
-`id_iconmarker` int(11) NOT NULL,
+`id_iconmarker` int(11) NOT NULL AUTO_INCREMENT,
   `name_iconmarker` varchar(100) DEFAULT NULL,
   `urlname_iconmarker` varchar(100) DEFAULT NULL,
-  `color_iconmarker` varchar(100) DEFAULT NULL
+  `color_iconmarker` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`id_iconmarker`)
 ) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8;
 
 
@@ -313,13 +247,6 @@ INSERT INTO `iconmarker` (`id_iconmarker`, `name_iconmarker`, `urlname_iconmarke
 (17, 'defaut d''entretien', 'iconmarker17', ''),
 (18, 'chicanes', 'iconmarker18', ''),
 (19, 'tourne à droite 2', 'iconmarker19', '');
-
-
-ALTER TABLE `iconmarker`
- ADD PRIMARY KEY (`id_iconmarker`);
-
-ALTER TABLE `iconmarker`
-MODIFY `id_iconmarker` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=20;
 
 
 CREATE TABLE IF NOT EXISTS `poi` (
@@ -380,7 +307,7 @@ CREATE TABLE IF NOT EXISTS `commentaires` (
   `url_photo` varchar(500) DEFAULT NULL,
   `mail_commentaires` varchar(100) DEFAULT NULL,
   `poi_id_poi` int(11) NOT NULL,
-PRIMARY KEY (`id_commentaires`)
+    PRIMARY KEY (`id_commentaires`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
 
 
