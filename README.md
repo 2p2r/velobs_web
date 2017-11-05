@@ -8,6 +8,7 @@ VelObs est en  production à
 * Montpellier pour VéloCité : http://www.velocite-montpellier.fr/velobs/
 
 # Quelques commentaires sur l'application :
+* VelObs est une application web nécessitant un serveur web avec php et MySQL/MariaDB comme base de données (versions minimum à venir)
 
 * le répertoire lib/js contient tous les scripts nécessaires à l'utilisation :
     * key.js.template configuration des variables spécifiques à votre instance (pour l'instant uniquement l'API KEY de thunderforest
@@ -85,5 +86,8 @@ VelObs est en  production à
   * adapter les tables en suivant le protocole dédié (nécessite quelques compétences en Système d'Information Géographique - documentation complète à venir)
      * configmap: coordonnees GPS du centre de la carte
      * territoire: liste des territoires caracterisés par les codes INSEE des communes du territoire  
-     * commune:  liste des communes caractérisées par leur code INSEE et leur contour géographique
      * pole:  liste des poles  caractérisés par leur nom et leur contour géographique
+     * commune:  liste des communes caractérisées par leur code INSEE et leur contour géographique
+  * se connecter à l'interface d'administration de VelObs avec le compte admin : URL_VelObs/admin.php
+     * Ajouter les comptes : cliquer sur le menu Utilisateurs > Ajouter un utilisateur
+         * modérateurs : sélectionner le rôle Modérateur
