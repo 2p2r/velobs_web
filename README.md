@@ -1,11 +1,14 @@
 VelObs
 ========
 
-Application web permettant aux cyclistes de signaler les problèmes sur les aménagements cyclables ; puis aux collectivités territoriales compétentes de les traiter.
+Application web permettant aux cyclistes de signaler les problèmes sur les aménagements cyclables ; puis aux collectivités territoriales compétentes de les traiter (sans obligation de prise en compte, ni de résultat).
 
-C'est en production à Toulouse pour 2 pieds 2 roues sur : http://velobs.2p2r.org/
+VelObs est en  production à 
+* Toulouse pour 2 pieds 2 roues sur : http://velobs.2p2r.org/
+* Montpellier pour VéloCité : http://www.velocite-montpellier.fr/velobs/
 
 # Quelques commentaires sur l'application :
+* VelObs est une application web nécessitant un serveur web avec php et MySQL/MariaDB comme base de données (versions minimum à venir)
 
 * le répertoire lib/js contient tous les scripts nécessaires à l'utilisation :
     * key.js.template configuration des variables spécifiques à votre instance (pour l'instant uniquement l'API KEY de thunderforest
@@ -42,42 +45,4 @@ C'est en production à Toulouse pour 2 pieds 2 roues sur : http://velobs.2p2r.or
     * répertoire pictures contient toutes les images relatives aux enregistrements
     * répertoire sql contient toutes les tables de la base de données ) la date du 10 janvier 2016
    
-#   Notice d'installation pour l'application VelObs :
-
- * décompresser l'archive dans le répertoire voulu sur le serveur de production
- * copier le fichier lib/js/key.js.template vers lib/js/key.js
- * éditer lib/js/key.js en ajoutant votre clé d'API thunderforest
- * copier le ficher lib/php/key.php.template vers lib/php/key.php
- * éditer le fichier lib/php/key.php :
-    * définir la constante HOST : url du serveur MySQL
-    * définir la constante PORT : port du serveur MySQL
-    * définir la constante DB_USER : login du serveur MySQL
-    * définir la constante DB_PASS : password du serveur MySQL
-    * définir la constante DB_NAME : nom de la base de données VelObs
-    * définir la constante URL : url de l'application
-    * définir les constantes  MAIL_* pour l'envoi des mails de VélObs
-    * définir les constantes VELOBS_* en fonction des institutions avec lesquelles vous travaillez
- * modifier les droits en écriture pour les répertoires :
-    * resources/pictures
-    * resources/icon/marker
-    * resources/icon/marker/16x18
-    * resources/csv
- * modifier les droits en écriture pour le fichier resources/css/icon.css
- * créer une base de données MySQL (ex. velobs) :
-    * interclassement : utf8_general_ci
- * importer dans l'ordre de la numérotation les 19 scripts SQL du répertoire resources/sql
- 
-#   Notice d'adaptation à d'autres territoires pour l'application VelObs :
-
-  * éditer le fichier lib/php/key.php :  
-     * définir les variables propres à l'association vélo et les collectivités concernées
-  * éditer les fichiers  lib/js/translate_fr.js et lib/js/translate_en.js pour adapter à votre contexte les variables
-     * T_header_main : contenu du panneau supérieur de la page principale
-     * T_textHowToParticipate : contenu du pop up "comment participer"
-  * adapter les logos dans resources/images en respectant les dimensions    
-  * adapter les tables
-     * configmap: coordonnees GPS du centre de la carte
-     * territoire: liste des territoires caracterisés par les codes INSEE des communes du territoire  
-     * commune:  liste des communes caractérisées par leur code INSEE et leur contour géographique
-     * pole:  liste des poles  caractérisés par leur nom et leur contour géographique
-     * quartier: liste des quartiers de la metropole caractérisés par leur nom
+Pour installer VelObs sur votre territoire, veuillez consulter le document INSTALL.odt

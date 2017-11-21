@@ -2362,7 +2362,7 @@ Lien vers la modération : ".URL.'/admin.php?id='.$arrayObs['id_poi']."\n".$arra
 						if (DEBUG){
 							error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " Il y a ". count($mails) . " mails à envoyer \n", 3, LOG_FILE);
 						}
-						$succes = sendMails($mails);
+// 						$succes = sendMails($mails);
 						
 						/* debut envoi d'un mail au contributeur */
 						$subject = 'Observation en attente de modération';
@@ -2377,12 +2377,7 @@ Cordialement, l'Association ".VELOBS_ASSOCIATION." :)";
 					if (DEBUG){
 						error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - Il y a ". count($mails) ." mails à envoyer\n", 3, LOG_FILE);
 					}
-					foreach ($mails as $key => $value) {
-						if (DEBUG){
-							error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - Clé : $key; Valeur : $value[0],  $value[1],  $value[2]\n", 3, LOG_FILE);
-						}
-						sendMail($value[0], $value[2], $value[3]);
-					}
+					$succes = sendMails($mails);
 				}else{
 					
 					if (DEBUG){
