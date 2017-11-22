@@ -24,7 +24,7 @@
 	 * 	Input			: $latitude_poi and $longitude_poi
 	* 	Output			: $array array containing commune and pole data, where the point($latitude_poi, $longitude_poi) stands
 	* 	Object			: converts latitude and longitude in human understandeable information
-	* 	Date			: septembre 19 2017
+	* 	Date			: septembre 19 2017 et novembre 2017
 	*/
 	function getLocations($latitude_poi, $longitude_poi){
 		switch (SGBD) {
@@ -32,44 +32,23 @@
 				if (DEBUG){
 					error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - commonfunction.php -  ".$latitude_poi.", ".$longitude_poi."\n", 3, LOG_FILE);
 				}
+				//détermination de la commune concernée par croisement du polygone de la commune avec latitude et longitude				
+				$commune_id_commune = 99999;
 				$sql = "SELECT id_commune, AsText(geom_commune) AS geom, lib_commune FROM commune";
 				$result = mysql_query($sql);
 				while ($row = mysql_fetch_array($result)) {
-					$commune = $row['geom'];
-					$temp = substr($commune,9,-2);
-					$tab = explode(',',$temp);
-					$vertices_x = array();
-					$vertices_y = array();
-					for ($i = 0; $i < count($tab) - 1; $i++) {
-						$temp = explode(" ",$tab[$i]);
-						array_push($vertices_x,$temp[0]);
-						array_push($vertices_y,$temp[1]);
-					}
-					$points_polygon = count($vertices_x) - 1;
-					if (is_in_polygon($points_polygon, $vertices_x, $vertices_y, $longitude_poi, $latitude_poi)) {
+					if (isWithinPolygons($row['geom'], $latitude_poi, $longitude_poi)) {												
 						//echo "Is in polygon!";
 						$commune_id_commune = $row['id_commune'];
 						$lib_commune = $row['lib_commune'];
 					}
-				}
-
-				//détermination du pole concerné par croisement du polygone de la commune avec latitude et longitude
+				}								
+				//détermination du pole concerné par croisement du polygone du pole avec latitude et longitude
 				$pole_id_pole = 9;
 				$sql = "SELECT id_pole, AsText(geom_pole) AS geom, lib_pole FROM pole";
 				$result = mysql_query($sql);
 				while ($row = mysql_fetch_array($result)) {
-					$pole = $row['geom'];
-					$temp = substr($pole,9,-2);
-					$tab = explode(',',$temp);
-					$vertices_x = array();
-					$vertices_y = array();
-					for ($i = 0; $i < count($tab) - 1; $i++) {
-						$temp = explode(" ",$tab[$i]);
-						array_push($vertices_x,$temp[0]);
-						array_push($vertices_y,$temp[1]);
-					}
-					$points_polygon = count($vertices_x) - 1;
-					if (is_in_polygon($points_polygon, $vertices_x, $vertices_y, $longitude_poi, $latitude_poi)) {
+					if (isWithinPolygons($row['geom'], $latitude_poi, $longitude_poi)){	
 						//echo "Is in polygon!";
 						$pole_id_pole = $row['id_pole'];
 						$lib_pole = $row['lib_pole'];
@@ -85,7 +64,59 @@
 		}
 	}
 	
-	
+	/*	Function name	: isWithinPolygons
+	 * 	Input			: $geom_value, $latitude_poi and $longitude_poi
+	 * 	Output		: if within polygons and outside the holes 1 else 0 
+	 * 	Object		: checks if the poi belongs to polygons of the geom
+	 *               POLYGON((x1 y1,x2 y2),(x3 y3,x4 y4),(x5 y5,x6 y6)) 
+	 *               MULTIPOLYGON(((x1 y1,x2 y2),(x3 y3,x4 y4)),((x5 y5,x6 y6)(x7 y7,x5 y5)))
+	 * 	Date			: novembre 2017
+	 */	
+	function isWithinPolygons($geom_value, $latitude_poi, $longitude_poi){		
+		// get all polygons
+		if (substr($geom_value,0,1) == 'M') {
+			$start = 15;
+			$length = -3;
+		}
+		else{
+			$start = 9;
+			$length = -2;
+		}
+		$polygons = explode(')),((', substr($geom_value, $start, $length)); 
+		// check all polygons
+		$inPolygon = FALSE;
+		for ($i = 0; ($i < count($polygons)) && !$inPolygon ; $i++) {
+			// get rings
+			$rings = explode('),(', $polygons[$i]); 				
+			if (isWithinPolygon($rings[0], $latitude_poi, $longitude_poi)){
+				$inHole = FALSE;
+				for ($j = 1; ($j < count($rings)) && !$inHole; $j++) {					
+					$inHole = isWithinRing($rings[$j], $latitude_poi, $longitude_poi);
+				}
+				$inPolygon = !$inHole;
+			}
+		}
+		return ($inPolygon);
+	}
+	/*	Function name	: isWithinPolygon
+	 * 	Input			: $polyg , $latitude_poi and $longitude_poi
+	* 	Output		: if within the simple polygon  1 else 0
+	* 	Object		: check if the poi belongs to a simple polygon
+	* 	Date			: novembre 2017
+	*/
+	function isWithinPolygon($polyg, $latitude_poi, $longitude_poi){
+		$tab = explode(',',$polyg);
+		$vertices_x = array();
+		$vertices_y = array();
+		for ($i = 0; $i < count($tab) - 1; $i++) {
+			$temp = explode(" ",$tab[$i]);
+			array_push($vertices_x,$temp[0]);
+			array_push($vertices_y,$temp[1]);
+		}
+		$points_polygon = count($vertices_x) - 1;
+		return(is_in_polygon($points_polygon, $vertices_x, $vertices_y, $longitude_poi, $latitude_poi));	
+	}			
+		
 	
 	/* 	Function name 	: generate_image_thumbnail
 	 * 	Input			: une url d'image en entrée, le path en sortie, la largeur et la hauteur
