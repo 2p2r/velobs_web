@@ -9,7 +9,7 @@
 
             print '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>';
             print '<response>';
-            $buffer = $_POST['buffer'];
+            //$buffer = $_POST['buffer'];
             if (!isset($_POST['lat']) || !isset($_POST['lng'])) {
                 print '<coderetour result="-1" />';
                 print '<listpoi>';

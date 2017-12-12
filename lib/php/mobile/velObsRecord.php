@@ -20,7 +20,7 @@
             		error_log(date("Y-m-d H:i:s") . "  - velObsRecord.php, manque des infos\n", 3, LOG_FILE);
             	}
             	$createObservation = 0;
-            	echo 'dataKOfile';
+            	echo 'Des informations sont manquantes pour créer l\'observation';
             	
             }
             if (isset($_FILES["photo1"]) && $createObservation) {
@@ -32,10 +32,10 @@
             	$extension = end($temp);
             	
             		if (!in_array($extension, $allowedExts)) {
-            			echo 'dataOKfileKO';
+            			echo 'L\'extension du nom de la photo n\'est pas correct';
             			$createObservation = 0;
             		} else if (($_FILES["photo1"]["type"] != "image/gif") && ($_FILES["photo1"]["type"] != "image/jpeg") && ($_FILES["photo1"]["type"] != "image/jpg") && ($_FILES["photo1"]["type"] != "image/png")) {
-            			echo 'dataOKfileKO';
+            			echo 'Le type du fichier soumis come photo n\'est pas correct';
             			$createObservation = 0;
             		} else {
             	
@@ -54,7 +54,7 @@
             				$newpathphoto = $dossier.$newnamefichier;
             				rename($pathphoto, $newpathphoto);
             			} else {
-            				echo "pictureKO";
+            				echo "Une erreur est survenue lors du traitement de la photo.";
             				$createObservation = 0;
             			}
             			$photo_poi = $newnamefichier;
@@ -113,7 +113,15 @@
                     $lib_commune = $locations[1];
                     $pole_id_pole = $locations[2];
                     $lib_pole = $locations[3];
-                    
+                    if ($commune_id_commune == 99999){
+                    	if (DEBUG){
+                    		error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " L'observation semble être dans une zone non couverte par velobs\n", 3, LOG_FILE);
+                    	}
+                    	$infoPOI = "Repere : $num_poi\nMail : $mail_poi\nTel : $tel_poi\nRue : $rue_poi\nDescription : $desc_poi\nProposition : $prop_poi\nNom : $adherent_poi\nLatitude : $latitude_poi\nLongitude : $longitude_poi\n Categorie : $subcategory_id_subcategory";
+                    	sendMail(MAIL_FROM,"Erreur creation observation sur mobile", "Message affiché à l'utilisateur : L'observation semble être dans une zone non couverte par VelObs, si ce n'est pas le cas, merci de nous contacter à l'adresse " . MAIL_FROM. "\n" . $infoPOI);
+                    		
+                     	die("L'observation semble être dans une zone non couverte par VelObs, si ce n'est pas le cas, merci de nous contacter à l'adresse " . MAIL_FROM);
+                    }
                     
 
                     // si le mail est un administrateur ou un modérateur alors on bypasse la modération
@@ -131,12 +139,11 @@
                     	
                     $result = mysql_query($sql);
                     if (!$result) {
-                        die("sqlKO");
+                        echo "La création de l'observation a échoué.";
+                    }else{
+                    	$id_poi = mysql_insert_id();
+                    	echo 'dataOK';
                     }
-                    $id_poi = mysql_insert_id();
-
-                    echo 'dataOK';
-
                     $arrayObs = getObservationDetailsInArray($id_poi);
                     $arrayDetailsAndUpdateSQL = getObservationDetailsInString($arrayObs);
                     if (DEBUG){

@@ -2224,11 +2224,11 @@ En cas de question, vous pouvez trouver des informations sur https://github.com/
 				$lib_commune = $locations[1];
 				$pole_id_pole = $locations[2];
 				$lib_pole = $locations[3];
-				if ($commune_id_commune == ''){
+				if ($commune_id_commune == 99999){
 					if (DEBUG){
 						error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " L'observation semble être dans une zone non couverte par velobs\n", 3, LOG_FILE);
 					}
-					$erreur = "L'observation semble être dans une zone non couverte par VelObs, si ce n'est pas le cas, merci de nous contacter.";
+					$erreur = "L'observation semble être dans une zone non couverte par VelObs, si ce n'est pas le cas, merci de nous contacter à l'adresse " . MAIL_FROM;
 					$return['success'] = false;
 					$return['pb'] = $erreur;
 				}
