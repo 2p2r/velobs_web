@@ -2224,19 +2224,19 @@ En cas de question, vous pouvez trouver des informations sur https://github.com/
 				$lib_commune = $locations[1];
 				$pole_id_pole = $locations[2];
 				$lib_pole = $locations[3];
-				if ($commune_id_commune == ''){
+				if ($commune_id_commune == 99999){
 					if (DEBUG){
 						error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " L'observation semble être dans une zone non couverte par velobs\n", 3, LOG_FILE);
-						$erreur = "L'observation semble être dans une zone non couverte par VelObs, si ce n'est pas le cas, merci de nous contacter.";
-						$return['success'] = false;
-						$return['pb'] = $erreur;
 					}
+					$erreur = "L'observation semble être dans une zone non couverte par VelObs, si ce n'est pas le cas, merci de nous contacter à l'adresse " . MAIL_FROM;
+					$return['success'] = false;
+					$return['pb'] = $erreur;
 				}
 				if (DEBUG){
 					error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - isset(_FILES['photo-path']) - ".isset($_FILES['photo-path']['name'])."\n", 3, LOG_FILE);
 				}
 				//si une photo a été associée au commentaire, on la traite
-				if ($erreur == '' && isset($_FILES['photo-path']) && $_FILES['photo-path']['name'] != ""){
+				if (!isset($erreur) && isset($_FILES['photo-path']) && $_FILES['photo-path']['name'] != ""){
 					if (DEBUG){
 						error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " photo-path isset " . $_FILES['photo-path'] . "\n", 3, LOG_FILE);
 					}
@@ -2264,7 +2264,7 @@ En cas de question, vous pouvez trouver des informations sur https://github.com/
 						$return['pb'] = getTranslation(1,'PICTURESIZE');
 					}
 						
-					if ($erreur == '') {
+					if (!isset($erreur)){
 						if (DEBUG){
 							error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " pas d'erreur, on continue \n", 3, LOG_FILE);
 						}
@@ -2297,19 +2297,20 @@ En cas de question, vous pouvez trouver des informations sur https://github.com/
 							$return['success'] = true;
 							$return['ok'] = getTranslation($_SESSION['id_language'],'PHOTOTRANSFERTDONE');
 						} else {
-							$return['success'] = false;
-							$return['pb'] = "Erreur lors du traitement de la photo.";
-						}
-					}
-				}
-				if (DEBUG){
-					error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - entre 2 $erreur ".$return['success'] . " " .$return['pb']."\n", 3, LOG_FILE);
-				}
-				//si une photo a été associée au commentaire et que tout s'est bien passé, ou bien s'il n'y avait pas de photo, on peut créer l'observation dans la base de données
-				if ($erreur =='' && ((isset($_FILES['photo-path']['name']) && $return['success'] ==  true) || (isset($_FILES['photo-path']['name']) && $_FILES['photo-path']['name'] == ''))){
-					if (DEBUG){
-						error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - place locations - ".$commune_id_commune.", " .$lib_commune.", " .$pole_id_pole.", " .$lib_pole."\n", 3, LOG_FILE);
-					}
+						 	$erreur = "Erreur lors du traitement de la photo.";
+            				$return['success'] = false;
+            				$return['pb'] = $erreur;
+          				}
+        			}
+      			}
+      			if (DEBUG){
+        			error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - entre 2 ".$return['success'] . " " .$return['pb']."\n", 3, LOG_FILE);
+      			}
+      			//si une photo a été associée au commentaire et que tout s'est bien passé, ou bien s'il n'y avait pas de photo, on peut créer l'observation dans la base de données
+      			if (!isset($erreur) && ((isset($_FILES['photo-path']['name']) && $return['success'] ==  true) || (isset($_FILES['photo-path']['name']) && $_FILES['photo-path']['name'] == ''))){
+        			if (DEBUG){
+          				error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - place locations - ".$commune_id_commune.", " .$lib_commune.", " .$pole_id_pole.", " .$lib_pole."\n", 3, LOG_FILE);
+        			}
 				
 				$datecreation_poi = date('Y-m-d H:i:s');			
 				
