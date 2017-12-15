@@ -37,6 +37,7 @@
                     }
                     $url_photo = $newnamefichier;
                 }
+            }
                 if ($createObservation){
                     $id_poi = mysql_real_escape_string($_POST['id_poi']);
                     $text = mysql_real_escape_string($_POST['text_comment']);
@@ -90,7 +91,6 @@ Cordialement, l'Association ".VELOBS_ASSOCIATION." :)";
 						error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - Il y a ". count($mails) ." mails à envoyer\n", 3, LOG_FILE);
 					}
 					$succes = sendMails($mails);
-                }
                 }
             }
             break;
