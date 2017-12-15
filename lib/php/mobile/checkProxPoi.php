@@ -23,7 +23,7 @@
                 }
                 $centerlat = $_POST['lat'];
                 $centerlng = $_POST['lng'];
-                $sql = "SELECT  prop_poi, x(poi.geom_poi) AS X, y(poi.geom_poi) AS Y,commune_id_commune, desc_poi, num_poi, photo_poi, id_poi, lib_poi, rue_poi, status_id_status, subcategory_id_subcategory, 6371 * 2 * asin(sqrt(power(sin((".$centerlat." - abs(y(geom_poi))) * pi() / 180 / 2), 2) + cos(".$centerlat." * pi() / 180) * cos(abs(y(geom_poi)) * pi() / 180) * power(sin((".$centerlng." - x(geom_poi)) * pi() / 180 / 2), 2) )) AS distance, priorite_id_priorite FROM poi WHERE priorite_id_priorite <> 6 AND moderation_poi = 1 AND (status_id_status LIKE 1 OR status_id_status LIKE 3 OR status_id_status LIKE 5) HAVING distance < ".$buffer." ORDER BY distance";
+                $sql = "SELECT  datecreation_poi, prop_poi, x(poi.geom_poi) AS X, y(poi.geom_poi) AS Y,commune_id_commune, desc_poi, num_poi, photo_poi, id_poi, lib_poi, rue_poi, status_id_status, subcategory_id_subcategory, 6371 * 2 * asin(sqrt(power(sin((".$centerlat." - abs(y(geom_poi))) * pi() / 180 / 2), 2) + cos(".$centerlat." * pi() / 180) * cos(abs(y(geom_poi)) * pi() / 180) * power(sin((".$centerlng." - x(geom_poi)) * pi() / 180 / 2), 2) )) AS distance, priorite_id_priorite FROM poi WHERE priorite_id_priorite <> 6 AND moderation_poi = 1 AND (status_id_status LIKE 1 OR status_id_status LIKE 3 OR status_id_status LIKE 5) HAVING distance < ".$buffer." ORDER BY distance";
                 //$sql = "SELECT id_poi, lib_poi, rue_poi, status_id_status, subcategory_id_subcategory, 6371 * 2 * asin(sqrt(power(sin((".$centerlat." - abs(y(geom_poi))) * pi() / 180 / 2), 2) + cos(".$centerlat." * pi() / 180) * cos(abs(y(geom_poi)) * pi() / 180) * power(sin((".$centerlng." - x(geom_poi)) * pi() / 180 / 2), 2) )) AS distance FROM poi HAVING distance < ".$buffer." ORDER BY distance";
                 $result = mysql_query($sql);
                 $num_rows = mysql_num_rows($result);
@@ -60,10 +60,11 @@
                             print '<status><![CDATA['.$row['status_id_status'].']]></status>';
                             print '<photo>'.$row['photo_poi'].'</photo>';
                             print '<num><![CDATA['.stripslashes($row['num_poi']).']]></num>';
-			    print '<latitude>'.$row['Y'].'</latitude>';
+			    			print '<latitude>'.$row['Y'].'</latitude>';
                             print '<longitude>'.$row['X'].'</longitude>';
                             print '<ville><![CDATA['.stripslashes($lib_commune).']]></ville>';
-			    print '<prop><![CDATA['.stripslashes($row['prop_poi']).']]></prop>';
+			    			print '<prop><![CDATA['.stripslashes($row['prop_poi']).']]></prop>';
+			    			print '<dateCreation><![CDATA['.stripslashes($row['datecreation_poi']).']]></dateCreation>';
                         print '</poi>';
                     }
                     print '</listpoi>';
