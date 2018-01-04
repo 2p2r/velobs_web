@@ -134,6 +134,20 @@
 				break;
 			case IMAGETYPE_JPEG:
 				$source_gd_image = imagecreatefromjpeg($source_image_path);
+				$exif = exif_read_data($source_image_path);
+				if ($source_gd_image && $exif && isset($exif['Orientation'])) {
+					$ort = $exif['Orientation'];
+
+					if ($ort == 6 || $ort == 5)
+					    $source_gd_image = imagerotate($source_gd_image, 270, null);
+					if ($ort == 3 || $ort == 4)
+						$source_gd_image = imagerotate($source_gd_image, 180, null);
+					if ($ort == 8 || $ort == 7)
+						$source_gd_image = imagerotate($source_gd_image, 90, null);
+
+					if (function_exists('imageflip') && ($ort == 5 || $ort == 4 || $ort == 7))
+						imageflip($source_gd_image, IMG_FLIP_HORIZONTAL);
+				}
 				break;
 			case IMAGETYPE_PNG:
 				$source_gd_image = imagecreatefrompng($source_image_path);
