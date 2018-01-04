@@ -17,7 +17,7 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
 		<title>VelObs [Admin]</title>
-		<link rel="shortcut icon" type="image/png" href="resources/favicon/favicon.ico" />
+		<link rel="shortcut icon" type="image/png" href="resources/favicon/favicon.png" />
 	</head>
 	<body onunload="setCookie()">
 		<div id="loading"> 
@@ -97,7 +97,7 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
 		<title>VelObs [Admin]</title>
-		<link rel="shortcut icon" type="image/png" href="resources/favicon/favicon.ico" />
+		<link rel="shortcut icon" type="image/png" href="resources/favicon/favicon.png" />
 	</head>
 	<body>
 		<div id="loading"> 
@@ -176,7 +176,7 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
 		<title>VelObs [Admin]</title>
-		<link rel="shortcut icon" type="image/png" href="resources/favicon/favicon.ico" />
+		<link rel="shortcut icon" type="image/png" href="resources/favicon/favicon.png" />
 	</head>
 	<body onunload="setCookie()">
 		<div id="loading"> 
@@ -257,7 +257,7 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
 		<title>VelObs [Admin]</title>
-		<link rel="shortcut icon" type="image/png" href="resources/favicon/favicon.ico" />
+		<link rel="shortcut icon" type="image/png" href="resources/favicon/favicon.png" />
 	</head>
 	<body onunload="setCookie()">
 		<div id="loading">
