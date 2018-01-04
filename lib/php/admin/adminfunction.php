@@ -624,6 +624,7 @@
 						$arr[$i]['id_poi'] = $row['id_poi'];
 						$arr[$i]['lib_poi'] = stripslashes($row['lib_subcategory']);
 						$arr[$i]['adherent_poi'] = stripslashes($row['adherent_poi']);
+						$arr[$i]['adherentfirstname_poi'] = stripslashes($row['adherentfirstname_poi']);
 						$arr[$i]['num_poi'] = stripslashes($row['num_poi']);
 						$arr[$i]['rue_poi'] = stripslashes($row['rue_poi']);
 						$arr[$i]['tel_poi'] = stripslashes($row['tel_poi']);
@@ -2202,6 +2203,7 @@ En cas de question, vous pouvez trouver des informations sur https://github.com/
 				$desc_poi = mysql_real_escape_string($_POST['desc_poi']);
 				$prop_poi = mysql_real_escape_string($_POST['prop_poi']);
 				$adherent_poi = mysql_real_escape_string($_POST['adherent_poi']);
+				$adherentfirstname_poi = mysql_real_escape_string($_POST['adherentfirstname_poi']);
 				$latitude_poi = $_POST['latitude_poi'];
 				$longitude_poi = $_POST['longitude_poi'];
 				$subcategory_id_subcategory = $_POST['subcategory_id_subcategory'];
@@ -2327,7 +2329,7 @@ En cas de question, vous pouvez trouver des informations sur https://github.com/
 				if (DEBUG){
 					error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - place locations - ".$commune_id_commune.", " .$lib_commune.", " .$pole_id_pole.", " .$lib_pole."\n", 3, LOG_FILE);
 				}
-				$sql = "INSERT INTO poi (adherent_poi, priorite_id_priorite, quartier_id_quartier, pole_id_pole, lib_poi, mail_poi, tel_poi, num_poi, rue_poi, commune_id_commune, desc_poi, prop_poi, subcategory_id_subcategory, display_poi, fix_poi, datecreation_poi, geolocatemode_poi, moderation_poi, geom_poi, status_id_status, photo_poi) VALUES ('$adherent_poi', $priorityId, $quartier_id_quartier, $pole_id_pole, '$lib_subcategory', '$mail_poi', '$tel_poi', '$num_poi', '$rue_poi', $commune_id_commune, '$desc_poi', '$prop_poi', $subcategory_id_subcategory , TRUE, FALSE, '$datecreation_poi', 1, $moderationFlag, GeomFromText('POINT(".$longitude_poi." ".$latitude_poi.")'), 5, '$url_photo')";
+				$sql = "INSERT INTO poi (adherent_poi, adherentfirstname_poi, priorite_id_priorite, quartier_id_quartier, pole_id_pole, lib_poi, mail_poi, tel_poi, num_poi, rue_poi, commune_id_commune, desc_poi, prop_poi, subcategory_id_subcategory, display_poi, fix_poi, datecreation_poi, geolocatemode_poi, moderation_poi, geom_poi, status_id_status, photo_poi) VALUES ('$adherent_poi', '$adherentfirstname_poi', $priorityId, $quartier_id_quartier, $pole_id_pole, '$lib_subcategory', '$mail_poi', '$tel_poi', '$num_poi', '$rue_poi', $commune_id_commune, '$desc_poi', '$prop_poi', $subcategory_id_subcategory , TRUE, FALSE, '$datecreation_poi', 1, $moderationFlag, GeomFromText('POINT(".$longitude_poi." ".$latitude_poi.")'), 5, '$url_photo')";
 				
 				if (DEBUG){
 					error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - createPublicPoi - Requete d'insertion sql = ".$sql."\n", 3, LOG_FILE);
@@ -2390,7 +2392,7 @@ Cordialement, l'Association ".VELOBS_ASSOCIATION." :)";
 				}
 				}else{
 					
-					$infoPOI = "Repere : $num_poi\nMail : $mail_poi\nTel : $tel_poi\nRue : $rue_poi\nDescription : $desc_poi\nProposition : $prop_poi\nNom : $adherent_poi\nLatitude : $latitude_poi\nLongitude : $longitude_poi\n Categorie : $subcategory_id_subcategory";
+					$infoPOI = "Repere : $num_poi\nMail : $mail_poi\nTel : $tel_poi\nRue : $rue_poi\nDescription : $desc_poi\nProposition : $prop_poi\nNom : $adherent_poi\nPrenom : $adherentfirstname_poi\nLatitude : $latitude_poi\nLongitude : $longitude_poi\n Categorie : $subcategory_id_subcategory";
 					sendMail(MAIL_FROM,"Erreur méthode createPublicPoi", "Erreur = " .  $return['pb'] . "\n" . $infoPOI);
 					$return['success'] = false;
 					$return['pb'] = "Erreur lors de l'ajout de l'observation : " . $return['pb'];
