@@ -1,3 +1,4 @@
+var USE_TF = true;
 var TF_key = "xxx" ; // documentation ici : http://thunderforest.com/docs/apikeys/
 function getCookie(sName) {
         var cookContent = document.cookie, cookEnd, i, j;
