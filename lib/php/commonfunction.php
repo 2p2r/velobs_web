@@ -256,6 +256,7 @@
 			$observationArray['display_poi'] = stripslashes($row['display_poi']);
 			$observationArray['tel_poi'] = stripslashes($row['tel_poi']);
 			$observationArray['adherent_poi'] = stripslashes($row['adherent_poi']);
+			$observationArray['adherentfirstname_poi'] = stripslashes($row['adherentfirstname_poi']);
 			//clés étrangères
 			$observationArray['commune_id_commune'] = stripslashes($row['commune_id_commune']);
 			$observationArray['subcategory_id_subcategory'] = stripslashes($row['subcategory_id_subcategory']);
@@ -388,6 +389,11 @@
 		//info personne qui a remonté l'observationr
 		$arrayColumns[$numberOfColumns]['columnSQL'] = 'adherent_poi' ;
 		$arrayColumns[$numberOfColumns]['columnPOST'] = 'adherent_poi' ;
+		$arrayColumns[$numberOfColumns]['columnIntitule'] = '# Nom du contributeur : ' ;
+		$arrayColumns[$numberOfColumns]['dataType'] = 'string' ;
+		$numberOfColumns++;
+		$arrayColumns[$numberOfColumns]['columnSQL'] = 'adherentfirstname_poi' ;
+		$arrayColumns[$numberOfColumns]['columnPOST'] = 'adherentfirstname_poi' ;
 		$arrayColumns[$numberOfColumns]['columnIntitule'] = '# Nom du contributeur : ' ;
 		$arrayColumns[$numberOfColumns]['dataType'] = 'string' ;
 		$numberOfColumns++;
