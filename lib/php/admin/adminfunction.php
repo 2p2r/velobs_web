@@ -2213,6 +2213,13 @@ En cas de question, vous pouvez trouver des informations sur https://github.com/
 				$row = mysql_fetch_assoc( $result );
 				$lib_subcategory = mysql_real_escape_string($row['lib_subcategory']);
 				
+				// Construction de la référence du POI
+				$sql = "SELECT count(1) as thismonth_poi_count FROM `poi` WHERE MONTH(`datecreation_poi`) = MONTH(NOW()) AND YEAR(`datecreation_poi`) = YEAR(NOW())";
+				$result = mysql_query($sql);
+				$row = mysql_fetch_assoc( $result );
+				$thismonth_poi_count = $row['thismonth_poi_count']+1;
+				$ref_poi = "F" . date('ym') . $thismonth_poi_count;
+
 				//détermination de la commune et du pole concernés par croisement du polygone de la commune ave latitude et longitude
 				$commune_id_commune = 99999;
 				$pole_id_pole = 9;
@@ -2329,7 +2336,7 @@ En cas de question, vous pouvez trouver des informations sur https://github.com/
 				if (DEBUG){
 					error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - place locations - ".$commune_id_commune.", " .$lib_commune.", " .$pole_id_pole.", " .$lib_pole."\n", 3, LOG_FILE);
 				}
-				$sql = "INSERT INTO poi (adherent_poi, adherentfirstname_poi, priorite_id_priorite, quartier_id_quartier, pole_id_pole, lib_poi, mail_poi, tel_poi, num_poi, rue_poi, commune_id_commune, desc_poi, prop_poi, subcategory_id_subcategory, display_poi, fix_poi, datecreation_poi, geolocatemode_poi, moderation_poi, geom_poi, status_id_status, photo_poi) VALUES ('$adherent_poi', '$adherentfirstname_poi', $priorityId, $quartier_id_quartier, $pole_id_pole, '$lib_subcategory', '$mail_poi', '$tel_poi', '$num_poi', '$rue_poi', $commune_id_commune, '$desc_poi', '$prop_poi', $subcategory_id_subcategory , TRUE, FALSE, '$datecreation_poi', 1, $moderationFlag, GeomFromText('POINT(".$longitude_poi." ".$latitude_poi.")'), 5, '$url_photo')";
+				$sql = "INSERT INTO poi (adherent_poi, adherentfirstname_poi, ref_poi, priorite_id_priorite, quartier_id_quartier, pole_id_pole, lib_poi, mail_poi, tel_poi, num_poi, rue_poi, commune_id_commune, desc_poi, prop_poi, subcategory_id_subcategory, display_poi, fix_poi, datecreation_poi, geolocatemode_poi, moderation_poi, geom_poi, status_id_status, photo_poi) VALUES ('$adherent_poi', '$adherentfirstname_poi', '$ref_poi', $priorityId, $quartier_id_quartier, $pole_id_pole, '$lib_subcategory', '$mail_poi', '$tel_poi', '$num_poi', '$rue_poi', $commune_id_commune, '$desc_poi', '$prop_poi', $subcategory_id_subcategory , TRUE, FALSE, '$datecreation_poi', 1, $moderationFlag, GeomFromText('POINT(".$longitude_poi." ".$latitude_poi.")'), 5, '$url_photo')";
 				
 				if (DEBUG){
 					error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - createPublicPoi - Requete d'insertion sql = ".$sql."\n", 3, LOG_FILE);
