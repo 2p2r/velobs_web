@@ -2204,9 +2204,9 @@ En cas de question, vous pouvez trouver des informations sur https://github.com/
 				$prop_poi = mysql_real_escape_string($_POST['prop_poi']);
 				$adherent_poi = mysql_real_escape_string($_POST['adherent_poi']);
 				$adherentfirstname_poi = mysql_real_escape_string($_POST['adherentfirstname_poi']);
-				$latitude_poi = $_POST['latitude_poi'];
-				$longitude_poi = $_POST['longitude_poi'];
-				$subcategory_id_subcategory = $_POST['subcategory_id_subcategory'];
+				$latitude_poi = mysql_real_escape_string($_POST['latitude_poi']);
+				$longitude_poi = mysql_real_escape_string($_POST['longitude_poi']);
+				$subcategory_id_subcategory = mysql_real_escape_string($_POST['subcategory_id_subcategory']);
 				
 				$sql = "SELECT lib_subcategory FROM subcategory WHERE id_subcategory = ".$subcategory_id_subcategory;
 				$result = mysql_query($sql);
