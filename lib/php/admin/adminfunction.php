@@ -622,6 +622,7 @@
 				if ($nbrows > 0) {
 					while ($row = mysql_fetch_array($result)) {
 						$arr[$i]['id_poi'] = $row['id_poi'];
+						$arr[$i]['ref_poi'] = $row['ref_poi'];
 						$arr[$i]['lib_poi'] = stripslashes($row['lib_subcategory']);
 						$arr[$i]['adherent_poi'] = stripslashes($row['adherent_poi']);
 						$arr[$i]['adherentfirstname_poi'] = stripslashes($row['adherentfirstname_poi']);
