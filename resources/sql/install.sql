@@ -248,6 +248,12 @@ INSERT INTO `iconmarker` (`id_iconmarker`, `name_iconmarker`, `urlname_iconmarke
 (18, 'chicanes', 'iconmarker18', ''),
 (19, 'tourne à droite 2', 'iconmarker19', '');
 
+CREATE TABLE IF NOT EXISTS `poireferences` (
+  `year` int(11) NOT NULL,
+  `month` int(11) NOT NULL,
+  `seq` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+ALTER TABLE `poireferences` ADD UNIQUE(`year`, `month`, `seq`);
 
 CREATE TABLE IF NOT EXISTS `poi` (
   `id_poi` int(11) NOT NULL AUTO_INCREMENT,
