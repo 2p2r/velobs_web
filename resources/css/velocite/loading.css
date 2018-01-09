@@ -1,7 +1,7 @@
 .loading {
     position   : static!important;
     margin-top : 50vh;
-    transform  : translateY(-50%)
+    transform  : translateY(-50%);
 }
 
 .loading-indicator {
@@ -9,6 +9,7 @@
 
 .loading__logo {
     /* TODO (CMR) : supprimer le !important quand style="..." aura été supprimé du template */
+    height         : 150px!important;
     float          : none!important;
     vertical-align : middle!important;
 }
