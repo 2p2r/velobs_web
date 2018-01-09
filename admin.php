@@ -16,13 +16,13 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-		<title>VelObs [Admin]</title>
+		<title>Cyclo-fiches - Vélo-Cité [Admin]</title>
 		<link rel="shortcut icon" type="image/png" href="resources/favicon/favicon.jpg" />
 	</head>
 	<body onunload="setCookie()">
 		<div id="loading"> 
 			<div class="loading-indicator">
-				<img alt="VelObs" src="resources/images/velocite.png" height="64" style="margin-right:8px;float:left;vertical-align:top;"/>Cyclo-Fiches - <a href="https://www.velo-cite.org/" target="_blank">Vélo-Cité</a><br /><span id="loading-msg">Loading styles and images ...</span>
+				<img alt="VelObs" src="resources/images/velocite.png" height="64" style="margin-right:8px;float:left;vertical-align:top;"/>Cyclo-fiches - <a href="https://www.velo-cite.org/" target="_blank">Vélo-Cité</a><br /><span id="loading-msg">Loading styles and images ...</span>
 			</div>
 			<link rel="stylesheet" type="text/css" href="resources/css/icon.css" />
 			<link rel="stylesheet" type="text/css" href="lib/js/framework/ext-3.4.0/resources/css/ext-all.css" />
@@ -96,7 +96,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-		<title>VelObs [Admin]</title>
+		<title>Cyclo-fiches - Vélo-Cité [Admin]</title>
 		<link rel="shortcut icon" type="image/png" href="resources/favicon/favicon.jpg" />
 	</head>
 	<body>
@@ -175,7 +175,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-		<title>VelObs [Admin]</title>
+		<title>Cyclo-fiches - Vélo-Cité [Admin]</title>
 		<link rel="shortcut icon" type="image/png" href="resources/favicon/favicon.jpg" />
 	</head>
 	<body onunload="setCookie()">
@@ -256,7 +256,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-		<title>VelObs [Admin]</title>
+		<title>Cyclo-fiches - Vélo-Cité [Admin]</title>
 		<link rel="shortcut icon" type="image/png" href="resources/favicon/favicon.jpg" />
 	</head>
 	<body onunload="setCookie()">
