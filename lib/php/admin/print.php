@@ -57,7 +57,9 @@
         $pdf->MultiCell(0, 5, utf8_decode($poi_data['desc_poi'] . "\n\n"));
 
         if (isset($poi_data['photo_poi'])) {
-            $pdf->Image('../../../resources/pictures/' . $poi_data['photo_poi']);
+            $photo_filename = '../../../resources/pictures/' . $poi_data['photo_poi'];
+            if (file_exists($photo_filename))
+                $pdf->Image('../../../resources/pictures/' . $poi_data['photo_poi']);
         }
 
         return $pdf;
