@@ -6,6 +6,7 @@
     function get_pdf($poi_data) {
         $pdf = new FPDF();
         $pdf->AddPage("");
+        $pdf->SetTitle('Cyclofiche ' . $poi_data['ref_poi']);
         $pdf->SetMargins(10, 10);
 
         $pdf->Image('../../../resources/images/velocite.png', NULL, NULL, 0, 30);
