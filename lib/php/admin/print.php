@@ -56,7 +56,9 @@
         $pdf->SetFont('Arial', '', 12);
         $pdf->MultiCell(0, 5, utf8_decode($poi_data['desc_poi'] . "\n\n"));
 
-        $pdf->Image('../../../resources/pictures/' . $poi_data['photo_poi']);
+        if (isset($poi_data['photo_poi'])) {
+            $pdf->Image('../../../resources/pictures/' . $poi_data['photo_poi']);
+        }
 
         return $pdf;
     }
