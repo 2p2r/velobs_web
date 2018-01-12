@@ -79,7 +79,7 @@
                 mysql_free_result($result);
                 mysql_close($link);
                 
-                $pdf_obj->Output();
+                $pdf_obj->Output("I", "cyclofiche-" . $poi['ref_poi'] . ".pdf");
 
 				break;
 			case 'postgresql':
