@@ -263,7 +263,7 @@ CREATE TABLE IF NOT EXISTS `poi` (
   `adherentfirstname_poi` varchar(100) DEFAULT NULL,
   `rue_poi` varchar(100) DEFAULT NULL,
   `num_poi` varchar(100) DEFAULT NULL,
-  `commune_poi` varchar(100) DEFAULT NULL,
+  `communename_poi` varchar(100) DEFAULT NULL,
   `mail_poi` varchar(100) DEFAULT NULL,
   `tel_poi` varchar(100) DEFAULT NULL,
   `geom_poi` geometry DEFAULT NULL,
