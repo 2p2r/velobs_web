@@ -9,7 +9,7 @@
         $pdf->SetTitle('Cyclofiche ' . $poi_data['ref_poi']);
         $pdf->SetMargins(10, 10);
 
-        $pdf->Image('../../../resources/images/velocite.png', NULL, NULL, 0, 30);
+        $pdf->Image('../../../resources/images/logo-main.png', NULL, NULL, 0, 30);
         $pdf->SetY(10);
         $pdf->SetX(30);
 
