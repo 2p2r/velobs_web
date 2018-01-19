@@ -2,7 +2,7 @@
 	session_start();
 	include_once '../key.php';
 	
-	if (isset($_SESSION['user'])) {
+	//if (isset($_SESSION['user'])) {
 		switch (SGBD) {
 			case 'mysql':
 				$link = mysql_connect(HOST,DB_USER,DB_PASS);
@@ -26,6 +26,6 @@
 				// TODO
 				break;
 		}
-	}
+	//}
 	
 ?>
