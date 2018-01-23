@@ -71,20 +71,24 @@
 			<script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Initialization...';</script> 
 
 			<script type="text/javascript">
-			// TODO (CMR) deleteme (tentative de bricole)
-			//  window.addEventListener("load", function() {
-			// 	 document.getElementsByClassName("x-tree-node-cb")[0].addEventListener("load", function() {
-			// 		console.log(".x-tree-node-cb chargé !");
-			// 	 });
-
-			// 	 document.getElementsByClassName("x-tree-node-cb")[0].addEventListener("click", function() {
-			// 		console.log(".x-tree-node-cb clické !");
-			// 	 });
-
-			// 	 console.log("tentative de click sur .x-tree-node-cb...");
-			// 	 document.getElementsByClassName("x-tree-node-cb")[0].click();
-			// 	 console.log("click sur .x-tree-node-cb !");
-			// 	}); 
+			// FIXME (CMR) tentative de bricole
+			window.addEventListener("load", function() {
+				if(document.getElementsByClassName("x-tree-node-cb")[0] != undefined) {
+					document.getElementsByClassName("x-tree-node-cb")[0].addEventListener("load", function() {
+						console.log(".x-tree-node-cb chargé !");
+					});
+					
+					document.getElementsByClassName("x-tree-node-cb")[0].addEventListener("click", function() {
+						console.log(".x-tree-node-cb clické !");
+					});
+					
+					console.log("tentative de click sur .x-tree-node-cb...");
+					document.getElementsByClassName("x-tree-node-cb")[0].click();
+					console.log("click sur .x-tree-node-cb !");
+				} else {
+					console.error('document.getElementsByClassName("x-tree-node-cb")[0] is undefined');
+				}
+			}); 
 			</script>
 		</div>
 	</body>
