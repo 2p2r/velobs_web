@@ -71,17 +71,10 @@
 			<script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Initialization...';</script> 
 
 			<script type="text/javascript">
-			// FIXME (CMR) tentative de bricole
+			// FIXME (CMR) tentative et bricole
 			window.addEventListener("load", function() {
-				if(document.getElementsByClassName("x-tree-node-cb")[0] != undefined) {
-					document.getElementsByClassName("x-tree-node-cb")[0].addEventListener("load", function() {
-						console.log(".x-tree-node-cb chargé !");
-					});
-					
-					document.getElementsByClassName("x-tree-node-cb")[0].addEventListener("click", function() {
-						console.log(".x-tree-node-cb clické !");
-					});
-					
+				// ouverture de la liste d'observations
+				if(document.getElementsByClassName("x-tree-node-cb")[0] != undefined) {					
 					console.log("tentative de click sur .x-tree-node-cb...");
 					document.getElementsByClassName("x-tree-node-cb")[0].click();
 					console.log("click sur .x-tree-node-cb !");
