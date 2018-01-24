@@ -2364,7 +2364,7 @@ En cas de question, vous pouvez trouver des informations sur https://github.com/
 					
 					}
 					$return['success'] = true;
-					$return['ok'] = "L'observation a été correctement ajoutée sous le numéro $poiId et est directement affichée (après rechargement de la page) puisque vous êtes référencé(e) comme modérateur ou administrateur de VelObs.";
+					$return['ok'] = "L'observation a été correctement ajoutée sous la référence $ref_poi et est directement affichée (après rechargement de la page) puisque vous êtes référencé(e) comme modérateur ou administrateur de VelObs.";
 						
 					//si le contributeur n'est pas un modérateur ni un administrateur par ailleurs, on envoie des mails
 					if ($num_rows2 == 0){
@@ -2384,11 +2384,31 @@ Lien vers la modération : ".URL.'/admin.php?id='.$arrayObs['id_poi']."\n".$arra
 // 						$succes = sendMails($mails);
 						
 						/* debut envoi d'un mail au contributeur */
+						$tableName = 'subcategory';
+						$sqlLibCategory = "SELECT lib_subcategory FROM subcategory WHERE id_subcategory = ".$arrayObs['subcategory_id_subcategory'];
+						$resultLibCategory = mysql_query($sqlLibCategory);
+						$rowLibCategory = mysql_fetch_assoc( $resultLibCategory );
+						$subcategory_lib = $rowLibCategory['lib_subcategory'];
+
+						$sqlLibCommune = "SELECT lib_commune FROM commune WHERE id_commune = ".$arrayObs['commune_id_commune'];
+						$resultLibCommune = mysql_query($sqlLibCommune);
+						$rowLibCommune = mysql_fetch_assoc( $resultLibCommune );
+						$commune_lib = $rowLibCommune['lib_commune'];
+
 						$subject = 'Observation en attente de modération';
-						$message = "Bonjour !
-Vous venez d'ajouter une observation à VelObs et vous en remercions. Celle-ci devrait être administrée sous peu.\n".
-$arrayDetailsAndUpdateSQL['detailObservationString']."\n
-Cordialement, l'Association ".VELOBS_ASSOCIATION." :)";
+						$message = "Bonjour,
+Vous venez​ de signaler un problème sur la plateforme Cyclo-fiche de Vélo-Cité et ​nous ​vous en remercions​!​
+​Cette information ​sera ​modérée ​prochainement par notre équipe et transférée aux services de Bordeaux Métropole.​
+Vélo-Cité vous informera des suites données à votre demande.
+​Si vous observez une amélioration, n'hésitez pas à nous ​la ​signaler​.​
+
+Référence: ".$arrayObs['ref_poi']."
+Catégorie: ".$subcategory_lib."
+Nom de la voie: ".$arrayObs['rue_poi']."
+Nom de la commune: ".$commune_lib."
+Description du problème: ".$arrayObs['desc_poi']."
+Lien vers l'observation (non visible tant que la modération n'a pas été effectuée): ".URL.'?id='.$arrayObs['id_poi']."\n\n
+Cordialement, l'équipe ".VELOBS_ASSOCIATION." :)\n05 56 81 63 89\velo-cite.org";
 						$mailArray = [$arrayObs['mail_poi'],"Soumetteur", $subject, $message ];
 						array_push($mails,$mailArray);
 				
