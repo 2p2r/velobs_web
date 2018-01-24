@@ -1,14 +1,19 @@
-.header {
+.header__logo-wrapper {
+    text-align : center;
 }
 
 .header__logo {
     height         : 100%;
-    margin         : 0px 25px!important; /* TODO (CMR) : supprimer le !important quand style="margin-left:50px" aura été supprimé du template */
     vertical-align : middle;
+    margin-left    : 0px!important; /* TODO (CMR) : supprimer le !important quand style="margin-left:50px" aura été supprimé du template */
 }
 
 .header__slogan {
-    font-size : 24px;
+    font-size : 22px;
+}
+
+.header__button-wrapper {
+    text-align : center;
 }
 
 .header__description {

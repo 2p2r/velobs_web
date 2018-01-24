@@ -3,3 +3,61 @@
     color        : red;
     margin-right : 3px;
 }
+
+.row {
+    letter-spacing  : -0.31em; /* webkit */
+    *letter-spacing : normal; /* reset IE < 8 */
+    word-spacing    : -0.43em; /* IE < 8 && gecko */
+}
+
+.row [class*=col-] {
+    display        : inline-block;
+    padding-left   : 15px;
+    padding-right  : 15px;
+    line-height    : 1.5;
+    vertical-align : middle;
+    box-sizing     : border-box;
+
+    zoom           : 1;
+    *display       : inline; /* IE < 8: fake inline-block */
+    letter-spacing : normal;
+    word-spacing   : normal;
+}
+
+.row .col-xs-1 { width : calc(1 * 100% / 12) }
+.row .col-xs-2 { width : calc(2 * 100% / 12) }
+.row .col-xs-3 { width : calc(3 * 100% / 12) }
+.row .col-xs-4 { width : calc(4 * 100% / 12) }
+.row .col-xs-5 { width : calc(5 * 100% / 12) }
+.row .col-xs-6 { width : calc(6 * 100% / 12) }
+.row .col-xs-7 { width : calc(7 * 100% / 12) }
+.row .col-xs-8 { width : calc(8 * 100% / 12) }
+.row .col-xs-9 { width : calc(9 * 100% / 12) }
+.row .col-xs-10 { width : calc(10 * 100% / 12) }
+.row .col-xs-11 { width : calc(11 * 100% / 12) }
+.row .col-xs-12 { width : calc(12 * 100% / 12) }
+
+.btn {
+    padding-top    : 6px;
+    padding-bottom : 6px;
+    padding-left   : 12px;
+    padding-right  : 12px;
+    border-radius  : 4px;
+    font-size      : 16px;
+    transition     : background-color .15s ease-in-out;
+
+    border : none;
+}
+
+.btn-primary {
+    color            : white;
+    background-color : rgb(130, 184, 226);
+}
+
+.btn-primary:hover {
+    background-color : rgba(130, 184, 226, 0.75);
+}
+
+.btn:not(:disabled):not(.disabled) {
+    cursor : pointer;
+}
