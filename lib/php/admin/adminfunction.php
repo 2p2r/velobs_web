@@ -2375,7 +2375,7 @@ En cas de question, vous pouvez trouver des informations sur https://github.com/
 						$subject = 'Nouvelle observation à modérer sur le pole '.$arrayObs['lib_pole'];
 						$message = "Bonjour !
 Une nouvelle observation a été ajoutée sur le pole ".$arrayObs['lib_pole'].". Veuillez vous connecter à l'interface d'administration pour la modérer.
-Lien vers la modération : ".(substr(URL, 0, 7) === "http://" ? 'http://': '').URL.'/admin.php?id='.$arrayObs['id_poi']."\n".$arrayDetailsAndUpdateSQL['detailObservationString']."\n";
+Lien vers la modération : ".URL.'/admin.php?id='.$arrayObs['id_poi']."\n".$arrayDetailsAndUpdateSQL['detailObservationString']."\n";
 						$mails = array();
 						$mails = getMailsToSend($whereClause, $subject, $message );
 						if (DEBUG){
@@ -2407,7 +2407,7 @@ Catégorie: ".$subcategory_lib."
 Nom de la voie: ".$arrayObs['rue_poi']."
 Nom de la commune: ".$commune_lib."
 Description du problème: ".$arrayObs['desc_poi']."
-Lien vers l'observation (non visible tant que la modération n'a pas été effectuée): ".URL.'?id='.$arrayObs['id_poi']."\n\n
+Lien vers l'observation (non visible tant que la modération n'a pas été effectuée): ".(substr(URL, 0, 7) === "http://" ? 'http://': '').URL.'?id='.$arrayObs['id_poi']."\n\n
 Cordialement, l'équipe ".VELOBS_ASSOCIATION." :)
 05 56 81 63 89
 velo-cite.org";
