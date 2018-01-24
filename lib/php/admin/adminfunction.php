@@ -2408,7 +2408,9 @@ Nom de la voie: ".$arrayObs['rue_poi']."
 Nom de la commune: ".$commune_lib."
 Description du problème: ".$arrayObs['desc_poi']."
 Lien vers l'observation (non visible tant que la modération n'a pas été effectuée): ".URL.'?id='.$arrayObs['id_poi']."\n\n
-Cordialement, l'équipe ".VELOBS_ASSOCIATION." :)\n05 56 81 63 89\velo-cite.org";
+Cordialement, l'équipe ".VELOBS_ASSOCIATION." :)
+05 56 81 63 89
+velo-cite.org";
 						$mailArray = [$arrayObs['mail_poi'],"Soumetteur", $subject, $message ];
 						array_push($mails,$mailArray);
 				

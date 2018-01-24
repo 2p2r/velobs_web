@@ -233,6 +233,7 @@
 			$observationArray['desc_poi'] = stripslashes($row['desc_poi']);
 			$observationArray['prop_poi'] = stripslashes($row['prop_poi']);
 			$observationArray['num_poi'] = stripslashes($row['num_poi']);
+			$observationArray['ref_poi'] = stripslashes($row['ref_poi']);
 			$observationArray['rue_poi'] = stripslashes($row['rue_poi']);
 			$observationArray['communename_poi'] = stripslashes($row['communename_poi']);
 			$observationArray['mailsentuser_poi'] = stripslashes($row['mailsentuser_poi']);
