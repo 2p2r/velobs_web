@@ -80,7 +80,7 @@
 	 
 			<script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Initialization...';</script> 
 		</div>
-		<div id="header">
+		<div id="header">test
 			<div id="disconnect" title="<?php echo getTranslation($_SESSION['id_language'],'DISCONNECT'); ?>" onclick="self.location.href ='lib/php/admin/disconnect.php';"></div>
 			<div id="gotopublicmap" title=<?php echo getTranslation($_SESSION['id_language'],'OPENPUBLICMAP'); ?> onclick="window.open('./');"></div>
 			<div id="hellouser""><?php if ($_SESSION['nom'] != '') {echo "[".$_SESSION['nom']."]";} ?></div>
