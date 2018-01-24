@@ -2375,7 +2375,7 @@ En cas de question, vous pouvez trouver des informations sur https://github.com/
 						$subject = 'Nouvelle observation à modérer sur le pole '.$arrayObs['lib_pole'];
 						$message = "Bonjour !
 Une nouvelle observation a été ajoutée sur le pole ".$arrayObs['lib_pole'].". Veuillez vous connecter à l'interface d'administration pour la modérer.
-Lien vers la modération : ".URL.'/admin.php?id='.$arrayObs['id_poi']."\n".$arrayDetailsAndUpdateSQL['detailObservationString']."\n";
+Lien vers la modération : ".(substr(URL, 0, 7) === "http://" ? 'http://': '').URL.'/admin.php?id='.$arrayObs['id_poi']."\n".$arrayDetailsAndUpdateSQL['detailObservationString']."\n";
 						$mails = array();
 						$mails = getMailsToSend($whereClause, $subject, $message );
 						if (DEBUG){
