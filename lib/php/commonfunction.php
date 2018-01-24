@@ -312,6 +312,11 @@
 		$arrayColumns[$numberOfColumns]['columnIntitule'] = '# Repère : ' ;
 		$arrayColumns[$numberOfColumns]['dataType'] = 'string' ;
 		$numberOfColumns++;
+		$arrayColumns[$numberOfColumns]['columnSQL'] = 'ref_poi' ;
+		$arrayColumns[$numberOfColumns]['columnPOST'] = 'ref_poi' ;
+		$arrayColumns[$numberOfColumns]['columnIntitule'] = '# Référence : ' ;
+		$arrayColumns[$numberOfColumns]['dataType'] = 'string' ;
+		$numberOfColumns++;
 		$arrayColumns[$numberOfColumns]['columnSQL'] = 'pole_id_pole' ;
 		$arrayColumns[$numberOfColumns]['columnPOST'] = 'pole_id_pole' ;
 		$arrayColumns[$numberOfColumns]['columnIntitule'] = '# Pôle : ' ;
