@@ -37,7 +37,7 @@
         $pdf->SetFont('Arial','B', 12);
         $pdf->Write(0.4, 'Commune: ');
         $pdf->SetFont('Arial', '', 12);
-        $pdf->Write(0.4, utf8_decode($poi_data['commune_poi']));
+        $pdf->Write(0.4, utf8_decode($poi_data['lib_commune']));
 
         $pdf->SetY(59);
         $pdf->SetX(79);
@@ -74,7 +74,9 @@
                 
                 $id_poi = mysql_real_escape_string($_GET['id_poi']);
             
-                $sql = "SELECT * FROM poi WHERE id_poi = ". $id_poi;
+                $sql = "SELECT poi.*, commune.lib_commune FROM poi 
+                INNER JOIN commune ON commune.id_commune = poi.commune_id_commune
+                WHERE id_poi = ". $id_poi;
                 $result = mysql_query($sql);
                 $poi = mysql_fetch_array($result);
                 
