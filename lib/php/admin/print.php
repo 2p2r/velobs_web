@@ -46,7 +46,7 @@
         $pdf->SetFont('Arial', '', 12);
         $pdf->SetY(63);
         $pdf->SetX(81);
-        $pdf->MultiCell(0, 5, utf8_decode($poi_data['num_poi']));
+        $pdf->MultiCell(0, 5, utf8_decode($poi_data['rue_poi']));
 
         $pdf->SetY(85);
         $pdf->SetX(8);
