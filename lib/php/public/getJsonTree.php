@@ -24,6 +24,7 @@
 				$json .= "text: '".addslashes($row['lib_category'])."',";
 				$json .= "iconCls: '".$row['icon_category']."',";
 				$json .= "expanded: true,";
+				$json .= "checked: true,";
 				
 				$sql2 = "SELECT subcategory.* FROM subcategory WHERE display_subcategory = TRUE AND category_id_category = ".$row['id_category']." ORDER BY treerank_subcategory ASC";
 				$result2 = mysql_query($sql2);
@@ -39,7 +40,7 @@
 							$json .= "text: '".addslashes($row2['lib_subcategory'])."',";
 							$json .= "iconCls: '".$row2['icon_subcategory']."',";
 							$json .= "leaf: true,";
-							$json .= "checked: false";
+							
 							$json .= "},";
 						}
 					}
