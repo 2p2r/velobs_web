@@ -54,7 +54,6 @@
                         print '<poi id="'.$row['id_poi'].'">';
                             print '<category><![CDATA['.stripslashes($subcategory).']]></category>';
                             print '<adresse><![CDATA['.stripslashes($row['rue_poi']).']]></adresse>';
-                            print '<ville><![CDATA['.$lib_commune.']]></ville>';
                             print '<desc><![CDATA['.stripslashes($row['desc_poi']).']]></desc>';
                             print '<distance>'.$distance.'</distance>';
                             print '<status><![CDATA['.$row['status_id_status'].']]></status>';
