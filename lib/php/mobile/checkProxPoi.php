@@ -5,7 +5,7 @@
 		case 'mysql':
 			$link = mysql_connect(HOST,DB_USER,DB_PASS);
 			mysql_select_db(DB_NAME);
-			mysql_query("SET NAMES 'utf8'");
+			mysql_query("SET NAMES utf8mb4");
 
             print '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>';
             print '<response>';

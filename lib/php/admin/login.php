@@ -6,7 +6,7 @@
 		case 'mysql':
 			$link = mysql_connect(HOST,DB_USER,DB_PASS);
 			mysql_select_db(DB_NAME);
-            mysql_query("SET NAMES 'utf8'");
+            mysql_query("SET NAMES utf8mb4");
 
 			$pseudo = mysql_real_escape_string($_POST['login']);
 			$pass = mysql_real_escape_string($_POST['password']);
