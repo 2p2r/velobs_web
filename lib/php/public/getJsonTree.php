@@ -8,41 +8,38 @@
 			mysql_query("SET NAMES utf8mb4");
 			
 			$json = "[";
-		
-			$sql = "SELECT count(p.id_poi) as nbpoi, c.* FROM category AS c 
-		INNER JOIN subcategory sc ON c.id_category = sc.category_id_category
-		INNER JOIN poi p ON p.subcategory_id_subcategory = sc.id_subcategory
-		WHERE c.display_category = TRUE AND sc.display_subcategory = TRUE
-		GROUP BY 
-			c.id_category, c.lib_category, c.icon_category, c.treerank_category, c.display_category
-		ORDER BY c.treerank_category ASC";
+			$sql = "SELECT c.* 
+					FROM category AS c
+					WHERE c.display_category = TRUE 
+					ORDER BY c.treerank_category ASC";
 		
 			$result = mysql_query($sql);
 			while ($row = mysql_fetch_array($result)){
-				$json .= "{";
-				$json .= "'id_': '".$row['id_category']."',";
-				$json .= "text: '".addslashes($row['lib_category'])."',";
-				$json .= "iconCls: '".$row['icon_category']."',";
-				$json .= "expanded: true,";
-				$json .= "checked: true,";
-				
-				$sql2 = "SELECT subcategory.* FROM subcategory WHERE display_subcategory = TRUE AND category_id_category = ".$row['id_category']." ORDER BY treerank_subcategory ASC";
+				$sql2 = "SELECT distinct(subcategory.id_subcategory), 
+							subcategory.lib_subcategory, 
+							subcategory.icon_subcategory 
+						FROM subcategory 
+						INNER JOIN poi ON (poi.subcategory_id_subcategory = subcategory.id_subcategory) 
+						WHERE display_subcategory = TRUE AND 
+							category_id_category =  ".$row['id_category']."
+						ORDER BY treerank_subcategory ASC";
 				$result2 = mysql_query($sql2);
 				if (mysql_num_rows($result2) > 0){
+					$json .= "{";
+					$json .= "'id_': '".$row['id_category']."',";
+					$json .= "text: '".addslashes($row['lib_category'])."',";
+					$json .= "iconCls: '".$row['icon_category']."',";
+					$json .= "expanded: true,";
+					$json .= "checked: true,";
 					$json .= "leaf: false,";
 					$json .= "children: [";
 					while ($row2 = mysql_fetch_array($result2)){
-						$sql3 = "SELECT poi.id_poi FROM poi INNER JOIN subcategory ON (poi.subcategory_id_subcategory = subcategory.id_subcategory) WHERE subcategory.id_subcategory = ".$row2['id_subcategory'];
-						$result3 = mysql_query($sql3);
-						if (mysql_num_rows($result3) > 0){
 							$json .= "{";
 							$json .= "id: '".$row2['id_subcategory']."',";
 							$json .= "text: '".addslashes($row2['lib_subcategory'])."',";
 							$json .= "iconCls: '".$row2['icon_subcategory']."',";
 							$json .= "leaf: true,";
-							
 							$json .= "},";
-						}
 					}
 					$json = substr($json, 0, strlen($json)-1);
 					$json .= "]";
