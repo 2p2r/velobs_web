@@ -61,18 +61,6 @@
                     print '<coderetour result="'.$num_rows.'" />';
                     print '<listpoi>';
                     while ($row = mysql_fetch_array($result)) {
-//                         $sql2 = "SELECT lib_subcategory FROM subcategory WHERE id_subcategory = ".$row['subcategory_id_subcategory'];
-//                         $result2 = mysql_query($sql2);
-//                         while ($row2 = mysql_fetch_array($result2)) {
-//                             $subcategory = $row2['lib_subcategory'];
-//                         }
-//                         mysql_free_result($result2);
-//                         $sql3 = "SELECT id_commune, lib_commune FROM commune WHERE commune.id_commune = ".$row['commune_id_commune'];
-//                         $result3 = mysql_query($sql3);
-//                         while ($row3 = mysql_fetch_array($result3)) {
-//                             $lib_commune = $row3['lib_commune'];
-//                         }
-//                         mysql_free_result($result3);
                         $distance = intval($row['distance'] * 1000);
                         print '<poi id="'.$row['id_poi'].'">';
                             print '<category><![CDATA['.stripslashes($row['lib_subcategory']).']]></category>';
@@ -87,6 +75,22 @@
                             print '<ville><![CDATA['.stripslashes($row['lib_commune']).']]></ville>';
 			    			print '<prop><![CDATA['.stripslashes($row['prop_poi']).']]></prop>';
 			    			print '<dateCreation><![CDATA['.stripslashes($row['datecreation_poi']).']]></dateCreation>';
+								
+                            print '<listcomment>';
+														
+							$sql4 = "SELECT * FROM commentaires WHERE poi_id_poi = ".$row['id_poi']." AND display_commentaires = 1";
+							$result4 = mysql_query($sql4);
+															
+							while ($row4 = mysql_fetch_array($result4)) {
+								print '<comment id="'.$row4['id_commentaires'].'">';
+								print '<textcommentaire><![CDATA['.stripslashes($row4['text_commentaires']).']]></textcommentaire>';
+								print '<urlphoto>'.$row4['url_photo'].'</urlphoto>';
+								print '<datecommentaire><![CDATA['.stripslashes($row4['datecreation']).']]></datecommentaire>';
+                               	print '</comment>';
+							}	
+							mysql_free_result($result4);
+							print '</listcomment>';		
+					
                         print '</poi>';
                     }
                     print '</listpoi>';
