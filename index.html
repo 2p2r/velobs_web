@@ -69,21 +69,6 @@
 			<script type="text/javascript" src="lib/js/public/main.js?v1.3"></script>
 	 
 			<script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Initialization...';</script> 
-
-			<script type="text/javascript">
-			// FIXME (CMR) tentatives et bricoles
-			window.addEventListener("load", function() {
-				console.log("window loaded !");
-				// ouverture de la liste d'observations
-				if(document.getElementsByClassName("x-tree-node-cb")[0] != undefined) {					
-					console.log("tentative de click sur .x-tree-node-cb...");
-					document.getElementsByClassName("x-tree-node-cb")[0].click();
-					console.log("click sur .x-tree-node-cb !");
-				} else {
-					console.error('document.getElementsByClassName("x-tree-node-cb")[0] is undefined');
-				}
-			}); 
-			</script>
 		</div>
 	</body>
 </html>
