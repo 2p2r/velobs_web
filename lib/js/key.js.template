@@ -17,3 +17,7 @@ function getCookie(sName) {
         }       
         return null;
 }
+
+//Surcharge les variables de translation_fr.js et translation_en.js
+//ajouter ici les variables des fichiers translation_fr.js et translation_en.js que vous voulez remplacer sans les perde lors d'une prochaine mise à jour
+//T_header_main = 'Une entête spécifique pour mon instance'; //texte affiché dans l'entête de l'interface publique
