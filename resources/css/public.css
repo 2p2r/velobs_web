@@ -71,6 +71,27 @@ div#header {
 	height: 110px;
 	margin-top: 7px;
 }
+div#header H1 {
+    color:blue;
+}
+div#header .statusItem{
+
+    color:blue;
+    float:left;
+    padding-left:10px;
+    text-align: center;
+}
+div#header .statusItem H2{
+
+    color:blue;
+    font-size:100%;
+}
+div#header .statusItem span{
+
+    color:blue;
+    font-weight:bold;
+    font-size:350%
+}
 div#mooveatis{
 	float: right;
 	height: 60px;
