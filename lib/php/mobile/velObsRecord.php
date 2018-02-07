@@ -12,7 +12,7 @@
             if (DEBUG){
             	error_log(date("Y-m-d H:i:s") . "  - velObsRecord.php $output\n", 3, LOG_FILE);
             }
-            //mysql_query("SET NAMES 'utf8'");
+            mysql_query("SET NAMES utf8mb4");
 			//TODO : ne faire qu'un traitement et exclusre la photo s'il n'y en a pas....
             $createObservation = 1;
             if (!isset($_POST['latitude_poi']) || !isset($_POST['longitude_poi']) || !isset($_POST['desc_poi']) || !isset($_POST['prop_poi']) || !isset($_POST['subcategory_id_subcategory']) || !isset($_POST['mail_poi']) || !isset($_POST['tel_poi']) || !isset($_POST['rue_poi']) || !isset($_POST['num_poi'])) {

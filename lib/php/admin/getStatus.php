@@ -2,12 +2,12 @@
 	session_start();
 	include_once '../key.php';
 	
-	if (isset($_SESSION['user'])) {
+	//if (isset($_SESSION['user'])) {
 		switch (SGBD) {
 			case 'mysql':
 				$link = mysql_connect(HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
-				mysql_query("SET NAMES 'utf8'");
+				mysql_query("SET NAMES utf8mb4");
 				
 				$sql = "SELECT id_status, lib_status FROM status ORDER BY lib_status ASC";
 				$result = mysql_query($sql);
@@ -26,6 +26,6 @@
 				// TODO
 				break;
 		}
-	}
+	//}
 	
 ?>

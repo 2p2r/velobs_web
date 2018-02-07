@@ -90,7 +90,7 @@
 			case 'mysql':
 				$link = mysql_connect(HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
-				mysql_query("SET NAMES 'utf8'");
+				mysql_query("SET NAMES utf8mb4");
 				
 				$sql = "SELECT * FROM iconmarker ORDER BY id_iconmarker ASC";
 				$result = mysql_query($sql);
@@ -139,7 +139,7 @@
 			case 'mysql':
 				$link = mysql_connect(HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
-				mysql_query("SET NAMES 'utf8'");
+				mysql_query("SET NAMES utf8mb4");
 				
 				$sql = "UPDATE iconmarker SET name_iconmarker = '".$name_iconmarker."', color_iconmarker = '".$color_iconmarker."' WHERE id_iconmarker = ".$id_iconmarker;
 				$result = mysql_query($sql);
@@ -172,7 +172,7 @@
 			case 'mysql':
 				$link = mysql_connect(HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
-				mysql_query("SET NAMES 'utf8'");
+				mysql_query("SET NAMES utf8mb4");
 	
 				$sql = "SELECT * FROM category ORDER BY lib_category ASC";
 				$result = mysql_query($sql);
@@ -218,7 +218,7 @@
 			case 'mysql':
 				$link = mysql_connect(HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
-				mysql_query("SET NAMES 'utf8'");
+				mysql_query("SET NAMES utf8mb4");
 	
 				if (isset($_POST['display_category'])) {
 					$display_category = $_POST['display_category'];
@@ -258,7 +258,7 @@
 			case 'mysql':
 				$link = mysql_connect(HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
-				mysql_query("SET NAMES 'utf8'");
+				mysql_query("SET NAMES utf8mb4");
 				
 				$lib_category = mysql_real_escape_string($_POST['lib_category']);
 				$icon_category = mysql_real_escape_string($_POST['icon_category']);	
@@ -306,7 +306,7 @@
 			case 'mysql':
 				$link = mysql_connect(HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
-				mysql_query("SET NAMES 'utf8'");
+				mysql_query("SET NAMES utf8mb4");
 	
 				if (sizeof($idcategorys) < 1){
 					echo '0';
@@ -352,7 +352,7 @@
 			case 'mysql':
 				$link = mysql_connect(HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
-				mysql_query("SET NAMES 'utf8'");
+				mysql_query("SET NAMES utf8mb4");
 	
 				$sql = "SELECT * FROM subcategory INNER JOIN category ON (category.id_category = subcategory.category_id_category) ORDER BY treerank_subcategory ASC";
 				$result = mysql_query($sql);
@@ -399,7 +399,7 @@
 			case 'mysql':
 				$link = mysql_connect(HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
-				mysql_query("SET NAMES 'utf8'");
+				mysql_query("SET NAMES utf8mb4");
 
 				if (isset($_POST['display_subcategory'])) {
 					$display_subcategory = $_POST['display_subcategory'];
@@ -477,7 +477,7 @@
 			case 'mysql':
 				$link = mysql_connect(HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
-				mysql_query("SET NAMES 'utf8'");
+				mysql_query("SET NAMES utf8mb4");
 				
 				$lib_subcategory = mysql_real_escape_string($_POST['lib_subcategory']);
 				$icon_subcategory = mysql_real_escape_string($_POST['icon_subcategory']);
@@ -529,7 +529,7 @@
 			case 'mysql':
 				$link = mysql_connect(HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
-				mysql_query("SET NAMES 'utf8'");
+				mysql_query("SET NAMES utf8mb4");
 	
 				if (sizeof($idsubcategorys) < 1){
 					echo '0';
@@ -578,7 +578,7 @@
 				}
 				$link = mysql_connect(HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
-				mysql_query("SET NAMES 'utf8'");
+				mysql_query("SET NAMES utf8mb4");
 				$whereClause = ' delete_poi = FALSE ';
 				if (isset($_POST["basket"])){
 					$whereClause = " delete_poi = TRUE ";
@@ -694,7 +694,7 @@
 			case 'mysql':
 				$link = mysql_connect(HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
-				mysql_query("SET NAMES 'utf8'");
+				mysql_query("SET NAMES utf8mb4");
 				
 				$arrayObs = getObservationDetailsInArray($id_poi);
 				
@@ -928,7 +928,7 @@ Lien vers la modération : ".URL.'/admin.php?id='.$arrayObs['id_poi']."\n".
 			case 'mysql':
 				$link = mysql_connect(HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
-				mysql_query("SET NAMES 'utf8'");
+				mysql_query("SET NAMES utf8mb4");
 	
 				if (sizeof($idpois) < 1){
 					echo '0';
@@ -977,7 +977,7 @@ Lien vers la modération : ".URL.'/admin.php?id='.$arrayObs['id_poi']."\n".
 			case 'mysql':
 				$link = mysql_connect(HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
-				mysql_query("SET NAMES 'utf8'");
+				mysql_query("SET NAMES utf8mb4");
 	
 				if (sizeof($idpois) < 1){
 					echo '0';
@@ -1027,7 +1027,7 @@ Lien vers la modération : ".URL.'/admin.php?id='.$arrayObs['id_poi']."\n".
 			case 'mysql':
 				$link = mysql_connect(HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
-				mysql_query("SET NAMES 'utf8'");
+				mysql_query("SET NAMES utf8mb4");
 	
 				$sql = "SELECT * FROM commune ORDER BY lib_commune ASC";
 				$result = mysql_query($sql);
@@ -1071,7 +1071,7 @@ Lien vers la modération : ".URL.'/admin.php?id='.$arrayObs['id_poi']."\n".
 			case 'mysql':
 				$link = mysql_connect(HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
-				mysql_query("SET NAMES 'utf8'");
+				mysql_query("SET NAMES utf8mb4");
 	
 				$sql = "UPDATE commune SET lib_commune = '$lib_commune' WHERE id_commune = $id_commune";
 				$result = mysql_query($sql);
@@ -1106,7 +1106,7 @@ Lien vers la modération : ".URL.'/admin.php?id='.$arrayObs['id_poi']."\n".
 			case 'mysql':
 				$link = mysql_connect(HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
-				mysql_query("SET NAMES 'utf8'");
+				mysql_query("SET NAMES utf8mb4");
 				
 				$lib_commune = mysql_real_escape_string($_POST['lib_commune']);
 				$id_commune = $_POST['id_commune'];
@@ -1144,7 +1144,7 @@ Lien vers la modération : ".URL.'/admin.php?id='.$arrayObs['id_poi']."\n".
 			case 'mysql':
 				$link = mysql_connect(HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
-				mysql_query("SET NAMES 'utf8'");
+				mysql_query("SET NAMES utf8mb4");
 	
 				if (sizeof($idcitys) < 1){
 					echo '0';
@@ -1190,7 +1190,7 @@ Lien vers la modération : ".URL.'/admin.php?id='.$arrayObs['id_poi']."\n".
 			case 'mysql':
 				$link = mysql_connect(HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
-				mysql_query("SET NAMES 'utf8'");
+				mysql_query("SET NAMES utf8mb4");
 	
 				$sql = "SELECT * FROM pole ORDER BY lib_pole ASC";
 				$result = mysql_query($sql);
@@ -1234,7 +1234,7 @@ Lien vers la modération : ".URL.'/admin.php?id='.$arrayObs['id_poi']."\n".
 			case 'mysql':
 				$link = mysql_connect(HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
-				mysql_query("SET NAMES 'utf8'");
+				mysql_query("SET NAMES utf8mb4");
 	
 				$sql = "UPDATE pole SET lib_pole = '$lib_pole' WHERE id_pole = $id_pole";
 				$result = mysql_query($sql);
@@ -1269,7 +1269,7 @@ Lien vers la modération : ".URL.'/admin.php?id='.$arrayObs['id_poi']."\n".
 			case 'mysql':
 				$link = mysql_connect(HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
-				mysql_query("SET NAMES 'utf8'");
+				mysql_query("SET NAMES utf8mb4");
 				
 				$lib_pole = mysql_real_escape_string($_POST['lib_pole']);
 				$id_pole = $_POST['id_pole'];
@@ -1307,7 +1307,7 @@ Lien vers la modération : ".URL.'/admin.php?id='.$arrayObs['id_poi']."\n".
 			case 'mysql':
 				$link = mysql_connect(HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
-				mysql_query("SET NAMES 'utf8'");
+				mysql_query("SET NAMES utf8mb4");
 	
 				if (sizeof($idpoles) < 1){
 					echo '0';
@@ -1353,7 +1353,7 @@ Lien vers la modération : ".URL.'/admin.php?id='.$arrayObs['id_poi']."\n".
 			case 'mysql':
 				$link = mysql_connect(HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
-				mysql_query("SET NAMES 'utf8'");
+				mysql_query("SET NAMES utf8mb4");
 	
 				$sql = "SELECT * FROM quartier ORDER BY lib_quartier ASC";
 				$result = mysql_query($sql);
@@ -1395,7 +1395,7 @@ Lien vers la modération : ".URL.'/admin.php?id='.$arrayObs['id_poi']."\n".
 // 			case 'mysql':
 // 				$link = mysql_connect(HOST,DB_USER,DB_PASS);
 // 				mysql_select_db(DB_NAME);
-// 				mysql_query("SET NAMES 'utf8'");
+// 				mysql_query("SET NAMES utf8mb4");
 				
 // 				$id_quartier = $_POST['id_quartier'];
 // 				$lib_quartier = $_POST['lib_quartier'];		
@@ -1431,7 +1431,7 @@ Lien vers la modération : ".URL.'/admin.php?id='.$arrayObs['id_poi']."\n".
 // 			case 'mysql':
 // 				$link = mysql_connect(HOST,DB_USER,DB_PASS);
 // 				mysql_select_db(DB_NAME);
-// 				mysql_query("SET NAMES 'utf8'");
+// 				mysql_query("SET NAMES utf8mb4");
 				
 // 				$lib_quartier = mysql_real_escape_string($_POST['lib_quartier']);		
 					
@@ -1467,7 +1467,7 @@ Lien vers la modération : ".URL.'/admin.php?id='.$arrayObs['id_poi']."\n".
 // 			case 'mysql':
 // 				$link = mysql_connect(HOST,DB_USER,DB_PASS);
 // 				mysql_select_db(DB_NAME);
-// 				mysql_query("SET NAMES 'utf8'");
+// 				mysql_query("SET NAMES utf8mb4");
 	
 // 				if (sizeof($idquartiers) < 1){
 // 					echo '0';
@@ -1512,7 +1512,7 @@ Lien vers la modération : ".URL.'/admin.php?id='.$arrayObs['id_poi']."\n".
 			case 'mysql':
 				$link = mysql_connect(HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
-				mysql_query("SET NAMES 'utf8'");
+				mysql_query("SET NAMES utf8mb4");
 	
 				$sql = "SELECT * FROM priorite ORDER BY lib_priorite ASC";
 				$result = mysql_query($sql);
@@ -1554,7 +1554,7 @@ Lien vers la modération : ".URL.'/admin.php?id='.$arrayObs['id_poi']."\n".
 			case 'mysql':
 				$link = mysql_connect(HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
-				mysql_query("SET NAMES 'utf8'");
+				mysql_query("SET NAMES utf8mb4");
 				
 				$id_priorite = $_POST['id_priorite'];
 				$lib_priorite = $_POST['lib_priorite'];		
@@ -1590,7 +1590,7 @@ Lien vers la modération : ".URL.'/admin.php?id='.$arrayObs['id_poi']."\n".
 			case 'mysql':
 				$link = mysql_connect(HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
-				mysql_query("SET NAMES 'utf8'");
+				mysql_query("SET NAMES utf8mb4");
 
 				$lib_priorite = mysql_real_escape_string($_POST['lib_priorite']);		
 					
@@ -1627,7 +1627,7 @@ Lien vers la modération : ".URL.'/admin.php?id='.$arrayObs['id_poi']."\n".
 			case 'mysql':
 				$link = mysql_connect(HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
-				mysql_query("SET NAMES 'utf8'");
+				mysql_query("SET NAMES utf8mb4");
 	
 				if (sizeof($idpriorites) < 1){
 					echo '0';
@@ -1673,7 +1673,7 @@ Lien vers la modération : ".URL.'/admin.php?id='.$arrayObs['id_poi']."\n".
 			case 'mysql':
 				$link = mysql_connect(HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
-				mysql_query("SET NAMES 'utf8'");
+				mysql_query("SET NAMES utf8mb4");
 	
 				$sql = "SELECT * FROM status ORDER BY lib_status ASC";
 				$result = mysql_query($sql);
@@ -1715,7 +1715,7 @@ Lien vers la modération : ".URL.'/admin.php?id='.$arrayObs['id_poi']."\n".
 			case 'mysql':
 				$link = mysql_connect(HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
-				mysql_query("SET NAMES 'utf8'");
+				mysql_query("SET NAMES utf8mb4");
 				
 				$id_status = $_POST['id_status'];
 				$lib_status = $_POST['lib_status'];		
@@ -1751,7 +1751,7 @@ Lien vers la modération : ".URL.'/admin.php?id='.$arrayObs['id_poi']."\n".
 			case 'mysql':
 				$link = mysql_connect(HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
-				mysql_query("SET NAMES 'utf8'");
+				mysql_query("SET NAMES utf8mb4");
 				
 				$lib_status = mysql_real_escape_string($_POST['lib_status']);		
 					
@@ -1788,7 +1788,7 @@ Lien vers la modération : ".URL.'/admin.php?id='.$arrayObs['id_poi']."\n".
 			case 'mysql':
 				$link = mysql_connect(HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
-				mysql_query("SET NAMES 'utf8'");
+				mysql_query("SET NAMES utf8mb4");
 	
 				if (sizeof($idstatuss) < 1){
 					echo '0';
@@ -1834,7 +1834,7 @@ Lien vers la modération : ".URL.'/admin.php?id='.$arrayObs['id_poi']."\n".
 			case 'mysql':
 				$link = mysql_connect(HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
-				mysql_query("SET NAMES 'utf8'");
+				mysql_query("SET NAMES utf8mb4");
 
 				$sql = "SELECT users.*, usertype.lib_usertype, pole.lib_pole, territoire.lib_territoire FROM users INNER JOIN usertype ON (usertype.id_usertype = users.usertype_id_usertype) INNER JOIN pole ON (pole.id_pole = users.num_pole) INNER JOIN territoire ON (territoire.id_territoire = users.territoire_id_territoire) ORDER BY id_users ASC";
 				$result = mysql_query($sql);
@@ -1882,7 +1882,7 @@ Lien vers la modération : ".URL.'/admin.php?id='.$arrayObs['id_poi']."\n".
 			case 'mysql':
 				$link = mysql_connect(HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
-				mysql_query("SET NAMES 'utf8'");
+				mysql_query("SET NAMES utf8mb4");
 
 				$id_users = mysql_real_escape_string($_POST['id_users']);
 				$lib_users = mysql_real_escape_string($_POST['lib_users']);
@@ -1933,7 +1933,7 @@ Lien vers la modération : ".URL.'/admin.php?id='.$arrayObs['id_poi']."\n".
 			case 'mysql':
 				$link = mysql_connect(HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
-				mysql_query("SET NAMES 'utf8'");
+				mysql_query("SET NAMES utf8mb4");
 
 				$lib_users = mysql_real_escape_string($_POST['lib_users']);
 				$nom_users = mysql_real_escape_string($_POST['nom_users']);
@@ -1984,7 +1984,7 @@ En cas de question, vous pouvez trouver des informations sur https://github.com/
 			case 'mysql':
 				$link = mysql_connect(HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
-				mysql_query("SET NAMES 'utf8'");
+				mysql_query("SET NAMES utf8mb4");
 
 				if (sizeof($idusers) < 1){
 					echo '0';
@@ -2032,7 +2032,7 @@ En cas de question, vous pouvez trouver des informations sur https://github.com/
 			case 'mysql':
 				$link = mysql_connect(HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
-				mysql_query("SET NAMES 'utf8'");
+				mysql_query("SET NAMES utf8mb4");
 	
 				$sql = "SELECT photo_poi FROM poi WHERE id_poi = $id_poi";
 				$result = mysql_query($sql);
@@ -2074,7 +2074,7 @@ En cas de question, vous pouvez trouver des informations sur https://github.com/
 			case 'mysql':
 				$link = mysql_connect(HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
-				mysql_query("SET NAMES 'utf8'");
+				mysql_query("SET NAMES utf8mb4");
 				$locations = getLocations($latitude_poi,$longitude_poi);
 				if (DEBUG){
 					//error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - " . getLocations($latitude_poi,$longitude_poi)[1]."\n", 3, LOG_FILE);
@@ -2121,7 +2121,7 @@ En cas de question, vous pouvez trouver des informations sur https://github.com/
 			case 'mysql':
 				$link = mysql_connect(HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
-				mysql_query("SET NAMES 'utf8'");
+				mysql_query("SET NAMES utf8mb4");
 				
 				$sql = "UPDATE poi SET geom_poi = NULL, geolocatemode_poi = NULL WHERE id_poi = $id_poi";
 				$result = mysql_query($sql);
@@ -2160,7 +2160,7 @@ En cas de question, vous pouvez trouver des informations sur https://github.com/
 			case 'mysql':
 				$link = mysql_connect(HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
-				mysql_query("SET NAMES 'utf8'");
+				mysql_query("SET NAMES utf8mb4");
 				
 				$sql = "UPDATE configmap SET lat_configmap = ".$lat.", lon_configmap = ".$lon.", zoom_configmap = ".$zoom.", baselayer_configmap = ".$baselayer." WHERE id_configmap = 1";
 				$result = mysql_query($sql);
@@ -2193,7 +2193,7 @@ En cas de question, vous pouvez trouver des informations sur https://github.com/
 			case 'mysql':
 				$link = mysql_connect(HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
-				mysql_query("SET NAMES 'utf8'");
+				mysql_query("SET NAMES utf8mb4");
 				
 				$num_poi = mysql_real_escape_string($_POST['num_poi']);
 				$mail_poi = mysql_real_escape_string($_POST['mail_poi']);
@@ -2420,7 +2420,7 @@ Cordialement, l'Association ".VELOBS_ASSOCIATION." :)";
 			case 'mysql':
 				$link = mysql_connect(HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
-				mysql_query("SET NAMES 'utf8'");
+				mysql_query("SET NAMES utf8mb4");
 	
 				$sql = "SELECT id_subcategory FROM subcategory WHERE proppublic_subcategory = 1";
 				$result = mysql_query($sql);
@@ -2454,7 +2454,7 @@ Cordialement, l'Association ".VELOBS_ASSOCIATION." :)";
 			case 'mysql':
 				$link = mysql_connect(HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
-				mysql_query("SET NAMES 'utf8'");
+				mysql_query("SET NAMES utf8mb4");
 
 				$line = -1;
 				switch ($usertype) {
@@ -2602,7 +2602,7 @@ Cordialement, l'Association ".VELOBS_ASSOCIATION." :)";
 			case 'mysql':
 				$link = mysql_connect(HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
-				mysql_query("SET NAMES 'utf8'");
+				mysql_query("SET NAMES utf8mb4");
 
 				$sql = "SELECT * FROM commentaires WHERE poi_id_poi = ".$id_poi;
 				$result = mysql_query($sql);
@@ -2646,7 +2646,7 @@ Cordialement, l'Association ".VELOBS_ASSOCIATION." :)";
 			case 'mysql':
 				$link = mysql_connect(HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
-				mysql_query("SET NAMES 'utf8'");
+				mysql_query("SET NAMES utf8mb4");
 
 
 				$sql = "UPDATE commentaires SET display_commentaires = $display_comment WHERE id_commentaires = $id_comment";
@@ -2679,7 +2679,7 @@ Cordialement, l'Association ".VELOBS_ASSOCIATION." :)";
 			case 'mysql':
 				$link = mysql_connect(HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
-				mysql_query("SET NAMES 'utf8'");
+				mysql_query("SET NAMES utf8mb4");
 
 				$text = mysql_real_escape_string($text_comment);
 				$sql = "UPDATE commentaires SET text_commentaires = '$text' WHERE id_commentaires = $id_comment";
@@ -2724,7 +2724,7 @@ Cordialement, l'Association ".VELOBS_ASSOCIATION." :)";
 				}
 				$link = mysql_connect(HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
-				mysql_query("SET NAMES 'utf8'");
+				mysql_query("SET NAMES utf8mb4");
 
 				$id_poi = $_POST['id_poi'];
 				$text = mysql_real_escape_string($_POST['text_comment']);
