@@ -730,7 +730,7 @@ Le pole '.$arrayObs['lib_pole'].' a modifié l\'observation n°'.$arrayObs['id_p
 						}
 
 						// Modération
-						if (arrayObs['moderation_poi'] != $_POST['moderation_poi'] && $_POST['moderation_poi']) {
+						if ($arrayObs['moderation_poi'] != $_POST['moderation_poi'] && $_POST['moderation_poi']) {
 							$subject = 'Nouvelle cyclofiche ' . $arrayObs['ref_poi'];
 							$message = "Bonjour,
 Une nouvelle cyclofiche a été renseignée sous la référence ".$arrayObs['ref_poi']." et modérée par l'Association ".VELOBS_ASSOCIATION.".
