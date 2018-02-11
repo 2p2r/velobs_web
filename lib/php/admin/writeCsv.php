@@ -78,13 +78,15 @@
 											y(poi.geom_poi) AS Y, 
 											lib_category, 
 											lib_subcategory, 
-											lib_commune 
+											lib_commune,
+											lib_status 
 										FROM poi 
 											INNER JOIN subcategory ON (subcategory.id_subcategory = poi.subcategory_id_subcategory) 
 											INNER JOIN category ON (subcategory.category_id_category = category.id_category) 
 											INNER JOIN commune ON (commune.id_commune = poi.commune_id_commune) 
 											INNER JOIN pole ON (pole.id_pole = poi.pole_id_pole) 
-											INNER JOIN priorite ON (priorite.id_priorite = poi.priorite_id_priorite) 
+											INNER JOIN priorite ON (priorite.id_priorite = poi.priorite_id_priorite)
+											INNER JOIN status ON (status.id_status = poi.status_id_status) 
 										WHERE 
 											poi.delete_poi = FALSE 
 											$extraSQL
