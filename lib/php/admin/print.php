@@ -37,7 +37,7 @@
         $pdf->SetFont('Arial','B', 12);
         $pdf->Write(0.4, 'Commune: ');
         $pdf->SetFont('Arial', '', 12);
-        $pdf->Write(0.4, utf8_decode($poi_data['commune_poi']));
+        $pdf->Write(0.4, utf8_decode($poi_data['lib_commune']));
 
         $pdf->SetY(59);
         $pdf->SetX(79);
@@ -46,12 +46,12 @@
         $pdf->SetFont('Arial', '', 12);
         $pdf->SetY(63);
         $pdf->SetX(81);
-        $pdf->MultiCell(0, 5, utf8_decode($poi_data['num_poi']));
+        $pdf->MultiCell(0, 5, utf8_decode($poi_data['rue_poi']));
 
         $pdf->SetY(85);
         $pdf->SetX(8);
         $pdf->SetFont('Arial', 'B', 16);
-        $pdf->Cell(0, 10, utf8_decode($poi_data['lib_poi']), '', 2, 'C');
+        $pdf->Cell(0, 10, utf8_decode($poi_data['lib_subcategory']), '', 2, 'C');
 
         $pdf->SetFont('Arial', '', 12);
         $pdf->MultiCell(0, 5, utf8_decode($poi_data['desc_poi'] . "\n\n"));
@@ -74,7 +74,10 @@
                 
                 $id_poi = mysql_real_escape_string($_GET['id_poi']);
             
-                $sql = "SELECT * FROM poi WHERE id_poi = ". $id_poi;
+                $sql = "SELECT poi.*, commune.lib_commune, subcategory.lib_subcategory FROM poi 
+                INNER JOIN commune ON commune.id_commune = poi.commune_id_commune
+                INNER JOIN subcategory ON subcategory.id_subcategory = poi.subcategory_id_subcategory
+                WHERE id_poi = ". $id_poi;
                 $result = mysql_query($sql);
                 $poi = mysql_fetch_array($result);
                 
