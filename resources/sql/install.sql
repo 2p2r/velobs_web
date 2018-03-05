@@ -9,7 +9,7 @@ CREATE TABLE `category` (
   `treerank_category` int(11) DEFAULT NULL,
   `display_category` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`id_category`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE = utf8mb4_unicode_ci AUTO_INCREMENT=1;
 
 
 INSERT INTO `category` (`id_category`, `lib_category`, `icon_category`, `treerank_category`, `display_category`) VALUES
@@ -25,7 +25,7 @@ CREATE TABLE `subcategory` (
   `category_id_category` int(11) DEFAULT NULL,
   PRIMARY KEY (`id_subcategory`), 
   KEY `category_id_category` (`category_id_category`)
-) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE = utf8mb4_unicode_ci AUTO_INCREMENT=1;
 
 
 INSERT INTO `subcategory` (`id_subcategory`, `lib_subcategory`, `icon_subcategory`, `treerank_subcategory`, `display_subcategory`, `proppublic_subcategory`, `category_id_category`) VALUES
@@ -50,7 +50,7 @@ CREATE TABLE `territoire` (
   `type_territoire` int(11) NOT NULL,
   `ids_territoire` varchar(4096) NOT NULL,
   PRIMARY KEY (`id_territoire`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE = utf8mb4_unicode_ci AUTO_INCREMENT=1;
 
 
 INSERT INTO `territoire` (`id_territoire`, `lib_territoire`, `type_territoire`, `ids_territoire`) VALUES
@@ -62,7 +62,7 @@ CREATE TABLE `pole` (
   `geom_pole` geometry DEFAULT NULL,
   `territoire_id_territoire` int(11) NOT NULL,
   PRIMARY KEY (`id_pole`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE = utf8mb4_unicode_ci AUTO_INCREMENT=1;
 
 INSERT INTO `pole` (`id_pole`, `lib_pole`, `geom_pole`, `territoire_id_territoire`) VALUES
 (9, 'Hors zone urbaine', NULL, 0),
@@ -75,14 +75,14 @@ CREATE TABLE `configmap` (
   `zoom_configmap` int(11) DEFAULT NULL,
   `baselayer_configmap` int(11) DEFAULT NULL,
   PRIMARY KEY (`id_configmap`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE = utf8mb4_unicode_ci AUTO_INCREMENT=1;
 
 CREATE TABLE `language` (
 `id_language` int(11) NOT NULL AUTO_INCREMENT,
   `lib_language` varchar(100) DEFAULT NULL,
   `extension_language` varchar(10) DEFAULT NULL,
   PRIMARY KEY (`id_language`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE = utf8mb4_unicode_ci AUTO_INCREMENT=1;
 
 INSERT INTO `language` (`id_language`, `lib_language`, `extension_language`) VALUES
 (1, 'France', 'fr'),
@@ -95,7 +95,7 @@ CREATE TABLE `translation` (
   `language_id_language` int(11) DEFAULT NULL,
   PRIMARY KEY (`id_translation`), 
   KEY `language_id_language` (`language_id_language`)
-) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8mb4 COLLATE = utf8mb4_unicode_ci AUTO_INCREMENT=1;
 
 
 INSERT INTO `translation` (`id_translation`, `code_translation`, `lib_translation`, `language_id_language`) VALUES
@@ -138,7 +138,7 @@ CREATE TABLE `commune` (
   `lib_commune` varchar(100) DEFAULT NULL,
   `geom_commune` geometry DEFAULT NULL,
   PRIMARY KEY (`id_commune`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE = utf8mb4_unicode_ci AUTO_INCREMENT=1;
 
 INSERT INTO `commune` (`id_commune`, `lib_commune`, `geom_commune`) VALUES (99999, 'Autre commune', NULL);
 
@@ -146,7 +146,7 @@ CREATE TABLE `usertype` (
 `id_usertype` int(11) NOT NULL AUTO_INCREMENT,
   `lib_usertype` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`id_usertype`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE = utf8mb4_unicode_ci AUTO_INCREMENT=1;
 
 INSERT INTO `usertype` (`id_usertype`, `lib_usertype`) VALUES
 (1, 'Administrateur'),
@@ -168,7 +168,7 @@ CREATE TABLE `users` (
   KEY `usertype_id_usertype` (`usertype_id_usertype`), 
   KEY `language_id_language` (`language_id_language`), 
   KEY `territoire_id_territoire` (`territoire_id_territoire`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE = utf8mb4_unicode_ci AUTO_INCREMENT=1;
 
 INSERT INTO `users` (`id_users`, `lib_users`, `pass_users`, `num_pole`, `usertype_id_usertype`, `language_id_language`, `territoire_id_territoire`, `mail_users`, `nom_users`) VALUES
 (1, 'admin', 'admin', 12, 1, 1, 0, 'test@velobs.org', 'Administrateur VelObs');
@@ -183,7 +183,7 @@ CREATE TABLE `priorite` (
 `id_priorite` int(11) NOT NULL AUTO_INCREMENT,
   `lib_priorite` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`id_priorite`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE = utf8mb4_unicode_ci AUTO_INCREMENT=1;
 
 
 INSERT INTO `priorite` (`id_priorite`, `lib_priorite`) VALUES
@@ -200,14 +200,14 @@ CREATE TABLE `quartier` (
 `id_quartier` int(11) NOT NULL AUTO_INCREMENT,
   `lib_quartier` varchar(100) DEFAULT NULL,
  PRIMARY KEY (`id_quartier`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE = utf8mb4_unicode_ci AUTO_INCREMENT=1;
 INSERT INTO `quartier` (`id_quartier`, `lib_quartier`) VALUES (99999, 'Inutile');
 
 CREATE TABLE `status` (
 `id_status` int(11) NOT NULL AUTO_INCREMENT,
   `lib_status` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`id_status`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE = utf8mb4_unicode_ci AUTO_INCREMENT=1;
 
 INSERT INTO `status` (`id_status`, `lib_status`) VALUES
 (1, 'En cours'),
@@ -223,7 +223,7 @@ CREATE TABLE `iconmarker` (
   `urlname_iconmarker` varchar(100) DEFAULT NULL,
   `color_iconmarker` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`id_iconmarker`)
-) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE = utf8mb4_unicode_ci AUTO_INCREMENT=1;
 
 
 
@@ -298,7 +298,7 @@ CREATE TABLE IF NOT EXISTS `poi` (
   KEY `quartier_id_quartier` (`quartier_id_quartier`),
   KEY `priorite_id_priorite` (`priorite_id_priorite`),
   KEY `status_id_status` (`status_id_status`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE = utf8mb4_unicode_ci AUTO_INCREMENT=1 AUTO_INCREMENT=1 ;
 
 ALTER TABLE `poi`
   ADD CONSTRAINT `poi_ibfk_1` FOREIGN KEY (`subcategory_id_subcategory`) REFERENCES `subcategory` (`id_subcategory`),
@@ -318,7 +318,7 @@ CREATE TABLE IF NOT EXISTS `commentaires` (
   `mail_commentaires` varchar(100) DEFAULT NULL,
   `poi_id_poi` int(11) NOT NULL,
     PRIMARY KEY (`id_commentaires`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE = utf8mb4_unicode_ci AUTO_INCREMENT=1 AUTO_INCREMENT=1;
 
 
 ALTER TABLE `commentaires`

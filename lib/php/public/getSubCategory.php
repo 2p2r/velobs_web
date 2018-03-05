@@ -5,7 +5,7 @@
 		case 'mysql':
 			$link = mysql_connect(HOST,DB_USER,DB_PASS);
 			mysql_select_db(DB_NAME);
-			mysql_query("SET NAMES 'utf8'");
+			mysql_query("SET NAMES utf8mb4");
 			
 			$sql = "SELECT id_subcategory, lib_subcategory FROM subcategory WHERE proppublic_subcategory = TRUE ORDER BY lib_subcategory ASC";
 			$result = mysql_query($sql);

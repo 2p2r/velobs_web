@@ -10,7 +10,7 @@
 				}
 				$link = mysql_connect(HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
-				mysql_query("SET NAMES 'utf8'");
+				mysql_query("SET NAMES utf8mb4");
 				
 				if (isset($_GET['id'])) {
 					if (DEBUG) {

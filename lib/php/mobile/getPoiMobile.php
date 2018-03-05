@@ -5,12 +5,12 @@
 		case 'mysql':
 			$link = mysql_connect(HOST,DB_USER,DB_PASS);
 			mysql_select_db(DB_NAME);
-			mysql_query("SET NAMES 'utf8'");
+			mysql_query("SET NAMES utf8mb4");
 
 			$id_poi = $_GET['id'];
 
 			$sql = "SELECT id_poi, num_poi, rue_poi, commune_id_commune, photo_poi, desc_poi FROM poi WHERE id_poi = ".$id_poi;
-            mysql_query("SET NAMES 'utf8'");
+            mysql_query("SET NAMES utf8mb4");
 			$result = mysql_query($sql);
 			print '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>';
 			print '<response>';
