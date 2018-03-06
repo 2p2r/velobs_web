@@ -20,7 +20,9 @@
 		<link rel="shortcut icon" type="image/png" href="resources/favicon/favicon.jpg" />
 	</head>
 	<body onunload="setCookie()">
-		<div id="loading"> 
+		<script>console.log(1);</script>
+		<div id="loading"
+			 class="loading"> 
 			<div class="loading-indicator">
 				<img alt="VelObs" src="resources/images/logo-admin.png" height="64" style="margin-right:8px;float:left;vertical-align:top;"/>Cyclo-fiches - <a href="https://www.velo-cite.org/" target="_blank">Vélo-Cité</a><br /><span id="loading-msg">Loading styles and images ...</span>
 			</div>
@@ -104,6 +106,7 @@
 		<link rel="shortcut icon" type="image/png" href="resources/favicon/favicon.jpg" />
 	</head>
 	<body>
+		<script>console.log(2);</script>
 		<div id="loading"
 			 class="loading"> 
 			<div class="loading-indicator">
@@ -191,6 +194,7 @@
 		<link rel="shortcut icon" type="image/png" href="resources/favicon/favicon.jpg" />
 	</head>
 	<body onunload="setCookie()">
+		<script>console.log(3);</script>
 		<div id="loading"
 			 class="loading"> 
 			<div class="loading-indicator">
@@ -280,6 +284,7 @@
 		<link rel="shortcut icon" type="image/png" href="resources/favicon/favicon.jpg" />
 	</head>
 	<body onunload="setCookie()">
+		<script>console.log(4);</script>
 		<div id="loading"
 			 class="loading"> 
 			<div class="loading-indicator">
