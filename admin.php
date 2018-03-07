@@ -86,8 +86,7 @@
 			<div id="hellouser""><?php if ($_SESSION['nom'] != '') {echo "[".$_SESSION['nom']."]";} ?></div>
 			<div id="update" style="display:none;"></div>
 		</div>
-	</body>
-</html>
+
 <?php			
 				break;
 			case '2':
@@ -165,8 +164,7 @@
 			<div id="hellouser"><?php if ($_SESSION['nom'] != '') {echo "[".$_SESSION['nom']."]";} ?></div>
 			<div id="update" style="display:none;"></div>
 		</div>
-	</body>
-</html>
+
 <?php
 				break;
 			case '3':
@@ -246,8 +244,7 @@
 			<div id="hellouser"><?php if ($_SESSION['nom'] != '') {echo "[".$_SESSION['nom']."]";} ?></div>
 			<div id="update" style="display:none;"></div>
 		</div>
-	</body>
-</html>			
+		
 <?php
 				break;
 		    case '4':
@@ -330,13 +327,18 @@
 			<div id="hellouser"><?php if ($_SESSION['nom'] != '') {echo "[".$_SESSION['nom']."]";} ?></div>
 			<div id="update" style="display:none;"></div>
 		</div>
-	</body>
-</html>
+
 <?php
 		        break;
 			default:
 				break;
 		}
+		//adds custom code from lib/php/key.php
+		echo INCLUDE_CODE_HTML_ADMIN;
+?>		
+	</body>
+	</html>
+<?php
 	} else {
 	    if (isset($_GET['id']) && $_GET['id'] != '') {
             header('Location: ./admin.html?id='.$_GET['id']);

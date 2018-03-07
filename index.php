@@ -1,3 +1,6 @@
+<?php
+    include_once 'lib/php/key.php';
+?>
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
@@ -50,5 +53,9 @@
 	 
 			<script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Initialization...';</script> 
 		</div>
+<?php
+//add custom code from lib/php/key.php
+echo INCLUDE_CODE_HTML_PUBLIC;
+?>
 	</body>
 </html>
