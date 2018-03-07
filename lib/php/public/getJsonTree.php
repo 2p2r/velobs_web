@@ -23,6 +23,7 @@
 						INNER JOIN poi ON (poi.subcategory_id_subcategory = subcategory.id_subcategory) 
 						WHERE display_subcategory = TRUE AND 
 							category_id_category =  ".$row['id_category']."
+						AND p.delete_poi = 0
 						GROUP BY subcategory.id_subcategory 
 						ORDER BY treerank_subcategory ASC";
 				$result2 = mysql_query($sql2);
