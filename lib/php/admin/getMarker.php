@@ -30,7 +30,12 @@
 					}
 					$sqlappend = substr($sqlappend, 0, strlen($sqlappend)-3);
 					$sqlappend .= " ) AND poi.display_poi = TRUE AND poi.fix_poi = FALSE";
-			
+					if (isset($_GET['priority']) && $_GET['priority'] != ''){
+						$sqlappend .= " AND poi.priorite_id_priorite = " .$_GET['priority'] ;
+					}
+					if($_SESSION["type"] == 4){
+						$sqlappend .= ' AND poi.pole_id_pole = ' . $_SESSION["pole"] . ' ';
+					}
 					$sql = "SELECT *, commune.lib_commune, x(poi.geom_poi) AS X, y(poi.geom_poi) AS Y, subcategory.icon_subcategory FROM poi INNER JOIN subcategory ON (subcategory.id_subcategory = poi.subcategory_id_subcategory) INNER JOIN commune ON (commune.id_commune = poi.commune_id_commune) INNER JOIN priorite ON (poi.priorite_id_priorite = priorite.id_priorite)";
 					$sql .= $sqlappend;
 				}
