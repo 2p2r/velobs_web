@@ -12,7 +12,9 @@
 					FROM category AS c
 					WHERE c.display_category = TRUE 
 					ORDER BY c.treerank_category ASC";
-		
+			if (DEBUG){
+				error_log(date("Y-m-d H:i:s") . " - getJsonTree.php $sql \n", 3, LOG_FILE);
+			}
 			$result = mysql_query($sql);
 			while ($row = mysql_fetch_array($result)){
 				$sql2 = "SELECT distinct(subcategory.id_subcategory), 
@@ -23,10 +25,17 @@
 						INNER JOIN poi ON (poi.subcategory_id_subcategory = subcategory.id_subcategory) 
 						WHERE display_subcategory = TRUE AND 
 							category_id_category =  ".$row['id_category']."
+						AND poi.delete_poi = 0
 						GROUP BY subcategory.id_subcategory 
 						ORDER BY treerank_subcategory ASC";
+				if (DEBUG){
+					error_log(date("Y-m-d H:i:s") . " - getJsonTree.php $sql2 \n", 3, LOG_FILE);
+				}
 				$result2 = mysql_query($sql2);
 				if (mysql_num_rows($result2) > 0){
+					if (DEBUG){
+						error_log(date("Y-m-d H:i:s") . " - getJsonTree.php  ". $row['id_category'], 3, LOG_FILE);
+					}
 					$json .= "{";
 					$json .= "'id_': '".$row['id_category']."',";
 					$json .= "text: '".addslashes($row['lib_category'])."',";

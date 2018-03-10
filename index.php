@@ -1,3 +1,6 @@
+<?php
+    include_once 'lib/php/key.php';
+?>
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
@@ -29,14 +32,14 @@
 	
 			<script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Loading language...';</script>
 			<script type="text/javascript" src="lib/js/framework/ext-3.4.0/src/locale/ext-lang-fr.js"></script>
-			<script type="text/javascript" src="lib/js/translation_fr.js?v1.3"></script>
-            <script type="text/javascript" src="lib/js/key.js?v1.3"></script>
+			<script type="text/javascript" src="lib/js/translation_fr.js?v1.4.3"></script>
+            <script type="text/javascript" src="lib/js/key.js?v1.4.3"></script>
 			
 			<script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Loading extensions...';</script>
 			<script type="text/javascript" src="lib/js/framework/ux/GeoNamesSearchCombo.js"></script>
             <script type="text/javascript" src="lib/js/public/poidisplaystatus.js"></script>
 			<script type="text/javascript" src="lib/js/public/poidisplaydate.js"></script>
-			<script type="text/javascript" src="lib/js/public/baselayerlist.js"></script>
+			<script type="text/javascript" src="lib/js/public/baselayerlist.js?v1.4.3"></script>
 			<script type="text/javascript" src="lib/js/framework/ux/FileUploadField.js"></script>
 			<script type="text/javascript" src="lib/js/framework/ux/IconCombo.js"></script>
 	
@@ -44,11 +47,15 @@
 			
 			<script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Loading application...';</script>
 			<script type="text/javascript" src="lib/js/public/credits.js"></script>
-			<script type="text/javascript" src="lib/js/public/proposition.js?v1.3"></script>
-			<script type="text/javascript" src="lib/js/public/map.js?v1.3"></script>
-			<script type="text/javascript" src="lib/js/public/main.js?v1.3"></script>
+			<script type="text/javascript" src="lib/js/public/proposition.js?v1.4.3"></script>
+			<script type="text/javascript" src="lib/js/public/map.js?v1.4.3"></script>
+			<script type="text/javascript" src="lib/js/public/main.js?v1.4.3"></script>
 	 
 			<script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Initialization...';</script> 
 		</div>
+<?php
+//add custom code from lib/php/key.php
+echo INCLUDE_CODE_HTML_PUBLIC;
+?>
 	</body>
 </html>

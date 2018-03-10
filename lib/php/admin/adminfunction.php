@@ -584,7 +584,10 @@
 					$whereClause = " delete_poi = TRUE ";
 				}
 				
-				if ($_SESSION["type"] == 2){
+				if ($_SESSION["type"] == 1 && isset($_POST["priority"])){
+					$whereClause .= ' AND priorite.id_priorite = '.$_POST["priority"] ;
+					
+				}elseif ($_SESSION["type"] == 2){
 					$whereClause .= ' AND moderation_poi = 1 AND display_poi = 1 AND commune_id_commune IN ('.str_replace(';',',',$_SESSION['territoire']).') AND delete_poi = FALSE AND priorite.id_priorite <> 7 AND priorite.id_priorite <> 15 ';
 					
 				}elseif($_SESSION["type"] == 3){
