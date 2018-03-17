@@ -1889,7 +1889,7 @@ Lien vers la modération : ".URL.'/admin.php?id='.$arrayObs['id_poi']."\n".
 
 				$id_users = mysql_real_escape_string($_POST['id_users']);
 				$lib_users = mysql_real_escape_string($_POST['lib_users']);
-				$pass_users = create_password_hash(mysql_real_escape_string($_POST['pass_users']),PASSWORD_BCRYPT);
+				$pass_users = create_password_hash($_POST['pass_users'],'PASSWORD_BCRYPT');
 				$mail_users = mysql_real_escape_string($_POST['mail_users']);
 				$nom_users = mysql_real_escape_string($_POST['nom_users']);
 
@@ -1940,7 +1940,7 @@ Lien vers la modération : ".URL.'/admin.php?id='.$arrayObs['id_poi']."\n".
 
 				$lib_users = mysql_real_escape_string($_POST['lib_users']);
 				$nom_users = mysql_real_escape_string($_POST['nom_users']);
-				$pass_users = create_password_hash(mysql_real_escape_string($_POST['pass_users']),PASSWORD_BCRYPT);
+				$pass_users = create_password_hash($_POST['pass_users'],'PASSWORD_BCRYPT');
 				$mail_users = mysql_real_escape_string($_POST['mail_users']);
 
 				$usertype_id_usertype = $_POST['usertype_id_usertype'];
