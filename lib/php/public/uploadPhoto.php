@@ -13,7 +13,7 @@
 					error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - fichier : ".$_FILES['photo-path']." et poi id = ".$_POST['id_POI']."\n", 3, LOG_FILE);
 				}
 				if ($_FILES['photo-path']['name'] != '') {
-					$link = mysql_connect(HOST,DB_USER,DB_PASS);
+					$link = mysql_connect(DB_HOST,DB_USER,DB_PASS);
 					mysql_select_db(DB_NAME);	
 					
 					$dossier = '../../../resources/pictures/';

@@ -1,14 +1,14 @@
 <?php
 include_once '../../lib/php/key.php';
 
-$link = mysql_connect(HOST,DB_USER,DB_PASS);
+$link = mysql_connect(DB_HOST,DB_USER,DB_PASS);
 mysql_select_db(DB_NAME);
 mysql_query("SET NAMES utf8mb4");
 if (DEBUG){
 	error_log(date("Y-m-d H:i:s") . " Entrée dans upgradeSQL.php \n", 3, LOG_FILE);
 }
 echo "Mise à jour des mots de passe avec blowfish_crypt (https://github.com/2p2r/velobs_web/issues/109)<br />\n";
-$link = mysql_connect(HOST,DB_USER,DB_PASS);
+$link = mysql_connect(DB_HOST,DB_USER,DB_PASS);
 mysql_select_db(DB_NAME);
 mysql_query("SET NAMES utf8mb4");
 

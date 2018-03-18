@@ -10,7 +10,7 @@ if (isset ( $_SESSION ['user'] )) {
 			if (DEBUG) {
 				error_log ( date ( "Y-m-d H:i:s" ) . " - admin/getMarker.php\n", 3, LOG_FILE );
 			}
-			$link = mysql_connect ( HOST, DB_USER, DB_PASS );
+			$link = mysql_connect ( DB_HOST, DB_USER, DB_PASS );
 			mysql_select_db ( DB_NAME );
 			mysql_query ( "SET NAMES utf8mb4" );
 			$sql = "SELECT *, commune.lib_commune, x(poi.geom_poi) AS X, y(poi.geom_poi) AS Y, subcategory.icon_subcategory FROM poi INNER JOIN subcategory ON (subcategory.id_subcategory = poi.subcategory_id_subcategory) INNER JOIN commune ON (commune.id_commune = poi.commune_id_commune) INNER JOIN priorite ON (poi.priorite_id_priorite = priorite.id_priorite) ";

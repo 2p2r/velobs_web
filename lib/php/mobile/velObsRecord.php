@@ -6,7 +6,7 @@
 
 	switch (SGBD) {
         case 'mysql':
-            $link = mysql_connect(HOST,DB_USER,DB_PASS);
+            $link = mysql_connect(DB_HOST,DB_USER,DB_PASS);
             mysql_select_db(DB_NAME);
             $output = var_export($_POST, true);
             if (DEBUG){
