@@ -1,8 +1,7 @@
 <?php
 	define('DEBUG', FALSE);
 	define('LOG_FILE', 'Path to log file');
-	define('HOST', 'localhost');
-	define('PORT', '3306');
+	define('DB_HOST', 'localhost:3306');
 
 	define('SGBD', 'mysql');
 

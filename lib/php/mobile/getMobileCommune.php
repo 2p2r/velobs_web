@@ -3,7 +3,7 @@
 	
 	switch (SGBD) {
 		case 'mysql':
-			$link = mysql_connect(HOST,DB_USER,DB_PASS);
+			$link = mysql_connect(DB_HOST,DB_USER,DB_PASS);
 			mysql_select_db(DB_NAME);	
 			
 			$sql = "SELECT id_commune, lib_commune FROM commune ORDER BY id_commune ASC";
