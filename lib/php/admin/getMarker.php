@@ -15,6 +15,9 @@ if (isset ( $_SESSION ['user'] )) {
 			mysql_query ( "SET NAMES utf8mb4" );
 			$sql = "SELECT *, commune.lib_commune, x(poi.geom_poi) AS X, y(poi.geom_poi) AS Y, subcategory.icon_subcategory FROM poi INNER JOIN subcategory ON (subcategory.id_subcategory = poi.subcategory_id_subcategory) INNER JOIN commune ON (commune.id_commune = poi.commune_id_commune) INNER JOIN priorite ON (poi.priorite_id_priorite = priorite.id_priorite) ";
 			$sqlappend = ' WHERE ';
+			//TODO : chek user type and pole
+			
+			
 			if (isset ( $_GET ['id'] )) {
 				if (DEBUG) {
 					error_log ( date ( "Y-m-d H:i:s" ) . " - admin/getMarker.php avec id\n", 3, LOG_FILE );
@@ -32,17 +35,19 @@ if (isset ( $_SESSION ['user'] )) {
 				}
 // 				$tabListType = preg_split ( '#,#', $listType );
 				$sqlappend .= " poi.geom_poi IS NOT NULL AND subcategory_id_subcategory IN ( ".$listType.") AND poi.display_poi = TRUE AND poi.fix_poi = FALSE";
-// 				for($i = 0; $i < count ( $tabListType ); $i ++) {
-// 					$sqlappend .= " subcategory_id_subcategory = " . $tabListType [$i] . " OR";
-// 				}
-// 				$sqlappend = substr ( $sqlappend, 0, strlen ( $sqlappend ) - 3 );
-// 				$sqlappend .= " ) ";
 				
 				
-				if ($_SESSION ["type"] == 4) {
-					$sqlappend .= ' AND poi.pole_id_pole = ' . $_SESSION ["pole"] . ' ';
-				}
-				
+			}
+			if ($_SESSION["type"] == 1 && isset($_POST["priority"])){
+				$sqlappend .= ' AND priorite.id_priorite = '.$_POST["priority"] ;
+					
+			}elseif ($_SESSION["type"] == 2){
+				$sqlappend .= ' AND moderation_poi = 1 AND display_poi = 1 AND commune_id_commune IN ('.str_replace(';',',',$_SESSION['territoire']).') AND delete_poi = FALSE AND priorite.id_priorite <> 7 AND priorite.id_priorite <> 15 ';
+					
+			}elseif($_SESSION["type"] == 3){
+				$sqlappend .= ' AND moderation_poi = 1 AND display_poi = 1 AND transmission_poi = 1 AND delete_poi = FALSE AND poi.pole_id_pole = ' . $_SESSION["pole"] . ' AND priorite.id_priorite <> 7 AND priorite.id_priorite <> 15 ';
+			}elseif($_SESSION["type"] == 4){
+				$sqlappend .= ' AND poi.pole_id_pole = ' . $_SESSION["pole"] . ' ';
 			}
 			$sql .= $sqlappend;
 			if (DEBUG) {

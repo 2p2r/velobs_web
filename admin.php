@@ -221,11 +221,9 @@
 			<script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Loading application...';</script>
 			<script type="text/javascript" src="lib/js/admin/userUpdate.js?v1.4.3"></script>
 			<script type="text/javascript" src="lib/js/admin/modeemploi3.js?v1.4.3"></script>
-			<script type="text/javascript" src="lib/js/admin/mapadmin3.js?v1.4.3"></script>
-			
 			<script type="text/javascript" src="lib/js/admin/poiCommon.js?v1.4.3"></script>
+			<script type="text/javascript" src="lib/js/admin/mapadmin3.js?v1.4.3"></script>
 			<script type="text/javascript" src="lib/js/admin/poi3.js?v1.4.3"></script>
-
 			<script type="text/javascript" src="lib/js/admin/main3.js?v1.4.3"></script>
 	 
 			<script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Initialization...';</script> 
