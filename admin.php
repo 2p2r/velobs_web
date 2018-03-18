@@ -66,6 +66,7 @@
 			<script type="text/javascript" src="lib/js/admin/config1.js?v1.4.3"></script>
 			<script type="text/javascript" src="lib/js/admin/status1.js?v1.4.3"></script>
 			<script type="text/javascript" src="lib/js/admin/users1.js?v1.4.3"></script>
+			<script type="text/javascript" src="lib/js/admin/userUpdate.js?v1.4.3"></script>
 			<script type="text/javascript" src="lib/js/admin/priorite1.js?v1.4.3"></script>
 			<script type="text/javascript" src="lib/js/admin/commune1.js?v1.4.3"></script>
 			<script type="text/javascript" src="lib/js/admin/pole1.js?v1.4.3"></script>
@@ -141,7 +142,7 @@
 			
 			<script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Loading application...';</script>
 			<script type="text/javascript" src="lib/js/admin/modeemploi2.js?v1.4.3"></script>
-			
+			<script type="text/javascript" src="lib/js/admin/userUpdate.js?v1.4.3"></script>
 			<script type="text/javascript" src="lib/js/admin/poiCommon.js?v1.4.3"></script>
 			<script type="text/javascript" src="lib/js/admin/poi2.js?v1.4.3"></script>
 			<script type="text/javascript" src="lib/js/admin/main2.js?v1.4.3"></script>
@@ -218,6 +219,7 @@
 			<script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Loading geometry...';</script>
 			
 			<script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Loading application...';</script>
+			<script type="text/javascript" src="lib/js/admin/userUpdate.js?v1.4.3"></script>
 			<script type="text/javascript" src="lib/js/admin/modeemploi3.js?v1.4.3"></script>
 			<script type="text/javascript" src="lib/js/admin/mapadmin3.js?v1.4.3"></script>
 			
@@ -300,6 +302,7 @@
 
 			<script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Loading application...';</script>
             <script type="text/javascript" src="lib/js/admin/modeemploi4.js?v1.4.3"></script>
+            <script type="text/javascript" src="lib/js/admin/userUpdate.js?v1.4.3"></script>
             <script type="text/javascript" src="lib/js/admin/commune1.js?v1.4.3"></script>
             <script type="text/javascript" src="lib/js/admin/pole1.js?v1.4.3"></script>
             <script type="text/javascript" src="lib/js/admin/basket.js?v1.4.3"></script>
