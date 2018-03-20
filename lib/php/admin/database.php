@@ -177,13 +177,18 @@
 			case "ISPROPPUBLIC":
 				isPropPublic();
 				break;
-
+			case "GETUSER":
+					getUser();
+					break;
 			case "LISTINGUSER":
-                getUser($start, $end);
+                getUsers($start, $end);
                 break;
             case "UPDATEUSER":
                 updateUser();
                 break;
+            case "RESETPASSWORD":
+            	resetUserPassword();
+            	break;
             case "CREATEUSER":
                 createUser();
                 break;

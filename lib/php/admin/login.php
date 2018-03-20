@@ -1,16 +1,19 @@
 <?php header('Content-Type: text/html; charset=UTF-8');
 	session_start();
 	include_once '../key.php';
+	include_once 'adminfunction.php';
 	
 	switch (SGBD) {
 		case 'mysql':
-			$link = mysql_connect(HOST,DB_USER,DB_PASS);
+			$link = mysql_connect(DB_HOST,DB_USER,DB_PASS);
 			mysql_select_db(DB_NAME);
             mysql_query("SET NAMES utf8mb4");
 
 			$pseudo = mysql_real_escape_string($_POST['login']);
 			$pass = mysql_real_escape_string($_POST['password']);
-			$sql = "SELECT users.*, language.* FROM users INNER JOIN language ON (language.id_language = users.language_id_language) WHERE lib_users = '".$pseudo."' AND pass_users = '".$pass."'";
+			$sql = "SELECT users.*, language.* FROM users INNER JOIN language ON (language.id_language = users.language_id_language) WHERE lib_users = '".$pseudo."'";
+			//$sql = "SELECT users.*, language.* FROM users INNER JOIN language ON (language.id_language = users.language_id_language) WHERE lib_users = '".$pseudo."' AND pass_users = '".$pass."'";
+			
 			$result = mysql_query($sql);
 			if (!$result) {
 				$arr['msg'] = 'Invalid request : '.mysql_error()."\n";
@@ -19,6 +22,7 @@
 			} else {
 				if (mysql_num_rows($result) != 0) {
 					while ($row = mysql_fetch_array($result)) {
+						if (verify_password_hash($_POST['password'],$row['pass_users'])){
 						$arr['id_users'] = $row['id_users'];
 						$arr['type_users'] = $row['usertype_id_usertype'];
 						$arr['who'] = $row['lib_users'];
@@ -52,6 +56,11 @@
 						$_SESSION['type'] = $row['usertype_id_usertype'];
 						$_SESSION['id_language'] = $row['language_id_language'];
 						$_SESSION['extension_language'] = $row['extension_language'];
+						}else{
+							$arr['msg'] = "Erreur\n";
+							//$arr['msg'] .= 'Request : '.$sql;
+							$arr['success'] = FALSE;
+						}
 					}
 				} else {
 					$arr['msg'] = 'Bad idenfication';
@@ -68,4 +77,6 @@
 	}
 
 	echo json_encode($arr);
+	
+	
 ?>

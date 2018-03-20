@@ -3,7 +3,7 @@
 	
 	switch (SGBD) {
 		case 'mysql':
-			$link = mysql_connect(HOST,DB_USER,DB_PASS);
+			$link = mysql_connect(DB_HOST,DB_USER,DB_PASS);
 			mysql_select_db(DB_NAME);
 			mysql_query("SET NAMES utf8mb4");
 			if (DEBUG){
@@ -19,7 +19,8 @@
 				$sql2 = "SELECT COUNT(p.id_poi) as nb_poi, s.id_status, s.lib_status 
 						FROM status s 
 						INNER JOIN poi p ON p.status_id_status = s.id_status 
-						WHERE p.status_id_status =  ".$row['id_status'];
+						WHERE p.status_id_status =  ".$row['id_status'] . "
+								AND p.delete_poi = 0";
 				if (DEBUG){
 					error_log(date("Y-m-d H:i:s") . " - getJsonStats.php $sql2 \n", 3, LOG_FILE);
 				}

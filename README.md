@@ -11,7 +11,7 @@ VelObs est en  production à
 * VelObs est une application web nécessitant un serveur web avec php et MySQL/MariaDB comme base de données (versions minimum à venir)
 
 * le répertoire lib/js contient tous les scripts nécessaires à l'utilisation :
-    * key.js.template configuration des variables spécifiques à votre instance (pour l'instant uniquement l'API KEY de thunderforest
+    * key.js.template configuration des variables spécifiques à votre instance (définition des cartes, API KEY de thunderforest le cas échéant, surcharge des variables contenues dans le fichier translation_fr.js pour conserver les textes spécifique de chaque instance suite à une mise à jour)
     * translation_fr.js et translation_en.js les deux fichiers de traduction de tous les textes affichés à l'écran (il est possible de modifier les préférences pour chaque utilisateur via base de données et le champ language_id_language de la table users)
     * tous les scripts JavaScript décomposés en trois répertoires :
         * admin : les scripts pour les différents rôles d'usage de l'interface d'administration (1 => admin général 2p2r ; 2 => admin comcom ; 3 => pole technique ; 4 => admin pole 2p2r)

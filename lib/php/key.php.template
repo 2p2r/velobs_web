@@ -1,8 +1,7 @@
 <?php
 	define('DEBUG', FALSE);
 	define('LOG_FILE', 'Path to log file');
-	define('HOST', 'localhost');
-	define('PORT', '3306');
+	define('DB_HOST', 'localhost:3306');
 
 	define('SGBD', 'mysql');
 
@@ -22,6 +21,9 @@
 	define('VELOBS_COLLECTIVITE2', 'le Sicoval');
 	define('VELOBS_COLLECTIVITE3', 'la CAM');
 	define('VELOBS_EMERGENCY_MAIL1', 'Veuillez téléphoner au 05 61 222 222 pour prévenir de ce problème si celui-ci est sur la commune de Toulouse');
+	
+	define('INCLUDE_CODE_HTML_PUBLIC',''); //code html inclus en fin de fichier index.php
+	define('INCLUDE_CODE_HTML_ADMIN',''); //code html inclus en fin de fichier admin.php
 	
 	if (!function_exists('mysql_connect')){
         include_once('mysql2i.class.php');

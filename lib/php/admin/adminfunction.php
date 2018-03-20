@@ -88,7 +88,7 @@
 	function getMarkerIcon($start, $limit){ 
 		switch (SGBD) {
 			case 'mysql':
-				$link = mysql_connect(HOST,DB_USER,DB_PASS);
+				$link = mysql_connect(DB_HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
 				mysql_query("SET NAMES utf8mb4");
 				
@@ -137,7 +137,7 @@
 		
 		switch (SGBD) {
 			case 'mysql':
-				$link = mysql_connect(HOST,DB_USER,DB_PASS);
+				$link = mysql_connect(DB_HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
 				mysql_query("SET NAMES utf8mb4");
 				
@@ -170,7 +170,7 @@
 	function getCategory($start, $limit){
 		switch (SGBD) {
 			case 'mysql':
-				$link = mysql_connect(HOST,DB_USER,DB_PASS);
+				$link = mysql_connect(DB_HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
 				mysql_query("SET NAMES utf8mb4");
 	
@@ -216,7 +216,7 @@
 		$id_category = $_POST['id_category'];
 		switch (SGBD) {
 			case 'mysql':
-				$link = mysql_connect(HOST,DB_USER,DB_PASS);
+				$link = mysql_connect(DB_HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
 				mysql_query("SET NAMES utf8mb4");
 	
@@ -256,7 +256,7 @@
 	function createCategory() {
 		switch (SGBD) {
 			case 'mysql':
-				$link = mysql_connect(HOST,DB_USER,DB_PASS);
+				$link = mysql_connect(DB_HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
 				mysql_query("SET NAMES utf8mb4");
 				
@@ -304,7 +304,7 @@
 		
 		switch (SGBD) {
 			case 'mysql':
-				$link = mysql_connect(HOST,DB_USER,DB_PASS);
+				$link = mysql_connect(DB_HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
 				mysql_query("SET NAMES utf8mb4");
 	
@@ -350,7 +350,7 @@
 	function getSubCategory($start, $limit) {
 		switch (SGBD) {
 			case 'mysql':
-				$link = mysql_connect(HOST,DB_USER,DB_PASS);
+				$link = mysql_connect(DB_HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
 				mysql_query("SET NAMES utf8mb4");
 	
@@ -397,7 +397,7 @@
 		$id_subcategory = $_POST['id_subcategory'];
 		switch (SGBD) {
 			case 'mysql':
-				$link = mysql_connect(HOST,DB_USER,DB_PASS);
+				$link = mysql_connect(DB_HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
 				mysql_query("SET NAMES utf8mb4");
 
@@ -475,7 +475,7 @@
 	function createSubCategory() {
 		switch (SGBD) {
 			case 'mysql':
-				$link = mysql_connect(HOST,DB_USER,DB_PASS);
+				$link = mysql_connect(DB_HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
 				mysql_query("SET NAMES utf8mb4");
 				
@@ -527,7 +527,7 @@
 		
 		switch (SGBD) {
 			case 'mysql':
-				$link = mysql_connect(HOST,DB_USER,DB_PASS);
+				$link = mysql_connect(DB_HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
 				mysql_query("SET NAMES utf8mb4");
 	
@@ -576,7 +576,7 @@
 				if (DEBUG){
 					error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - getPoi \n", 3, LOG_FILE);
 				}
-				$link = mysql_connect(HOST,DB_USER,DB_PASS);
+				$link = mysql_connect(DB_HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
 				mysql_query("SET NAMES utf8mb4");
 				$whereClause = ' delete_poi = FALSE ';
@@ -584,7 +584,10 @@
 					$whereClause = " delete_poi = TRUE ";
 				}
 				
-				if ($_SESSION["type"] == 2){
+				if ($_SESSION["type"] == 1 && isset($_POST["priority"])){
+					$whereClause .= ' AND priorite.id_priorite = '.$_POST["priority"] ;
+					
+				}elseif ($_SESSION["type"] == 2){
 					$whereClause .= ' AND moderation_poi = 1 AND display_poi = 1 AND commune_id_commune IN ('.str_replace(';',',',$_SESSION['territoire']).') AND delete_poi = FALSE AND priorite.id_priorite <> 7 AND priorite.id_priorite <> 15 ';
 					
 				}elseif($_SESSION["type"] == 3){
@@ -695,7 +698,7 @@
 		$id_poi = stripslashes($_POST['id_poi']);
 		switch (SGBD) {
 			case 'mysql':
-				$link = mysql_connect(HOST,DB_USER,DB_PASS);
+				$link = mysql_connect(DB_HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
 				mysql_query("SET NAMES utf8mb4");
 				
@@ -941,7 +944,7 @@ Lien vers la modération : ".URL.'/admin.php?id='.$arrayObs['id_poi']."\n".
 		
 		switch (SGBD) {
 			case 'mysql':
-				$link = mysql_connect(HOST,DB_USER,DB_PASS);
+				$link = mysql_connect(DB_HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
 				mysql_query("SET NAMES utf8mb4");
 	
@@ -990,7 +993,7 @@ Lien vers la modération : ".URL.'/admin.php?id='.$arrayObs['id_poi']."\n".
 		
 		switch (SGBD) {
 			case 'mysql':
-				$link = mysql_connect(HOST,DB_USER,DB_PASS);
+				$link = mysql_connect(DB_HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
 				mysql_query("SET NAMES utf8mb4");
 	
@@ -1040,7 +1043,7 @@ Lien vers la modération : ".URL.'/admin.php?id='.$arrayObs['id_poi']."\n".
 	function getCommune($start, $limit){
 		switch (SGBD) {
 			case 'mysql':
-				$link = mysql_connect(HOST,DB_USER,DB_PASS);
+				$link = mysql_connect(DB_HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
 				mysql_query("SET NAMES utf8mb4");
 	
@@ -1084,7 +1087,7 @@ Lien vers la modération : ".URL.'/admin.php?id='.$arrayObs['id_poi']."\n".
 		$lib_commune = $_POST['lib_commune'];
 		switch (SGBD) {
 			case 'mysql':
-				$link = mysql_connect(HOST,DB_USER,DB_PASS);
+				$link = mysql_connect(DB_HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
 				mysql_query("SET NAMES utf8mb4");
 	
@@ -1119,7 +1122,7 @@ Lien vers la modération : ".URL.'/admin.php?id='.$arrayObs['id_poi']."\n".
 	function createCommune() {
 		switch (SGBD) {
 			case 'mysql':
-				$link = mysql_connect(HOST,DB_USER,DB_PASS);
+				$link = mysql_connect(DB_HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
 				mysql_query("SET NAMES utf8mb4");
 				
@@ -1157,7 +1160,7 @@ Lien vers la modération : ".URL.'/admin.php?id='.$arrayObs['id_poi']."\n".
 		
 		switch (SGBD) {
 			case 'mysql':
-				$link = mysql_connect(HOST,DB_USER,DB_PASS);
+				$link = mysql_connect(DB_HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
 				mysql_query("SET NAMES utf8mb4");
 	
@@ -1203,7 +1206,7 @@ Lien vers la modération : ".URL.'/admin.php?id='.$arrayObs['id_poi']."\n".
 	function getPole($start, $limit){
 		switch (SGBD) {
 			case 'mysql':
-				$link = mysql_connect(HOST,DB_USER,DB_PASS);
+				$link = mysql_connect(DB_HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
 				mysql_query("SET NAMES utf8mb4");
 	
@@ -1247,7 +1250,7 @@ Lien vers la modération : ".URL.'/admin.php?id='.$arrayObs['id_poi']."\n".
 		$lib_pole = $_POST['lib_pole'];
 		switch (SGBD) {
 			case 'mysql':
-				$link = mysql_connect(HOST,DB_USER,DB_PASS);
+				$link = mysql_connect(DB_HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
 				mysql_query("SET NAMES utf8mb4");
 	
@@ -1282,7 +1285,7 @@ Lien vers la modération : ".URL.'/admin.php?id='.$arrayObs['id_poi']."\n".
 	function createPole() {
 		switch (SGBD) {
 			case 'mysql':
-				$link = mysql_connect(HOST,DB_USER,DB_PASS);
+				$link = mysql_connect(DB_HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
 				mysql_query("SET NAMES utf8mb4");
 				
@@ -1320,7 +1323,7 @@ Lien vers la modération : ".URL.'/admin.php?id='.$arrayObs['id_poi']."\n".
 		
 		switch (SGBD) {
 			case 'mysql':
-				$link = mysql_connect(HOST,DB_USER,DB_PASS);
+				$link = mysql_connect(DB_HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
 				mysql_query("SET NAMES utf8mb4");
 	
@@ -1366,7 +1369,7 @@ Lien vers la modération : ".URL.'/admin.php?id='.$arrayObs['id_poi']."\n".
 	function getQuartier($start, $limit){
 		switch (SGBD) {
 			case 'mysql':
-				$link = mysql_connect(HOST,DB_USER,DB_PASS);
+				$link = mysql_connect(DB_HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
 				mysql_query("SET NAMES utf8mb4");
 	
@@ -1408,7 +1411,7 @@ Lien vers la modération : ".URL.'/admin.php?id='.$arrayObs['id_poi']."\n".
 // 	function updateQuartier() {
 // 		switch (SGBD) {
 // 			case 'mysql':
-// 				$link = mysql_connect(HOST,DB_USER,DB_PASS);
+// 				$link = mysql_connect(DB_HOST,DB_USER,DB_PASS);
 // 				mysql_select_db(DB_NAME);
 // 				mysql_query("SET NAMES utf8mb4");
 				
@@ -1444,7 +1447,7 @@ Lien vers la modération : ".URL.'/admin.php?id='.$arrayObs['id_poi']."\n".
 // 	function createQuartier() {
 // 		switch (SGBD) {
 // 			case 'mysql':
-// 				$link = mysql_connect(HOST,DB_USER,DB_PASS);
+// 				$link = mysql_connect(DB_HOST,DB_USER,DB_PASS);
 // 				mysql_select_db(DB_NAME);
 // 				mysql_query("SET NAMES utf8mb4");
 				
@@ -1480,7 +1483,7 @@ Lien vers la modération : ".URL.'/admin.php?id='.$arrayObs['id_poi']."\n".
 		
 // 		switch (SGBD) {
 // 			case 'mysql':
-// 				$link = mysql_connect(HOST,DB_USER,DB_PASS);
+// 				$link = mysql_connect(DB_HOST,DB_USER,DB_PASS);
 // 				mysql_select_db(DB_NAME);
 // 				mysql_query("SET NAMES utf8mb4");
 	
@@ -1525,7 +1528,7 @@ Lien vers la modération : ".URL.'/admin.php?id='.$arrayObs['id_poi']."\n".
 	function getPriorite($start, $limit){
 		switch (SGBD) {
 			case 'mysql':
-				$link = mysql_connect(HOST,DB_USER,DB_PASS);
+				$link = mysql_connect(DB_HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
 				mysql_query("SET NAMES utf8mb4");
 	
@@ -1567,7 +1570,7 @@ Lien vers la modération : ".URL.'/admin.php?id='.$arrayObs['id_poi']."\n".
 	function updatePriorite() {
 		switch (SGBD) {
 			case 'mysql':
-				$link = mysql_connect(HOST,DB_USER,DB_PASS);
+				$link = mysql_connect(DB_HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
 				mysql_query("SET NAMES utf8mb4");
 				
@@ -1603,7 +1606,7 @@ Lien vers la modération : ".URL.'/admin.php?id='.$arrayObs['id_poi']."\n".
 	function createPriorite() {
 		switch (SGBD) {
 			case 'mysql':
-				$link = mysql_connect(HOST,DB_USER,DB_PASS);
+				$link = mysql_connect(DB_HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
 				mysql_query("SET NAMES utf8mb4");
 
@@ -1640,7 +1643,7 @@ Lien vers la modération : ".URL.'/admin.php?id='.$arrayObs['id_poi']."\n".
 		
 		switch (SGBD) {
 			case 'mysql':
-				$link = mysql_connect(HOST,DB_USER,DB_PASS);
+				$link = mysql_connect(DB_HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
 				mysql_query("SET NAMES utf8mb4");
 	
@@ -1686,7 +1689,7 @@ Lien vers la modération : ".URL.'/admin.php?id='.$arrayObs['id_poi']."\n".
 	function getStatus($start, $limit){
 		switch (SGBD) {
 			case 'mysql':
-				$link = mysql_connect(HOST,DB_USER,DB_PASS);
+				$link = mysql_connect(DB_HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
 				mysql_query("SET NAMES utf8mb4");
 	
@@ -1728,7 +1731,7 @@ Lien vers la modération : ".URL.'/admin.php?id='.$arrayObs['id_poi']."\n".
 	function updateStatus() {
 		switch (SGBD) {
 			case 'mysql':
-				$link = mysql_connect(HOST,DB_USER,DB_PASS);
+				$link = mysql_connect(DB_HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
 				mysql_query("SET NAMES utf8mb4");
 				
@@ -1764,7 +1767,7 @@ Lien vers la modération : ".URL.'/admin.php?id='.$arrayObs['id_poi']."\n".
 	function createStatus() {
 		switch (SGBD) {
 			case 'mysql':
-				$link = mysql_connect(HOST,DB_USER,DB_PASS);
+				$link = mysql_connect(DB_HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
 				mysql_query("SET NAMES utf8mb4");
 				
@@ -1801,7 +1804,7 @@ Lien vers la modération : ".URL.'/admin.php?id='.$arrayObs['id_poi']."\n".
 		
 		switch (SGBD) {
 			case 'mysql':
-				$link = mysql_connect(HOST,DB_USER,DB_PASS);
+				$link = mysql_connect(DB_HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
 				mysql_query("SET NAMES utf8mb4");
 	
@@ -1837,21 +1840,25 @@ Lien vers la modération : ".URL.'/admin.php?id='.$arrayObs['id_poi']."\n".
 	}
 
 
-	/* 	Function name 	: getUser
+	/* 	Function name 	: getUsers
 		 * 	Input			: start, limit
 		 * 	Output			: json status
 		 * 	Object			: populate user grid
 		 * 	Date			: July 9, 2015
 	*/
 
-	function getUser($start, $limit){
+	function getUsers($start, $limit){
 		switch (SGBD) {
 			case 'mysql':
-				$link = mysql_connect(HOST,DB_USER,DB_PASS);
+				$link = mysql_connect(DB_HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
 				mysql_query("SET NAMES utf8mb4");
 
 				$sql = "SELECT users.*, usertype.lib_usertype, pole.lib_pole, territoire.lib_territoire FROM users INNER JOIN usertype ON (usertype.id_usertype = users.usertype_id_usertype) INNER JOIN pole ON (pole.id_pole = users.num_pole) INNER JOIN territoire ON (territoire.id_territoire = users.territoire_id_territoire) ORDER BY id_users ASC";
+				if (DEBUG){
+					//error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - " . getLocations($latitude_poi,$longitude_poi)[1]."\n", 3, LOG_FILE);
+					error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - sql - ".$sql."\n", 3, LOG_FILE);
+				}
 				$result = mysql_query($sql);
 				$nbrows = mysql_num_rows($result);
 				$sql .= " LIMIT ".$limit." OFFSET ".$start;
@@ -1874,7 +1881,10 @@ Lien vers la modération : ".URL.'/admin.php?id='.$arrayObs['id_poi']."\n".
 				} else {
 					echo '({"total":"0", "results":""})';
 				}
-
+				if (DEBUG){
+					//error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - " . getLocations($latitude_poi,$longitude_poi)[1]."\n", 3, LOG_FILE);
+					error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - nbrows - ".$nbrows."\n", 3, LOG_FILE);
+				}
 				mysql_free_result($result);
 				mysql_close($link);
 				break;
@@ -1883,7 +1893,100 @@ Lien vers la modération : ".URL.'/admin.php?id='.$arrayObs['id_poi']."\n".
 				break;
 		}
 	}
-
+	/* 	Function name 	: getUser
+	* 	Output			: json status
+	* 	Object			: populate user grid
+	* 	Date			: March 17, 2018
+	*/
+	
+	function getUser(){
+		switch (SGBD) {
+			case 'mysql':
+				$link = mysql_connect(DB_HOST,DB_USER,DB_PASS);
+				mysql_select_db(DB_NAME);
+				mysql_query("SET NAMES utf8mb4");
+	
+				$sql = "SELECT users.*, usertype.lib_usertype, pole.lib_pole, territoire.lib_territoire FROM users INNER JOIN usertype ON (usertype.id_usertype = users.usertype_id_usertype) INNER JOIN pole ON (pole.id_pole = users.num_pole) INNER JOIN territoire ON (territoire.id_territoire = users.territoire_id_territoire) WHERE lib_users = '" . $_SESSION['user']."'";
+				if (DEBUG){
+					//error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - " . getLocations($latitude_poi,$longitude_poi)[1]."\n", 3, LOG_FILE);
+					error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - sql - ".$sql."\n", 3, LOG_FILE);
+				}
+				$result = mysql_query($sql);
+				$nbrows = mysql_num_rows($result);
+				$result = mysql_query($sql);
+	
+				$i = 0;
+				if ($nbrows > 0) {
+					while ($row = mysql_fetch_array($result)) {
+						$arr[$i]['id_users'] = $row['id_users'];
+						$arr[$i]['lib_users'] = stripslashes($row['lib_users']);
+						$arr[$i]['pass_users'] = stripslashes($row['pass_users']);
+						$arr[$i]['nom_users'] = stripslashes($row['nom_users']);
+						$arr[$i]['mail_users'] = stripslashes($row['mail_users']);
+						$arr[$i]['lib_usertype'] = stripslashes($row['lib_usertype']);
+						$arr[$i]['lib_userpole'] = stripslashes($row['lib_pole']);
+						$arr[$i]['lib_territoire'] = stripslashes($row['lib_territoire']);
+						$i++;
+					}
+					echo '({"total":"'.$nbrows.'","results":'.json_encode($arr).'})';
+				} else {
+					echo '({"total":"0", "results":""})';
+				}
+				if (DEBUG){
+					//error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - " . getLocations($latitude_poi,$longitude_poi)[1]."\n", 3, LOG_FILE);
+					error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - nbrows - ".$nbrows."\n", 3, LOG_FILE);
+				}
+				mysql_free_result($result);
+				mysql_close($link);
+				break;
+			case 'postgresql':
+				// TODO
+				break;
+		}
+	}
+	function resetUserPassword(){
+		switch (SGBD) {
+			case 'mysql':
+				$link = mysql_connect(DB_HOST,DB_USER,DB_PASS);
+				mysql_select_db(DB_NAME);
+				mysql_query("SET NAMES utf8mb4");
+		
+				$userId = mysql_real_escape_string($_POST['userId']);
+				$userMail = mysql_real_escape_string($_POST['userMail']);
+				$userLogin = mysql_real_escape_string($_POST['userLogin']);
+				$chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+				$clearPassword = substr(str_shuffle($chars),0,8);
+				$pass_users = create_password_hash($clearPassword,'PASSWORD_BCRYPT');
+				
+				$sql = "UPDATE users SET pass_users = '$pass_users' WHERE id_users = $userId";
+				if (DEBUG){
+					//error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - " . getLocations($latitude_poi,$longitude_poi)[1]."\n", 3, LOG_FILE);
+					error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - sql - ".$sql.", mot de passe \n", 3, LOG_FILE);
+				}
+				
+				$result = mysql_query($sql);
+				if (!$result) {
+					echo '2';
+				} else {
+					echo '1';
+					$message = "Bonjour,
+Votre compte sur VelObs a été mis à jour. Vous pouvez vous connecter à l'interface d'administration à l'adresse :
+".URL."/admin.php
+					Vos identifiants sont :
+					- Login : $userLogin
+					- Mot de passe : ".$clearPassword."
+					En cas de question, vous pouvez trouver des informations sur https://github.com/2p2r/velobs_web. N'hésitez pas à envoyer un courriel à ". MAIL_ALIAS_OBSERVATION_ADHERENTS . " pour toute question sur VelObs.";
+					sendMail($userMail, "Réinitialisation mote de passe sur VelObs", $message);
+				}
+		
+				mysql_free_result($result);
+				mysql_close($link);
+				break;
+			case 'postgresql':
+				// TODO
+				break;
+		}
+	}
 
 	/* 	Function name 	: updateUser
 		 * 	Input			:
@@ -1895,34 +1998,60 @@ Lien vers la modération : ".URL.'/admin.php?id='.$arrayObs['id_poi']."\n".
 	function updateUser() {
 		switch (SGBD) {
 			case 'mysql':
-				$link = mysql_connect(HOST,DB_USER,DB_PASS);
+				$link = mysql_connect(DB_HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
 				mysql_query("SET NAMES utf8mb4");
-
+				$message = '';
 				$id_users = mysql_real_escape_string($_POST['id_users']);
-				$lib_users = mysql_real_escape_string($_POST['lib_users']);
-				$pass_users = mysql_real_escape_string($_POST['pass_users']);
-				$mail_users = mysql_real_escape_string($_POST['mail_users']);
-				$nom_users = mysql_real_escape_string($_POST['nom_users']);
+				$sql = "UPDATE users SET ";
+				if (isset($_POST['lib_users']) && $_POST['lib_users'] != ''){
+					$sql .= "lib_users = '". mysql_real_escape_string($_POST['lib_users']) ."',";
+					$message .="	- Login : ".$_POST['lib_users']."\n";
+				}
+				if (isset($_POST['mail_users']) && $_POST['mail_users'] != ''){
+					$mail_users = mysql_real_escape_string($_POST['mail_users']);
+					$sql .= "mail_users = '". $mail_users ."',";
+					$message .="	- Mail : ".$_POST['mail_users']."\n";
+				}
+				if (isset($_POST['nom_users']) && $_POST['nom_users'] != ''){
+					$sql .= "nom_users = '". mysql_real_escape_string($_POST['nom_users']) ."',";
+					$message .="	- Nom : ".$_POST['nom_users']."\n";
+				}
+				if (isset($_POST['pass_users']) && $_POST['pass_users'] != ''){
+					$pass_users = create_password_hash($_POST['pass_users'],'PASSWORD_BCRYPT');
+					$sql .= "pass_users = '". $pass_users ."',";
+					$message .="	- Mot de passe : ".$_POST['pass_users']."\n";
+				}
 
 				if (is_numeric($_POST['territoire_id_territoire'])) {
 					$territoire_id_territoire = $_POST['territoire_id_territoire'];
-					$sql = "UPDATE users SET lib_users = '$lib_users', pass_users = '$pass_users', mail_users = '$mail_users', nom_users = '$nom_users', territoire_id_territoire = $territoire_id_territoire WHERE id_users = $id_users";
-				} else if (is_numeric($_POST['usertype_id_usertype'])) {
+					$sql .=" territoire_id_territoire = $territoire_id_territoire,";
+				} 
+				if (is_numeric($_POST['usertype_id_usertype'])) {
 					$usertype_id_usertype = $_POST['usertype_id_usertype'];
-					$sql = "UPDATE users SET lib_users = '$lib_users', pass_users = '$pass_users', mail_users = '$mail_users', nom_users = '$nom_users', usertype_id_usertype = $usertype_id_usertype WHERE id_users = $id_users";
-				} else if (is_numeric($_POST['num_pole'])) {
+					$sql .="usertype_id_usertype = $usertype_id_usertype,";
+				} 
+				if (is_numeric($_POST['num_pole'])) {
 					$num_pole = $_POST['num_pole'];
-					$sql = "UPDATE users SET lib_users = '$lib_users', pass_users = '$pass_users', mail_users = '$mail_users', nom_users = '$nom_users', num_pole = $num_pole WHERE id_users = $id_users";
-				} else {
-					$sql = "UPDATE users SET lib_users = '$lib_users', pass_users = '$pass_users', mail_users = '$mail_users', nom_users = '$nom_users' WHERE id_users = $id_users";
+					$sql .= " num_pole = $num_pole ,";
 				}
-
+				$sql = substr($sql,0,-1);
+				$sql .= " WHERE id_users = ".mysql_real_escape_string( $_POST['id_users']);
+				if (DEBUG){
+					//error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - " . getLocations($latitude_poi,$longitude_poi)[1]."\n", 3, LOG_FILE);
+					error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - sql - ".$sql." \n", 3, LOG_FILE);
+				}
 				$result = mysql_query($sql);
 				if (!$result) {
 					echo '2';
 				} else {
 					echo '1';
+					$message = "Bonjour,
+Votre compte sur VelObs a été mis à jour. Vous pouvez vous connecter à l'interface d'administration à l'adresse :
+".URL."/admin.php
+".$message."
+En cas de question, vous pouvez trouver des informations sur https://github.com/2p2r/velobs_web. N'hésitez pas à envoyer un courriel à ". MAIL_ALIAS_OBSERVATION_ADHERENTS . " pour toute question sur VelObs.";
+					sendMail($mail_users, "Modification coordonnées sur VelObs", $message);
 				}
 
 				mysql_free_result($result);
@@ -1946,13 +2075,13 @@ Lien vers la modération : ".URL.'/admin.php?id='.$arrayObs['id_poi']."\n".
 	function createUser() {
 		switch (SGBD) {
 			case 'mysql':
-				$link = mysql_connect(HOST,DB_USER,DB_PASS);
+				$link = mysql_connect(DB_HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
 				mysql_query("SET NAMES utf8mb4");
 
 				$lib_users = mysql_real_escape_string($_POST['lib_users']);
 				$nom_users = mysql_real_escape_string($_POST['nom_users']);
-				$pass_users = mysql_real_escape_string($_POST['pass_users']);
+				$pass_users = create_password_hash($_POST['pass_users'],'PASSWORD_BCRYPT');
 				$mail_users = mysql_real_escape_string($_POST['mail_users']);
 
 				$usertype_id_usertype = $_POST['usertype_id_usertype'];
@@ -1971,7 +2100,7 @@ Vous disposez maintenant d'un compte sur velobs vous permettant de mettre à jou
 ".URL."/admin.php
 Vos identifiants sont :
 	- Login : $lib_users
-	- Mot de passe : $pass_users
+	- Mot de passe : ".$_POST['pass_users']."
 En cas de question, vous pouvez trouver des informations sur https://github.com/2p2r/velobs_web. N'hésitez pas à envoyer un courriel à ". MAIL_ALIAS_OBSERVATION_ADHERENTS . " pour toute question sur VelObs.";
 				sendMail($mail_users, "Création compte sur VelObs", $message);
 				mysql_free_result($result);
@@ -1997,7 +2126,7 @@ En cas de question, vous pouvez trouver des informations sur https://github.com/
 
 		switch (SGBD) {
 			case 'mysql':
-				$link = mysql_connect(HOST,DB_USER,DB_PASS);
+				$link = mysql_connect(DB_HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
 				mysql_query("SET NAMES utf8mb4");
 
@@ -2045,7 +2174,7 @@ En cas de question, vous pouvez trouver des informations sur https://github.com/
 		$id_poi = $_POST['id_poi'];
 		switch (SGBD) {
 			case 'mysql':
-				$link = mysql_connect(HOST,DB_USER,DB_PASS);
+				$link = mysql_connect(DB_HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
 				mysql_query("SET NAMES utf8mb4");
 	
@@ -2087,7 +2216,7 @@ En cas de question, vous pouvez trouver des informations sur https://github.com/
 		$longitude_poi = $_POST['longitude_poi'];
 		switch (SGBD) {
 			case 'mysql':
-				$link = mysql_connect(HOST,DB_USER,DB_PASS);
+				$link = mysql_connect(DB_HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
 				mysql_query("SET NAMES utf8mb4");
 				$locations = getLocations($latitude_poi,$longitude_poi);
@@ -2134,7 +2263,7 @@ En cas de question, vous pouvez trouver des informations sur https://github.com/
 		$id_poi = $_POST['id_poi'];
 		switch (SGBD) {
 			case 'mysql':
-				$link = mysql_connect(HOST,DB_USER,DB_PASS);
+				$link = mysql_connect(DB_HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
 				mysql_query("SET NAMES utf8mb4");
 				
@@ -2173,7 +2302,7 @@ En cas de question, vous pouvez trouver des informations sur https://github.com/
 		
 		switch (SGBD) {
 			case 'mysql':
-				$link = mysql_connect(HOST,DB_USER,DB_PASS);
+				$link = mysql_connect(DB_HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
 				mysql_query("SET NAMES utf8mb4");
 				
@@ -2206,7 +2335,7 @@ En cas de question, vous pouvez trouver des informations sur https://github.com/
 	function createPublicPoi() {
 		switch (SGBD) {
 			case 'mysql':
-				$link = mysql_connect(HOST,DB_USER,DB_PASS);
+				$link = mysql_connect(DB_HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
 				mysql_query("SET NAMES utf8mb4");
 				
@@ -2470,7 +2599,7 @@ velo-cite.org";
 	function isPropPublic() {
 		switch (SGBD) {
 			case 'mysql':
-				$link = mysql_connect(HOST,DB_USER,DB_PASS);
+				$link = mysql_connect(DB_HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
 				mysql_query("SET NAMES utf8mb4");
 	
@@ -2504,7 +2633,7 @@ velo-cite.org";
 	function getNumPageIdParam($idToFind, $usertype, $numRecordPerPage) {
 		switch (SGBD) {
 			case 'mysql':
-				$link = mysql_connect(HOST,DB_USER,DB_PASS);
+				$link = mysql_connect(DB_HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
 				mysql_query("SET NAMES utf8mb4");
 
@@ -2652,7 +2781,7 @@ velo-cite.org";
 	function getComments($id_poi) {
 		switch (SGBD) {
 			case 'mysql':
-				$link = mysql_connect(HOST,DB_USER,DB_PASS);
+				$link = mysql_connect(DB_HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
 				mysql_query("SET NAMES utf8mb4");
 
@@ -2696,7 +2825,7 @@ velo-cite.org";
 	function displayComment($id_comment, $display_comment) {
 		switch (SGBD) {
 			case 'mysql':
-				$link = mysql_connect(HOST,DB_USER,DB_PASS);
+				$link = mysql_connect(DB_HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
 				mysql_query("SET NAMES utf8mb4");
 
@@ -2729,7 +2858,7 @@ velo-cite.org";
 	function editComment($id_comment, $text_comment) {
 		switch (SGBD) {
 			case 'mysql':
-				$link = mysql_connect(HOST,DB_USER,DB_PASS);
+				$link = mysql_connect(DB_HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
 				mysql_query("SET NAMES utf8mb4");
 
@@ -2774,7 +2903,7 @@ velo-cite.org";
 				if (DEBUG){
 					error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . "\n", 3, LOG_FILE);
 				}
-				$link = mysql_connect(HOST,DB_USER,DB_PASS);
+				$link = mysql_connect(DB_HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
 				mysql_query("SET NAMES utf8mb4");
 
@@ -2920,5 +3049,42 @@ Cordialement, l'Association ".VELOBS_ASSOCIATION." :)";
 				// TODO
 				break;
 		}
+	}
+	
+	// When you need to hash a password, just feed it to the function
+	// and it will return the hash which you can store in your database.
+	// The important thing here is that you don’t have to provide a salt
+	// value or a cost parameter. The new API will take care of all of
+	// that for you. And the salt is part of the hash, so you don’t
+	// have to store it separately.
+	//
+	// Links:
+	// http://www.sitepoint.com/hashing-passwords-php-5-5-password-hashing-api/
+	// http://stackoverflow.com/questions/536584/non-random-salt-for-password-hashes/536756#536756
+	//
+	// Here is a imlementation for PHP 5.5 and older:
+	function create_password_hash($strPassword, $numAlgo = 1, $arrOptions = array())
+	{
+		if (function_exists('password_hash')) {
+			// php >= 5.5
+			$hash = password_hash($strPassword, $numAlgo, $arrOptions);
+		} else {
+			$salt = mcrypt_create_iv(22, MCRYPT_DEV_URANDOM);
+			$salt = base64_encode($salt);
+			$salt = str_replace('+', '.', $salt);
+			$hash = crypt($strPassword, '$2y$10$' . $salt . '$');
+		}
+		return $hash;
+	}
+	function verify_password_hash($strPassword, $strHash)
+	{
+		if (function_exists('password_verify')) {
+			// php >= 5.5
+			$boolReturn = password_verify($strPassword, $strHash);
+		} else {
+			$strHash2 = crypt($strPassword, $strHash);
+			$boolReturn = $strHash == $strHash2;
+		}
+		return $boolReturn;
 	}
 ?>

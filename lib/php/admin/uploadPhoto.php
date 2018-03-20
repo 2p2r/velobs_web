@@ -7,7 +7,7 @@
 		switch (SGBD) {
 			case 'mysql':
 				if (isset($_FILES['photo-path']) && isset($_POST['id_POI'])){
-					$link = mysql_connect(HOST,DB_USER,DB_PASS);
+					$link = mysql_connect(DB_HOST,DB_USER,DB_PASS);
 					mysql_select_db(DB_NAME);	
 					mysql_query("SET NAMES utf8mb4");
 					if (DEBUG){
