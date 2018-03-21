@@ -4,14 +4,28 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-		<title>VelObs</title>
-		<link rel="shortcut icon" type="image/png" href="resources/favicon/favicon.ico" />
+		<title>Signalez un problème à vélo à Bordeaux et dans la métropole | Vélo-Cité</title>
+		<link rel="shortcut icon" type="image/png" href="resources/favicon/favicon.jpg" />
 	</head>
+
 	<body onunload="setCookie()">
-		<div id="loading"> 
+		<div id="loading"
+			 class="loading"> 
 			<div class="loading-indicator">
-                <img alt="VelObs" src="resources/images/velobs.jpg" width="99" height="64" style="margin-right:8px;float:left;vertical-align:top;"/>VelObs - <a href="https://www.2p2r.org/" target="_blank">2P2R</a><br /><span id="loading-msg">Loading styles and images ...</span>
+				<img src="resources/images/logo-main.png"
+					 class="loading__logo"
+					 title="Logo Vélo-Cité"
+					 alt="Logo Vélo-Cité"
+					 height="64"
+					 style="margin-right:8px;float:left;vertical-align:top;"/>
+				
+				<span class="loading__message">
+					<p>Cyclo-fiches - <a href="https://www.velo-cite.org/" target="_blank">Vélo-Cité</a></p>
+
+					<p id="loading-msg">Loading styles and images ...</p>
+				</span>
 			</div>
+
 			<link rel="stylesheet" type="text/css" href="resources/css/icon.css" />
 			<link rel="stylesheet" type="text/css" href="lib/js/framework/ext-3.4.0/resources/css/ext-all.css" />
 			<link rel="stylesheet" type="text/css" href="lib/js/framework/ext-3.4.0/resources/css/xtheme-gray.css" />
@@ -21,6 +35,13 @@
 			<link rel="stylesheet" type="text/css" href="resources/css/public.css" />
 			<link rel="stylesheet" type="text/css" href="resources/css/iconmarker.css" />
 			<link rel="stylesheet" type="text/css" href="resources/css/fileuploadfield.css" />
+
+			<!-- Début particularités Vélo-Cité -->
+			<link rel="stylesheet" type="text/css" href="resources/css/velocite/common.css"/>
+			<link rel="stylesheet" type="text/css" href="resources/css/velocite/loading.css"/>
+			<link rel="stylesheet" type="text/css" href="resources/css/velocite/header.css"/>
+			<link rel="stylesheet" type="text/css" href="resources/css/velocite/map.css"/>
+			<!-- Fin particularités Vélo-Cité -->
 	
 			<script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Loading ExtJS...';</script>
 			<script type="text/javascript" src="lib/js/framework/ext-3.4.0/adapter/ext/ext-base.js"></script>

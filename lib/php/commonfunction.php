@@ -134,6 +134,20 @@
 				break;
 			case IMAGETYPE_JPEG:
 				$source_gd_image = imagecreatefromjpeg($source_image_path);
+				$exif = exif_read_data($source_image_path);
+				if ($source_gd_image && $exif && isset($exif['Orientation'])) {
+					$ort = $exif['Orientation'];
+
+					if ($ort == 6 || $ort == 5)
+					    $source_gd_image = imagerotate($source_gd_image, 270, null);
+					if ($ort == 3 || $ort == 4)
+						$source_gd_image = imagerotate($source_gd_image, 180, null);
+					if ($ort == 8 || $ort == 7)
+						$source_gd_image = imagerotate($source_gd_image, 90, null);
+
+					if (function_exists('imageflip') && ($ort == 5 || $ort == 4 || $ort == 7))
+						imageflip($source_gd_image, IMG_FLIP_HORIZONTAL);
+				}
 				break;
 			case IMAGETYPE_PNG:
 				$source_gd_image = imagecreatefrompng($source_image_path);
@@ -219,7 +233,9 @@
 			$observationArray['desc_poi'] = stripslashes($row['desc_poi']);
 			$observationArray['prop_poi'] = stripslashes($row['prop_poi']);
 			$observationArray['num_poi'] = stripslashes($row['num_poi']);
+			$observationArray['ref_poi'] = stripslashes($row['ref_poi']);
 			$observationArray['rue_poi'] = stripslashes($row['rue_poi']);
+			$observationArray['communename_poi'] = stripslashes($row['communename_poi']);
 			$observationArray['mailsentuser_poi'] = stripslashes($row['mailsentuser_poi']);
 			$observationArray['mail_poi'] = stripslashes($row['mail_poi']);
 			$observationArray['reponsegrandtoulouse_poi'] = stripslashes($row['reponsegrandtoulouse_poi']);
@@ -242,6 +258,7 @@
 			$observationArray['display_poi'] = stripslashes($row['display_poi']);
 			$observationArray['tel_poi'] = stripslashes($row['tel_poi']);
 			$observationArray['adherent_poi'] = stripslashes($row['adherent_poi']);
+			$observationArray['adherentfirstname_poi'] = stripslashes($row['adherentfirstname_poi']);
 			//clés étrangères
 			$observationArray['commune_id_commune'] = stripslashes($row['commune_id_commune']);
 			$observationArray['subcategory_id_subcategory'] = stripslashes($row['subcategory_id_subcategory']);
@@ -286,9 +303,19 @@
 		$arrayColumns[$numberOfColumns]['columnIntitule'] = '# Nom de la voie : ' ;
 		$arrayColumns[$numberOfColumns]['dataType'] = 'string' ;
 		$numberOfColumns++;
+		$arrayColumns[$numberOfColumns]['columnSQL'] = 'communename_poi' ;
+		$arrayColumns[$numberOfColumns]['columnPOST'] = 'communename_poi' ;
+		$arrayColumns[$numberOfColumns]['columnIntitule'] = '# Nom de la commune : ' ;
+		$arrayColumns[$numberOfColumns]['dataType'] = 'string' ;
+		$numberOfColumns++;
 		$arrayColumns[$numberOfColumns]['columnSQL'] = 'num_poi' ;
 		$arrayColumns[$numberOfColumns]['columnPOST'] = 'num_poi' ;
 		$arrayColumns[$numberOfColumns]['columnIntitule'] = '# Repère : ' ;
+		$arrayColumns[$numberOfColumns]['dataType'] = 'string' ;
+		$numberOfColumns++;
+		$arrayColumns[$numberOfColumns]['columnSQL'] = 'ref_poi' ;
+		$arrayColumns[$numberOfColumns]['columnPOST'] = 'ref_poi' ;
+		$arrayColumns[$numberOfColumns]['columnIntitule'] = '# Référence : ' ;
 		$arrayColumns[$numberOfColumns]['dataType'] = 'string' ;
 		$numberOfColumns++;
 		$arrayColumns[$numberOfColumns]['columnSQL'] = 'pole_id_pole' ;
@@ -374,6 +401,11 @@
 		//info personne qui a remonté l'observationr
 		$arrayColumns[$numberOfColumns]['columnSQL'] = 'adherent_poi' ;
 		$arrayColumns[$numberOfColumns]['columnPOST'] = 'adherent_poi' ;
+		$arrayColumns[$numberOfColumns]['columnIntitule'] = '# Nom du contributeur : ' ;
+		$arrayColumns[$numberOfColumns]['dataType'] = 'string' ;
+		$numberOfColumns++;
+		$arrayColumns[$numberOfColumns]['columnSQL'] = 'adherentfirstname_poi' ;
+		$arrayColumns[$numberOfColumns]['columnPOST'] = 'adherentfirstname_poi' ;
 		$arrayColumns[$numberOfColumns]['columnIntitule'] = '# Nom du contributeur : ' ;
 		$arrayColumns[$numberOfColumns]['dataType'] = 'string' ;
 		$numberOfColumns++;

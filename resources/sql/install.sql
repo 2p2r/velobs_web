@@ -248,13 +248,22 @@ INSERT INTO `iconmarker` (`id_iconmarker`, `name_iconmarker`, `urlname_iconmarke
 (18, 'chicanes', 'iconmarker18', ''),
 (19, 'tourne à droite 2', 'iconmarker19', '');
 
+CREATE TABLE IF NOT EXISTS `poireferences` (
+  `year` int(11) NOT NULL,
+  `month` int(11) NOT NULL,
+  `seq` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+ALTER TABLE `poireferences` ADD UNIQUE(`year`, `month`, `seq`);
 
 CREATE TABLE IF NOT EXISTS `poi` (
   `id_poi` int(11) NOT NULL AUTO_INCREMENT,
   `lib_poi` varchar(100) DEFAULT NULL,
+  `ref_poi` varchar(10) DEFAULT NULL,
   `adherent_poi` varchar(100) DEFAULT NULL,
+  `adherentfirstname_poi` varchar(100) DEFAULT NULL,
   `rue_poi` varchar(100) DEFAULT NULL,
   `num_poi` varchar(100) DEFAULT NULL,
+  `communename_poi` varchar(100) DEFAULT NULL,
   `mail_poi` varchar(100) DEFAULT NULL,
   `tel_poi` varchar(100) DEFAULT NULL,
   `geom_poi` geometry DEFAULT NULL,
@@ -297,7 +306,8 @@ ALTER TABLE `poi`
   ADD CONSTRAINT `poi_ibfk_3` FOREIGN KEY (`pole_id_pole`) REFERENCES `pole` (`id_pole`),
   ADD CONSTRAINT `poi_ibfk_4` FOREIGN KEY (`quartier_id_quartier`) REFERENCES `quartier` (`id_quartier`),
   ADD CONSTRAINT `poi_ibfk_5` FOREIGN KEY (`priorite_id_priorite`) REFERENCES `priorite` (`id_priorite`),
-  ADD CONSTRAINT `poi_ibfk_6` FOREIGN KEY (`status_id_status`) REFERENCES `status` (`id_status`);
+  ADD CONSTRAINT `poi_ibfk_6` FOREIGN KEY (`status_id_status`) REFERENCES `status` (`id_status`),
+  ADD UNIQUE(`ref_poi`);
 
 CREATE TABLE IF NOT EXISTS `commentaires` (
   `id_commentaires` int(11) NOT NULL AUTO_INCREMENT,

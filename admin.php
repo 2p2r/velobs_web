@@ -11,19 +11,33 @@
 		}
 		switch ($_SESSION['type']) {
 			case '1':
+			/* Rôle : Administrateur */
 ?>
 <!DOCTYPE >
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-		<title>VelObs [Admin]</title>
-		<link rel="shortcut icon" type="image/png" href="resources/favicon/favicon.ico" />
+		<title>Cyclo-fiches - Vélo-Cité [Admin]</title>
+		<link rel="shortcut icon" type="image/png" href="resources/favicon/favicon.jpg" />
 	</head>
 	<body onunload="setCookie()">
-		<div id="loading"> 
-			<div class="loading-indicator">
-				<img alt="VelObs" src="resources/images/velobs.jpg" width="99" height="64" style="margin-right:8px;float:left;vertical-align:top;"/>VelObs - <a href="https://www.2p2r.org/" target="_blank">2P2R</a><br /><span id="loading-msg">Loading styles and images ...</span>
+		<div id="loading"
+			 class="loading"> 
+			 <div class="loading-indicator">
+				<img src="resources/images/logo-main.png"
+					 class="loading__logo"
+					 title="Logo Vélo-Cité"
+					 alt="Logo Vélo-Cité"
+					 height="64"
+					 style="margin-right:8px;float:left;vertical-align:top;"/>
+				
+				<span class="loading__message">
+					<p>Cyclo-fiches - <a href="https://www.velo-cite.org/" target="_blank">Vélo-Cité</a></p>
+
+					<p id="loading-msg">Loading styles and images ...</p>
+				</span>
 			</div>
+
 			<link rel="stylesheet" type="text/css" href="resources/css/icon.css" />
 			<link rel="stylesheet" type="text/css" href="lib/js/framework/ext-3.4.0/resources/css/ext-all.css" />
 			<link rel="stylesheet" type="text/css" href="lib/js/framework/ext-3.4.0/resources/css/xtheme-gray.css" />
@@ -33,6 +47,10 @@
 			<link rel="stylesheet" type="text/css" href="resources/css/admin.css" />
 			<link rel="stylesheet" type="text/css" href="resources/css/iconmarker.css" />
 			<link rel="stylesheet" type="text/css" href="resources/css/fileuploadfield.css" />
+
+			<!-- Début particularités Vélo-Cité -->
+			<link rel="stylesheet" type="text/css" href="resources/css/velocite/loading.css"/>
+			<!-- Fin particularités Vélo-Cité -->
 
 			<!--<script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Loading Google Maps API...';</script> 
 			<script src="http://maps.google.com/maps/api/js?v=3&sensor=false"></script>-->
@@ -81,29 +99,44 @@
 	 
 			<script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Initialization...';</script> 
 		</div>
-		<div id="header">
+
+		<div>
 			<div id="disconnect" title="<?php echo getTranslation($_SESSION['id_language'],'DISCONNECT'); ?>" onclick="self.location.href ='lib/php/admin/disconnect.php';"></div>
 			<div id="gotopublicmap" title=<?php echo getTranslation($_SESSION['id_language'],'OPENPUBLICMAP'); ?> onclick="window.open('./');"></div>
-			<div id="hellouser""><?php if ($_SESSION['nom'] != '') {echo "[".$_SESSION['nom']."]";} ?></div>
+			<div id="hellouser"><?php if ($_SESSION['nom'] != '') {echo "[".$_SESSION['nom']."]";} ?></div>
 			<div id="update" style="display:none;"></div>
 		</div>
 
 <?php			
 				break;
 			case '2':
+			/* Rôle : Communauté de communes */
 ?>
 <!DOCTYPE >
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-		<title>VelObs [Admin]</title>
-		<link rel="shortcut icon" type="image/png" href="resources/favicon/favicon.ico" />
+		<title>Cyclo-fiches - Vélo-Cité [Admin]</title>
+		<link rel="shortcut icon" type="image/png" href="resources/favicon/favicon.jpg" />
 	</head>
 	<body>
-		<div id="loading"> 
+		<div id="loading"
+			 class="loading"> 
 			<div class="loading-indicator">
-				<img alt="2P2R" src="resources/images/2p2r.png" width="99" height="64" style="margin-right:8px;float:left;vertical-align:top;"/>VelObs - <a href="https://www.2p2r.org/" target="_blank">2P2R</a><br /><span id="loading-msg">Loading styles and images ...</span>
+				<img src="resources/images/logo-main.png"
+					 class="loading__logo"
+					 title="Logo Vélo-Cité"
+					 alt="Logo Vélo-Cité"
+					 height="64"
+					 style="margin-right:8px;float:left;vertical-align:top;"/>
+				
+				<span class="loading__message">
+					<p>Cyclo-fiches - <a href="https://www.velo-cite.org/" target="_blank">Vélo-Cité</a></p>
+
+					<p id="loading-msg">Loading styles and images ...</p>
+				</span>
 			</div>
+
 			<link rel="stylesheet" type="text/css" href="resources/css/icon.css" />
 			<link rel="stylesheet" type="text/css" href="lib/js/framework/ext-3.4.0/resources/css/ext-all.css" />
 			<link rel="stylesheet" type="text/css" href="lib/js/framework/ext-3.4.0/resources/css/xtheme-gray.css" />
@@ -113,6 +146,10 @@
 			<link rel="stylesheet" type="text/css" href="resources/css/admin.css" />
 			<link rel="stylesheet" type="text/css" href="resources/css/iconmarker.css" />
 			<link rel="stylesheet" type="text/css" href="resources/css/fileuploadfield.css" />
+
+			<!-- Début particularités Vélo-Cité -->
+			<link rel="stylesheet" type="text/css" href="resources/css/velocite/loading.css"/>
+			<!-- Fin particularités Vélo-Cité -->
 
 			<script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Loading Google Maps API...';</script> 
 			<!--<script src="http://maps.google.com/maps/api/js?v=3&sensor=false"></script>-->
@@ -149,17 +186,13 @@
 	 
 			<script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Initialization...';</script> 
 		</div>
-		<?php
-            if ($_SESSION['header_logo'] == 1) {
-                echo '<div id="headergt">';
-            } else if ($_SESSION['header_logo'] == 2) {
-                echo '<div id="header" style="background:url(./resources/images/logowithsico.png) no-repeat;">';
-            } else if ($_SESSION['header_logo'] == 3) {
-                echo '<div id="header" style="background:url(./resources/images/logowithmur.png) no-repeat;">';
-            } else {
-                echo '<div id="header" style="background:url(./resources/images/logo.png) no-repeat;">';
-            }
-        ?>
+		
+		<img src="resources/images/bmheader.png"
+			 title="Logo Bordeaux Métropole"
+			 alt="Logo Bordeaux Métropole"
+			 style="height: 85px; position: absolute; left: 85px; top: 10px;"/>
+
+		<div>
 			<div id="disconnect" title="<?php echo getTranslation($_SESSION['id_language'],'DISCONNECT'); ?>" onclick="self.location.href ='lib/php/admin/disconnect.php';"></div>
 			<div id="gotopublicmap" title=<?php echo getTranslation($_SESSION['id_language'],'OPENPUBLICMAP'); ?> onclick="window.open('./');"></div>
 			<div id="hellouser"><?php if ($_SESSION['nom'] != '') {echo "[".$_SESSION['nom']."]";} ?></div>
@@ -169,19 +202,33 @@
 <?php
 				break;
 			case '3':
+			/* Rôle : Pôle technique */
 ?>
 <!DOCTYPE >
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-		<title>VelObs [Admin]</title>
-		<link rel="shortcut icon" type="image/png" href="resources/favicon/favicon.ico" />
+		<title>Cyclo-fiches - Vélo-Cité [Admin]</title>
+		<link rel="shortcut icon" type="image/png" href="resources/favicon/favicon.jpg" />
 	</head>
 	<body onunload="setCookie()">
-		<div id="loading"> 
+		<div id="loading"
+			 class="loading"> 
 			<div class="loading-indicator">
-				<img alt="2P2R" src="resources/images/2p2r.png" width="99" height="64" style="margin-right:8px;float:left;vertical-align:top;"/>VelObs - <a href="https://www.2p2r.org/" target="_blank">2P2R</a><br /><span id="loading-msg">Loading styles and images ...</span>
+				<img src="resources/images/logo-main.png"
+					 class="loading__logo"
+					 title="Logo Vélo-Cité"
+					 alt="Logo Vélo-Cité"
+					 height="64"
+					 style="margin-right:8px;float:left;vertical-align:top;"/>
+				
+				<span class="loading__message">
+					<p>Cyclo-fiches - <a href="https://www.velo-cite.org/" target="_blank">Vélo-Cité</a></p>
+
+					<p id="loading-msg">Loading styles and images ...</p>
+				</span>
 			</div>
+
 			<link rel="stylesheet" type="text/css" href="resources/css/icon.css" />
 			<link rel="stylesheet" type="text/css" href="lib/js/framework/ext-3.4.0/resources/css/ext-all.css" />
 			<link rel="stylesheet" type="text/css" href="lib/js/framework/ext-3.4.0/resources/css/xtheme-gray.css" />
@@ -192,6 +239,10 @@
 			<link rel="stylesheet" type="text/css" href="resources/css/iconmarker.css" />
 			<link rel="stylesheet" type="text/css" href="resources/css/fileuploadfield.css" />
 
+			<!-- Début particularités Vélo-Cité -->
+			<link rel="stylesheet" type="text/css" href="resources/css/velocite/loading.css"/>
+			<!-- Fin particularités Vélo-Cité -->
+			
 			<script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Loading Google Maps API...';</script> 
 			<!--<script src="http://maps.google.com/maps/api/js?v=3&sensor=false"></script>-->
 	
@@ -230,17 +281,8 @@
 	 
 			<script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Initialization...';</script> 
 		</div>
-        <?php
-            if ($_SESSION['header_logo'] == 1) {
-                echo '<div id="header" style="background:url(./resources/images/logowithgt.png) no-repeat;">';
-            } else if ($_SESSION['header_logo'] == 2) {
-                echo '<div id="header" style="background:url(./resources/images/logowithsico.png) no-repeat;">';
-            } else if ($_SESSION['header_logo'] == 3) {
-                echo '<div id="header" style="background:url(./resources/images/logowithmur.png) no-repeat;">';
-            } else {
-                echo '<div id="header" style="background:url(./resources/images/logo.png) no-repeat;">';
-            }
-        ?>
+
+        <div>
 			<div id="disconnect" title="<?php echo getTranslation($_SESSION['id_language'],'DISCONNECT'); ?>" onclick="self.location.href ='lib/php/admin/disconnect.php';"></div>
 			<div id="gotopublicmap" title=<?php echo getTranslation($_SESSION['id_language'],'OPENPUBLICMAP'); ?> onclick="window.open('./');"></div>
 			<div id="hellouser"><?php if ($_SESSION['nom'] != '') {echo "[".$_SESSION['nom']."]";} ?></div>
@@ -249,20 +291,34 @@
 		
 <?php
 				break;
-		    case '4':
+			case '4':
+			/* Rôle : Responsable pôle modérateur */
 ?>
 <!DOCTYPE >
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-		<title>VelObs [Admin]</title>
-		<link rel="shortcut icon" type="image/png" href="resources/favicon/favicon.ico" />
+		<title>Cyclo-fiches - Vélo-Cité [Admin]</title>
+		<link rel="shortcut icon" type="image/png" href="resources/favicon/favicon.jpg" />
 	</head>
 	<body onunload="setCookie()">
-		<div id="loading">
+		<div id="loading"
+			 class="loading"> 
 			<div class="loading-indicator">
-                <img alt="2P2R" src="resources/images/2p2r.png" width="99" height="64" style="margin-right:8px;float:left;vertical-align:top;"/>VelObs - <a href="https://www.2p2r.org/" target="_blank">2P2R</a><br /><span id="loading-msg">Loading styles and images ...</span>
-            </div>
+				<img src="resources/images/logo-main.png"
+					 class="loading__logo"
+					 title="Logo Vélo-Cité"
+					 alt="Logo Vélo-Cité"
+					 height="64"
+					 style="margin-right:8px;float:left;vertical-align:top;"/>
+				
+				<span class="loading__message">
+					<p>Cyclo-fiches - <a href="https://www.velo-cite.org/" target="_blank">Vélo-Cité</a></p>
+
+					<p id="loading-msg">Loading styles and images ...</p>
+				</span>
+			</div>
+
 			<link rel="stylesheet" type="text/css" href="resources/css/icon.css" />
 			<link rel="stylesheet" type="text/css" href="lib/js/framework/ext-3.4.0/resources/css/ext-all.css" />
 			<link rel="stylesheet" type="text/css" href="lib/js/framework/ext-3.4.0/resources/css/xtheme-gray.css" />
@@ -273,6 +329,10 @@
 			<link rel="stylesheet" type="text/css" href="resources/css/admin_sico.css" />
 			<link rel="stylesheet" type="text/css" href="resources/css/iconmarker.css" />
 			<link rel="stylesheet" type="text/css" href="resources/css/fileuploadfield.css" />
+
+			<!-- Début particularités Vélo-Cité -->
+			<link rel="stylesheet" type="text/css" href="resources/css/velocite/loading.css"/>
+			<!-- Fin particularités Vélo-Cité -->
 
 			<!--<script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Loading Google Maps API...';</script>
 			<script src="http://maps.google.com/maps/api/js?v=3&sensor=false"></script>-->
@@ -314,17 +374,8 @@
 
 			<script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Initialization...';</script>
 		</div>
-		<?php
-            if ($_SESSION['header_logo'] == 1) {
-                echo '<div id="headergt">';
-            } else if ($_SESSION['header_logo'] == 2) {
-                echo '<div id="header" style="background:url(./resources/images/logowithsico.png) no-repeat;">';
-            } else if ($_SESSION['header_logo'] == 3) {
-                echo '<div id="header" style="background:url(./resources/images/logowithmur.png) no-repeat;">';
-            } else {
-                echo '<div id="header" style="background:url(./resources/images/logo.png) no-repeat;">';
-            }
-        ?>
+
+		<div>
 			<div id="disconnect" title="<?php echo getTranslation($_SESSION['id_language'],'DISCONNECT'); ?>" onclick="self.location.href ='lib/php/admin/disconnect.php';"></div>
 			<div id="gotopublicmap" title=<?php echo getTranslation($_SESSION['id_language'],'OPENPUBLICMAP'); ?> onclick="window.open('./');"></div>
 			<div id="hellouser"><?php if ($_SESSION['nom'] != '') {echo "[".$_SESSION['nom']."]";} ?></div>

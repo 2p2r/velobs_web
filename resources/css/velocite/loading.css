@@ -1,0 +1,17 @@
+.loading {
+    top       : 50%;
+    left      : 50%;
+    transform : translate(-50%, -50%);
+}
+
+.loading__logo {
+    /* TODO (CMR) : supprimer le !important quand style="..." aura été supprimé du template */
+    height         : 150px!important;
+    float          : none!important;
+    vertical-align : middle!important;
+}
+
+.loading__message {
+    display        : inline-block;
+    vertical-align : middle;
+}

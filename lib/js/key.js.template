@@ -1,3 +1,4 @@
+var USE_TF = true;
 var TF_key = "xxx" ; // API key pour le serveur de tuiles opencyclemap de thunderforest (documentation ici : http://thunderforest.com/docs/apikeys/) dans le cas où ce serveur est utilisé (cf ci-dessous dans la définition des layers)
 var LOAD_ALL_OBSERVATIONS_DEFAULT = false; // au premier accès à l'interface publique : charge toutes les observations ou non
 

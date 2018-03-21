@@ -625,10 +625,13 @@
 				if ($nbrows > 0) {
 					while ($row = mysql_fetch_array($result)) {
 						$arr[$i]['id_poi'] = $row['id_poi'];
+						$arr[$i]['ref_poi'] = $row['ref_poi'];
 						$arr[$i]['lib_poi'] = stripslashes($row['lib_subcategory']);
 						$arr[$i]['adherent_poi'] = stripslashes($row['adherent_poi']);
+						$arr[$i]['adherentfirstname_poi'] = stripslashes($row['adherentfirstname_poi']);
 						$arr[$i]['num_poi'] = stripslashes($row['num_poi']);
 						$arr[$i]['rue_poi'] = stripslashes($row['rue_poi']);
+						$arr[$i]['communename_poi'] = stripslashes($row['communename_poi']);
 						$arr[$i]['tel_poi'] = stripslashes($row['tel_poi']);
 						$arr[$i]['mail_poi'] = stripslashes($row['mail_poi']);
 						$arr[$i]['desc_poi'] = stripslashes($row['desc_poi']);
@@ -728,6 +731,18 @@ Le pole '.$arrayObs['lib_pole'].' a modifié l\'observation n°'.$arrayObs['id_p
 							$mailsComComModo = getMailsToSend($whereClause, $subject, $message );
 							
 						}
+
+						// Modération
+						if ($arrayObs['moderation_poi'] != $_POST['moderation_poi'] && $_POST['moderation_poi']) {
+							$subject = 'Nouvelle cyclofiche ' . $arrayObs['ref_poi'];
+							$message = "Bonjour,
+Une nouvelle cyclofiche a été renseignée sous la référence ".$arrayObs['ref_poi']." et modérée par l'Association ".VELOBS_ASSOCIATION.".
+Voici le lien pour visualiser la cyclofiche: " . URL . "/lib/php/admin/print.php?id_poi=" . $arrayObs['id_poi'];
+							$message .= "Cordialement, l'Association ".VELOBS_ASSOCIATION." :)";
+							$whereClause = "(u.usertype_id_usertype = 2 AND u.territoire_id_territoire = ".$arrayObs['territoire_id_territoire'].") OR (u.usertype_id_usertype = 4 AND u.num_pole = ".$arrayObs['pole_id_pole'].")";
+							$mailsComComModo = getMailsToSend($whereClause, $subject, $message );
+						}
+
 						//Priorités et leur iD
 						// 				"1","Priorité 1"
 						// 				"2","Priorité 2"
@@ -2328,18 +2343,20 @@ En cas de question, vous pouvez trouver des informations sur https://github.com/
 				$mail_poi = mysql_real_escape_string($_POST['mail_poi']);
 				$tel_poi = mysql_real_escape_string($_POST['tel_poi']);
 				$rue_poi = mysql_real_escape_string($_POST['rue_poi']);
+				$communename_poi = mysql_real_escape_string($_POST['communename_poi']);
 				$desc_poi = mysql_real_escape_string($_POST['desc_poi']);
 				$prop_poi = mysql_real_escape_string($_POST['prop_poi']);
 				$adherent_poi = mysql_real_escape_string($_POST['adherent_poi']);
-				$latitude_poi = $_POST['latitude_poi'];
-				$longitude_poi = $_POST['longitude_poi'];
-				$subcategory_id_subcategory = $_POST['subcategory_id_subcategory'];
+				$adherentfirstname_poi = mysql_real_escape_string($_POST['adherentfirstname_poi']);
+				$latitude_poi = mysql_real_escape_string($_POST['latitude_poi']);
+				$longitude_poi = mysql_real_escape_string($_POST['longitude_poi']);
+				$subcategory_id_subcategory = mysql_real_escape_string($_POST['subcategory_id_subcategory']);
 				
 				$sql = "SELECT lib_subcategory FROM subcategory WHERE id_subcategory = ".$subcategory_id_subcategory;
 				$result = mysql_query($sql);
 				$row = mysql_fetch_assoc( $result );
 				$lib_subcategory = mysql_real_escape_string($row['lib_subcategory']);
-				
+
 				//détermination de la commune et du pole concernés par croisement du polygone de la commune ave latitude et longitude
 				$commune_id_commune = 99999;
 				$pole_id_pole = 9;
@@ -2456,7 +2473,15 @@ En cas de question, vous pouvez trouver des informations sur https://github.com/
 				if (DEBUG){
 					error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - place locations - ".$commune_id_commune.", " .$lib_commune.", " .$pole_id_pole.", " .$lib_pole."\n", 3, LOG_FILE);
 				}
-				$sql = "INSERT INTO poi (adherent_poi, priorite_id_priorite, quartier_id_quartier, pole_id_pole, lib_poi, mail_poi, tel_poi, num_poi, rue_poi, commune_id_commune, desc_poi, prop_poi, subcategory_id_subcategory, display_poi, fix_poi, datecreation_poi, geolocatemode_poi, moderation_poi, geom_poi, status_id_status, photo_poi) VALUES ('$adherent_poi', $priorityId, $quartier_id_quartier, $pole_id_pole, '$lib_subcategory', '$mail_poi', '$tel_poi', '$num_poi', '$rue_poi', $commune_id_commune, '$desc_poi', '$prop_poi', $subcategory_id_subcategory , TRUE, FALSE, '$datecreation_poi', 1, $moderationFlag, GeomFromText('POINT(".$longitude_poi." ".$latitude_poi.")'), 5, '$url_photo')";
+
+				// Construction de la référence du POI
+				$sql = "SELECT IFNULL(max(seq), 0) as last_seq FROM poireferences WHERE year = " . date("y") . " AND month = " . date("m");
+				$result = mysql_query($sql);
+				$row = mysql_fetch_assoc( $result );
+				$ref_sequence = $row['last_seq']+1;
+				$ref_poi = "F" . date('ym') . str_pad($ref_sequence, 2, '0', STR_PAD_LEFT);
+
+				$sql = "INSERT INTO poi (adherent_poi, adherentfirstname_poi, ref_poi, priorite_id_priorite, quartier_id_quartier, pole_id_pole, lib_poi, mail_poi, tel_poi, num_poi, rue_poi, communename_poi, commune_id_commune, desc_poi, prop_poi, subcategory_id_subcategory, display_poi, fix_poi, datecreation_poi, geolocatemode_poi, moderation_poi, geom_poi, status_id_status, photo_poi) VALUES ('$adherent_poi', '$adherentfirstname_poi', '$ref_poi', $priorityId, $quartier_id_quartier, $pole_id_pole, '$lib_subcategory', '$mail_poi', '$tel_poi', '$num_poi', '$rue_poi', '$communename_poi', $commune_id_commune, '$desc_poi', '$prop_poi', $subcategory_id_subcategory , TRUE, FALSE, '$datecreation_poi', 1, $moderationFlag, GeomFromText('POINT(".$longitude_poi." ".$latitude_poi.")'), 5, '$url_photo')";
 				
 				if (DEBUG){
 					error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - createPublicPoi - Requete d'insertion sql = ".$sql."\n", 3, LOG_FILE);
@@ -2465,6 +2490,11 @@ En cas de question, vous pouvez trouver des informations sur https://github.com/
 				$result = mysql_query($sql);
 				if ($result){
 					$poiId = mysql_insert_id();
+
+					// Le compteur de références est maintenu dans une table à part pour éviter de réattribuer une référence après une suppression.
+					$sql = "INSERT INTO poireferences (year, month, seq) VALUES (" . date("y") . ", " . date("m") . ", " . $ref_sequence . ")";
+					$result = mysql_query($sql);
+
 					$arrayObs = getObservationDetailsInArray($poiId);
 					$arrayDetailsAndUpdateSQL = getObservationDetailsInString($arrayObs);
 					if (DEBUG){
@@ -2475,7 +2505,7 @@ En cas de question, vous pouvez trouver des informations sur https://github.com/
 					
 					}
 					$return['success'] = true;
-					$return['ok'] = "L'observation a été correctement ajoutée sous le numéro $poiId et est directement affichée (après rechargement de la page) puisque vous êtes référencé(e) comme modérateur ou administrateur de VelObs.";
+					$return['ok'] = "L'observation a été correctement ajoutée sous la référence $ref_poi et est directement affichée (après rechargement de la page) puisque vous êtes référencé(e) comme modérateur ou administrateur de VelObs.";
 						
 					//si le contributeur n'est pas un modérateur ni un administrateur par ailleurs, on envoie des mails
 					if ($num_rows2 == 0){
@@ -2495,11 +2525,33 @@ Lien vers la modération : ".URL.'/admin.php?id='.$arrayObs['id_poi']."\n".$arra
 // 						$succes = sendMails($mails);
 						
 						/* debut envoi d'un mail au contributeur */
+						$tableName = 'subcategory';
+						$sqlLibCategory = "SELECT lib_subcategory FROM subcategory WHERE id_subcategory = ".$arrayObs['subcategory_id_subcategory'];
+						$resultLibCategory = mysql_query($sqlLibCategory);
+						$rowLibCategory = mysql_fetch_assoc( $resultLibCategory );
+						$subcategory_lib = $rowLibCategory['lib_subcategory'];
+
+						$sqlLibCommune = "SELECT lib_commune FROM commune WHERE id_commune = ".$arrayObs['commune_id_commune'];
+						$resultLibCommune = mysql_query($sqlLibCommune);
+						$rowLibCommune = mysql_fetch_assoc( $resultLibCommune );
+						$commune_lib = $rowLibCommune['lib_commune'];
+
 						$subject = 'Observation en attente de modération';
-						$message = "Bonjour !
-Vous venez d'ajouter une observation à VelObs et vous en remercions. Celle-ci devrait être administrée sous peu.\n".
-$arrayDetailsAndUpdateSQL['detailObservationString']."\n
-Cordialement, l'Association ".VELOBS_ASSOCIATION." :)";
+						$message = "Bonjour,
+Vous venez​ de signaler un problème sur la plateforme Cyclo-fiche de Vélo-Cité et ​nous ​vous en remercions​!​
+​Cette information ​sera ​modérée ​prochainement par notre équipe et transférée aux services de Bordeaux Métropole.​
+Vélo-Cité vous informera des suites données à votre demande.
+​Si vous observez une amélioration, n'hésitez pas à nous ​la ​signaler​.​
+
+Référence: ".$arrayObs['ref_poi']."
+Catégorie: ".$subcategory_lib."
+Nom de la voie: ".$arrayObs['rue_poi']."
+Nom de la commune: ".$commune_lib."
+Description du problème: ".$arrayObs['desc_poi']."
+Lien vers l'observation (non visible tant que la modération n'a pas été effectuée): ".(substr(URL, 0, 7) === "http://" ? 'http://': '').URL.'?id='.$arrayObs['id_poi']."\n\n
+Cordialement, l'équipe ".VELOBS_ASSOCIATION." :)
+05 56 81 63 89
+velo-cite.org";
 						$mailArray = [$arrayObs['mail_poi'],"Soumetteur", $subject, $message ];
 						array_push($mails,$mailArray);
 				
@@ -2519,7 +2571,7 @@ Cordialement, l'Association ".VELOBS_ASSOCIATION." :)";
 				}
 				}else{
 					
-					$infoPOI = "Repere : $num_poi\nMail : $mail_poi\nTel : $tel_poi\nRue : $rue_poi\nDescription : $desc_poi\nProposition : $prop_poi\nNom : $adherent_poi\nLatitude : $latitude_poi\nLongitude : $longitude_poi\n Categorie : $subcategory_id_subcategory";
+					$infoPOI = "Repere : $num_poi\nMail : $mail_poi\nTel : $tel_poi\nRue : $rue_poi\nCommune : $communename_poi\nDescription : $desc_poi\nProposition : $prop_poi\nNom : $adherent_poi\nPrenom : $adherentfirstname_poi\nLatitude : $latitude_poi\nLongitude : $longitude_poi\n Categorie : $subcategory_id_subcategory";
 					sendMail(MAIL_FROM,"Erreur méthode createPublicPoi", "Erreur = " .  $return['pb'] . "\n" . $infoPOI);
 					$return['success'] = false;
 					$return['pb'] = "Erreur lors de l'ajout de l'observation : " . $return['pb'];
