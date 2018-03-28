@@ -8,7 +8,8 @@
 		<link rel="shortcut icon" type="image/png" href="resources/favicon/favicon.ico" />
 	</head>
 	<body onunload="setCookie()">
-		<div id="loading"> 
+		<div id="loader"></div>
+		<div id="loading">
 			<div class="loading-indicator">
                 <img alt="VelObs" src="resources/images/velobs.jpg" width="99" height="64" style="margin-right:8px;float:left;vertical-align:top;"/><?php echo INCLUDE_CODE_HTML_LOADING ?><br /><span id="loading-msg">Loading styles and images ...</span>
 			</div>
