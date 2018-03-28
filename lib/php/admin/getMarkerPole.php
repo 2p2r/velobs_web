@@ -36,7 +36,7 @@
 				$i = 0;
 				while ($row = mysql_fetch_array($result)) {
 				$arr[$i]['id'] = $row['id_poi'];
-				$arr[$i]['lib'] = stripslashes($row['lib_poi']);
+				$arr[$i]['lib'] = stripslashes ( $row ['lib_subcategory'] );
 				$arr[$i]['date'] = $row['datecreation_poi'];
 				$arr[$i]['desc'] = stripslashes($row['desc_poi']);
 				$arr[$i]['repgt'] = stripslashes($row['reponsegrandtoulouse_poi']);
@@ -49,21 +49,35 @@
 				$arr[$i]['reppole'] = stripslashes($row['reponsepole_poi']);
 
 				$arr[$i]['traite'] = $row['traiteparpole_poi'];
-
+				$arr [$i] ['lastdatemodif_poi'] = $row ['lastdatemodif_poi'];
 				/*$arr[$i]['icon'] = 'resources/icon/marker/'.$row['icon_subcategory'].'.png';
 				$arr[$i]['iconCls'] = $row['icon_subcategory'];*/
-
-				if ($row['lib_priorite'] == 'DONE') {
-					$arr[$i]['icon'] = 'resources/icon/marker/done.png';
-					$arr[$i]['iconCls'] = 'done';
+				//TODO : revoir ce lib_priorite, pas correct
+					if ($row ['priorite_id_priorite'] == 6) {
+					$arr [$i] ['icon'] = 'resources/icon/marker/done.png';
+					$arr [$i] ['iconCls'] = 'done';
+				} else if ($row ['priorite_id_priorite'] == 12) {
+					$arr [$i] ['icon'] = 'resources/icon/marker/refuse.png';
+					$arr [$i] ['iconCls'] = 'refuse';
 				} else {
-					$arr[$i]['icon'] = 'resources/icon/marker/'.$row['icon_subcategory'].'.png';
-					$arr[$i]['iconCls'] = $row['icon_subcategory'];
+					$arr [$i] ['icon'] = 'resources/icon/marker/' . $row ['icon_subcategory'] . '.png';
+					$arr [$i] ['iconCls'] = $row ['icon_subcategory'];
 				}
 
 				$arr[$i]['lat'] = $row['Y'];
 				$arr[$i]['lon'] = $row['X'];
-
+				$sql2 = "SELECT * FROM commentaires WHERE display_commentaires = 1 AND poi_id_poi = " . $row ['id_poi'];
+				$result2 = mysql_query ( $sql2 );
+				$j = 0;
+				
+				while ( $row2 = mysql_fetch_array ( $result2 ) ) {
+					$arr [$i] ['commentaires'] [$j] = stripslashes ( $row2 ['text_commentaires'] );
+					$arr [$i] ['photos'] [$j] = stripslashes ( $row2 ['url_photo'] );
+					$arr [$i] ['mail_commentaires'] [$j] = stripslashes ( $row2 ['mail_commentaires'] );
+					$arr [$i] ['datecreation'] [$j] = stripslashes ( $row2 ['datecreation'] );
+					$arr [$i] ['affiche'] [$j] = stripslashes ( $row2 ['display_commentaires'] );
+					$j ++;
+				}
 					$i++;
 				}
 				if (DEBUG) {
