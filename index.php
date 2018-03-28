@@ -4,13 +4,13 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-		<title>VelObs</title>
+		<title><?php echo PAGE_TITLE ?> V1.5</title>
 		<link rel="shortcut icon" type="image/png" href="resources/favicon/favicon.ico" />
 	</head>
 	<body onunload="setCookie()">
 		<div id="loading"> 
 			<div class="loading-indicator">
-                <img alt="VelObs" src="resources/images/velobs.jpg" width="99" height="64" style="margin-right:8px;float:left;vertical-align:top;"/>VelObs - <a href="https://www.2p2r.org/" target="_blank">2P2R</a><br /><span id="loading-msg">Loading styles and images ...</span>
+                <img alt="VelObs" src="resources/images/velobs.jpg" width="99" height="64" style="margin-right:8px;float:left;vertical-align:top;"/><?php echo INCLUDE_CODE_HTML_LOADING ?><br /><span id="loading-msg">Loading styles and images ...</span>
 			</div>
 			<link rel="stylesheet" type="text/css" href="resources/css/icon.css" />
 			<link rel="stylesheet" type="text/css" href="lib/js/framework/ext-3.4.0/resources/css/ext-all.css" />

@@ -26,6 +26,7 @@
 						WHERE display_subcategory = TRUE AND 
 							category_id_category =  ".$row['id_category']."
 						AND poi.delete_poi = 0
+						AND poi.moderation_poi = 1
 						GROUP BY subcategory.id_subcategory 
 						ORDER BY treerank_subcategory ASC";
 				if (DEBUG){

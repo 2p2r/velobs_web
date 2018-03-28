@@ -22,9 +22,12 @@
 	define('VELOBS_COLLECTIVITE3', 'la CAM');
 	define('VELOBS_EMERGENCY_MAIL1', 'Veuillez téléphoner au 05 61 222 222 pour prévenir de ce problème si celui-ci est sur la commune de Toulouse');
 	
-	define('INCLUDE_CODE_HTML_PUBLIC',''); //code html inclus en fin de fichier index.php
-	define('INCLUDE_CODE_HTML_ADMIN',''); //code html inclus en fin de fichier admin.php
+	define('INCLUDE_CODE_HTML_PUBLIC',''); //html code included at the end of the index.php file
+	define('INCLUDE_CODE_HTML_LOADING','VelObs - <a href="https://www.2p2r.org/" target="_blank">2P2R</a>');//html code displayed during the loading of the application
+	define('PAGE_TITLE','VelObs'); //text inserted in the title of the web page index.php
 	
+	define('INCLUDE_CODE_HTML_ADMIN',''); //html code included at the end of the admin.php file
+    
 	if (!function_exists('mysql_connect')){
         include_once('mysql2i.class.php');
     }
