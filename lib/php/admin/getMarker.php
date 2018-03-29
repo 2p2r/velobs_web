@@ -1,5 +1,4 @@
 <?php
-
 header ( 'Content-Type: text/html; charset=UTF-8' );
 session_start ();
 include_once '../key.php';
@@ -13,10 +12,17 @@ if (isset ( $_SESSION ['user'] )) {
 			$link = mysql_connect ( DB_HOST, DB_USER, DB_PASS );
 			mysql_select_db ( DB_NAME );
 			mysql_query ( "SET NAMES utf8mb4" );
-			$sql = "SELECT *, commune.lib_commune, x(poi.geom_poi) AS X, y(poi.geom_poi) AS Y, subcategory.icon_subcategory FROM poi INNER JOIN subcategory ON (subcategory.id_subcategory = poi.subcategory_id_subcategory) INNER JOIN commune ON (commune.id_commune = poi.commune_id_commune) INNER JOIN priorite ON (poi.priorite_id_priorite = priorite.id_priorite) ";
+			$sql = "SELECT *, 
+						commune.lib_commune, 
+						x(poi.geom_poi) AS X, 
+						y(poi.geom_poi) AS Y, 
+						subcategory.icon_subcategory 
+					FROM poi 
+					INNER JOIN subcategory ON (subcategory.id_subcategory = poi.subcategory_id_subcategory) 
+					INNER JOIN commune ON (commune.id_commune = poi.commune_id_commune) 
+					INNER JOIN priorite ON (poi.priorite_id_priorite = priorite.id_priorite) ";
 			$sqlappend = ' WHERE ';
-			//TODO : chek user type and pole
-			
+			// TODO : chek user type and pole
 			
 			if (isset ( $_GET ['id'] )) {
 				if (DEBUG) {
@@ -24,30 +30,26 @@ if (isset ( $_SESSION ['user'] )) {
 				}
 				$sqlappend .= " delete_poi = FALSE AND poi.id_poi = " . $_GET ['id'];
 			} else {
-			if (isset ( $_GET ['commentToModerate'] ) && $_GET ['commentToModerate'] == 1) {
-					$sqlappend = " INNER JOIN commentaires ON (poi.id_poi = commentaires.poi_id_poi) ".$sqlappend." commentaires.display_commentaires = false AND ";
-				}elseif (isset ( $_GET ['priority'] ) && $_GET ['priority'] != '') {
+				if (isset ( $_GET ['commentToModerate'] ) && $_GET ['commentToModerate'] == 1) {
+					$sqlappend = " INNER JOIN commentaires ON (poi.id_poi = commentaires.poi_id_poi) " . $sqlappend . " commentaires.display_commentaires = false AND ";
+				} elseif (isset ( $_GET ['priority'] ) && $_GET ['priority'] != '') {
 					$sqlappend .= " poi.priorite_id_priorite = " . $_GET ['priority'] . " AND ";
 				}
 				$listType = $_GET ['listType'];
 				if (DEBUG) {
 					error_log ( date ( "Y-m-d H:i:s" ) . " - admin/getMarker.php avec listType $listType\n", 3, LOG_FILE );
 				}
-// 				$tabListType = preg_split ( '#,#', $listType );
-				$sqlappend .= " poi.geom_poi IS NOT NULL AND subcategory_id_subcategory IN ( ".$listType.") AND poi.display_poi = TRUE AND poi.fix_poi = FALSE";
-				
-				
+				// $tabListType = preg_split ( '#,#', $listType );
+				$sqlappend .= " poi.geom_poi IS NOT NULL AND subcategory_id_subcategory IN ( " . $listType . ") AND poi.display_poi = TRUE AND poi.fix_poi = FALSE";
 			}
-			if ($_SESSION["type"] == 1 && isset($_POST["priority"])){
-				$sqlappend .= ' AND priorite.id_priorite = '.$_POST["priority"] ;
-					
-			}elseif ($_SESSION["type"] == 2){
-				$sqlappend .= ' AND moderation_poi = 1 AND display_poi = 1 AND commune_id_commune IN ('.str_replace(';',',',$_SESSION['territoire']).') AND delete_poi = FALSE AND priorite.id_priorite <> 7 AND priorite.id_priorite <> 15 ';
-					
-			}elseif($_SESSION["type"] == 3){
-				$sqlappend .= ' AND moderation_poi = 1 AND display_poi = 1 AND transmission_poi = 1 AND delete_poi = FALSE AND poi.pole_id_pole = ' . $_SESSION["pole"] . ' AND priorite.id_priorite <> 7 AND priorite.id_priorite <> 15 ';
-			}elseif($_SESSION["type"] == 4){
-				$sqlappend .= ' AND poi.pole_id_pole = ' . $_SESSION["pole"] . ' ';
+			if ($_SESSION ["type"] == 1 && isset ( $_POST ["priority"] )) {//is admin
+				$sqlappend .= ' AND priorite.id_priorite = ' . $_POST ["priority"];
+			} elseif ($_SESSION ["type"] == 2) {//is communaute de communes
+				$sqlappend .= ' AND moderation_poi = 1 AND display_poi = 1 AND commune_id_commune IN (' . str_replace ( ';', ',', $_SESSION ['territoire'] ) . ') AND delete_poi = FALSE AND priorite.id_priorite <> 7 AND priorite.id_priorite <> 15 ';
+			} elseif ($_SESSION ["type"] == 3) {//is pole technique
+				$sqlappend .= ' AND moderation_poi = 1 AND display_poi = 1 AND transmission_poi = 1 AND delete_poi = FALSE AND poi.pole_id_pole = ' . $_SESSION ["pole"] . ' AND priorite.id_priorite <> 7 AND priorite.id_priorite <> 15 ';
+			} elseif ($_SESSION ["type"] == 4) {//is moderateur
+				$sqlappend .= ' AND poi.pole_id_pole = ' . $_SESSION ["pole"] . ' AND delete_poi = FALSE ';
 			}
 			$sql .= $sqlappend;
 			if (DEBUG) {
