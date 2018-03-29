@@ -22,11 +22,17 @@
 							subcategory.icon_subcategory,
 							COUNT(poi.id_poi) as nb_poi 
 						FROM subcategory 
-						INNER JOIN poi ON (poi.subcategory_id_subcategory = subcategory.id_subcategory) 
+						INNER JOIN poi ON (poi.subcategory_id_subcategory = subcategory.id_subcategory)
+						INNER JOIN priorite ON (poi.priorite_id_priorite = priorite.id_priorite)
 						WHERE display_subcategory = TRUE AND 
-							category_id_category =  ".$row['id_category']."
-						AND poi.delete_poi = 0
-						AND poi.moderation_poi = 1
+							category_id_category =  ".$row['id_category']." 
+						AND poi.display_poi = TRUE 
+						AND poi.fix_poi = FALSE 
+						AND poi.moderation_poi = TRUE 
+						AND priorite.id_priorite <> 7 
+						AND priorite.id_priorite <> 8
+						AND priorite.id_priorite <> 6
+						AND poi.delete_poi = 0 
 						GROUP BY subcategory.id_subcategory 
 						ORDER BY treerank_subcategory ASC";
 				if (DEBUG){
