@@ -15,24 +15,60 @@ if (isset ( $_SESSION ['user'] )) {
 			$json = "[";
 			
 			if ($_SESSION ['role'] == 3) { // pole technique
-				$sql = "SELECT count(p.id_poi) as nbpoi, c.* FROM category AS c
-                    INNER JOIN subcategory sc ON c.id_category = sc.category_id_category
-                    INNER JOIN poi p ON p.subcategory_id_subcategory = sc.id_subcategory
-                    WHERE c.display_category = TRUE AND sc.display_subcategory = TRUE
-                    AND p.transmission_poi = TRUE AND p.pole_id_pole = " . $_SESSION ['pole'] . " AND p.delete_poi = FALSE
-                    GROUP BY
-                        c.id_category, c.lib_category, c.icon_category, c.treerank_category, c.display_category
-                    ORDER BY c.treerank_category ASC";
-			} else {
-				$sql = "SELECT count(p.id_poi) as nbpoi, c.* FROM category AS c
-                    INNER JOIN subcategory sc ON c.id_category = sc.category_id_category
-                    INNER JOIN poi p ON p.subcategory_id_subcategory = sc.id_subcategory
-                    WHERE c.display_category = TRUE AND sc.display_subcategory = TRUE
-                    GROUP BY
-                        c.id_category, c.lib_category, c.icon_category, c.treerank_category, c.display_category
-                    ORDER BY c.treerank_category ASC";
+				$whereClauseSQL = " display_subcategory = TRUE 
+						 	AND p.pole_id_pole = " . $_SESSION ['pole'] . " 
+						 	AND priorite.id_priorite <> 7 
+						 	AND priorite.id_priorite <> 15 
+						 	AND delete_poi = FALSE 
+						 	AND p.geom_poi IS NOT NULL 	
+						 	AND moderation_poi = 1 
+						 	AND p.display_poi = TRUE 
+						 	AND p.fix_poi = FALSE	
+						 	AND p.transmission_poi = TRUE ";
+			} else if ($_SESSION ['role'] == 4) { // moderateur
+				$whereClauseSQL = " display_subcategory = TRUE 
+						 	AND p.pole_id_pole = " . $_SESSION ['pole'] . " 
+						 	AND p.delete_poi = FALSE 
+						 	AND p.geom_poi IS NOT NULL 
+						 	AND p.display_poi = TRUE 
+						 	AND p.fix_poi = FALSE ";
+			}else if ($_SESSION ['role'] == 2) { // communaute de commune
+				$whereClauseSQL = " display_subcategory = TRUE 
+							AND moderation_poi = 1 
+							AND display_poi = 1 
+							AND commune_id_commune IN (" . str_replace ( ';', ',', $_SESSION ['territoire'] ) . ") 
+							AND delete_poi = FALSE 
+							AND priorite.id_priorite <> 7 
+							AND priorite.id_priorite <> 15 ";
+				
+				
+			}else {
+				$whereClauseSQL = " display_subcategory = TRUE 
+						 	AND p.delete_poi = FALSE ";
 			}
 			
+			$sql = "SELECT count(p.id_poi) as nbpoi, c.* FROM category AS c
+                    INNER JOIN subcategory sc ON c.id_category = sc.category_id_category
+                    INNER JOIN poi p ON p.subcategory_id_subcategory = sc.id_subcategory
+                    INNER JOIN priorite ON (p.priorite_id_priorite = priorite.id_priorite)
+                    WHERE $whereClauseSQL
+                    GROUP BY
+                        c.id_category, c.lib_category, c.icon_category, c.treerank_category, c.display_category
+                    ORDER BY c.treerank_category ASC";
+			$sql2 = "SELECT distinct(subcategory.id_subcategory),
+                        subcategory.lib_subcategory,
+                        subcategory.icon_subcategory,
+                        COUNT(p.id_poi) as nb_poi
+                        FROM subcategory
+                        INNER JOIN poi p ON (p.subcategory_id_subcategory = subcategory.id_subcategory)
+						INNER JOIN priorite ON (p.priorite_id_priorite = priorite.id_priorite)
+                        WHERE category_id_category =  idCategory AND 
+						 	$whereClauseSQL
+				        GROUP BY subcategory.id_subcategory
+						ORDER BY treerank_subcategory ASC";
+			if (DEBUG) {
+				error_log ( date ( "Y-m-d H:i:s" ) . " - admin/getJsonTree.php $sql \n $sql2\n", 3, LOG_FILE );
+			}
 			$result = mysql_query ( $sql );
 			while ( $row = mysql_fetch_array ( $result ) ) {
 				$json .= "{";
@@ -41,20 +77,13 @@ if (isset ( $_SESSION ['user'] )) {
 				$json .= "iconCls: '" . $row ['icon_category'] . "',";
 				$json .= "expanded: true,";
 				
-				$sql2 = "SELECT distinct(subcategory.id_subcategory),
-                        subcategory.lib_subcategory,
-                        subcategory.icon_subcategory,
-                        COUNT(poi.id_poi) as nb_poi
-                        FROM subcategory
-                        INNER JOIN poi ON (poi.subcategory_id_subcategory = subcategory.id_subcategory)
-                        WHERE display_subcategory = TRUE AND
-                        category_id_category =  " . $row ['id_category'] .
-				" 		GROUP BY subcategory.id_subcategory 
-						ORDER BY treerank_subcategory ASC";
-				
+				$sqlSubCategory =str_replace('idCategory',$row['id_category'],$sql2);
+				if (DEBUG) {
+					error_log ( date ( "Y-m-d H:i:s" ) . " - admin/getJsonTree.php $sqlSubCategory\n", 3, LOG_FILE );
+				}
 				// $sql2 = "SELECT ,
 				// COUNT(poi.id_poi) as nb_poi, subcategory.* FROM subcategory WHERE display_subcategory = TRUE AND category_id_category = ".$row['id_category']." ORDER BY treerank_subcategory ASC";
-				$result2 = mysql_query ( $sql2 );
+				$result2 = mysql_query ( $sqlSubCategory );
 				if (mysql_num_rows ( $result2 ) > 0) {
 					$json .= "leaf: false,";
 					$json .= "children: [";
