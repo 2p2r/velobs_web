@@ -34,6 +34,7 @@
 			<script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Loading language...';</script>
 			<script type="text/javascript" src="lib/js/framework/ext-3.4.0/src/locale/ext-lang-fr.js"></script>
 			<script type="text/javascript" src="lib/js/translation_fr.js?v1.5"></script>
+            <script type="text/javascript" src="lib/js/key.js.template?v1.5"></script>
             <script type="text/javascript" src="lib/js/key.js?v1.5"></script>
 			
 			<script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Loading extensions...';</script>
