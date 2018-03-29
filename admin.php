@@ -93,6 +93,7 @@
 
 			<script type="text/javascript" src="lib/js/admin/modeemploi2.js?v1.5"></script>
 			<script type="text/javascript" src="lib/js/admin/userUpdate.js?v1.5"></script>
+			<script type="text/javascript" src="lib/js/admin/mapadmin3.js?v1.5"></script>
 			<script type="text/javascript" src="lib/js/admin/poi2.js?v1.5"></script>
 			<script type="text/javascript" src="lib/js/admin/main2.js?v1.5"></script>
 	 
