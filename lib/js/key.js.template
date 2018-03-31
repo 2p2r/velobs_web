@@ -53,3 +53,6 @@ var mapLayersArray = [
 //peut-être la même définition qu'une carte ci-dessus, mais ne pas affecter une variable de carte déjà existante sinon une des 2 cartes ne s'affichera pas
 var adminMapForPoi = new OpenLayers.Layer.OSM("OpenStreetMap Hikebike", "http://toolserver.org/tiles/hikebike/${z}/${x}/${y}.png");
 
+//variables used in the render of observations, grouped together in clusters if there are more than ClusterStrategyNumberOfGroupedObservations observations close to each other of at most ClusterStrategyDistance pixels
+var ClusterStrategyNumberOfGroupedObservations = 6;
+var ClusterStrategyDistance = 30;
