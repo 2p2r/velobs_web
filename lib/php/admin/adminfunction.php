@@ -1941,7 +1941,7 @@ Lien vers la modération : ".URL.'/admin.php?id='.$arrayObs['id_poi']."\n".
 				$userLogin = mysql_real_escape_string($_POST['userLogin']);
 				$chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 				$clearPassword = substr(str_shuffle($chars),0,8);
-				$pass_users = create_password_hash($clearPassword,'PASSWORD_BCRYPT');
+				$pass_users = create_password_hash($clearPassword,PASSWORD_BCRYPT);
 				
 				$sql = "UPDATE users SET pass_users = '$pass_users' WHERE id_users = $userId";
 				if (DEBUG){
@@ -2003,7 +2003,7 @@ Votre compte sur VelObs a été mis à jour. Vous pouvez vous connecter à l'int
 					$message .="	- Nom : ".$_POST['nom_users']."\n";
 				}
 				if (isset($_POST['pass_users']) && $_POST['pass_users'] != ''){
-					$pass_users = create_password_hash($_POST['pass_users'],'PASSWORD_BCRYPT');
+					$pass_users = create_password_hash($_POST['pass_users'],PASSWORD_BCRYPT);
 					$sql .= "pass_users = '". $pass_users ."',";
 					$message .="	- Mot de passe : ".$_POST['pass_users']."\n";
 				}
@@ -2066,7 +2066,7 @@ En cas de question, vous pouvez trouver des informations sur https://github.com/
 
 				$lib_users = mysql_real_escape_string($_POST['lib_users']);
 				$nom_users = mysql_real_escape_string($_POST['nom_users']);
-				$pass_users = create_password_hash($_POST['pass_users'],'PASSWORD_BCRYPT');
+				$pass_users = create_password_hash($_POST['pass_users'],PASSWORD_BCRYPT);
 				$mail_users = mysql_real_escape_string($_POST['mail_users']);
 
 				$usertype_id_usertype = $_POST['usertype_id_usertype'];
