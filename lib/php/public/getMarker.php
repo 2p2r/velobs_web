@@ -60,7 +60,7 @@ switch (SGBD) {
 				$sqlappend .= " AND priorite.id_priorite = 6 ";
 			}
 			
-			$sql = "SELECT *, commune.lib_commune, x(poi.geom_poi) AS X, y(poi.geom_poi) AS Y, subcategory.icon_subcategory, subcategory.lib_subcategory 
+			$sql = "SELECT poi.*, commune.lib_commune, x(poi.geom_poi) AS X, y(poi.geom_poi) AS Y, subcategory.icon_subcategory, subcategory.lib_subcategory, status.lib_status
 					FROM poi 
 					INNER JOIN subcategory ON (subcategory.id_subcategory = poi.subcategory_id_subcategory) 
 					INNER JOIN commune ON (commune.id_commune = poi.commune_id_commune) 
@@ -89,6 +89,8 @@ switch (SGBD) {
 			$arr [$i] ['num'] = stripslashes ( $row ['num_poi'] );
 			$arr [$i] ['rue'] = stripslashes ( $row ['rue_poi'] );
 			$arr [$i] ['commune'] = stripslashes ( $row ['lib_commune'] );
+			$arr [$i] ['priority'] = stripslashes ( $row ['priorite.lib_priorite'] );
+			$arr [$i] ['status'] = stripslashes ( $row ['status.lib_status'] );
 			// TODO : combiner icone de subcategory + priorité
 			if ($row ['priorite_id_priorite'] == 6) {
 				$arr [$i] ['icon'] = 'resources/icon/marker/done.png';
