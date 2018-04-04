@@ -2729,14 +2729,17 @@ Cordialement, l'Association ".VELOBS_ASSOCIATION." :)";
 	function getComments($id_poi) {
 		switch (SGBD) {
 			case 'mysql':
+				if (DEBUG){
+					error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . ", SESSION type = ".$_SESSION ["type"]."\n", 3, LOG_FILE);
+				}
 				$link = mysql_connect(DB_HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
 				mysql_query("SET NAMES utf8mb4");
-				$displayAllCommentaires = true;
+				$whereAppend = '';
 				if ($_SESSION ["type"] == 3 || $_SESSION ["type"] == 2) {//is communaute de communes or pole technique
-					$displayAllCommentaires = false;
+					$whereAppend = ' AND display_commentaires = 1';
 				}
-				$sql = "SELECT * FROM commentaires WHERE poi_id_poi = ".$id_poi." AND display_commentaires = ".$displayAllCommentaires;
+				$sql = "SELECT * FROM commentaires WHERE poi_id_poi = ".$id_poi. " " . $whereAppend;
 				$result = mysql_query($sql);
 				$nbrows = mysql_num_rows($result);
 

@@ -46,15 +46,15 @@ if (isset ( $_SESSION ['user'] )) {
 				// $tabListType = preg_split ( '#,#', $listType );
 				$sqlappend .= " poi.geom_poi IS NOT NULL AND subcategory_id_subcategory IN ( " . $listType . ") AND poi.display_poi = TRUE AND poi.fix_poi = FALSE";
 			}
-			$displayAllCommentaires = true;
+			$whereSelectCommentAppend = '';
 			if ($_SESSION ["type"] == 1 && isset ( $_POST ["priority"] )) {//is admin
 				$sqlappend .= ' AND priorite.id_priorite = ' . $_POST ["priority"];
 			} elseif ($_SESSION ["type"] == 2) {//is communaute de communes
 				$sqlappend .= ' AND moderation_poi = 1 AND display_poi = 1 AND commune_id_commune IN (' . str_replace ( ';', ',', $_SESSION ['territoire'] ) . ') AND delete_poi = FALSE AND priorite.id_priorite <> 7 AND priorite.id_priorite <> 15 ';
-				$displayAllCommentaires = false;
+				$whereSelectCommentAppend = ' AND display_commentaires = 1 ';
 			} elseif ($_SESSION ["type"] == 3) {//is pole technique
 				$sqlappend .= ' AND moderation_poi = 1 AND display_poi = 1 AND transmission_poi = 1 AND delete_poi = FALSE AND poi.pole_id_pole = ' . $_SESSION ["pole"] . ' AND priorite.id_priorite <> 7 AND priorite.id_priorite <> 15 ';
-				$displayAllCommentaires = false;
+				$whereSelectCommentAppend = ' AND display_commentaires = 1 ';
 			} elseif ($_SESSION ["type"] == 4) {//is moderateur
 				$sqlappend .= ' AND poi.pole_id_pole = ' . $_SESSION ["pole"] . ' AND delete_poi = FALSE ';
 			}
@@ -103,7 +103,7 @@ if (isset ( $_SESSION ['user'] )) {
 				$arr [$i] ['lat'] = $row ['Y'];
 				$arr [$i] ['lon'] = $row ['X'];
 				$arr [$i] ['lastdatemodif_poi'] = $row ['lastdatemodif_poi'];
-				$sql2 = "SELECT * FROM commentaires WHERE poi_id_poi = " . $row ['id_poi'] ." AND display_commentaires = ".$displayAllCommentaires;
+				$sql2 = "SELECT * FROM commentaires WHERE poi_id_poi = " . $row ['id_poi'] ." " . $whereSelectCommentAppend;
 				if (DEBUG) {
 					error_log ( date ( "Y-m-d H:i:s" ) . " - admin/getMarker.php $sql2\n", 3, LOG_FILE );
 				}
