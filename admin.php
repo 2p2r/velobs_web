@@ -85,6 +85,7 @@
 			<script type="text/javascript" src="lib/js/admin/subcategory1.js?v1.5"></script>			
 			<script type="text/javascript" src="lib/js/admin/category1.js?v1.5"></script>
 			<script type="text/javascript" src="lib/js/admin/mapadmin.js?v1.5"></script>
+			<script type="text/javascript" src="lib/js/admin/poiCommonBeforeRender.js?v1.5"></script>
 			<script type="text/javascript" src="lib/js/admin/main1.js?v1.5"></script>
 	 
 <?php			
@@ -95,6 +96,7 @@
 			<script type="text/javascript" src="lib/js/admin/poi2.js?v1.5"></script>
 			
 			<script type="text/javascript" src="lib/js/admin/mapadmin.js?v1.5"></script>
+			<script type="text/javascript" src="lib/js/admin/poiCommonBeforeRender.js?v1.5"></script>
 			<script type="text/javascript" src="lib/js/admin/main2.js?v1.5"></script>
 <?php
 				break;
@@ -103,6 +105,7 @@
 			<script type="text/javascript" src="lib/js/admin/modeemploi3.js?v1.5"></script>
 			<script type="text/javascript" src="lib/js/admin/poi3.js?v1.5"></script>
 			<script type="text/javascript" src="lib/js/admin/mapadmin.js?v1.5"></script>
+			<script type="text/javascript" src="lib/js/admin/poiCommonBeforeRender.js?v1.5"></script>
 			<script type="text/javascript" src="lib/js/admin/main3.js?v1.5"></script>
 <?php
 				break;
@@ -114,6 +117,7 @@
             <script type="text/javascript" src="lib/js/admin/basket.js?v1.5"></script>
             <script type="text/javascript" src="lib/js/admin/poi4.js?v1.5"></script>
             <script type="text/javascript" src="lib/js/admin/mapadmin.js?v1.5"></script>
+			<script type="text/javascript" src="lib/js/admin/poiCommonBeforeRender.js?v1.5"></script>
             <script type="text/javascript" src="lib/js/admin/main4.js?v1.5"></script>
 
 <?php
