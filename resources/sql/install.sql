@@ -273,7 +273,7 @@ CREATE TABLE IF NOT EXISTS `poi` (
   `quartier_id_quartier` int(11) DEFAULT NULL,
   `priorite_id_priorite` int(11) DEFAULT NULL,
   `observationterrain_poi` text,
-  `reponsegrandtoulouse_poi` text,
+  `reponse_collectivite_poi` text,
   `commentfinal_poi` text,
   `status_id_status` int(11) DEFAULT NULL,
   `transmission_poi` tinyint(1) DEFAULT NULL,

@@ -634,7 +634,7 @@
 						$arr[$i]['desc_poi'] = stripslashes($row['desc_poi']);
 						$arr[$i]['prop_poi'] = stripslashes($row['prop_poi']);
 						$arr[$i]['observationterrain_poi'] = stripslashes($row['observationterrain_poi']);
-						$arr[$i]['reponsegrandtoulouse_poi'] = stripslashes($row['reponsegrandtoulouse_poi']);
+						$arr[$i]['reponse_collectivite_poi'] = stripslashes($row['reponse_collectivite_poi']);
 						$arr[$i]['reponsepole_poi'] = stripslashes($row['reponsepole_poi']);
 						$arr[$i]['commentfinal_poi'] = stripslashes($row['commentfinal_poi']);
 						$arr[$i]['display_poi'] = $row['display_poi'];

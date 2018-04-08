@@ -89,7 +89,7 @@ switch (SGBD) {
 			
 			$arr [$i] ['date'] = $row ['datecreation_poi'];
 			$arr [$i] ['desc'] = stripslashes ( $row ['desc_poi'] );
-			$arr [$i] ['repgt'] = stripslashes ( $row ['reponsegrandtoulouse_poi'] );
+			$arr [$i] ['repgt'] = stripslashes ( $row ['reponse_collectivite_poi'] );
 			$arr [$i] ['cmt'] = stripslashes ( $row ['commentfinal_poi'] );
 			$arr [$i] ['prop'] = stripslashes ( $row ['prop_poi'] );
 			$arr [$i] ['photo'] = $row ['photo_poi'];

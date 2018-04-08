@@ -222,7 +222,7 @@
 			$observationArray['rue_poi'] = stripslashes($row['rue_poi']);
 			$observationArray['mailsentuser_poi'] = stripslashes($row['mailsentuser_poi']);
 			$observationArray['mail_poi'] = stripslashes($row['mail_poi']);
-			$observationArray['reponsegrandtoulouse_poi'] = stripslashes($row['reponsegrandtoulouse_poi']);
+			$observationArray['reponse_collectivite_poi'] = stripslashes($row['reponse_collectivite_poi']);
 			$observationArray['reponsepole_poi'] = stripslashes($row['reponsepole_poi']);
 			$observationArray['mailsentuser_poi'] = stripslashes($row['mailsentuser_poi']);
 			$observationArray['delete_poi'] = stripslashes($row['delete_poi']);
@@ -331,8 +331,8 @@
 		$arrayColumns[$numberOfColumns]['columnIntitule'] = '# Observation affichée sur l\'interface publique : ' ;
 		$arrayColumns[$numberOfColumns]['dataType'] = 'boolean' ;
 		$numberOfColumns++;
-		$arrayColumns[$numberOfColumns]['columnSQL'] = 'reponsegrandtoulouse_poi' ;
-		$arrayColumns[$numberOfColumns]['columnPOST'] = 'reponsegrandtoulouse_poi' ;
+		$arrayColumns[$numberOfColumns]['columnSQL'] = 'reponse_collectivite_poi' ;
+		$arrayColumns[$numberOfColumns]['columnPOST'] = 'reponse_collectivite_poi' ;
 		$arrayColumns[$numberOfColumns]['columnIntitule'] = '# Réponse de la collectivité : ' ;
 		$arrayColumns[$numberOfColumns]['dataType'] = 'string' ;
 		$numberOfColumns++;
