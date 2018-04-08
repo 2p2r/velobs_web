@@ -2729,9 +2729,7 @@ Cordialement, l'Association ".VELOBS_ASSOCIATION." :)";
 	function getComments($id_poi) {
 		switch (SGBD) {
 			case 'mysql':
-				if (DEBUG){
-					error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . ", SESSION type = ".$_SESSION ["type"]."\n", 3, LOG_FILE);
-				}
+				
 				$link = mysql_connect(DB_HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
 				mysql_query("SET NAMES utf8mb4");
@@ -2740,6 +2738,9 @@ Cordialement, l'Association ".VELOBS_ASSOCIATION." :)";
 					$whereAppend = ' AND display_commentaires = 1';
 				}
 				$sql = "SELECT * FROM commentaires WHERE poi_id_poi = ".$id_poi. " " . $whereAppend;
+				if (DEBUG){
+					error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . ", SESSION type = ".$_SESSION ["type"].", $sql \n", 3, LOG_FILE);
+				}
 				$result = mysql_query($sql);
 				$nbrows = mysql_num_rows($result);
 
