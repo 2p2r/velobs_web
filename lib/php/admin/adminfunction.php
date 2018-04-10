@@ -1689,6 +1689,7 @@ Lien vers la modération : ".URL.'/admin.php?id='.$arrayObs['id_poi']."\n".
 					while ($row = mysql_fetch_array($result)) {
 						$arr[$i]['id_status'] = $row['id_status'];
 						$arr[$i]['lib_status'] = stripslashes($row['lib_status']);
+						$arr[$i]['color_status'] = stripslashes($row['color_status']);
 						$i++;
 					}
 					echo '({"total":"'.$nbrows.'","results":'.json_encode($arr).'})';
@@ -1720,10 +1721,10 @@ Lien vers la modération : ".URL.'/admin.php?id='.$arrayObs['id_poi']."\n".
 				mysql_select_db(DB_NAME);
 				mysql_query("SET NAMES utf8mb4");
 				
-				$id_status = $_POST['id_status'];
-				$lib_status = $_POST['lib_status'];		
-	
-				$sql = "UPDATE status SET lib_status = '$lib_status' WHERE id_status = $id_status";
+				$id_status = mysql_real_escape_string($_POST['id_status']);
+				$lib_status = mysql_real_escape_string($_POST['lib_status']);		
+				$color_status = mysql_real_escape_string($_POST['color_status']);
+				$sql = "UPDATE status SET lib_status = '$lib_status', color_status = '$color_status' WHERE id_status = $id_status";
 				$result = mysql_query($sql);
 				if (!$result) {
 					echo '2';

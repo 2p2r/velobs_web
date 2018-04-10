@@ -43,7 +43,7 @@ switch (SGBD) {
 			if ($_GET ['status'] == NULL || $_GET ['status'] == 'all') {
 				$statussqlappend = '';
 			} else {
-				$statussqlappend = ' AND status_id_status = ' + $_GET ['status'];
+				$statussqlappend = ' AND status_id_status = ' . $_GET ['status'];
 			}
 			$listType = $_GET ['listType'];
 			$tabListType = preg_split ( '#,#', $listType );
@@ -67,6 +67,7 @@ switch (SGBD) {
 					subcategory.icon_subcategory, 
 					subcategory.lib_subcategory, 
 					status.lib_status,
+					status.color_status,
 					priorite.lib_priorite 
 					FROM poi 
 					INNER JOIN subcategory ON (subcategory.id_subcategory = poi.subcategory_id_subcategory) 
@@ -98,17 +99,18 @@ switch (SGBD) {
 			$arr [$i] ['commune'] = stripslashes ( $row ['lib_commune'] );
 			$arr [$i] ['priorite'] = stripslashes ( $row ['lib_priorite'] );
 			$arr [$i] ['status'] = stripslashes ( $row ['lib_status'] );
+			$arr [$i] ['color_status'] = stripslashes ( $row ['color_status'] );
 			// TODO : combiner icone de subcategory + priorité
-			if ($row ['priorite_id_priorite'] == 6) {
-				$arr [$i] ['icon'] = 'resources/icon/marker/done.png';
-				$arr [$i] ['iconCls'] = 'done';
-			} else if ($row ['priorite_id_priorite'] == 12) {
-				$arr [$i] ['icon'] = 'resources/icon/marker/refuse.png';
-				$arr [$i] ['iconCls'] = 'refuse';
-			} else {
+// 			if ($row ['priorite_id_priorite'] == 6) {
+// 				$arr [$i] ['icon'] = 'resources/icon/marker/done.png';
+// 				$arr [$i] ['iconCls'] = 'done';
+// 			} else if ($row ['priorite_id_priorite'] == 12) {
+// 				$arr [$i] ['icon'] = 'resources/icon/marker/refuse.png';
+// 				$arr [$i] ['iconCls'] = 'refuse';
+// 			} else {
 				$arr [$i] ['icon'] = 'resources/icon/marker/' . $row ['icon_subcategory'] . '.png';
 				$arr [$i] ['iconCls'] = $row ['icon_subcategory'];
-			}
+// 			}
 			
 			$arr [$i] ['lat'] = $row ['Y'];
 			$arr [$i] ['lon'] = $row ['X'];
@@ -125,6 +127,9 @@ switch (SGBD) {
 			}
 			
 			$i ++;
+		}
+		if (DEBUG) {
+			error_log ( date ( "Y-m-d H:i:s" ) . " - public/getMarker.php Nombre d'observations correspondantes = " . $i, 3, LOG_FILE );
 		}
 		echo '{"markers":' . json_encode ( $arr ) . '}';
 		

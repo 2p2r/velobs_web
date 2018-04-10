@@ -49,6 +49,7 @@
 			
 			<script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Loading application...';</script>
 			<script type="text/javascript" src="lib/js/public/credits.js"></script>
+			<script type="text/javascript" src="lib/js/common.js?v1.5"></script>
 			<script type="text/javascript" src="lib/js/framework/AnimatedCluster.js"></script>
 			<script type="text/javascript" src="lib/js/public/proposition.js?v1.5"></script>
 			<script type="text/javascript" src="lib/js/public/map.js?v1.5"></script>

@@ -64,6 +64,7 @@
 			<script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Loading geometry...';</script>
 			
 			<script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Loading application...';</script>
+			<script type="text/javascript" src="lib/js/common.js?v1.5"></script>
 			<script type="text/javascript" src="lib/js/admin/poiCommon.js?v1.5"></script>
 			<script type="text/javascript" src="lib/js/admin/userUpdate.js?v1.5"></script>
 		<?php 

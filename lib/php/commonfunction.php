@@ -117,8 +117,6 @@
 		return(is_in_polygon($points_polygon, $vertices_x, $vertices_y, $longitude_poi, $latitude_poi));	
 	}			
 	
-	
-	
 	/* 	Function name 	: generate_image_thumbnail
 	 * 	Input			: une url d'image en entrée, le path en sortie, la largeur et la hauteur
 	* 	Output			: ---

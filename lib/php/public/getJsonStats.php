@@ -16,7 +16,7 @@
 			$result = mysql_query($sql);
 			$i = 0;
 			while ($row = mysql_fetch_array($result)){
-				$sql2 = "SELECT COUNT(p.id_poi) as nb_poi, s.id_status, s.lib_status 
+				$sql2 = "SELECT COUNT(p.id_poi) as nb_poi, s.id_status, s.lib_status, s.color_status
 						FROM status s 
 						INNER JOIN poi p ON p.status_id_status = s.id_status 
 						WHERE p.status_id_status =  ".$row['id_status'] . "
@@ -28,6 +28,7 @@
 				while ($row2 = mysql_fetch_array($result2)){	
 					$arr[$i]['status'] = addslashes($row2['lib_status']);
 					$arr[$i]['nb_poi'] = $row2['nb_poi'];
+					$arr[$i]['color_status'] = addslashes($row2['color_status']);
 					$i++;
 				}
 			}

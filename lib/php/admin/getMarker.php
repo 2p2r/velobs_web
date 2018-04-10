@@ -18,7 +18,8 @@ if (isset ( $_SESSION ['user'] )) {
 						y(poi.geom_poi) AS Y, 
 						subcategory.icon_subcategory,
 						lib_pole,
-						lib_status
+						lib_status,
+						color_status
 					FROM poi 
 					INNER JOIN subcategory ON (subcategory.id_subcategory = poi.subcategory_id_subcategory) 
 					INNER JOIN commune ON (commune.id_commune = poi.commune_id_commune) 
@@ -89,16 +90,17 @@ if (isset ( $_SESSION ['user'] )) {
 				$arr [$i] ['moderation_poi'] = stripslashes ( $row ['moderation_poi'] );
 				$arr [$i] ['observationterrain_poi'] = stripslashes ( $row ['observationterrain_poi'] );
 				$arr [$i] ['lib_status'] = stripslashes ( $row ['lib_status'] );
-				if ($row ['priorite_id_priorite'] == 6) {
-					$arr [$i] ['icon'] = 'resources/icon/marker/done.png';
-					$arr [$i] ['iconCls'] = 'done';
-				} else if ($row ['priorite_id_priorite'] == 12) {
-					$arr [$i] ['icon'] = 'resources/icon/marker/refuse.png';
-					$arr [$i] ['iconCls'] = 'refuse';
-				} else {
+				$arr [$i] ['color_status'] = stripslashes ( $row ['color_status'] );
+// 				if ($row ['priorite_id_priorite'] == 6) {
+// 					$arr [$i] ['icon'] = 'resources/icon/marker/done.png';
+// 					$arr [$i] ['iconCls'] = 'done';
+// 				} else if ($row ['priorite_id_priorite'] == 12) {
+// 					$arr [$i] ['icon'] = 'resources/icon/marker/refuse.png';
+// 					$arr [$i] ['iconCls'] = 'refuse';
+// 				} else {
 					$arr [$i] ['icon'] = 'resources/icon/marker/' . $row ['icon_subcategory'] . '.png';
 					$arr [$i] ['iconCls'] = $row ['icon_subcategory'];
-				}
+// 				}
 				
 				$arr [$i] ['lat'] = $row ['Y'];
 				$arr [$i] ['lon'] = $row ['X'];
