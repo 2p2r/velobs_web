@@ -12,7 +12,7 @@ if (isset ( $_SESSION ['user'] )) {
 			$link = mysql_connect ( DB_HOST, DB_USER, DB_PASS );
 			mysql_select_db ( DB_NAME );
 			mysql_query ( "SET NAMES utf8mb4" );
-			$sql = "SELECT *, 
+			$sql = "SELECT poi.*, 
 						commune.lib_commune, 
 						x(poi.geom_poi) AS X, 
 						y(poi.geom_poi) AS Y, 
@@ -45,19 +45,19 @@ if (isset ( $_SESSION ['user'] )) {
 					error_log ( date ( "Y-m-d H:i:s" ) . " - admin/getMarker.php avec listType $listType\n", 3, LOG_FILE );
 				}
 				// $tabListType = preg_split ( '#,#', $listType );
-				$sqlappend .= " poi.geom_poi IS NOT NULL AND subcategory_id_subcategory IN ( " . $listType . ") AND poi.display_poi = TRUE AND poi.fix_poi = FALSE";
+				$sqlappend .= " poi.geom_poi IS NOT NULL AND subcategory_id_subcategory IN ( " . $listType . ") AND poi.display_poi = TRUE AND poi.fix_poi = FALSE AND delete_poi = FALSE ";
 			}
 			$whereSelectCommentAppend = '';
 			if ($_SESSION ["type"] == 1 && isset ( $_POST ["priority"] )) {//is admin
 				$sqlappend .= ' AND priorite.id_priorite = ' . $_POST ["priority"];
 			} elseif ($_SESSION ["type"] == 2) {//is communaute de communes
-				$sqlappend .= ' AND moderation_poi = 1 AND display_poi = 1 AND commune_id_commune IN (' . str_replace ( ';', ',', $_SESSION ['territoire'] ) . ') AND delete_poi = FALSE AND priorite.id_priorite <> 7 AND priorite.id_priorite <> 15 ';
+				$sqlappend .= ' AND moderation_poi = 1 AND commune_id_commune IN (' . str_replace ( ';', ',', $_SESSION ['territoire'] ) . ') AND priorite.id_priorite <> 7 AND priorite.id_priorite <> 15 ';
 				$whereSelectCommentAppend = ' AND display_commentaires = 1 ';
 			} elseif ($_SESSION ["type"] == 3) {//is pole technique
-				$sqlappend .= ' AND moderation_poi = 1 AND display_poi = 1 AND transmission_poi = 1 AND delete_poi = FALSE AND poi.pole_id_pole = ' . $_SESSION ["pole"] . ' AND priorite.id_priorite <> 7 AND priorite.id_priorite <> 15 ';
+				$sqlappend .= ' AND moderation_poi = 1  AND transmission_poi = 1 AND poi.pole_id_pole = ' . $_SESSION ["pole"] . ' AND priorite.id_priorite <> 7 AND priorite.id_priorite <> 15 ';
 				$whereSelectCommentAppend = ' AND display_commentaires = 1 ';
 			} elseif ($_SESSION ["type"] == 4) {//is moderateur
-				$sqlappend .= ' AND poi.pole_id_pole = ' . $_SESSION ["pole"] . ' AND delete_poi = FALSE ';
+				$sqlappend .= ' AND poi.pole_id_pole = ' . $_SESSION ["pole"] . ' ';
 			}
 			$sql .= $sqlappend;
 			if (DEBUG) {
