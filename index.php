@@ -4,7 +4,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-		<title><?php echo PAGE_TITLE ?> V1.5</title>
+		<title><?php echo PAGE_TITLE ?> v1.5.1</title>
 		<link rel="shortcut icon" type="image/png" href="resources/favicon/favicon.ico" />
 	</head>
 	<body onunload="setCookie()">
@@ -33,15 +33,15 @@
 	
 			<script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Loading language...';</script>
 			<script type="text/javascript" src="lib/js/framework/ext-3.4.0/src/locale/ext-lang-fr.js"></script>
-			<script type="text/javascript" src="lib/js/translation_fr.js?v1.5"></script>
-            <script type="text/javascript" src="lib/js/key.js.template?v1.5"></script>
-            <script type="text/javascript" src="lib/js/key.js?v1.5"></script>
+			<script type="text/javascript" src="lib/js/translation_fr.js?v1.5.1"></script>
+            <script type="text/javascript" src="lib/js/key.js.template?v1.5.1"></script>
+            <script type="text/javascript" src="lib/js/key.js?v1.5.1"></script>
 			
 			<script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Loading extensions...';</script>
 			<script type="text/javascript" src="lib/js/framework/ux/GeoNamesSearchCombo.js"></script>
             <script type="text/javascript" src="lib/js/public/poidisplaystatus.js"></script>
 			<script type="text/javascript" src="lib/js/public/poidisplaydate.js"></script>
-			<script type="text/javascript" src="lib/js/public/baselayerlist.js?v1.5"></script>
+			<script type="text/javascript" src="lib/js/public/baselayerlist.js?v1.5.1"></script>
 			<script type="text/javascript" src="lib/js/framework/ux/FileUploadField.js"></script>
 			<script type="text/javascript" src="lib/js/framework/ux/IconCombo.js"></script>
 	
@@ -49,11 +49,11 @@
 			
 			<script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Loading application...';</script>
 			<script type="text/javascript" src="lib/js/public/credits.js"></script>
-			<script type="text/javascript" src="lib/js/common.js?v1.5"></script>
 			<script type="text/javascript" src="lib/js/framework/AnimatedCluster.js"></script>
-			<script type="text/javascript" src="lib/js/public/proposition.js?v1.5"></script>
-			<script type="text/javascript" src="lib/js/public/map.js?v1.5"></script>
-			<script type="text/javascript" src="lib/js/public/main.js?v1.5"></script>
+			<script type="text/javascript" src="lib/js/common.js?v1.5.1"></script>
+			<script type="text/javascript" src="lib/js/public/proposition.js?v1.5.1"></script>
+			<script type="text/javascript" src="lib/js/public/map.js?v1.5.1"></script>
+			<script type="text/javascript" src="lib/js/public/main.js?v1.5.1"></script>
 	 
 			<script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Initialization...';</script> 
 		</div>
