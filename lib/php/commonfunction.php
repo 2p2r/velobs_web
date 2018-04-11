@@ -91,7 +91,7 @@
 			if (isWithinPolygon($rings[0], $latitude_poi, $longitude_poi)){
 				$inHole = FALSE;
 				for ($j = 1; ($j < count($rings)) && !$inHole; $j++) {					
-					$inHole = isWithinRing($rings[$j], $latitude_poi, $longitude_poi);
+					$inHole = isWithinPolygon($rings[$j], $latitude_poi, $longitude_poi);
 				}
 				$inPolygon = !$inHole;
 			}

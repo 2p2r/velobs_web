@@ -281,7 +281,7 @@ CREATE TABLE IF NOT EXISTS `poi` (
   `reponsepole_poi` text,
   `mailsentuser_poi` tinyint(1) DEFAULT '0',
   `delete_poi` tinyint(1) DEFAULT '0',
-  `lastdatemodif_poi` date NOT NULL,
+  `lastdatemodif_poi` date,
   PRIMARY KEY (`id_poi`),
   KEY `subcategory_id_subcategory` (`subcategory_id_subcategory`),
   KEY `commune_id_commune` (`commune_id_commune`),
