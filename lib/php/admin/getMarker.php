@@ -48,15 +48,15 @@ if (isset ( $_SESSION ['user'] )) {
 				$sqlappend .= " poi.geom_poi IS NOT NULL AND subcategory_id_subcategory IN ( " . $listType . ") AND poi.display_poi = TRUE AND poi.fix_poi = FALSE AND delete_poi = FALSE ";
 			}
 			$whereSelectCommentAppend = '';
-			if ($_SESSION ["type"] == 1 && isset ( $_POST ["priority"] )) {//is admin
+			if ($_SESSION ["type"] == 1 && isset ( $_POST ["priority"] )) { // is admin
 				$sqlappend .= ' AND priorite.id_priorite = ' . $_POST ["priority"];
-			} elseif ($_SESSION ["type"] == 2) {//is communaute de communes
+			} elseif ($_SESSION ["type"] == 2) { // is communaute de communes
 				$sqlappend .= ' AND moderation_poi = 1 AND commune_id_commune IN (' . str_replace ( ';', ',', $_SESSION ['territoire'] ) . ') AND priorite.id_priorite <> 7 AND priorite.id_priorite <> 15 ';
 				$whereSelectCommentAppend = ' AND display_commentaires = 1 ';
-			} elseif ($_SESSION ["type"] == 3) {//is pole technique
+			} elseif ($_SESSION ["type"] == 3) { // is pole technique
 				$sqlappend .= ' AND moderation_poi = 1  AND transmission_poi = 1 AND poi.pole_id_pole = ' . $_SESSION ["pole"] . ' AND priorite.id_priorite <> 7 AND priorite.id_priorite <> 15 ';
 				$whereSelectCommentAppend = ' AND display_commentaires = 1 ';
-			} elseif ($_SESSION ["type"] == 4) {//is moderateur
+			} elseif ($_SESSION ["type"] == 4) { // is moderateur
 				$sqlappend .= ' AND poi.pole_id_pole = ' . $_SESSION ["pole"] . ' ';
 			}
 			$sql .= $sqlappend;
@@ -91,21 +91,13 @@ if (isset ( $_SESSION ['user'] )) {
 				$arr [$i] ['observationterrain_poi'] = stripslashes ( $row ['observationterrain_poi'] );
 				$arr [$i] ['lib_status'] = stripslashes ( $row ['lib_status'] );
 				$arr [$i] ['color_status'] = stripslashes ( $row ['color_status'] );
-// 				if ($row ['priorite_id_priorite'] == 6) {
-// 					$arr [$i] ['icon'] = 'resources/icon/marker/done.png';
-// 					$arr [$i] ['iconCls'] = 'done';
-// 				} else if ($row ['priorite_id_priorite'] == 12) {
-// 					$arr [$i] ['icon'] = 'resources/icon/marker/refuse.png';
-// 					$arr [$i] ['iconCls'] = 'refuse';
-// 				} else {
-					$arr [$i] ['icon'] = 'resources/icon/marker/' . $row ['icon_subcategory'] . '.png';
-					$arr [$i] ['iconCls'] = $row ['icon_subcategory'];
-// 				}
+				$arr [$i] ['icon'] = 'resources/icon/marker/' . $row ['icon_subcategory'] . '.png';
+				$arr [$i] ['iconCls'] = $row ['icon_subcategory'];
 				
 				$arr [$i] ['lat'] = $row ['Y'];
 				$arr [$i] ['lon'] = $row ['X'];
 				$arr [$i] ['lastdatemodif_poi'] = $row ['lastdatemodif_poi'];
-				$sql2 = "SELECT * FROM commentaires WHERE poi_id_poi = " . $row ['id_poi'] ." " . $whereSelectCommentAppend;
+				$sql2 = "SELECT * FROM commentaires WHERE poi_id_poi = " . $row ['id_poi'] . " " . $whereSelectCommentAppend;
 				if (DEBUG) {
 					error_log ( date ( "Y-m-d H:i:s" ) . " - admin/getMarker.php $sql2\n", 3, LOG_FILE );
 				}
