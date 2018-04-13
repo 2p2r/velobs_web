@@ -17,6 +17,7 @@ if (isset ( $_SESSION ['user'] )) {
 						x(poi.geom_poi) AS X, 
 						y(poi.geom_poi) AS Y, 
 						subcategory.icon_subcategory,
+						priorite.lib_priorite,
 						lib_pole,
 						lib_status,
 						color_status
@@ -35,7 +36,7 @@ if (isset ( $_SESSION ['user'] )) {
 				}
 				$sqlappend .= " delete_poi = FALSE AND poi.id_poi = " . $_GET ['id'];
 			} else {
-				if (isset ( $_GET ['commentToModerate'] ) && $_GET ['commentToModerate'] == 1) {
+				if (isset ( $_GET ['commentToModerate'] ) && $_GET ['commentToModerate'] == 1 && ($_SESSION ["type"] == 4 || $_SESSION ["type"] == 1)) {
 					$sqlappend = " INNER JOIN commentaires ON (poi.id_poi = commentaires.poi_id_poi) " . $sqlappend . " commentaires.display_commentaires = false AND ";
 				} elseif (isset ( $_GET ['priority'] ) && $_GET ['priority'] != '') {
 					$sqlappend .= " poi.priorite_id_priorite = " . $_GET ['priority'] . " AND ";
@@ -58,6 +59,10 @@ if (isset ( $_SESSION ['user'] )) {
 				$whereSelectCommentAppend = ' AND display_commentaires = 1 ';
 			} elseif ($_SESSION ["type"] == 4) { // is moderateur
 				$sqlappend .= ' AND poi.pole_id_pole = ' . $_SESSION ["pole"] . ' ';
+			}
+			
+			if (isset ( $_GET["status"] ) && $_GET["status"] != '') { // filter by status given by the collectivity
+				$sqlappend .= ' AND poi.status_id_status = ' . $_GET["status"];
 			}
 			$sql .= $sqlappend;
 			if (DEBUG) {

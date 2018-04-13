@@ -80,6 +80,10 @@ div#header .statusItem{
     float:left;
     padding-left:10px;
     text-align: center;
+/*     border-radius: 50%;
+    width: 100px;
+    height: 100px; 
+    background-color:#CCCCCC; */
 }
 div#header .statusItem H2{
 
