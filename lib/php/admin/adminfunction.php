@@ -665,10 +665,8 @@
 						$i++;
 					}
 					echo '({"total":"'.$nbrows.'","results":'.json_encode($arr).'})';
-					//echo '({"total":"'.$sql.'","results":'.json_encode($arr).'})';
 				} else {
 					echo '({"total":"0", "results":""})';
-					//echo '({"total":"'.$sql.'", "results":""})';
 				}
 				mysql_free_result($result);
 				mysql_close($link);
