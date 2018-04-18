@@ -97,8 +97,8 @@ switch (SGBD) {
 			$arr [$i] ['num'] = stripslashes ( $row ['num_poi'] );
 			$arr [$i] ['rue'] = stripslashes ( $row ['rue_poi'] );
 			$arr [$i] ['commune'] = stripslashes ( $row ['lib_commune'] );
-			$arr [$i] ['priorite'] = stripslashes ( $row ['lib_priorite'] );
-			$arr [$i] ['status'] = stripslashes ( $row ['lib_status'] );
+			$arr [$i] ['lib_priorite'] = stripslashes ( $row ['lib_priorite'] );
+			$arr [$i] ['lib_status'] = stripslashes ( $row ['lib_status'] );
 			$arr [$i] ['color_status'] = stripslashes ( $row ['color_status'] );
 			// TODO : combiner icone de subcategory + priorité
 // 			if ($row ['priorite_id_priorite'] == 6) {
