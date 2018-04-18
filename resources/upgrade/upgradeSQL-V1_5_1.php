@@ -18,6 +18,5 @@ echo $sqlUpdate . " : " . $resultUpdate . "<br />";
 $sqlUpdate = "UPDATE status SET color_status = 'black'";
 $resultUpdate = mysql_query ( $sqlUpdate );
 echo $sqlUpdate . " : " . $resultUpdate . "<br />";
-	}
 mysql_close($link);
 
