@@ -12,15 +12,22 @@ if (isset ( $_SESSION ['user'] )) {
 			$link = mysql_connect ( DB_HOST, DB_USER, DB_PASS );
 			mysql_select_db ( DB_NAME );
 			mysql_query ( "SET NAMES utf8mb4" );
-			$sql = "SELECT *, 
+			$sql = "SELECT poi.*, 
 						commune.lib_commune, 
 						x(poi.geom_poi) AS X, 
 						y(poi.geom_poi) AS Y, 
-						subcategory.icon_subcategory 
+						subcategory.icon_subcategory,
+						subcategory.lib_subcategory,
+						priorite.lib_priorite,
+						lib_pole,
+						lib_status,
+						color_status
 					FROM poi 
 					INNER JOIN subcategory ON (subcategory.id_subcategory = poi.subcategory_id_subcategory) 
 					INNER JOIN commune ON (commune.id_commune = poi.commune_id_commune) 
-					INNER JOIN priorite ON (poi.priorite_id_priorite = priorite.id_priorite) ";
+					INNER JOIN priorite ON (poi.priorite_id_priorite = priorite.id_priorite)
+					INNER JOIN pole ON (poi.pole_id_pole = pole.id_pole) 
+					INNER JOIN status ON (poi.status_id_status = status.id_status)";
 			$sqlappend = ' WHERE ';
 			// TODO : chek user type and pole
 			
@@ -30,7 +37,7 @@ if (isset ( $_SESSION ['user'] )) {
 				}
 				$sqlappend .= " delete_poi = FALSE AND poi.id_poi = " . $_GET ['id'];
 			} else {
-				if (isset ( $_GET ['commentToModerate'] ) && $_GET ['commentToModerate'] == 1) {
+				if (isset ( $_GET ['commentToModerate'] ) && $_GET ['commentToModerate'] == 1 && ($_SESSION ["type"] == 4 || $_SESSION ["type"] == 1)) {
 					$sqlappend = " INNER JOIN commentaires ON (poi.id_poi = commentaires.poi_id_poi) " . $sqlappend . " commentaires.display_commentaires = false AND ";
 				} elseif (isset ( $_GET ['priority'] ) && $_GET ['priority'] != '') {
 					$sqlappend .= " poi.priorite_id_priorite = " . $_GET ['priority'] . " AND ";
@@ -40,16 +47,23 @@ if (isset ( $_SESSION ['user'] )) {
 					error_log ( date ( "Y-m-d H:i:s" ) . " - admin/getMarker.php avec listType $listType\n", 3, LOG_FILE );
 				}
 				// $tabListType = preg_split ( '#,#', $listType );
-				$sqlappend .= " poi.geom_poi IS NOT NULL AND subcategory_id_subcategory IN ( " . $listType . ") AND poi.display_poi = TRUE AND poi.fix_poi = FALSE";
+				$sqlappend .= " poi.geom_poi IS NOT NULL AND subcategory_id_subcategory IN ( " . $listType . ") AND poi.display_poi = TRUE AND poi.fix_poi = FALSE AND delete_poi = FALSE ";
 			}
-			if ($_SESSION ["type"] == 1 && isset ( $_POST ["priority"] )) {//is admin
+			$whereSelectCommentAppend = '';
+			if ($_SESSION ["type"] == 1 && isset ( $_POST ["priority"] )) { // is admin
 				$sqlappend .= ' AND priorite.id_priorite = ' . $_POST ["priority"];
-			} elseif ($_SESSION ["type"] == 2) {//is communaute de communes
-				$sqlappend .= ' AND moderation_poi = 1 AND display_poi = 1 AND commune_id_commune IN (' . str_replace ( ';', ',', $_SESSION ['territoire'] ) . ') AND delete_poi = FALSE AND priorite.id_priorite <> 7 AND priorite.id_priorite <> 15 ';
-			} elseif ($_SESSION ["type"] == 3) {//is pole technique
-				$sqlappend .= ' AND moderation_poi = 1 AND display_poi = 1 AND transmission_poi = 1 AND delete_poi = FALSE AND poi.pole_id_pole = ' . $_SESSION ["pole"] . ' AND priorite.id_priorite <> 7 AND priorite.id_priorite <> 15 ';
-			} elseif ($_SESSION ["type"] == 4) {//is moderateur
-				$sqlappend .= ' AND poi.pole_id_pole = ' . $_SESSION ["pole"] . ' AND delete_poi = FALSE ';
+			} elseif ($_SESSION ["type"] == 2) { // is communaute de communes
+				$sqlappend .= ' AND moderation_poi = 1 AND commune_id_commune IN (' . str_replace ( ';', ',', $_SESSION ['territoire'] ) . ') AND priorite.id_priorite <> 7 AND priorite.id_priorite <> 15 ';
+				$whereSelectCommentAppend = ' AND display_commentaires = 1 ';
+			} elseif ($_SESSION ["type"] == 3) { // is pole technique
+				$sqlappend .= ' AND moderation_poi = 1  AND transmission_poi = 1 AND poi.pole_id_pole = ' . $_SESSION ["pole"] . ' AND priorite.id_priorite <> 7 AND priorite.id_priorite <> 15 ';
+				$whereSelectCommentAppend = ' AND display_commentaires = 1 ';
+			} elseif ($_SESSION ["type"] == 4) { // is moderateur
+				$sqlappend .= ' AND poi.pole_id_pole = ' . $_SESSION ["pole"] . ' ';
+			}
+			
+			if (isset ( $_GET["status"] ) && $_GET["status"] != '') { // filter by status given by the collectivity
+				$sqlappend .= ' AND poi.status_id_status = ' . $_GET["status"];
 			}
 			$sql .= $sqlappend;
 			if (DEBUG) {
@@ -62,32 +76,37 @@ if (isset ( $_SESSION ['user'] )) {
 			}
 			while ( $row = mysql_fetch_array ( $result ) ) {
 				$arr [$i] ['id'] = $row ['id_poi'];
-				$arr [$i] ['lib'] = stripslashes ( $row ['lib_subcategory'] );
+				$arr [$i] ['lib_subcategory'] = stripslashes ( $row ['lib_subcategory'] );
 				$arr [$i] ['date'] = $row ['datecreation_poi'];
 				$arr [$i] ['desc'] = stripslashes ( $row ['desc_poi'] );
-				$arr [$i] ['repgt'] = stripslashes ( $row ['reponsegrandtoulouse_poi'] );
+				$arr [$i] ['repgt'] = stripslashes ( $row ['reponse_collectivite_poi'] );
 				$arr [$i] ['cmt'] = stripslashes ( $row ['commentfinal_poi'] );
 				$arr [$i] ['prop'] = stripslashes ( $row ['prop_poi'] );
 				$arr [$i] ['photo'] = $row ['photo_poi'];
 				$arr [$i] ['num'] = stripslashes ( $row ['num_poi'] );
 				$arr [$i] ['rue'] = stripslashes ( $row ['rue_poi'] );
 				$arr [$i] ['commune'] = stripslashes ( $row ['lib_commune'] );
-				
-				if ($row ['priorite_id_priorite'] == 6) {
-					$arr [$i] ['icon'] = 'resources/icon/marker/done.png';
-					$arr [$i] ['iconCls'] = 'done';
-				} else if ($row ['priorite_id_priorite'] == 12) {
-					$arr [$i] ['icon'] = 'resources/icon/marker/refuse.png';
-					$arr [$i] ['iconCls'] = 'refuse';
-				} else {
-					$arr [$i] ['icon'] = 'resources/icon/marker/' . $row ['icon_subcategory'] . '.png';
-					$arr [$i] ['iconCls'] = $row ['icon_subcategory'];
-				}
+				$arr [$i] ['display_poi'] = stripslashes ( $row ['display_poi'] );
+				$arr [$i] ['fix_poi'] = stripslashes ( $row ['fix_poi'] );
+				$arr [$i] ['lib_priorite'] = stripslashes ( $row ['lib_priorite'] );
+				$arr [$i] ['lib_pole'] = stripslashes ( $row ['lib_pole'] );
+				$arr [$i] ['transmission_poi'] = stripslashes ( $row ['transmission_poi'] );
+				$arr [$i] ['reponsepole_poi'] = stripslashes ( $row ['reponsepole_poi'] );
+				$arr [$i] ['traiteparpole_poi'] = stripslashes ( $row ['traiteparpole_poi'] );
+				$arr [$i] ['moderation_poi'] = stripslashes ( $row ['moderation_poi'] );
+				$arr [$i] ['observationterrain_poi'] = stripslashes ( $row ['observationterrain_poi'] );
+				$arr [$i] ['lib_status'] = stripslashes ( $row ['lib_status'] );
+				$arr [$i] ['color_status'] = stripslashes ( $row ['color_status'] );
+				$arr [$i] ['icon'] = 'resources/icon/marker/' . $row ['icon_subcategory'] . '.png';
+				$arr [$i] ['iconCls'] = $row ['icon_subcategory'];
 				
 				$arr [$i] ['lat'] = $row ['Y'];
 				$arr [$i] ['lon'] = $row ['X'];
 				$arr [$i] ['lastdatemodif_poi'] = $row ['lastdatemodif_poi'];
-				$sql2 = "SELECT * FROM commentaires WHERE poi_id_poi = " . $row ['id_poi'];
+				$sql2 = "SELECT * FROM commentaires WHERE poi_id_poi = " . $row ['id_poi'] . " " . $whereSelectCommentAppend;
+				if (DEBUG) {
+					error_log ( date ( "Y-m-d H:i:s" ) . " - admin/getMarker.php $sql2\n", 3, LOG_FILE );
+				}
 				$result2 = mysql_query ( $sql2 );
 				$j = 0;
 				

@@ -634,7 +634,7 @@
 						$arr[$i]['desc_poi'] = stripslashes($row['desc_poi']);
 						$arr[$i]['prop_poi'] = stripslashes($row['prop_poi']);
 						$arr[$i]['observationterrain_poi'] = stripslashes($row['observationterrain_poi']);
-						$arr[$i]['reponsegrandtoulouse_poi'] = stripslashes($row['reponsegrandtoulouse_poi']);
+						$arr[$i]['reponse_collectivite_poi'] = stripslashes($row['reponse_collectivite_poi']);
 						$arr[$i]['reponsepole_poi'] = stripslashes($row['reponsepole_poi']);
 						$arr[$i]['commentfinal_poi'] = stripslashes($row['commentfinal_poi']);
 						$arr[$i]['display_poi'] = $row['display_poi'];
@@ -665,10 +665,8 @@
 						$i++;
 					}
 					echo '({"total":"'.$nbrows.'","results":'.json_encode($arr).'})';
-					//echo '({"total":"'.$sql.'","results":'.json_encode($arr).'})';
 				} else {
 					echo '({"total":"0", "results":""})';
-					//echo '({"total":"'.$sql.'", "results":""})';
 				}
 				mysql_free_result($result);
 				mysql_close($link);
@@ -1689,6 +1687,7 @@ Lien vers la modération : ".URL.'/admin.php?id='.$arrayObs['id_poi']."\n".
 					while ($row = mysql_fetch_array($result)) {
 						$arr[$i]['id_status'] = $row['id_status'];
 						$arr[$i]['lib_status'] = stripslashes($row['lib_status']);
+						$arr[$i]['color_status'] = stripslashes($row['color_status']);
 						$i++;
 					}
 					echo '({"total":"'.$nbrows.'","results":'.json_encode($arr).'})';
@@ -1720,10 +1719,10 @@ Lien vers la modération : ".URL.'/admin.php?id='.$arrayObs['id_poi']."\n".
 				mysql_select_db(DB_NAME);
 				mysql_query("SET NAMES utf8mb4");
 				
-				$id_status = $_POST['id_status'];
-				$lib_status = $_POST['lib_status'];		
-	
-				$sql = "UPDATE status SET lib_status = '$lib_status' WHERE id_status = $id_status";
+				$id_status = mysql_real_escape_string($_POST['id_status']);
+				$lib_status = mysql_real_escape_string($_POST['lib_status']);		
+				$color_status = mysql_real_escape_string($_POST['color_status']);
+				$sql = "UPDATE status SET lib_status = '$lib_status', color_status = '$color_status' WHERE id_status = $id_status";
 				$result = mysql_query($sql);
 				if (!$result) {
 					echo '2';
@@ -2729,11 +2728,18 @@ Cordialement, l'Association ".VELOBS_ASSOCIATION." :)";
 	function getComments($id_poi) {
 		switch (SGBD) {
 			case 'mysql':
+				
 				$link = mysql_connect(DB_HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
 				mysql_query("SET NAMES utf8mb4");
-
-				$sql = "SELECT * FROM commentaires WHERE poi_id_poi = ".$id_poi;
+				$whereAppend = '';
+				if ($_SESSION ["type"] == 3 || $_SESSION ["type"] == 2) {//is communaute de communes or pole technique
+					$whereAppend = ' AND display_commentaires = 1';
+				}
+				$sql = "SELECT * FROM commentaires WHERE poi_id_poi = ".$id_poi. " " . $whereAppend;
+				if (DEBUG){
+					error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . ", SESSION type = ".$_SESSION ["type"].", $sql \n", 3, LOG_FILE);
+				}
 				$result = mysql_query($sql);
 				$nbrows = mysql_num_rows($result);
 

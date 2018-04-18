@@ -91,7 +91,7 @@
 			if (isWithinPolygon($rings[0], $latitude_poi, $longitude_poi)){
 				$inHole = FALSE;
 				for ($j = 1; ($j < count($rings)) && !$inHole; $j++) {					
-					$inHole = isWithinRing($rings[$j], $latitude_poi, $longitude_poi);
+					$inHole = isWithinPolygon($rings[$j], $latitude_poi, $longitude_poi);
 				}
 				$inPolygon = !$inHole;
 			}
@@ -116,8 +116,6 @@
 		$points_polygon = count($vertices_x) - 1;
 		return(is_in_polygon($points_polygon, $vertices_x, $vertices_y, $longitude_poi, $latitude_poi));	
 	}			
-	
-	
 	
 	/* 	Function name 	: generate_image_thumbnail
 	 * 	Input			: une url d'image en entrée, le path en sortie, la largeur et la hauteur
@@ -222,7 +220,7 @@
 			$observationArray['rue_poi'] = stripslashes($row['rue_poi']);
 			$observationArray['mailsentuser_poi'] = stripslashes($row['mailsentuser_poi']);
 			$observationArray['mail_poi'] = stripslashes($row['mail_poi']);
-			$observationArray['reponsegrandtoulouse_poi'] = stripslashes($row['reponsegrandtoulouse_poi']);
+			$observationArray['reponse_collectivite_poi'] = stripslashes($row['reponse_collectivite_poi']);
 			$observationArray['reponsepole_poi'] = stripslashes($row['reponsepole_poi']);
 			$observationArray['mailsentuser_poi'] = stripslashes($row['mailsentuser_poi']);
 			$observationArray['delete_poi'] = stripslashes($row['delete_poi']);
@@ -331,8 +329,8 @@
 		$arrayColumns[$numberOfColumns]['columnIntitule'] = '# Observation affichée sur l\'interface publique : ' ;
 		$arrayColumns[$numberOfColumns]['dataType'] = 'boolean' ;
 		$numberOfColumns++;
-		$arrayColumns[$numberOfColumns]['columnSQL'] = 'reponsegrandtoulouse_poi' ;
-		$arrayColumns[$numberOfColumns]['columnPOST'] = 'reponsegrandtoulouse_poi' ;
+		$arrayColumns[$numberOfColumns]['columnSQL'] = 'reponse_collectivite_poi' ;
+		$arrayColumns[$numberOfColumns]['columnPOST'] = 'reponse_collectivite_poi' ;
 		$arrayColumns[$numberOfColumns]['columnIntitule'] = '# Réponse de la collectivité : ' ;
 		$arrayColumns[$numberOfColumns]['dataType'] = 'string' ;
 		$numberOfColumns++;

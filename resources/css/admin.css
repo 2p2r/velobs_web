@@ -275,6 +275,7 @@ cursor: not-allowed;
 }
 .x-form-text, textarea.x-form-field {
     background-image: none;
+    white-space:normal;
 }
 .ext-webkit .x-small-editor .x-form-field {
     color: black !important;
@@ -307,4 +308,29 @@ cursor: not-allowed;
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+.disabled {
+	height:50px;
+}
+
+div#header H1 {
+    color:blue;
+}
+div#header .statusItem{
+
+    color:blue;
+    float:left;
+    padding-left:10px;
+    text-align: center;
+}
+div#header .statusItem H2{
+
+    color:blue;
+    font-size:100%;
+}
+div#header .statusItem span{
+
+    color:blue;
+    font-weight:bold;
+    font-size:350%
 }
