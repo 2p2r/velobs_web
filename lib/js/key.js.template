@@ -56,3 +56,15 @@ var adminMapForPoi = new OpenLayers.Layer.OSM("OpenStreetMap Hikebike", "http://
 //variables used in the render of observations, grouped together in clusters if there are more than ClusterStrategyNumberOfGroupedObservations observations close to each other of at most ClusterStrategyDistance pixels
 var ClusterStrategyNumberOfGroupedObservations = 6;
 var ClusterStrategyDistance = 30;
+
+
+
+//pre-defined colors usable to link the status with. The color linked with a status is used to display the statistics and for the shadow of icons of the corresponding observations
+//to add a new color colorX oin this array
+//copy this array in key.js
+//the text of the statisitics for the corresponding status will be given the css "color:colorX", so be sure that colorX is well known by the browsers
+//add the colorX in the array
+//make sure to add a png image for the corresponding shadow shadowHover_colorX.png in the folder resources/icon
+
+//Be aware that an update of velobs will not keep the png files you added in resources/icon, you will have to copy them manually. Feel free to add your new colors in the velobs project on github (https://github.com/2p2r/velobs_web)
+var predefinedColorsForStatus = [['Vert','green'],['Noir','black'],['Rouge','red'],['Bleu','blue']];

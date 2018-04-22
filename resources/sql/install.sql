@@ -205,16 +205,17 @@ INSERT INTO `quartier` (`id_quartier`, `lib_quartier`) VALUES (99999, 'Inutile')
 
 CREATE TABLE `status` (
 `id_status` int(11) NOT NULL AUTO_INCREMENT,
-  `lib_status` varchar(100) DEFAULT NULL,
+  `lib_status` varchar(100) DEFAULT NULL,,
+  `color_status` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id_status`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE = utf8mb4_unicode_ci AUTO_INCREMENT=1;
 
-INSERT INTO `status` (`id_status`, `lib_status`) VALUES
-(1, 'En cours'),
-(2, 'Réalisé'),
-(3, 'Programmé'),
-(4, 'Refusé'),
-(5, 'A définir');
+INSERT INTO `status` (`id_status`, `lib_status`, `color_status`) VALUES
+(1, 'En cours', 'black'),
+(2, 'Réalisé', 'green'),
+(3, 'Programmé', 'blue'),
+(4, 'Refusé', 'red'),
+(5, 'A définir', 'black');
 
 
 CREATE TABLE `iconmarker` (
