@@ -78,7 +78,7 @@
 								
                             print '<listcomment>';
 														
-							$sql4 = "SELECT * FROM commentaires WHERE poi_id_poi = ".$row['id_poi']." AND display_commentaires = 1";
+							$sql4 = "SELECT * FROM commentaires WHERE poi_id_poi = ".$row['id_poi']." AND display_commentaires = \'Modéré accepté\'";
 							$result4 = mysql_query($sql4);
 															
 							while ($row4 = mysql_fetch_array($result4)) {

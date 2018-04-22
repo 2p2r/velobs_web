@@ -2734,7 +2734,7 @@ Cordialement, l'Association ".VELOBS_ASSOCIATION." :)";
 				mysql_query("SET NAMES utf8mb4");
 				$whereAppend = '';
 				if ($_SESSION ["type"] == 3 || $_SESSION ["type"] == 2) {//is communaute de communes or pole technique
-					$whereAppend = ' AND display_commentaires = 1';
+					$whereAppend = ' AND display_commentaires = \'Modéré accepté\'';
 				}
 				$sql = "SELECT * FROM commentaires WHERE poi_id_poi = ".$id_poi. " " . $whereAppend;
 				if (DEBUG){
@@ -2768,40 +2768,6 @@ Cordialement, l'Association ".VELOBS_ASSOCIATION." :)";
 		}
 	}
 
-
-	/* 	Function name 	: displayComment
-	 * 	Input			: id_comment, display_comment
-	 * 	Output			: json
-	 * 	Object			: display comments per ID
-	 * 	Date			: Dec. 13, 2015
-	 */
-
-	function displayComment($id_comment, $display_comment) {
-		switch (SGBD) {
-			case 'mysql':
-				$link = mysql_connect(DB_HOST,DB_USER,DB_PASS);
-				mysql_select_db(DB_NAME);
-				mysql_query("SET NAMES utf8mb4");
-
-
-				$sql = "UPDATE commentaires SET display_commentaires = $display_comment WHERE id_commentaires = $id_comment";
-				$result = mysql_query($sql);
-
-				if (!$result) {
-					echo '2';
-				} else {
-					echo '1';
-				}
-
-				mysql_free_result($result);
-				mysql_close($link);
-				break;
-			case 'postgresql':
-				// TODO
-				break;
-		}
-	}
-
 	/* 	Function name 	: editComment
 	 * 	Input			: id_comment, text_comment
 	 * 	Output			: json
@@ -2809,7 +2775,7 @@ Cordialement, l'Association ".VELOBS_ASSOCIATION." :)";
 	 * 	Date			: Dec. 13, 2015
 	 */
 
-	function editComment($id_comment, $text_comment) {
+	function editComment($id_comment, $text_comment, $status_comment) {
 		switch (SGBD) {
 			case 'mysql':
 				$link = mysql_connect(DB_HOST,DB_USER,DB_PASS);
@@ -2817,7 +2783,8 @@ Cordialement, l'Association ".VELOBS_ASSOCIATION." :)";
 				mysql_query("SET NAMES utf8mb4");
 
 				$text = mysql_real_escape_string($text_comment);
-				$sql = "UPDATE commentaires SET text_commentaires = '$text' WHERE id_commentaires = $id_comment";
+				$status = mysql_real_escape_string($status_comment);
+				$sql = "UPDATE commentaires SET text_commentaires = '$text', display_commentaires = '$status' WHERE id_commentaires = $id_comment";
 				$result = mysql_query($sql);
 
 
@@ -2934,11 +2901,11 @@ Cordialement, l'Association ".VELOBS_ASSOCIATION." :)";
 					$sql2 = "SELECT id_users FROM users WHERE (usertype_id_usertype = 1 OR usertype_id_usertype = 4) AND mail_users LIKE '".$mail_commentaires."'";
 					$result2 = mysql_query($sql2);
 					$num_rows2 = mysql_num_rows($result2);
-					$displayFlag = 1;
+					$displayFlag = 'Modéré accepté';
 					if ($num_rows2 == 0) {
-						$displayFlag = 0;
+						$displayFlag = 'Non modéré';
 					}
-					$sql = "INSERT INTO commentaires (text_commentaires, display_commentaires, mail_commentaires, poi_id_poi,url_photo) VALUES ('$text', $displayFlag, '$mail_commentaires',$id_poi,'$url_photo')";
+					$sql = "INSERT INTO commentaires (text_commentaires, display_commentaires, mail_commentaires, poi_id_poi,url_photo) VALUES ('$text', '$displayFlag', '$mail_commentaires',$id_poi,'$url_photo')";
 					$result = mysql_query($sql);
 					if (DEBUG){
 						error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " " . $_POST['task'] .", sql : $sql\n", 3, LOG_FILE);

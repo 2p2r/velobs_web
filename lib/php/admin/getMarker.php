@@ -38,7 +38,7 @@ if (isset ( $_SESSION ['user'] )) {
 				$sqlappend .= " delete_poi = FALSE AND poi.id_poi = " . $_GET ['id'];
 			} else {
 				if (isset ( $_GET ['commentToModerate'] ) && $_GET ['commentToModerate'] == 1 && ($_SESSION ["type"] == 4 || $_SESSION ["type"] == 1)) {
-					$sqlappend = " INNER JOIN commentaires ON (poi.id_poi = commentaires.poi_id_poi) " . $sqlappend . " commentaires.display_commentaires = false AND ";
+					$sqlappend = " INNER JOIN commentaires ON (poi.id_poi = commentaires.poi_id_poi) " . $sqlappend . " commentaires.display_commentaires = 'Non modéré' AND ";
 				} elseif (isset ( $_GET ['priority'] ) && $_GET ['priority'] != '') {
 					$sqlappend .= " poi.priorite_id_priorite = " . $_GET ['priority'] . " AND ";
 				}
@@ -54,10 +54,10 @@ if (isset ( $_SESSION ['user'] )) {
 				$sqlappend .= ' AND priorite.id_priorite = ' . $_POST ["priority"];
 			} elseif ($_SESSION ["type"] == 2) { // is communaute de communes
 				$sqlappend .= ' AND moderation_poi = 1 AND commune_id_commune IN (' . str_replace ( ';', ',', $_SESSION ['territoire'] ) . ') AND priorite.id_priorite <> 7 AND priorite.id_priorite <> 15 ';
-				$whereSelectCommentAppend = ' AND display_commentaires = 1 ';
+				$whereSelectCommentAppend = ' AND display_commentaires = \'Modéré accepté\' ';
 			} elseif ($_SESSION ["type"] == 3) { // is pole technique
 				$sqlappend .= ' AND moderation_poi = 1  AND transmission_poi = 1 AND poi.pole_id_pole = ' . $_SESSION ["pole"] . ' AND priorite.id_priorite <> 7 AND priorite.id_priorite <> 15 ';
-				$whereSelectCommentAppend = ' AND display_commentaires = 1 ';
+				$whereSelectCommentAppend = ' AND display_commentaires = \'Modéré accepté\' ';
 			} elseif ($_SESSION ["type"] == 4) { // is moderateur
 				$sqlappend .= ' AND poi.pole_id_pole = ' . $_SESSION ["pole"] . ' ';
 			}

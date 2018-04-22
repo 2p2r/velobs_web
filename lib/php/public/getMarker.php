@@ -115,7 +115,7 @@ switch (SGBD) {
 			$arr [$i] ['lat'] = $row ['Y'];
 			$arr [$i] ['lon'] = $row ['X'];
 			$arr [$i] ['lastdatemodif_poi'] = $row ['lastdatemodif_poi'];
-			$sql2 = "SELECT * FROM commentaires WHERE poi_id_poi = " . $row ['id_poi'] . " AND display_commentaires = 1";
+			$sql2 = "SELECT * FROM commentaires WHERE poi_id_poi = " . $row ['id_poi'] . " AND display_commentaires = \'Modéré accepté\'";
 			$result2 = mysql_query ( $sql2 );
 			$j = 0;
 			while ( $row2 = mysql_fetch_array ( $result2 ) ) {
