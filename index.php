@@ -1,5 +1,7 @@
-<?php
+<?php header('Content-Type: text/html; charset=UTF-8');
+	session_start();
     include_once 'lib/php/key.php';
+    include_once 'lib/php/commonfunction.php';
 ?>
 <html>
 	<head>
@@ -57,7 +59,17 @@
 	 
 			<script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Initialization...';</script> 
 		</div>
-<?php
+		
+		<div id="header">
+			<?php 
+		if (isset($_SESSION['user'])){ 
+?><div id="disconnect" title="<?php echo getTranslation($_SESSION['id_language'],'DISCONNECT'); ?>" onclick="self.location.href ='lib/php/admin/disconnect.php';"></div>
+<?php } ?>
+			<div id="gotopublicmap" title="<?php echo getTranslation($_SESSION['id_language'],'OPENPUBLICMAP'); ?>" onclick="self.location.href='<?php echo URL."/admin.php" ?>';"></div>
+			<div id="hellouser""><?php if ($_SESSION['nom'] != '') {echo "[".$_SESSION['nom']."]";} ?></div>
+			<div id="update" style="display:none;"></div>
+		</div>
+<?php 
 //add custom code from lib/php/key.php
 echo INCLUDE_CODE_HTML_PUBLIC;
 ?>

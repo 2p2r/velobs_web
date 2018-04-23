@@ -297,3 +297,43 @@ div.olLayerGooglePoweredBy {display:none;}
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+div#disconnect{
+    position: relative;
+    float: right;
+    height: 16px;
+    width: 16px;
+    background-image: url(../icon/fugue/plug-disconnect-nb.png);
+    margin: 10px;
+    cursor: pointer;
+}
+div#disconnect:hover {
+    background-image: url(../icon/fugue/plug-disconnect.png);
+}
+
+div#gotopublicmap{
+    position: relative;
+    float: right;
+    height: 16px;
+    width: 16px;
+    background-image: url(../icon/silk/map_go-nb.png);
+    margin: 10px;
+    cursor: pointer;
+}
+div#gotopublicmap:hover {
+    background-image: url(../icon/silk/map_go.png);
+}
+div#hellouser{
+    position: relative;
+    float: right;
+    margin: 10px;
+    font-weight: bold;
+}
+div#update{
+    position: relative;
+    float: right;
+    height: 16px;
+    width: 16px;
+    background-image: url(../images/update.gif);
+    margin: 10px;
+    cursor: pointer;
+}
