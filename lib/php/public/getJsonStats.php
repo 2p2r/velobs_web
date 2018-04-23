@@ -11,13 +11,6 @@ include_once '../key.php';
 				error_log(date("Y-m-d H:i:s") . " - getJsonStats.php \n", 3, LOG_FILE);
 			}
 			
-			
-			// TODO : chek user type and pole
-				
-			
-			
-			
-			
 			$sql = "SELECT s.id_status 
 					FROM status AS s
 					ORDER BY s.lib_status ASC";
@@ -37,7 +30,7 @@ include_once '../key.php';
 				} elseif ($_SESSION ["type"] == 3) { // is pole technique
 					$sqlappend .= ' AND p.moderation_poi = 1  AND p.transmission_poi = 1 AND p.pole_id_pole = ' . $_SESSION ["pole"] . ' AND p.priorite_id_priorite <> 7 AND p.priorite_id_priorite <> 15 ';
 				} elseif ($_SESSION ["type"] == 4) { // is moderateur
-					$sqlappend .= ' AND p.poi.pole_id_pole = ' . $_SESSION ["pole"] . ' ';
+					$sqlappend .= ' AND p.pole_id_pole = ' . $_SESSION ["pole"] . ' ';
 				}
 				$sqlGetStats .= $sqlappend;
 				
