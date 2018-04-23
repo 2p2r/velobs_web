@@ -11,9 +11,22 @@ switch (SGBD) {
 		$link = mysql_connect ( DB_HOST, DB_USER, DB_PASS );
 		mysql_select_db ( DB_NAME );
 		mysql_query ( "SET NAMES utf8mb4" );
-		
+		$sql = "SELECT poi.*,
+					commune.lib_commune,
+					x(poi.geom_poi) AS X,
+					y(poi.geom_poi) AS Y,
+					subcategory.icon_subcategory,
+					subcategory.lib_subcategory,
+					status.lib_status,
+					status.color_status,
+					priorite.lib_priorite
+					FROM poi
+					INNER JOIN subcategory ON (subcategory.id_subcategory = poi.subcategory_id_subcategory)
+					INNER JOIN commune ON (commune.id_commune = poi.commune_id_commune)
+					INNER JOIN priorite ON (poi.priorite_id_priorite = priorite.id_priorite)
+					INNER JOIN status ON (status.id_status = poi.status_id_status) ";
 		if (isset ( $_GET ['id'] )) {
-			$sql = "SELECT *, commune.lib_commune, x(poi.geom_poi) AS X, y(poi.geom_poi) AS Y, subcategory.icon_subcategory, subcategory.lib_subcategory FROM poi INNER JOIN subcategory ON (subcategory.id_subcategory = poi.subcategory_id_subcategory) INNER JOIN commune ON (commune.id_commune = poi.commune_id_commune) INNER JOIN priorite ON (poi.priorite_id_priorite = priorite.id_priorite) WHERE poi.moderation_poi = TRUE AND delete_poi = FALSE AND poi.id_poi = " . $_GET ['id'];
+			$sqlappend .= " WHERE delete_poi = FALSE AND poi.id_poi = " . $_GET ['id'];
 		} else {
 			
 			if ($_GET ['date'] == NULL) {
@@ -60,24 +73,10 @@ switch (SGBD) {
 				$sqlappend .= " AND priorite.id_priorite = 6 ";
 			}
 			
-			$sql = "SELECT poi.*, 
-					commune.lib_commune, 
-					x(poi.geom_poi) AS X, 
-					y(poi.geom_poi) AS Y, 
-					subcategory.icon_subcategory, 
-					subcategory.lib_subcategory, 
-					status.lib_status,
-					status.color_status,
-					priorite.lib_priorite 
-					FROM poi 
-					INNER JOIN subcategory ON (subcategory.id_subcategory = poi.subcategory_id_subcategory) 
-					INNER JOIN commune ON (commune.id_commune = poi.commune_id_commune) 
-					INNER JOIN priorite ON (poi.priorite_id_priorite = priorite.id_priorite) 
-					INNER JOIN status ON (status.id_status = poi.status_id_status) ";
-			$sql .= $sqlappend;
-			$sql .= $datesqlappend;
-			$sql .= $statussqlappend;
+			
+			$sqlappend .= $datesqlappend . $statussqlappend;
 		}
+		$sql .= $sqlappend;
 		$result = mysql_query ( $sql );
 		if (DEBUG) {
 			error_log ( date ( "Y-m-d H:i:s" ) . " - public/getMarker.php sql = $sql\n", 3, LOG_FILE );

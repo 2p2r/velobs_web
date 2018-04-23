@@ -94,13 +94,14 @@ if (isset ( $_SESSION ['user'] )) {
 				$arr [$i] ['reponsepole_poi'] = stripslashes ( $row ['reponsepole_poi'] );
 				$arr [$i] ['traiteparpole_poi'] = stripslashes ( $row ['traiteparpole_poi'] );
 				$arr [$i] ['moderation_poi'] = stripslashes ( $row ['moderation_poi'] );
+				$arr [$i] ['mail_poi'] = stripslashes ( $row ['mail_poi'] );
 				$arr [$i] ['observationterrain_poi'] = stripslashes ( $row ['observationterrain_poi'] );
 				$arr [$i] ['lib_status'] = stripslashes ( $row ['lib_status'] );
 				$arr [$i] ['color_status'] = stripslashes ( $row ['color_status'] );
 				$arr [$i] ['icon'] = 'resources/icon/marker/' . $row ['icon_subcategory'] . '.png';
 				$arr [$i] ['iconCls'] = $row ['icon_subcategory'];
 				
-				$arr [$i] ['lat'] = $row ['Y'];
+				$arr [$i] ['lat'] = $row ['Y']; 
 				$arr [$i] ['lon'] = $row ['X'];
 				$arr [$i] ['lastdatemodif_poi'] = $row ['lastdatemodif_poi'];
 				$sql2 = "SELECT * FROM commentaires WHERE poi_id_poi = " . $row ['id_poi'] . " " . $whereSelectCommentAppend;

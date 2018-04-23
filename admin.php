@@ -25,14 +25,14 @@
 			<div class="loading-indicator">
 				<img alt="VelObs" src="resources/images/velobs.jpg" width="99" height="64" style="margin-right:8px;float:left;vertical-align:top;"/><?php echo INCLUDE_CODE_HTML_LOADING ?><br /><span id="loading-msg">Loading styles and images ...</span>
 			</div>
-			<link rel="stylesheet" type="text/css" href="resources/css/icon.css" />
+			<link rel="stylesheet" type="text/css" href="resources/css/icon.css?v1.5.1" />
 			<link rel="stylesheet" type="text/css" href="lib/js/framework/ext-3.4.0/resources/css/ext-all.css" />
 			<link rel="stylesheet" type="text/css" href="lib/js/framework/ext-3.4.0/resources/css/xtheme-gray.css" />
 			<link rel="stylesheet" type="text/css" href="lib/js/framework/GeoExt/resources/css/geoext-all.css" />
 			<link rel="stylesheet" type="text/css" href="lib/js/framework/GeoExt/resources/css/gxtheme-gray.css" />
 			<link rel="stylesheet" type="text/css" href="lib/js/framework/GeoExt/resources/css/popup.css" />
-			<link rel="stylesheet" type="text/css" href="resources/css/admin.css" />
-			<link rel="stylesheet" type="text/css" href="resources/css/iconmarker.css" />
+			<link rel="stylesheet" type="text/css" href="resources/css/admin.css?v1.5.1" />
+			<link rel="stylesheet" type="text/css" href="resources/css/iconmarker.css?v1.5.1" />
 			<link rel="stylesheet" type="text/css" href="resources/css/fileuploadfield.css" />
 
 			<!--<script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Loading Google Maps API...';</script> 
