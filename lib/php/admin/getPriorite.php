@@ -15,6 +15,11 @@
 				while ($row = mysql_fetch_array($result)){
 					$arr[$i]['id_priorite'] = $row['id_priorite'];
 					$arr[$i]['lib_priorite'] = stripslashes($row['lib_priorite']);
+					$arr[$i]['non_visible_par_collectivite'] = stripslashes($row['non_visible_par_collectivite']);
+					$arr[$i]['non_visible_par_public'] = stripslashes($row['non_visible_par_public']);
+					$arr[$i]['priorite_sujet_email'] = stripslashes($row['priorite_sujet_email']);
+					$arr[$i]['priorite_corps_email'] = stripslashes($row['priorite_corps_email']);
+					$arr[$i]['besoin_commentaire_association'] = stripslashes($row['besoin_commentaire_association']);
 					$i++;
 				}
 				echo '({"priorite":'.json_encode($arr).'})';

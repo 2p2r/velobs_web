@@ -761,97 +761,6 @@ Le pole '.$arrayObs['lib_pole'].' a modifié l\'observation n°'.$arrayObs['id_p
 								$updatePOI  = 0;
 								$returnCode = 10;
 							}
-// 							//TODO : récupérer les infos de la BDD
-// 							// changement du workflow : si priorite == 1 ou priorite == 2 alors on modère par défaut
-// 							if (($new_id_priorite == 1 || $new_id_priorite == 2)) {
-// 								$subject = 'Merci pour votre participation';
-// 								$message = "Bonjour !
-// L'observation que vous avez envoyée sur VelObs a changé de statut. Le problème identifié a été transmis aux services municipaux.\n".$arrayDetailsAndUpdateSQL['detailObservationString']
-// 							.$signature;
-									
-// 							}
-							
-// 							// mail à la personne qui a envoyé la proposition pour le prévenir que son intervention a été prise en compte par la comcom et par l'asso, que si le champ commentfinal_poi n'est pas vide, sinon erreur
-// 							//Priorité Cloturé
-// 							if ($new_id_priorite == 6 ) {
-// 								if ($arrayObs['commentfinal_poi'] == '' && $_POST['commentfinal_poi'] == '' ){
-// 									$updatePOI  = 0;
-// 									$returnCode = 10; // pour cloturer il faut que le commentaire final ne soit pas vide
-// 								}
-// 								$subject = 'Observation prise en compte';
-// 								$message = "Bonjour !
-// L'Association ".VELOBS_ASSOCIATION." vous remercie. Le problème a bien été pris en compte et réglé par la collectivité.\n".$arrayDetailsAndUpdateSQL['detailObservationString'].'
-// '.$signature;
-// 							}
-// 							// mail à la personne qui a envoyé la proposition pour le prévenir que son intervention ne sera pas prise en compte par l'asso, que si le champ commentfinal_poi n'est pas vide, sinon erreur
-// 							//Priorité Refusé par l'association
-// 							if ($new_id_priorite == 7) {
-// 								if ($arrayObs['commentfinal_poi'] == '' && $_POST['commentfinal_poi'] == '' ){
-// 									$updatePOI  = 0;
-// 									$returnCode = 10; // pour cloturer il faut que le commentaire final ne soit pas vide
-// 								}
-// 								$subject = 'Observation non transmise à la collectivité';
-// 								$message = "Bonjour !
-// L'Association ".VELOBS_ASSOCIATION." et la collectivité vous remercient de votre participation.
-// Cependant le problème rapporté a été refusé par l'association et n'a pas été transmis à la collectivité.\n".$arrayDetailsAndUpdateSQL['detailObservationString'].'
-							
-// '.$signature;
-									
-// 							}
-// 							// mail à la personne qui a envoyé la proposition pour le prévenir que son intervention ne sera pas prise en compte par l'asso, que si le champ commentfinal_poi n'est pas vide, sinon erreur
-// 							//Priorité Refusé par la collectivité
-// 							if ($new_id_priorite == 12) {
-// 								if ($arrayObs['commentfinal_poi'] == '' && $_POST['commentfinal_poi'] == '' ){
-// 									$updatePOI  = 0;
-// 									$returnCode = 10; // pour cloturer il faut que le commentaire final ne soit pas vide
-// 								}
-// 								$subject = 'Observation refusée par la collectivité';
-// 								$message = "Bonjour !
-// L'Association ".VELOBS_ASSOCIATION." et la collectivité vous remercient de votre participation.
-// Cependant le problème rapporté a été refusé par la collectivité.\n".$arrayDetailsAndUpdateSQL['detailObservationString'].'
-				
-// '.$signature;
-									
-// 							}
-// 							// mail à la personne qui a envoyé la proposition pour le prévenir que son intervention est en doublon, que si le champ commentfinal_poi n'est pas vide, sinon erreur
-// 							//Priorité DOUBLON
-// 							if ($new_id_priorite == 15) {
-// 								if ($arrayObs['commentfinal_poi'] == '' && $_POST['commentfinal_poi'] == '' ){
-// 									$updatePOI  = 0;
-// 									$returnCode = 11; // pour cloturer il faut que le commentaire final ne soit pas vide, et donner le numero du doublon
-// 								}
-// 								$subject = 'Observation doublon';
-// 								$message = "Bonjour !
-// L'Association ".VELOBS_ASSOCIATION." et la collectivité vous remercient de votre participation.
-// Le problème que vous avez identifié nous a déjà été rapporté par un autre observateur.\n".$arrayDetailsAndUpdateSQL['detailObservationString'].'
-							
-// Vous pouvez ajouter de nouvelles photos et ou commentaires à l\'observation existante.
-// '.$signature;
-// 							}
-// 							// mail à la personne qui a envoyé la proposition pour le prévenir que son intervention est une urgence, que si le champ commentfinal_poi n'est pas vide, sinon erreur
-// 							//URGENCE
-// 							if ($new_id_priorite == 8) {
-// 								if ($arrayObs['commentfinal_poi'] == '' && $_POST['commentfinal_poi'] == '' ){
-// 									$updatePOI  = 0;
-// 									$returnCode = 10; // pour cloturer il faut que le commentaire final ne soit pas vide
-// 								}
-// 								/* envoi d'un mail à l'observateur*/
-// 								$subject = 'Merci pour votre participation';
-// 								$message = 'Bonjour !
-// L\'observation que vous avez envoyée a été modérée par l\'association. Le problème identifié est une urgence qui nécessite une intervention rapide des services techniques de la collectivité. Merci de faire le nécessaire.';
-// 								//si la commune fait partie d'un territoire
-// 								//premier territoire
-// 								switch ($arrayObs['territoire_id_territoire']) {
-// 									case 1:
-// 										$message .= '
-// '.VELOBS_EMERGENCY_MAIL1."\n".$arrayDetailsAndUpdateSQL['detailObservationString'].$signature;
-// 										break;
-// 									default:
-// 										$message .= "\n".$arrayDetailsAndUpdateSQL['detailObservationString'].$signature;
-// 										break;
-// 								}
-// 							}
-							
 							if ($updatePOI == 1 && $subject != ""){
 								$mailArray = [$arrayObs['mail_poi'],'Contributeur',$subject, $message ];
 								array_push($mails,$mailArray);
@@ -1544,7 +1453,12 @@ Lien vers la modération : ".URL.'/admin.php?id='.$arrayObs['id_poi']."\n".
 					while ($row = mysql_fetch_array($result)) {
 						$arr[$i]['id_priorite'] = $row['id_priorite'];
 						$arr[$i]['lib_priorite'] = stripslashes($row['lib_priorite']);
-						$i++;
+						$arr[$i]['non_visible_par_collectivite'] = stripslashes($row['non_visible_par_collectivite']);
+						$arr[$i]['non_visible_par_public'] = stripslashes($row['non_visible_par_public']);
+						$arr[$i]['priorite_sujet_email'] = stripslashes($row['priorite_sujet_email']);
+						$arr[$i]['priorite_corps_email'] = stripslashes($row['priorite_corps_email']);
+						$arr[$i]['besoin_commentaire_association'] = stripslashes($row['besoin_commentaire_association']);
+					$i++;
 					}
 					echo '({"total":"'.$nbrows.'","results":'.json_encode($arr).'})';
 				} else {
