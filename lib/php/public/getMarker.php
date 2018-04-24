@@ -1,5 +1,4 @@
 <?php
-
 header ( 'Content-Type: text/html; charset=UTF-8' );
 include_once '../key.php';
 
@@ -65,14 +64,17 @@ switch (SGBD) {
 				$sqlappend .= " subcategory_id_subcategory = " . $tabListType [$i] . " OR";
 			}
 			$sqlappend = substr ( $sqlappend, 0, strlen ( $sqlappend ) - 3 );
-			$sqlappend .= " ) AND poi.display_poi = TRUE AND poi.fix_poi = FALSE AND poi.moderation_poi = TRUE AND priorite.id_priorite <> 7 AND priorite.id_priorite <> 8 AND priorite.id_priorite <> 15 AND poi.delete_poi = 0 ";
-			
+			$sqlappend .= " ) AND poi.display_poi = TRUE 
+					AND poi.fix_poi = FALSE 
+					AND poi.moderation_poi = TRUE 
+					AND priorite.non_visible_par_public = 0
+					AND poi.delete_poi = 0 ";
+			//TODO : check exclusion, delete this equest when the priority combo is added
 			if ($_GET ['done'] == 0) {
 				$sqlappend .= " AND priorite.id_priorite <> 6 ";
 			} else {
 				$sqlappend .= " AND priorite.id_priorite = 6 ";
 			}
-			
 			
 			$sqlappend .= $datesqlappend . $statussqlappend;
 		}
@@ -84,9 +86,7 @@ switch (SGBD) {
 		$i = 0;
 		while ( $row = mysql_fetch_array ( $result ) ) {
 			$arr [$i] ['id'] = $row ['id_poi'];
-			
 			$arr [$i] ['lib_subcategory'] = stripslashes ( $row ['lib_subcategory'] );
-			
 			$arr [$i] ['date'] = $row ['datecreation_poi'];
 			$arr [$i] ['desc'] = stripslashes ( $row ['desc_poi'] );
 			$arr [$i] ['repgt'] = stripslashes ( $row ['reponse_collectivite_poi'] );
@@ -100,17 +100,8 @@ switch (SGBD) {
 			$arr [$i] ['lib_status'] = stripslashes ( $row ['lib_status'] );
 			$arr [$i] ['color_status'] = stripslashes ( $row ['color_status'] );
 			// TODO : combiner icone de subcategory + priorité
-// 			if ($row ['priorite_id_priorite'] == 6) {
-// 				$arr [$i] ['icon'] = 'resources/icon/marker/done.png';
-// 				$arr [$i] ['iconCls'] = 'done';
-// 			} else if ($row ['priorite_id_priorite'] == 12) {
-// 				$arr [$i] ['icon'] = 'resources/icon/marker/refuse.png';
-// 				$arr [$i] ['iconCls'] = 'refuse';
-// 			} else {
-				$arr [$i] ['icon'] = 'resources/icon/marker/' . $row ['icon_subcategory'] . '.png';
-				$arr [$i] ['iconCls'] = $row ['icon_subcategory'];
-// 			}
-			
+			$arr [$i] ['icon'] = 'resources/icon/marker/' . $row ['icon_subcategory'] . '.png';
+			$arr [$i] ['iconCls'] = $row ['icon_subcategory'];
 			$arr [$i] ['lat'] = $row ['Y'];
 			$arr [$i] ['lon'] = $row ['X'];
 			$arr [$i] ['lastdatemodif_poi'] = $row ['lastdatemodif_poi'];

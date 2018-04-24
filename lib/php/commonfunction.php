@@ -321,7 +321,7 @@
 		$numberOfColumns++;
 		$arrayColumns[$numberOfColumns]['columnSQL'] = 'moderation_poi' ;
 		$arrayColumns[$numberOfColumns]['columnPOST'] = 'moderation_poi' ;
-		$arrayColumns[$numberOfColumns]['columnIntitule'] = '# Observation transmise à la collectivité : ' ;
+		$arrayColumns[$numberOfColumns]['columnIntitule'] = '# Observation modérée : ' ;
 		$arrayColumns[$numberOfColumns]['dataType'] = 'boolean' ;
 		$numberOfColumns++;
 		$arrayColumns[$numberOfColumns]['columnSQL'] = 'display_poi' ;

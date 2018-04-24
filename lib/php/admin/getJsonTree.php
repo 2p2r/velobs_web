@@ -17,8 +17,7 @@ if (isset ( $_SESSION ['user'] )) {
 			if ($_SESSION ['role'] == 3) { // pole technique
 				$whereClauseSQL = " display_subcategory = TRUE 
 						 	AND p.pole_id_pole = " . $_SESSION ['pole'] . " 
-						 	AND priorite.id_priorite <> 7 
-						 	AND priorite.id_priorite <> 15 
+						 	AND priorite.non_visible_par_collectivite = 0  
 						 	AND delete_poi = FALSE 
 						 	AND p.geom_poi IS NOT NULL 	
 						 	AND moderation_poi = 1 
@@ -38,8 +37,7 @@ if (isset ( $_SESSION ['user'] )) {
 							AND display_poi = 1 
 							AND commune_id_commune IN (" . str_replace ( ';', ',', $_SESSION ['territoire'] ) . ") 
 							AND delete_poi = FALSE 
-							AND priorite.id_priorite <> 7 
-							AND priorite.id_priorite <> 15 ";
+							AND priorite.non_visible_par_collectivite = 0 ";
 				
 				
 			}else {

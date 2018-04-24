@@ -1,5 +1,6 @@
 <?php header('Content-Type: text/html; charset=UTF-8');
 	session_start();
+	include_once 'lib/php/key.php.template';
 	include_once 'lib/php/key.php';
 	include_once 'lib/php/commonfunction.php';
 	if (DEBUG){
