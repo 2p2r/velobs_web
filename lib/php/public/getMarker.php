@@ -34,13 +34,13 @@ switch (SGBD) {
 			} else {
 				switch ($_GET ['date']) {
 					case '1year' :
-						$datesqlappend = ' AND (TO_DAYS(NOW()) - TO_DAYS(datecreation_poi)) <= 365';
+						$datesqlappend = ' AND (TO_DAYS(NOW()) - TO_DAYS(lastdatemodif_poi)) <= 365';
 						break;
 					case '2year' :
-						$datesqlappend = ' AND (TO_DAYS(NOW()) - TO_DAYS(datecreation_poi)) > 365 AND (TO_DAYS(NOW()) - TO_DAYS(datecreation_poi)) <= 730';
+						$datesqlappend = ' AND (TO_DAYS(NOW()) - TO_DAYS(lastdatemodif_poi)) > 365 AND (TO_DAYS(NOW()) - TO_DAYS(datecreation_poi)) <= 730';
 						break;
 					case '3year' :
-						$datesqlappend = ' AND (TO_DAYS(NOW()) - TO_DAYS(datecreation_poi)) > 730';
+						$datesqlappend = ' AND (TO_DAYS(NOW()) - TO_DAYS(lastdatemodif_poi)) > 730';
 						break;
 					case 'all' :
 						$datesqlappend = '';
@@ -52,7 +52,7 @@ switch (SGBD) {
 				}
 			}
 			
-			if ($_GET ['status'] == NULL || $_GET ['status'] == 'all') {
+			if (isset ($_GET ['status']) && ($_GET ['status'] == "" || $_GET ['status'] == 'all'|| $_GET ['status'] == 'undefined')) {
 				$statussqlappend = '';
 			} else {
 				$statussqlappend = ' AND status_id_status = ' . $_GET ['status'];
@@ -70,11 +70,9 @@ switch (SGBD) {
 					AND priorite.non_visible_par_public = 0
 					AND poi.delete_poi = 0 ";
 			//TODO : check exclusion, delete this equest when the priority combo is added
-			if ($_GET ['done'] == 0) {
-				$sqlappend .= " AND priorite.id_priorite <> 6 ";
-			} else {
-				$sqlappend .= " AND priorite.id_priorite = 6 ";
-			}
+			if (isset($_GET ['priorite']) && $_GET ['priorite'] != "") {
+				$sqlappend .= " AND priorite.id_priorite =  " . mysql_real_escape_string($_GET ['priorite']);
+			} 
 			
 			$sqlappend .= $datesqlappend . $statussqlappend;
 		}
