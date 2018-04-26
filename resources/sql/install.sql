@@ -179,22 +179,49 @@ ADD CONSTRAINT `users_ibfk_2` FOREIGN KEY (`language_id_language`) REFERENCES `l
 ADD CONSTRAINT `users_ibfk_3` FOREIGN KEY (`territoire_id_territoire`) REFERENCES `territoire` (`id_territoire`);
 
 
-CREATE TABLE `priorite` (
-`id_priorite` int(11) NOT NULL AUTO_INCREMENT,
-  `lib_priorite` varchar(100) DEFAULT NULL,
-  PRIMARY KEY (`id_priorite`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE = utf8mb4_unicode_ci AUTO_INCREMENT=1;
+CREATE TABLE IF NOT EXISTS `priorite` (
+  `id_priorite` int(11) NOT NULL,
+  `lib_priorite` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `non_visible_par_collectivite` tinyint(1) NOT NULL DEFAULT '0',
+  `non_visible_par_public` tinyint(1) NOT NULL DEFAULT '0',
+  `priorite_sujet_email` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `priorite_corps_email` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `besoin_commentaire_association` tinyint(1) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Contenu de la table `priorite`
+--
 
-INSERT INTO `priorite` (`id_priorite`, `lib_priorite`) VALUES
-(1, 'Priorité 1'),
-(2, 'Priorité 2'),
-(4, 'A modérer'),
-(6, 'Clôturé'),
-(7, 'Refusé par l\'association'),
-(8, 'Urgence'),
-(12, 'Refusé par la collectivité'),
-(15, 'Doublon');
+INSERT INTO `priorite` (`id_priorite`, `lib_priorite`, `non_visible_par_collectivite`, `non_visible_par_public`, `priorite_sujet_email`, `priorite_corps_email`, `besoin_commentaire_association`) VALUES
+(1, 'Priorité 1', 0, 0, 'Merci pour votre participation', 'Bonjour !\nL''observation que \nvous avez envoyée sur VelObs a changé de statut. \n\nLe problème identifié a été transmis aux services municipaux.', 0),
+(2, 'Priorité 2', 0, 0, 'Merci pour votre participation', 'Bonjour !\nL''observation que vous avez envoyée sur VelObs a changé de statut. Le problème identifié a été transmis aux services municipaux.\\n', 0),
+(4, 'A modérer', 0, 1, '', '', 0),
+(6, 'Clôturé', 1, 0, 'Observation prise en compte', 'Bonjour !\nL''Association #VELOBS_ASSOCIATION# vous remercie. Le problème a bien été pris en compte et réglé par la collectivité.', 1),
+(7, 'Refusé par 2p2r', 1, 1, 'Observation non transmise à la collectivité', 'Bonjour !\r\nL''Association #VELOBS_ASSOCIATION# et la collectivité vous remercient de votre participation.\r\nCependant le problème rapporté a été refusé par l''association et n''a pas été transmis à la collectivité.', 1),
+(8, 'Urgence', 1, 0, 'Merci pour votre participation', 'Bonjour ! \nL''observation que vous avez envoyée a été modérée par l''association. Le problème identifié est une urgence qui nécessite une intervention rapide des services techniques de la collectivité. Merci de faire le nécessaire.\nVeuillez téléphoner au 05 61 222 222 pour prévenir de ce problème si celui-ci est sur la commune de Toulouse.', 1),
+(12, 'Refusé par collectivité', 0, 0, 'Observation refusée par la collectivité', 'Bonjour ! \nL''Association #VELOBS_ASSOCIATION# et la collectivité vous remercient de votre participation. Cependant le problème rapporté a été refusé par la collectivité.', 1),
+(15, 'Doublon', 1, 1, 'Observation en doublon', 'Bonjour ! \nL''Association #VELOBS_ASSOCIATION# et la collectivité vous remercient de votre participation. Le problème que vous avez identifié nous a déjà été rapporté par un autre observateur.', 1);
+
+--
+-- Index pour les tables exportées
+--
+
+--
+-- Index pour la table `priorite`
+--
+ALTER TABLE `priorite`
+  ADD PRIMARY KEY (`id_priorite`);
+
+--
+-- AUTO_INCREMENT pour les tables exportées
+--
+
+--
+-- AUTO_INCREMENT pour la table `priorite`
+--
+ALTER TABLE `priorite`
+  MODIFY `id_priorite` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=16;
 
 CREATE TABLE `quartier` (
 `id_quartier` int(11) NOT NULL AUTO_INCREMENT,
