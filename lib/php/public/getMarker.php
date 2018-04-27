@@ -34,7 +34,7 @@ switch (SGBD) {
 				$datesqlappend = '';
 				// $datesqlappend = ' AND (TO_DAYS(NOW()) - TO_DAYS(datecreation_poi)) <= 365';
 			} else {
-				$datesqlappend = " AND (lastdatemodif_poi >= '".mysql_real_escape_string($_GET['dateLastModif'])."' OR datecreation_poi >= '".mysql_real_escape_string($_GET['dateLastModif'])."')";
+				$datesqlappend = " AND (lastdatemodif_poi >= '".mysql_real_escape_string($_GET['dateLastModif'])."' OR datecreation_poi >= '".mysql_real_escape_string($_GET['dateLastModif'])."') ";
 				if (DEBUG) {
 					error_log ( date ( "Y-m-d H:i:s" ) . " - public/getMarker.php datesqlappend = ".$datesqlappend."\n", 3, LOG_FILE );
 				}
