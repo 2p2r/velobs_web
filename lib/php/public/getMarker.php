@@ -27,28 +27,16 @@ switch (SGBD) {
 		if (isset ( $_GET ['id'] )) {
 			$sqlappend .= " WHERE delete_poi = FALSE AND poi.id_poi = " . $_GET ['id'];
 		} else {
-			
-			if ($_GET ['date'] == NULL) {
+			if (DEBUG) {
+				error_log ( date ( "Y-m-d H:i:s" ) . " - public/getMarker.php dateLastModif = ".$_GET ['dateLastModif']."\n", 3, LOG_FILE );
+			}
+			if ($_GET ['dateLastModif'] == NULL || $_GET ['dateLastModif'] == 'undefined') {
 				$datesqlappend = '';
 				// $datesqlappend = ' AND (TO_DAYS(NOW()) - TO_DAYS(datecreation_poi)) <= 365';
 			} else {
-				switch ($_GET ['date']) {
-					case '1year' :
-						$datesqlappend = ' AND (TO_DAYS(NOW()) - TO_DAYS(lastdatemodif_poi)) <= 365';
-						break;
-					case '2year' :
-						$datesqlappend = ' AND (TO_DAYS(NOW()) - TO_DAYS(lastdatemodif_poi)) > 365 AND (TO_DAYS(NOW()) - TO_DAYS(datecreation_poi)) <= 730';
-						break;
-					case '3year' :
-						$datesqlappend = ' AND (TO_DAYS(NOW()) - TO_DAYS(lastdatemodif_poi)) > 730';
-						break;
-					case 'all' :
-						$datesqlappend = '';
-						break;
-					default :
-						$datesqlappend = '';
-						// $datesqlappend = ' AND (TO_DAYS(NOW()) - TO_DAYS(datecreation_poi)) <= 365';
-						break;
+				$datesqlappend = " AND (lastdatemodif_poi >= '".mysql_real_escape_string($_GET['dateLastModif'])."' OR datecreation_poi >= '".mysql_real_escape_string($_GET['dateLastModif'])."')";
+				if (DEBUG) {
+					error_log ( date ( "Y-m-d H:i:s" ) . " - public/getMarker.php datesqlappend = ".$datesqlappend."\n", 3, LOG_FILE );
 				}
 			}
 			
@@ -57,19 +45,12 @@ switch (SGBD) {
 			} else {
 				$statussqlappend = ' AND status_id_status = ' . $_GET ['status'];
 			}
-			$listType = $_GET ['listType'];
-			$tabListType = preg_split ( '#,#', $listType );
-			$sqlappend = " WHERE poi.geom_poi IS NOT NULL AND ( ";
-			for($i = 0; $i < count ( $tabListType ); $i ++) {
-				$sqlappend .= " subcategory_id_subcategory = " . $tabListType [$i] . " OR";
-			}
-			$sqlappend = substr ( $sqlappend, 0, strlen ( $sqlappend ) - 3 );
-			$sqlappend .= " ) AND poi.display_poi = TRUE 
+			$listType = mysql_real_escape_string($_GET ['listType']);
+			$sqlappend = " WHERE poi.geom_poi IS NOT NULL AND subcategory_id_subcategory IN ( " . $listType . ") AND poi.display_poi = TRUE 
 					AND poi.fix_poi = FALSE 
 					AND poi.moderation_poi = TRUE 
 					AND priorite.non_visible_par_public = 0
 					AND poi.delete_poi = 0 ";
-			//TODO : check exclusion, delete this equest when the priority combo is added
 			if (isset($_GET ['priorite']) && $_GET ['priorite'] != "") {
 				$sqlappend .= " AND priorite.id_priorite =  " . mysql_real_escape_string($_GET ['priorite']);
 			} 
@@ -80,6 +61,7 @@ switch (SGBD) {
 		$result = mysql_query ( $sql );
 		if (DEBUG) {
 			error_log ( date ( "Y-m-d H:i:s" ) . " - public/getMarker.php sql = $sql\n", 3, LOG_FILE );
+			error_log ( date ( "Y-m-d H:i:s" ) . " - public/getMarker.php sql = $datesqlappend\n", 3, LOG_FILE );
 		}
 		$i = 0;
 		while ( $row = mysql_fetch_array ( $result ) ) {
@@ -117,7 +99,7 @@ switch (SGBD) {
 			$i ++;
 		}
 		if (DEBUG) {
-			error_log ( date ( "Y-m-d H:i:s" ) . " - public/getMarker.php Nombre d'observations correspondantes = " . $i, 3, LOG_FILE );
+			error_log ( date ( "Y-m-d H:i:s" ) . " - public/getMarker.php Nombre d'observations correspondantes = " . $i."\n", 3, LOG_FILE );
 		}
 		echo '{"markers":' . json_encode ( $arr ) . '}';
 		
