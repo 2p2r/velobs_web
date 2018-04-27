@@ -48,6 +48,9 @@ if (isset ( $_SESSION ['user'] )) {
 				}
 				// $tabListType = preg_split ( '#,#', $listType );
 				$sqlappend .= " poi.geom_poi IS NOT NULL AND subcategory_id_subcategory IN ( " . $listType . ") AND poi.display_poi = TRUE AND poi.fix_poi = FALSE AND delete_poi = FALSE ";
+				if (isset ( $_GET ['displayObservationsToBeAnalyzedByComCom'] ) && $_GET ['displayObservationsToBeAnalyzedByComCom'] == 1 && ($_SESSION ["type"] == 3 || $_SESSION ["type"] == 2)) {
+					$sqlappend .= " AND reponse_collectivite_poi = '' AND (transmission_poi IS NULL OR transmission_poi = 0) ";
+				}
 			}
 			$whereSelectCommentAppend = '';
 			if ($_SESSION ["type"] == 1 && isset ( $_POST ["priority"] )) { // is admin
