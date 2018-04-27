@@ -48,9 +48,16 @@ if (isset ( $_SESSION ['user'] )) {
 				}
 				// $tabListType = preg_split ( '#,#', $listType );
 				$sqlappend .= " poi.geom_poi IS NOT NULL AND subcategory_id_subcategory IN ( " . $listType . ") AND poi.display_poi = TRUE AND poi.fix_poi = FALSE AND delete_poi = FALSE ";
-				if (isset ( $_GET ['displayObservationsToBeAnalyzedByComCom'] ) && $_GET ['displayObservationsToBeAnalyzedByComCom'] == 1 && ($_SESSION ["type"] == 3 || $_SESSION ["type"] == 2)) {
+				if (isset ( $_GET ['displayObservationsToBeAnalyzedByComCom'] ) && $_GET ['displayObservationsToBeAnalyzedByComCom'] == 1 &&  $_SESSION ["type"] == 2) {
 					$sqlappend .= " AND reponse_collectivite_poi = '' AND (transmission_poi IS NULL OR transmission_poi = 0) ";
 				}
+				if (DEBUG) {
+					error_log ( date ( "Y-m-d H:i:s" ) . " - admin/getMarker.php displayObservationsToBeAnalyzedByPole = ".$_GET ['displayObservationsToBeAnalyzedByPole'].", type = ".$_SESSION ["type"]."\n", 3, LOG_FILE );
+				}
+				if (isset ( $_GET ['displayObservationsToBeAnalyzedByPole'] ) && $_GET ['displayObservationsToBeAnalyzedByPole'] == 1 && $_SESSION ["type"] == 3) {
+					$sqlappend .= " AND reponsepole_poi = '' AND (traiteparpole_poi IS NULL OR traiteparpole_poi = 0) ";
+				}
+				
 			}
 			$whereSelectCommentAppend = '';
 			if ($_SESSION ["type"] == 1 && isset ( $_POST ["priority"] )) { // is admin
@@ -122,9 +129,7 @@ if (isset ( $_SESSION ['user'] )) {
 				$arr [$i] ['lon'] = $row ['X'];
 				$arr [$i] ['lastdatemodif_poi'] = $row ['lastdatemodif_poi'];
 				$sql2 = "SELECT * FROM commentaires WHERE poi_id_poi = " . $row ['id_poi'] . " " . $whereSelectCommentAppend;
-				if (DEBUG) {
-					error_log ( date ( "Y-m-d H:i:s" ) . " - admin/getMarker.php $sql2\n", 3, LOG_FILE );
-				}
+				
 				$result2 = mysql_query ( $sql2 );
 				$j = 0;
 				
