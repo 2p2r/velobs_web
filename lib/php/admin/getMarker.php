@@ -132,15 +132,60 @@ if (isset ( $_SESSION ['user'] )) {
 				
 				$result2 = mysql_query ( $sql2 );
 				$j = 0;
-				
+				$comments = '<b>Commentaires</b>';
+					$acceptedCommentCount = 0;
 				while ( $row2 = mysql_fetch_array ( $result2 ) ) {
 					$arr [$i] ['commentaires'] [$j] = stripslashes ( $row2 ['text_commentaires'] );
 					$arr [$i] ['photos'] [$j] = stripslashes ( $row2 ['url_photo'] );
 					$arr [$i] ['mail_commentaires'] [$j] = stripslashes ( $row2 ['mail_commentaires'] );
 					$arr [$i] ['datecreation'] [$j] = stripslashes ( $row2 ['datecreation'] );
 					$arr [$i] ['affiche'] [$j] = stripslashes ( $row2 ['display_commentaires'] );
+					
+				if ($_SESSION ["type"] == 4 || $_SESSION ["type"] == 1) {
+							$color = 'green';
+							if ($row2 ['display_commentaires'] == 'Non modéré') {
+								$color = 'orange';
+							} else if ($row2 ['display_commentaires'] == 'Modéré refusé') {
+								$color = 'red';
+							}
+							$comments .= '<ul><li style="color:' . $color . ';">' . $j .'. ';
+							if ($row2 ['datecreation'] != '0000-00-00 00:00:00') {
+								$comments .= 'Ajouté le ' . $row2 ['datecreation'] . '';
+							}
+							$comments .= ", par ".$row2 ['mail_commentaires']." : ";
+							$comments .= $row2 ['text_commentaires'] . '</i></li>';
+							if ($row2 ['url_photo'] != "") {
+								$comments .= '<li><a href="./resources/pictures/' . $row2 ['url_photo'] . '" target="_blank">Photo associée</a></li>';
+							}
+							$comments .= '</ul><hr />';
+						} else if ($_SESSION ["type"] == 2 || $_SESSION ["type"] == 3) {
+							if ($row2 ['display_commentaires'] == 'Modéré accepté') {
+								$acceptedCommentCount++;
+								$comments .= '<ul><li>' . $j .'. ';
+								if ($row2 ['datecreation'] != '0000-00-00 00:00:00') {
+									$comments .= 'Ajouté le ' . $row2 ['datecreation'] . '';
+								}
+								$comments .= $row2 ['text_commentaires'] . '</i></li>';
+								if ($row2 ['url_photo'] != "") {
+									$comments .= '<li><a href="./resources/pictures/' . $row2 ['url_photo'] . '" target="_blank">Photo associée</a></li>';
+								}
+								$comments .= '</ul><hr />';
+							}
+						}
+					
 					$j ++;
 				}
+				
+				if ($j>1){
+						if ($_SESSION ["type"] == 4 || $_SESSION ["type"] == 1) {
+						$comments .= "Cliquer sur le bouton \"Commentaires\" ci-dessous pour le(s) modérer.";
+						}else if ($acceptedCommentCount > 0){
+							$comments .= "Cliquer sur le bouton \"Commentaires\" ci-dessous pour le(s) afficher en vue tableau.";
+						}
+					}
+				
+				$arr[$i]['comments'] = stripslashes($comments);
+				
 				
 				$i ++;
 			}
