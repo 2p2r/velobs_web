@@ -665,11 +665,25 @@
 						$arr[$i]['lastdatemodif_poi'] = $row['lastdatemodif_poi'];
 
 						$sql2 = "SELECT * FROM commentaires WHERE poi_id_poi = ".$row['id_poi'];
-						$res2 = mysql_query($sql2);
-						$nb2 = mysql_num_rows($res2);
+						$result2 = mysql_query($sql2);
+						$nb2 = mysql_num_rows($result2);
 						$arr[$i]['num_comments'] = $nb2;
-
-
+						
+						$comments = '<b>Commentaires</b>';
+												
+						while ( $row2 = mysql_fetch_array ( $result2 ) ) {
+							$comments .= '<ul>';
+							if ( $row2 ['datecreation'] != '0000-00-00 00:00:00'){
+								$comments .= '<li>Ajouté le '. $row2 ['datecreation'] . ' : '.$row2 ['text_commentaires'].'</li>';
+							}
+							
+							if ($row2 ['url_photo'] != ""){
+								$comments .= '<li><a href="./resources/pictures/'.$row2 ['url_photo'].'" target="_blank">Photo associée</a></li>';
+							}
+							$comments .= '</ul><hr />';
+							$j ++;
+						}
+						$arr[$i]['comments'] = stripslashes($comments);
 						$i++;
 					}
 					echo '({"total":"'.$nbrows.'","results":'.json_encode($arr).'})';
