@@ -178,11 +178,13 @@ if (isset ( $_SESSION ['user'] )) {
 				
 				if ($j>1){
 						if ($_SESSION ["type"] == 4 || $_SESSION ["type"] == 1) {
-						$comments .= "Cliquer sur le bouton \"Commentaires\" ci-dessous pour le(s) modérer.";
+							$comments .= "Cliquer sur le bouton \"Commentaires\" ci-dessous pour le(s) modérer.";
 						}else if ($acceptedCommentCount > 0){
 							$comments .= "Cliquer sur le bouton \"Commentaires\" ci-dessous pour le(s) afficher en vue tableau.";
 						}
-					}
+				}else{
+					$comments .="Encore aucun commentaire associé";
+				}
 				
 				$arr[$i]['comments'] = stripslashes($comments);
 				

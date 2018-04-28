@@ -552,11 +552,11 @@ function getPoi($start, $limit, $asc, $sort, $dir) {
 							} else if ($row2 ['display_commentaires'] == 'Modéré refusé') {
 								$color = 'red';
 							}
-							$comments .= '<ul><li style="color:' . $color . ';">' . $j .'. ';
+							$comments .= '<ul><li style="color:' . $color . ';">' . $j . '. ';
 							if ($row2 ['datecreation'] != '0000-00-00 00:00:00') {
 								$comments .= 'Ajouté le ' . $row2 ['datecreation'] . '';
 							}
-							$comments .= ", par ".$row2 ['mail_commentaires']." : ";
+							$comments .= ", par " . $row2 ['mail_commentaires'] . " : ";
 							$comments .= $row2 ['text_commentaires'] . '</i></li>';
 							if ($row2 ['url_photo'] != "") {
 								$comments .= '<li><a href="./resources/pictures/' . $row2 ['url_photo'] . '" target="_blank">Photo associée</a></li>';
@@ -564,8 +564,8 @@ function getPoi($start, $limit, $asc, $sort, $dir) {
 							$comments .= '</ul><hr />';
 						} else if ($_SESSION ["type"] == 2 || $_SESSION ["type"] == 3) {
 							if ($row2 ['display_commentaires'] == 'Modéré accepté') {
-								$acceptedCommentCount++;
-								$comments .= '<ul><li style="color:' . $color . ';">' . $j .'. ';
+								$acceptedCommentCount ++;
+								$comments .= '<ul><li style="color:' . $color . ';">' . $j . '. ';
 								if ($row2 ['datecreation'] != '0000-00-00 00:00:00') {
 									$comments .= 'Ajouté le ' . $row2 ['datecreation'] . '';
 								}
@@ -579,12 +579,14 @@ function getPoi($start, $limit, $asc, $sort, $dir) {
 						
 						$j ++;
 					}
-					if ($j>1){
+					if ($j > 1) {
 						if ($_SESSION ["type"] == 4 || $_SESSION ["type"] == 1) {
-						$comments .= "Cliquer sur le bouton \"Commentaires\" ci-dessous pour le(s) modérer.";
-						}else if ($acceptedCommentCount > 0){
+							$comments .= "Cliquer sur le bouton \"Commentaires\" ci-dessous pour le(s) modérer.";
+						} else if ($acceptedCommentCount > 0) {
 							$comments .= "Cliquer sur le bouton \"Commentaires\" ci-dessous pour le(s) afficher en vue tableau.";
 						}
+					} else {
+						$comments .= "Encore aucun commentaire associé";
 					}
 					$arr [$i] ['comments'] = stripslashes ( $comments );
 					$i ++;
