@@ -132,7 +132,7 @@ if (isset ( $_SESSION ['user'] )) {
 				
 				$result2 = mysql_query ( $sql2 );
 				$j = 0;
-				$comments = '<b>Commentaires</b>';
+				$comments = '<b>Commentaires</b><br />';
 					$acceptedCommentCount = 0;
 				while ( $row2 = mysql_fetch_array ( $result2 ) ) {
 					$arr [$i] ['commentaires'] [$j] = stripslashes ( $row2 ['text_commentaires'] );

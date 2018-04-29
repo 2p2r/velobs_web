@@ -541,7 +541,7 @@ function getPoi($start, $limit, $asc, $sort, $dir) {
 					$nb2 = mysql_num_rows ( $result2 );
 					$arr [$i] ['num_comments'] = $nb2;
 					$j = 1;
-					$comments = '<b>Commentaires</b>';
+					$comments = '<b>Commentaires</b><br />';
 					$acceptedCommentCount = 0;
 					while ( $row2 = mysql_fetch_array ( $result2 ) ) {
 						
