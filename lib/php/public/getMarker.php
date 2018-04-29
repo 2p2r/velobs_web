@@ -84,6 +84,7 @@ switch (SGBD) {
 			$arr [$i] ['iconCls'] = $row ['icon_subcategory'];
 			$arr [$i] ['lat'] = $row ['Y'];
 			$arr [$i] ['lon'] = $row ['X'];
+			$arr [$i] ['mail_poi'] = stripslashes ( $row ['mail_poi'] );
 			$arr [$i] ['lastdatemodif_poi'] = $row ['lastdatemodif_poi'];
 			$sql2 = "SELECT * FROM commentaires WHERE poi_id_poi = " . $row ['id_poi'] . " AND display_commentaires = \'Modéré accepté\'";
 			$result2 = mysql_query ( $sql2 );
@@ -95,7 +96,8 @@ switch (SGBD) {
 				$arr [$i] ['datecreation'] [$j] = stripslashes ( $row2 ['datecreation'] );
 				$j ++;
 			}
-			
+			$arr [$i] ['num_comments'] =$j;
+			$arr [$i] ['num_accepted_comments'] =$acceptedCommentCount;
 			$i ++;
 		}
 		if (DEBUG) {

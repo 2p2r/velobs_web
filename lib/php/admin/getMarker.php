@@ -175,6 +175,8 @@ if (isset ( $_SESSION ['user'] )) {
 					
 					$j ++;
 				}
+				$arr [$i] ['num_comments'] = $j;
+				$arr [$i] ['num_accepted_comments'] = $acceptedCommentCount;
 				
 				if ($j>1){
 						if ($_SESSION ["type"] == 4 || $_SESSION ["type"] == 1) {

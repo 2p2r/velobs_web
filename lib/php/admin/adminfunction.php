@@ -539,7 +539,7 @@ function getPoi($start, $limit, $asc, $sort, $dir) {
 					$sql2 = "SELECT * FROM commentaires WHERE poi_id_poi = " . $row ['id_poi'];
 					$result2 = mysql_query ( $sql2 );
 					$nb2 = mysql_num_rows ( $result2 );
-					$arr [$i] ['num_comments'] = $nb2;
+					
 					$j = 1;
 					$comments = '<b>Commentaires</b><br />';
 					$acceptedCommentCount = 0;
@@ -579,6 +579,8 @@ function getPoi($start, $limit, $asc, $sort, $dir) {
 						
 						$j ++;
 					}
+					$arr [$i] ['num_comments'] =$j;
+					$arr [$i] ['num_accepted_comments'] =$acceptedCommentCount;
 					if ($j > 1) {
 						if ($_SESSION ["type"] == 4 || $_SESSION ["type"] == 1) {
 							$comments .= "Cliquer sur le bouton \"Commentaires\" ci-dessous pour le(s) modérer.";
