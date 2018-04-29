@@ -117,7 +117,11 @@ if (isset ( $_SESSION ['user'] )) {
 				$arr [$i] ['reponsepole_poi'] = stripslashes ( $row ['reponsepole_poi'] );
 				$arr [$i] ['traiteparpole_poi'] = stripslashes ( $row ['traiteparpole_poi'] );
 				$arr [$i] ['moderation_poi'] = stripslashes ( $row ['moderation_poi'] );
-				$arr [$i] ['mail_poi'] = stripslashes ( $row ['mail_poi'] );
+				if ($_SESSION ["type"] == 4 || $_SESSION ["type"] == 1) {
+					$arr [$i] ['mail_poi'] = stripslashes ( $row ['mail_poi'] );
+				}else{
+					$arr [$i] ['mail_poi'] = "******";
+				}
 				$arr [$i] ['observationterrain_poi'] = stripslashes ( $row ['observationterrain_poi'] );
 				$arr [$i] ['lib_status'] = stripslashes ( $row ['lib_status'] );
 				$arr [$i] ['color_status'] = stripslashes ( $row ['color_status'] );

@@ -510,7 +510,11 @@ function getPoi($start, $limit, $asc, $sort, $dir) {
 					$arr [$i] ['num_poi'] = stripslashes ( $row ['num_poi'] );
 					$arr [$i] ['rue_poi'] = stripslashes ( $row ['rue_poi'] );
 					$arr [$i] ['tel_poi'] = stripslashes ( $row ['tel_poi'] );
-					$arr [$i] ['mail_poi'] = stripslashes ( $row ['mail_poi'] );
+					if ($_SESSION ["type"] == 4 || $_SESSION ["type"] == 1) {
+						$arr [$i] ['mail_poi'] = stripslashes ( $row ['mail_poi'] );
+					} else {
+						$arr [$i] ['mail_poi'] = "******";
+					}
 					$arr [$i] ['desc_poi'] = stripslashes ( $row ['desc_poi'] );
 					$arr [$i] ['prop_poi'] = stripslashes ( $row ['prop_poi'] );
 					$arr [$i] ['observationterrain_poi'] = stripslashes ( $row ['observationterrain_poi'] );
@@ -545,51 +549,51 @@ function getPoi($start, $limit, $asc, $sort, $dir) {
 					$acceptedCommentCount = 0;
 					while ( $row2 = mysql_fetch_array ( $result2 ) ) {
 						
-					if ($_SESSION ["type"] == 4 || $_SESSION ["type"] == 1) {
-						$color = 'green';
-						if ($row2 ['display_commentaires'] == 'Non modéré') {
-							$color = 'orange';
-						} else if ($row2 ['display_commentaires'] == 'Modéré refusé') {
-							$color = 'red';
-						}
-						$comments .= '<ul><li style="color:' . $color . ';">' . $j . '. ';
-						if ($row2 ['datecreation'] != '0000-00-00 00:00:00') {
-							$comments .= 'Ajouté le ' . $row2 ['datecreation'] . '';
-						} else {
-							$comments .= 'Ajouté le ?';
-						}
-						if ($row2 ['mail_commentaires'] != '') {
-							$comments .= ", par " . $row2 ['mail_commentaires'] . " : ";
-						} else {
-							$comments .= ', par ? : ';
-						}
-						
-						$comments .= nl2br ( $row2 ['text_commentaires'] ) . '</i></li>';
-						if ($row2 ['url_photo'] != "") {
-							$comments .= '<li><a href="./resources/pictures/' . $row2 ['url_photo'] . '" target="_blank">Photo associée</a></li>';
-						}
-						$comments .= '</ul><hr />';
-					} else if ($_SESSION ["type"] == 2 || $_SESSION ["type"] == 3) {
-						if ($row2 ['display_commentaires'] == 'Modéré accepté') {
-							$acceptedCommentCount ++;
-							$comments .= '<ul><li>' . $j . '. ';
-							if ($row2 ['datecreation'] != '0000-00-00 00:00:00') {
-								$comments .= 'Ajouté le ' . $row2 ['datecreation'] . ' : ';
-							} else {
-								$comments .= 'Ajouté le ? : ';
+						if ($_SESSION ["type"] == 4 || $_SESSION ["type"] == 1) {
+							$color = 'green';
+							if ($row2 ['display_commentaires'] == 'Non modéré') {
+								$color = 'orange';
+							} else if ($row2 ['display_commentaires'] == 'Modéré refusé') {
+								$color = 'red';
 							}
+							$comments .= '<ul><li style="color:' . $color . ';">' . $j . '. ';
+							if ($row2 ['datecreation'] != '0000-00-00 00:00:00') {
+								$comments .= 'Ajouté le ' . $row2 ['datecreation'] . '';
+							} else {
+								$comments .= 'Ajouté le ?';
+							}
+							if ($row2 ['mail_commentaires'] != '') {
+								$comments .= ", par " . $row2 ['mail_commentaires'] . " : ";
+							} else {
+								$comments .= ', par ? : ';
+							}
+							
 							$comments .= nl2br ( $row2 ['text_commentaires'] ) . '</i></li>';
 							if ($row2 ['url_photo'] != "") {
 								$comments .= '<li><a href="./resources/pictures/' . $row2 ['url_photo'] . '" target="_blank">Photo associée</a></li>';
 							}
 							$comments .= '</ul><hr />';
+						} else if ($_SESSION ["type"] == 2 || $_SESSION ["type"] == 3) {
+							if ($row2 ['display_commentaires'] == 'Modéré accepté') {
+								$acceptedCommentCount ++;
+								$comments .= '<ul><li>' . $j . '. ';
+								if ($row2 ['datecreation'] != '0000-00-00 00:00:00') {
+									$comments .= 'Ajouté le ' . $row2 ['datecreation'] . ' : ';
+								} else {
+									$comments .= 'Ajouté le ? : ';
+								}
+								$comments .= nl2br ( $row2 ['text_commentaires'] ) . '</i></li>';
+								if ($row2 ['url_photo'] != "") {
+									$comments .= '<li><a href="./resources/pictures/' . $row2 ['url_photo'] . '" target="_blank">Photo associée</a></li>';
+								}
+								$comments .= '</ul><hr />';
+							}
 						}
-					}
 						
 						$j ++;
 					}
-					$arr [$i] ['num_comments'] =$j;
-					$arr [$i] ['num_accepted_comments'] =$acceptedCommentCount;
+					$arr [$i] ['num_comments'] = $j;
+					$arr [$i] ['num_accepted_comments'] = $acceptedCommentCount;
 					if ($j > 1) {
 						if ($_SESSION ["type"] == 4 || $_SESSION ["type"] == 1) {
 							$comments .= "Cliquer sur le bouton \"Commentaires\" ci-dessous pour le(s) modérer.";

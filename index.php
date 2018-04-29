@@ -42,7 +42,6 @@
 			<script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Loading extensions...';</script>
 			<script type="text/javascript" src="lib/js/framework/ux/GeoNamesSearchCombo.js"></script>
             <script type="text/javascript" src="lib/js/public/poidisplaystatus.js"></script>
-			<script type="text/javascript" src="lib/js/public/poidisplaydate.js"></script>
 			<script type="text/javascript" src="lib/js/public/baselayerlist.js?v1.5.2"></script>
 			<script type="text/javascript" src="lib/js/framework/ux/FileUploadField.js"></script>
 			<script type="text/javascript" src="lib/js/framework/ux/IconCombo.js"></script>
