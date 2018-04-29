@@ -545,37 +545,46 @@ function getPoi($start, $limit, $asc, $sort, $dir) {
 					$acceptedCommentCount = 0;
 					while ( $row2 = mysql_fetch_array ( $result2 ) ) {
 						
-						if ($_SESSION ["type"] == 4 || $_SESSION ["type"] == 1) {
-							$color = 'green';
-							if ($row2 ['display_commentaires'] == 'Non modéré') {
-								$color = 'orange';
-							} else if ($row2 ['display_commentaires'] == 'Modéré refusé') {
-								$color = 'red';
-							}
-							$comments .= '<ul><li style="color:' . $color . ';">' . $j . '. ';
-							if ($row2 ['datecreation'] != '0000-00-00 00:00:00') {
-								$comments .= 'Ajouté le ' . $row2 ['datecreation'] . '';
-							}
+					if ($_SESSION ["type"] == 4 || $_SESSION ["type"] == 1) {
+						$color = 'green';
+						if ($row2 ['display_commentaires'] == 'Non modéré') {
+							$color = 'orange';
+						} else if ($row2 ['display_commentaires'] == 'Modéré refusé') {
+							$color = 'red';
+						}
+						$comments .= '<ul><li style="color:' . $color . ';">' . $j . '. ';
+						if ($row2 ['datecreation'] != '0000-00-00 00:00:00') {
+							$comments .= 'Ajouté le ' . $row2 ['datecreation'] . '';
+						} else {
+							$comments .= 'Ajouté le ?';
+						}
+						if ($row2 ['mail_commentaires'] != '') {
 							$comments .= ", par " . $row2 ['mail_commentaires'] . " : ";
-							$comments .= $row2 ['text_commentaires'] . '</i></li>';
+						} else {
+							$comments .= ', par ? : ';
+						}
+						
+						$comments .= nl2br ( $row2 ['text_commentaires'] ) . '</i></li>';
+						if ($row2 ['url_photo'] != "") {
+							$comments .= '<li><a href="./resources/pictures/' . $row2 ['url_photo'] . '" target="_blank">Photo associée</a></li>';
+						}
+						$comments .= '</ul><hr />';
+					} else if ($_SESSION ["type"] == 2 || $_SESSION ["type"] == 3) {
+						if ($row2 ['display_commentaires'] == 'Modéré accepté') {
+							$acceptedCommentCount ++;
+							$comments .= '<ul><li>' . $j . '. ';
+							if ($row2 ['datecreation'] != '0000-00-00 00:00:00') {
+								$comments .= 'Ajouté le ' . $row2 ['datecreation'] . ' : ';
+							} else {
+								$comments .= 'Ajouté le ? : ';
+							}
+							$comments .= nl2br ( $row2 ['text_commentaires'] ) . '</i></li>';
 							if ($row2 ['url_photo'] != "") {
 								$comments .= '<li><a href="./resources/pictures/' . $row2 ['url_photo'] . '" target="_blank">Photo associée</a></li>';
 							}
 							$comments .= '</ul><hr />';
-						} else if ($_SESSION ["type"] == 2 || $_SESSION ["type"] == 3) {
-							if ($row2 ['display_commentaires'] == 'Modéré accepté') {
-								$acceptedCommentCount ++;
-								$comments .= '<ul><li style="color:' . $color . ';">' . $j . '. ';
-								if ($row2 ['datecreation'] != '0000-00-00 00:00:00') {
-									$comments .= 'Ajouté le ' . $row2 ['datecreation'] . '';
-								}
-								$comments .= $row2 ['text_commentaires'] . '</i></li>';
-								if ($row2 ['url_photo'] != "") {
-									$comments .= '<li><a href="./resources/pictures/' . $row2 ['url_photo'] . '" target="_blank">Photo associée</a></li>';
-								}
-								$comments .= '</ul><hr />';
-							}
 						}
+					}
 						
 						$j ++;
 					}
