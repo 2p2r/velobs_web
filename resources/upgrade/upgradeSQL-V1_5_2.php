@@ -33,7 +33,7 @@ Le problème identifié a été transmis aux services municipaux.',besoin_commen
 L''observation que vous avez envoyée sur VelObs a changé de statut. Le problème identifié a été transmis aux services municipaux.\n',besoin_commentaire_association = 0 WHERE id_priorite = 2;";
 	$resultUpdate = mysql_query ( $sqlUpdate );
 	echo $sqlUpdate . " : " . $resultUpdate . "<br />";
-	$sqlUpdate = "UPDATE priorite SET non_visible_par_collectivite = 0, non_visible_par_public = 1, priorite_sujet_email = '',priorite_corps_email = '',besoin_commentaire_association = 0 WHERE id_priorite = 4;";
+	$sqlUpdate = "UPDATE priorite SET non_visible_par_collectivite = 1, non_visible_par_public = 1, priorite_sujet_email = '',priorite_corps_email = '',besoin_commentaire_association = 0 WHERE id_priorite = 4;";
 	$resultUpdate = mysql_query ( $sqlUpdate );
 	echo $sqlUpdate . " : " . $resultUpdate . "<br />";
 	$sqlUpdate = "UPDATE priorite SET non_visible_par_collectivite = 1, non_visible_par_public = 0, priorite_sujet_email = 'Observation prise en compte',priorite_corps_email = 'Bonjour !

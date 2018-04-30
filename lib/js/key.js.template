@@ -70,7 +70,7 @@ var ClusterStrategyDistance = 30;
 var predefinedColorsForStatus = [['Vert','green'],['Noir','black'],['Rouge','red'],['Bleu','blue']];
 
 //fields to inactivate for each role (have a look at the install.odt file which lists all the ids usable in thes arrays
-var arrayComponentsToDisableRole1Admin = ["emailPOIField","StatusPOIField","RespComcomPOIField", "RespPolePOIField","TraitePolePOIField","TransmissionPolePOIField"];
-var arrayComponentsToDisableRole2CommunauteCommunes = ["emailPOIField","sendMailButton","SubCategoryPOIField", "DescPOIField", "PropPOIField", "RuePOIField", "ObsPOIField", "NumPOIField","PrioritePOIField","CommentFinalPOIField","ModerationPOIField","DisplayPOIField"];
-var arrayComponentsToDisableRole3PoleTechnique = ["emailPOIField","sendMailButton","SubCategoryPOIField", "CommunePOIField", "PolePOIField", "RespComcomPOIField", "DescPOIField", "PropPOIField", "RuePOIField", "ObsPOIField", "NumPOIField", "PrioritePOIField","CommentFinalPOIField","ModerationPOIField","DisplayPOIField"];
-var arrayComponentsToDisableRole4Moderateur = ["emailPOIField","StatusPOIField","RespComcomPOIField","RespPolePOIField","TraitePolePOIField","TransmissionPolePOIField"];
+var arrayComponentsToDisableRole1Admin = ["latitude","longitude","emailPOIField","StatusPOIField","RespComcomPOIField", "RespPolePOIField","TraitePolePOIField","TransmissionPolePOIField"];
+var arrayComponentsToDisableRole2CommunauteCommunes = ["RespPolePOIField","latitude","longitude","emailPOIField","sendMailButton","SubCategoryPOIField", "DescPOIField", "PropPOIField", "RuePOIField", "ObsPOIField", "NumPOIField","PrioritePOIField","CommentFinalPOIField","ModerationPOIField","DisplayPOIField"];
+var arrayComponentsToDisableRole3PoleTechnique = ["latitude","longitude","emailPOIField","sendMailButton","SubCategoryPOIField", "CommunePOIField", "PolePOIField", "RespComcomPOIField", "DescPOIField", "PropPOIField", "RuePOIField", "ObsPOIField", "NumPOIField", "PrioritePOIField","CommentFinalPOIField","ModerationPOIField","DisplayPOIField"];
+var arrayComponentsToDisableRole4Moderateur = ["latitude","longitude","emailPOIField","StatusPOIField","RespComcomPOIField","RespPolePOIField","TraitePolePOIField","TransmissionPolePOIField"];
