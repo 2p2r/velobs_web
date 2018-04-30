@@ -43,7 +43,7 @@
                     $text = mysql_real_escape_string($_POST['text_comment']);
                     $mail_commentaires = mysql_real_escape_string($_POST['mail_comment']);
                     
-                    $sql = "INSERT INTO commentaires (text_commentaires, display_commentaires, mail_commentaires, poi_id_poi, url_photo) VALUES ('$text', 0, '$mail_commentaires',$id_poi, '$url_photo')";
+                    $sql = "INSERT INTO commentaires (text_commentaires, display_commentaires, mail_commentaires, poi_id_poi, url_photo) VALUES ('$text', 'Non modéré', '$mail_commentaires',$id_poi, '$url_photo')";
                     $result = mysql_query($sql);
                     $id_commentaire = mysql_insert_id();
 

@@ -38,7 +38,7 @@ if (isset ( $_SESSION ['user'] )) {
 				$sqlappend .= " delete_poi = FALSE AND poi.id_poi = " . $_GET ['id'];
 			} else {
 				if (isset ( $_GET ['commentToModerate'] ) && $_GET ['commentToModerate'] == 1 && ($_SESSION ["type"] == 4 || $_SESSION ["type"] == 1)) {
-					$sqlappend = " INNER JOIN commentaires ON (poi.id_poi = commentaires.poi_id_poi) " . $sqlappend . " commentaires.display_commentaires = false AND ";
+					$sqlappend = " INNER JOIN commentaires ON (poi.id_poi = commentaires.poi_id_poi) " . $sqlappend . " commentaires.display_commentaires = 'Non modéré' AND ";
 				} elseif (isset ( $_GET ['priority'] ) && $_GET ['priority'] != '') {
 					$sqlappend .= " poi.priorite_id_priorite = " . $_GET ['priority'] . " AND ";
 				}
@@ -48,24 +48,47 @@ if (isset ( $_SESSION ['user'] )) {
 				}
 				// $tabListType = preg_split ( '#,#', $listType );
 				$sqlappend .= " poi.geom_poi IS NOT NULL AND subcategory_id_subcategory IN ( " . $listType . ") AND poi.display_poi = TRUE AND poi.fix_poi = FALSE AND delete_poi = FALSE ";
+				if (isset ( $_GET ['displayObservationsToBeAnalyzedByComCom'] ) && $_GET ['displayObservationsToBeAnalyzedByComCom'] == 1 && $_SESSION ["type"] == 2) {
+					$sqlappend .= " AND reponse_collectivite_poi = '' AND (transmission_poi IS NULL OR transmission_poi = 0) ";
+				}
+				if (DEBUG) {
+					error_log ( date ( "Y-m-d H:i:s" ) . " - admin/getMarker.php displayObservationsToBeAnalyzedByPole = " . $_GET ['displayObservationsToBeAnalyzedByPole'] . ", type = " . $_SESSION ["type"] . "\n", 3, LOG_FILE );
+				}
+				if (isset ( $_GET ['displayObservationsToBeAnalyzedByPole'] ) && $_GET ['displayObservationsToBeAnalyzedByPole'] == 1 && $_SESSION ["type"] == 3) {
+					$sqlappend .= " AND reponsepole_poi = '' AND (traiteparpole_poi IS NULL OR traiteparpole_poi = 0) ";
+				}
 			}
 			$whereSelectCommentAppend = '';
 			if ($_SESSION ["type"] == 1 && isset ( $_POST ["priority"] )) { // is admin
 				$sqlappend .= ' AND priorite.id_priorite = ' . $_POST ["priority"];
 			} elseif ($_SESSION ["type"] == 2) { // is communaute de communes
-				$sqlappend .= ' AND moderation_poi = 1 AND commune_id_commune IN (' . str_replace ( ';', ',', $_SESSION ['territoire'] ) . ') AND priorite.id_priorite <> 7 AND priorite.id_priorite <> 15 ';
-				$whereSelectCommentAppend = ' AND display_commentaires = 1 ';
+				$sqlappend .= ' AND moderation_poi = 1 
+						AND commune_id_commune IN (' . str_replace ( ';', ',', $_SESSION ['territoire'] ) . ') 
+						AND priorite.non_visible_par_collectivite = 0 ';
+				$whereSelectCommentAppend = ' AND display_commentaires = \'Modéré accepté\' ';
 			} elseif ($_SESSION ["type"] == 3) { // is pole technique
-				$sqlappend .= ' AND moderation_poi = 1  AND transmission_poi = 1 AND poi.pole_id_pole = ' . $_SESSION ["pole"] . ' AND priorite.id_priorite <> 7 AND priorite.id_priorite <> 15 ';
-				$whereSelectCommentAppend = ' AND display_commentaires = 1 ';
+				$sqlappend .= ' AND moderation_poi = 1  
+						AND transmission_poi = 1 
+						AND poi.pole_id_pole = ' . $_SESSION ["pole"] . ' 
+						AND priorite.non_visible_par_collectivite = 0 ';
+				$whereSelectCommentAppend = ' AND display_commentaires = \'Modéré accepté\' ';
 			} elseif ($_SESSION ["type"] == 4) { // is moderateur
 				$sqlappend .= ' AND poi.pole_id_pole = ' . $_SESSION ["pole"] . ' ';
 			}
 			
-			if (isset ( $_GET["status"] ) && $_GET["status"] != '') { // filter by status given by the collectivity
-				$sqlappend .= ' AND poi.status_id_status = ' . $_GET["status"];
+			if (isset ( $_GET ["status"] ) && $_GET ["status"] != '') { // filter by status given by the collectivity
+				$sqlappend .= ' AND poi.status_id_status = ' . $_GET ["status"];
 			}
-			$sql .= $sqlappend;
+			if ($_GET ['dateLastModif'] == NULL || $_GET ['dateLastModif'] == 'undefined') {
+				$datesqlappend = '';
+				// $datesqlappend = ' AND (TO_DAYS(NOW()) - TO_DAYS(datecreation_poi)) <= 365';
+			} else {
+				$datesqlappend = " AND (lastdatemodif_poi >= '" . mysql_real_escape_string ( $_GET ['dateLastModif'] ) . "' OR datecreation_poi >= '" . mysql_real_escape_string ( $_GET ['dateLastModif'] ) . "') ";
+				if (DEBUG) {
+					error_log ( date ( "Y-m-d H:i:s" ) . " - public/getMarker.php datesqlappend = " . $datesqlappend . "\n", 3, LOG_FILE );
+				}
+			}
+			$sql .= $datesqlappend . $sqlappend;
 			if (DEBUG) {
 				error_log ( date ( "Y-m-d H:i:s" ) . " - admin/getMarker.php sql = $sql\n", 3, LOG_FILE );
 			}
@@ -94,6 +117,11 @@ if (isset ( $_SESSION ['user'] )) {
 				$arr [$i] ['reponsepole_poi'] = stripslashes ( $row ['reponsepole_poi'] );
 				$arr [$i] ['traiteparpole_poi'] = stripslashes ( $row ['traiteparpole_poi'] );
 				$arr [$i] ['moderation_poi'] = stripslashes ( $row ['moderation_poi'] );
+				if ($_SESSION ["type"] == 4 || $_SESSION ["type"] == 1) {
+					$arr [$i] ['mail_poi'] = stripslashes ( $row ['mail_poi'] );
+				}else{
+					$arr [$i] ['mail_poi'] = "******";
+				}
 				$arr [$i] ['observationterrain_poi'] = stripslashes ( $row ['observationterrain_poi'] );
 				$arr [$i] ['lib_status'] = stripslashes ( $row ['lib_status'] );
 				$arr [$i] ['color_status'] = stripslashes ( $row ['color_status'] );
@@ -104,20 +132,75 @@ if (isset ( $_SESSION ['user'] )) {
 				$arr [$i] ['lon'] = $row ['X'];
 				$arr [$i] ['lastdatemodif_poi'] = $row ['lastdatemodif_poi'];
 				$sql2 = "SELECT * FROM commentaires WHERE poi_id_poi = " . $row ['id_poi'] . " " . $whereSelectCommentAppend;
-				if (DEBUG) {
-					error_log ( date ( "Y-m-d H:i:s" ) . " - admin/getMarker.php $sql2\n", 3, LOG_FILE );
-				}
+				
 				$result2 = mysql_query ( $sql2 );
 				$j = 0;
-				
+				$comments = '<b>Commentaires</b><br />';
+				$acceptedCommentCount = 0;
 				while ( $row2 = mysql_fetch_array ( $result2 ) ) {
 					$arr [$i] ['commentaires'] [$j] = stripslashes ( $row2 ['text_commentaires'] );
 					$arr [$i] ['photos'] [$j] = stripslashes ( $row2 ['url_photo'] );
 					$arr [$i] ['mail_commentaires'] [$j] = stripslashes ( $row2 ['mail_commentaires'] );
 					$arr [$i] ['datecreation'] [$j] = stripslashes ( $row2 ['datecreation'] );
 					$arr [$i] ['affiche'] [$j] = stripslashes ( $row2 ['display_commentaires'] );
+					
+					if ($_SESSION ["type"] == 4 || $_SESSION ["type"] == 1) {
+						$color = 'green';
+						if ($row2 ['display_commentaires'] == 'Non modéré') {
+							$color = 'orange';
+						} else if ($row2 ['display_commentaires'] == 'Modéré refusé') {
+							$color = 'red';
+						}
+						$comments .= '<ul><li style="color:' . $color . ';">' . $j . '. ';
+						if ($row2 ['datecreation'] != '0000-00-00 00:00:00') {
+							$comments .= 'Ajouté le ' . $row2 ['datecreation'] . '';
+						} else {
+							$comments .= 'Ajouté le ?';
+						}
+						if ($row2 ['mail_commentaires'] != '') {
+							$comments .= ", par " . $row2 ['mail_commentaires'] . " : ";
+						} else {
+							$comments .= ', par ? : ';
+						}
+						
+						$comments .= nl2br ( $row2 ['text_commentaires'] ) . '</i></li>';
+						if ($row2 ['url_photo'] != "") {
+							$comments .= '<li><a href="./resources/pictures/' . $row2 ['url_photo'] . '" target="_blank">Photo associée</a></li>';
+						}
+						$comments .= '</ul><hr />';
+					} else if ($_SESSION ["type"] == 2 || $_SESSION ["type"] == 3) {
+						if ($row2 ['display_commentaires'] == 'Modéré accepté') {
+							$acceptedCommentCount ++;
+							$comments .= '<ul><li>' . $j . '. ';
+							if ($row2 ['datecreation'] != '0000-00-00 00:00:00') {
+								$comments .= 'Ajouté le ' . $row2 ['datecreation'] . ' : ';
+							} else {
+								$comments .= 'Ajouté le ? : ';
+							}
+							$comments .= nl2br ( $row2 ['text_commentaires'] ) . '</i></li>';
+							if ($row2 ['url_photo'] != "") {
+								$comments .= '<li><a href="./resources/pictures/' . $row2 ['url_photo'] . '" target="_blank">Photo associée</a></li>';
+							}
+							$comments .= '</ul><hr />';
+						}
+					}
+					
 					$j ++;
 				}
+				$arr [$i] ['num_comments'] = $j;
+				$arr [$i] ['num_accepted_comments'] = $acceptedCommentCount;
+				
+				if ($j > 1) {
+					if ($_SESSION ["type"] == 4 || $_SESSION ["type"] == 1) {
+						$comments .= "Cliquer sur le bouton \"Commentaires\" ci-dessous pour le(s) modérer.";
+					} else if ($acceptedCommentCount > 0) {
+						$comments .= "Cliquer sur le bouton \"Commentaires\" ci-dessous pour le(s) afficher en vue tableau.";
+					}
+				} else {
+					$comments .= "Encore aucun commentaire associé";
+				}
+				
+				$arr [$i] ['comments'] = stripslashes ( $comments );
 				
 				$i ++;
 			}

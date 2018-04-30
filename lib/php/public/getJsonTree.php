@@ -29,9 +29,7 @@
 						AND poi.display_poi = TRUE 
 						AND poi.fix_poi = FALSE 
 						AND poi.moderation_poi = TRUE 
-						AND priorite.id_priorite <> 7 
-						AND priorite.id_priorite <> 8
-						AND priorite.id_priorite <> 6
+						AND priorite.non_visible_par_public = 0
 						AND poi.delete_poi = 0 
 						GROUP BY subcategory.id_subcategory 
 						ORDER BY treerank_subcategory ASC";

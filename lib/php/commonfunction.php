@@ -321,12 +321,12 @@
 		$numberOfColumns++;
 		$arrayColumns[$numberOfColumns]['columnSQL'] = 'moderation_poi' ;
 		$arrayColumns[$numberOfColumns]['columnPOST'] = 'moderation_poi' ;
-		$arrayColumns[$numberOfColumns]['columnIntitule'] = '# Observation transmise à la collectivité : ' ;
+		$arrayColumns[$numberOfColumns]['columnIntitule'] = '# Observation modérée : ' ;
 		$arrayColumns[$numberOfColumns]['dataType'] = 'boolean' ;
 		$numberOfColumns++;
 		$arrayColumns[$numberOfColumns]['columnSQL'] = 'display_poi' ;
 		$arrayColumns[$numberOfColumns]['columnPOST'] = 'display_poi' ;
-		$arrayColumns[$numberOfColumns]['columnIntitule'] = '# Observation affichée sur l\'interface publique : ' ;
+		$arrayColumns[$numberOfColumns]['columnIntitule'] = '# Observation affichée sur l\'interface publique (valable si la priorité le permet) : ' ;
 		$arrayColumns[$numberOfColumns]['dataType'] = 'boolean' ;
 		$numberOfColumns++;
 		$arrayColumns[$numberOfColumns]['columnSQL'] = 'reponse_collectivite_poi' ;
@@ -638,7 +638,7 @@
 			error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - commonfunction.php, sqlUpdate " . $sqlUpdate . " \n", 3, LOG_FILE );
 			error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - commonfunction.php, updateObservationBoolean " . $updateObservationBoolean . " \n", 3, LOG_FILE );
 		}
-		$DetailObservation .= "# Lien vers l'observation publique (non visible tant que la modération n'a pas été effectuée) : ".URL.'?id='.$arrayObservation['id_poi'];
+		$DetailObservation .= "# Lien direct vers l'observation (non visible sur la carte tant que la modération n'a pas été effectuée) : ".URL.'?id='.$arrayObservation['id_poi'];
 		$helpReadingDetailsOfPOI = '';
 		if ($sqlUpdate != ""){
 			$helpReadingDetailsOfPOI = "(les lignes avec un alinéa correspondent aux informations modifiées)";

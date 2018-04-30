@@ -11,13 +11,6 @@ include_once '../key.php';
 				error_log(date("Y-m-d H:i:s") . " - getJsonStats.php \n", 3, LOG_FILE);
 			}
 			
-			
-			// TODO : chek user type and pole
-				
-			
-			
-			
-			
 			$sql = "SELECT s.id_status 
 					FROM status AS s
 					ORDER BY s.lib_status ASC";
@@ -29,15 +22,21 @@ include_once '../key.php';
 				$sqlGetStats = "SELECT COUNT(p.id_poi) as nb_poi, s.id_status, s.lib_status, s.color_status
 					FROM poi p
 					INNER JOIN status s ON (p.status_id_status = s.id_status)
+					INNER JOIN priorite ON (p.priorite_id_priorite = priorite.id_priorite)
 					WHERE p.status_id_status =  ".$row['id_status'] . "
 						AND p.delete_poi = 0 ";
 				$sqlappend = "";
 				if ($_SESSION ["type"] == 2) { // is communaute de communes
-					$sqlappend .= ' AND p.moderation_poi = 1 AND p.commune_id_commune IN (' . str_replace ( ';', ',', $_SESSION ['territoire'] ) . ') AND p.priorite_id_priorite <> 7 AND p.priorite_id_priorite <> 15 ';
+					$sqlappend .= ' AND p.moderation_poi = 1 
+							AND p.commune_id_commune IN (' . str_replace ( ';', ',', $_SESSION ['territoire'] ) . ') 
+							AND priorite.non_visible_par_collectivite = 0 ';
 				} elseif ($_SESSION ["type"] == 3) { // is pole technique
-					$sqlappend .= ' AND p.moderation_poi = 1  AND p.transmission_poi = 1 AND p.pole_id_pole = ' . $_SESSION ["pole"] . ' AND p.priorite_id_priorite <> 7 AND p.priorite_id_priorite <> 15 ';
+					$sqlappend .= ' AND p.moderation_poi = 1  
+							AND p.transmission_poi = 1 
+							AND p.pole_id_pole = ' . $_SESSION ["pole"] . ' 
+							AND priorite.non_visible_par_collectivite = 0 ';
 				} elseif ($_SESSION ["type"] == 4) { // is moderateur
-					$sqlappend .= ' AND p.poi.pole_id_pole = ' . $_SESSION ["pole"] . ' ';
+					$sqlappend .= ' AND p.pole_id_pole = ' . $_SESSION ["pole"] . ' ';
 				}
 				$sqlGetStats .= $sqlappend;
 				

@@ -8,7 +8,9 @@
 			$link = mysql_connect(DB_HOST,DB_USER,DB_PASS);
 			mysql_select_db(DB_NAME);
             mysql_query("SET NAMES utf8mb4");
-
+            if (DEBUG){
+            	error_log(date("Y-m-d H:i:s") . " - login.php \n", 3, LOG_FILE);
+            }
 			$pseudo = mysql_real_escape_string($_POST['login']);
 			$pass = mysql_real_escape_string($_POST['password']);
 			$sql = "SELECT users.*, language.* FROM users INNER JOIN language ON (language.id_language = users.language_id_language) WHERE lib_users = '".$pseudo."'";

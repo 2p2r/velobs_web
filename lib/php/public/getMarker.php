@@ -1,5 +1,4 @@
 <?php
-
 header ( 'Content-Type: text/html; charset=UTF-8' );
 include_once '../key.php';
 
@@ -11,83 +10,63 @@ switch (SGBD) {
 		$link = mysql_connect ( DB_HOST, DB_USER, DB_PASS );
 		mysql_select_db ( DB_NAME );
 		mysql_query ( "SET NAMES utf8mb4" );
-		
+		$sql = "SELECT poi.*,
+					commune.lib_commune,
+					x(poi.geom_poi) AS X,
+					y(poi.geom_poi) AS Y,
+					subcategory.icon_subcategory,
+					subcategory.lib_subcategory,
+					status.lib_status,
+					status.color_status,
+					priorite.lib_priorite
+					FROM poi
+					INNER JOIN subcategory ON (subcategory.id_subcategory = poi.subcategory_id_subcategory)
+					INNER JOIN commune ON (commune.id_commune = poi.commune_id_commune)
+					INNER JOIN priorite ON (poi.priorite_id_priorite = priorite.id_priorite)
+					INNER JOIN status ON (status.id_status = poi.status_id_status) ";
 		if (isset ( $_GET ['id'] )) {
-			$sql = "SELECT *, commune.lib_commune, x(poi.geom_poi) AS X, y(poi.geom_poi) AS Y, subcategory.icon_subcategory, subcategory.lib_subcategory FROM poi INNER JOIN subcategory ON (subcategory.id_subcategory = poi.subcategory_id_subcategory) INNER JOIN commune ON (commune.id_commune = poi.commune_id_commune) INNER JOIN priorite ON (poi.priorite_id_priorite = priorite.id_priorite) WHERE poi.moderation_poi = TRUE AND delete_poi = FALSE AND poi.id_poi = " . $_GET ['id'];
+			$sqlappend .= " WHERE delete_poi = FALSE AND poi.id_poi = " . $_GET ['id'];
 		} else {
-			
-			if ($_GET ['date'] == NULL) {
+			if (DEBUG) {
+				error_log ( date ( "Y-m-d H:i:s" ) . " - public/getMarker.php dateLastModif = ".$_GET ['dateLastModif']."\n", 3, LOG_FILE );
+			}
+			if ($_GET ['dateLastModif'] == NULL || $_GET ['dateLastModif'] == 'undefined') {
 				$datesqlappend = '';
 				// $datesqlappend = ' AND (TO_DAYS(NOW()) - TO_DAYS(datecreation_poi)) <= 365';
 			} else {
-				switch ($_GET ['date']) {
-					case '1year' :
-						$datesqlappend = ' AND (TO_DAYS(NOW()) - TO_DAYS(datecreation_poi)) <= 365';
-						break;
-					case '2year' :
-						$datesqlappend = ' AND (TO_DAYS(NOW()) - TO_DAYS(datecreation_poi)) > 365 AND (TO_DAYS(NOW()) - TO_DAYS(datecreation_poi)) <= 730';
-						break;
-					case '3year' :
-						$datesqlappend = ' AND (TO_DAYS(NOW()) - TO_DAYS(datecreation_poi)) > 730';
-						break;
-					case 'all' :
-						$datesqlappend = '';
-						break;
-					default :
-						$datesqlappend = '';
-						// $datesqlappend = ' AND (TO_DAYS(NOW()) - TO_DAYS(datecreation_poi)) <= 365';
-						break;
+				$datesqlappend = " AND (lastdatemodif_poi >= '".mysql_real_escape_string($_GET['dateLastModif'])."' OR datecreation_poi >= '".mysql_real_escape_string($_GET['dateLastModif'])."') ";
+				if (DEBUG) {
+					error_log ( date ( "Y-m-d H:i:s" ) . " - public/getMarker.php datesqlappend = ".$datesqlappend."\n", 3, LOG_FILE );
 				}
 			}
 			
-			if ($_GET ['status'] == NULL || $_GET ['status'] == 'all') {
+			if (isset ($_GET ['status']) && ($_GET ['status'] == "" || $_GET ['status'] == 'all'|| $_GET ['status'] == 'undefined')) {
 				$statussqlappend = '';
 			} else {
 				$statussqlappend = ' AND status_id_status = ' . $_GET ['status'];
 			}
-			$listType = $_GET ['listType'];
-			$tabListType = preg_split ( '#,#', $listType );
-			$sqlappend = " WHERE poi.geom_poi IS NOT NULL AND ( ";
-			for($i = 0; $i < count ( $tabListType ); $i ++) {
-				$sqlappend .= " subcategory_id_subcategory = " . $tabListType [$i] . " OR";
-			}
-			$sqlappend = substr ( $sqlappend, 0, strlen ( $sqlappend ) - 3 );
-			$sqlappend .= " ) AND poi.display_poi = TRUE AND poi.fix_poi = FALSE AND poi.moderation_poi = TRUE AND priorite.id_priorite <> 7 AND priorite.id_priorite <> 8 AND priorite.id_priorite <> 15 AND poi.delete_poi = 0 ";
+			$listType = mysql_real_escape_string($_GET ['listType']);
+			$sqlappend = " WHERE poi.geom_poi IS NOT NULL AND subcategory_id_subcategory IN ( " . $listType . ") AND poi.display_poi = TRUE 
+					AND poi.fix_poi = FALSE 
+					AND poi.moderation_poi = TRUE 
+					AND priorite.non_visible_par_public = 0
+					AND poi.delete_poi = 0 ";
+			if (isset($_GET ['priorite']) && $_GET ['priorite'] != "") {
+				$sqlappend .= " AND priorite.id_priorite =  " . mysql_real_escape_string($_GET ['priorite']);
+			} 
 			
-			if ($_GET ['done'] == 0) {
-				$sqlappend .= " AND priorite.id_priorite <> 6 ";
-			} else {
-				$sqlappend .= " AND priorite.id_priorite = 6 ";
-			}
-			
-			$sql = "SELECT poi.*, 
-					commune.lib_commune, 
-					x(poi.geom_poi) AS X, 
-					y(poi.geom_poi) AS Y, 
-					subcategory.icon_subcategory, 
-					subcategory.lib_subcategory, 
-					status.lib_status,
-					status.color_status,
-					priorite.lib_priorite 
-					FROM poi 
-					INNER JOIN subcategory ON (subcategory.id_subcategory = poi.subcategory_id_subcategory) 
-					INNER JOIN commune ON (commune.id_commune = poi.commune_id_commune) 
-					INNER JOIN priorite ON (poi.priorite_id_priorite = priorite.id_priorite) 
-					INNER JOIN status ON (status.id_status = poi.status_id_status) ";
-			$sql .= $sqlappend;
-			$sql .= $datesqlappend;
-			$sql .= $statussqlappend;
+			$sqlappend .= $datesqlappend . $statussqlappend;
 		}
+		$sql .= $sqlappend;
 		$result = mysql_query ( $sql );
 		if (DEBUG) {
 			error_log ( date ( "Y-m-d H:i:s" ) . " - public/getMarker.php sql = $sql\n", 3, LOG_FILE );
+			error_log ( date ( "Y-m-d H:i:s" ) . " - public/getMarker.php sql = $datesqlappend\n", 3, LOG_FILE );
 		}
 		$i = 0;
 		while ( $row = mysql_fetch_array ( $result ) ) {
 			$arr [$i] ['id'] = $row ['id_poi'];
-			
 			$arr [$i] ['lib_subcategory'] = stripslashes ( $row ['lib_subcategory'] );
-			
 			$arr [$i] ['date'] = $row ['datecreation_poi'];
 			$arr [$i] ['desc'] = stripslashes ( $row ['desc_poi'] );
 			$arr [$i] ['repgt'] = stripslashes ( $row ['reponse_collectivite_poi'] );
@@ -101,35 +80,28 @@ switch (SGBD) {
 			$arr [$i] ['lib_status'] = stripslashes ( $row ['lib_status'] );
 			$arr [$i] ['color_status'] = stripslashes ( $row ['color_status'] );
 			// TODO : combiner icone de subcategory + priorité
-// 			if ($row ['priorite_id_priorite'] == 6) {
-// 				$arr [$i] ['icon'] = 'resources/icon/marker/done.png';
-// 				$arr [$i] ['iconCls'] = 'done';
-// 			} else if ($row ['priorite_id_priorite'] == 12) {
-// 				$arr [$i] ['icon'] = 'resources/icon/marker/refuse.png';
-// 				$arr [$i] ['iconCls'] = 'refuse';
-// 			} else {
-				$arr [$i] ['icon'] = 'resources/icon/marker/' . $row ['icon_subcategory'] . '.png';
-				$arr [$i] ['iconCls'] = $row ['icon_subcategory'];
-// 			}
-			
+			$arr [$i] ['icon'] = 'resources/icon/marker/' . $row ['icon_subcategory'] . '.png';
+			$arr [$i] ['iconCls'] = $row ['icon_subcategory'];
 			$arr [$i] ['lat'] = $row ['Y'];
 			$arr [$i] ['lon'] = $row ['X'];
+			$arr [$i] ['mail_poi'] = stripslashes ( $row ['mail_poi'] );
 			$arr [$i] ['lastdatemodif_poi'] = $row ['lastdatemodif_poi'];
-			$sql2 = "SELECT * FROM commentaires WHERE poi_id_poi = " . $row ['id_poi'] . " AND display_commentaires = 1";
+			$sql2 = "SELECT * FROM commentaires WHERE poi_id_poi = " . $row ['id_poi'] . " AND display_commentaires = 'Modéré accepté'";
 			$result2 = mysql_query ( $sql2 );
 			$j = 0;
 			while ( $row2 = mysql_fetch_array ( $result2 ) ) {
-				$arr [$i] ['commentaires'] [$j] = stripslashes ( $row2 ['text_commentaires'] );
+				$arr [$i] ['commentaires'] [$j] = stripslashes ( nl2br($row2 ['text_commentaires']) );
 				$arr [$i] ['photos'] [$j] = stripslashes ( $row2 ['url_photo'] );
 				$arr [$i] ['mail_commentaires'] [$j] = stripslashes ( $row2 ['mail_commentaires'] );
 				$arr [$i] ['datecreation'] [$j] = stripslashes ( $row2 ['datecreation'] );
 				$j ++;
 			}
-			
+			$arr [$i] ['num_comments'] =$j;
+			$arr [$i] ['num_accepted_comments'] =$acceptedCommentCount;
 			$i ++;
 		}
 		if (DEBUG) {
-			error_log ( date ( "Y-m-d H:i:s" ) . " - public/getMarker.php Nombre d'observations correspondantes = " . $i, 3, LOG_FILE );
+			error_log ( date ( "Y-m-d H:i:s" ) . " - public/getMarker.php Nombre d'observations correspondantes = " . $i."\n", 3, LOG_FILE );
 		}
 		echo '{"markers":' . json_encode ( $arr ) . '}';
 		
