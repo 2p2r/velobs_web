@@ -97,7 +97,7 @@ switch (SGBD) {
 				$j ++;
 			}
 			$arr [$i] ['num_comments'] =$j;
-			$arr [$i] ['num_accepted_comments'] =$acceptedCommentCount;
+			$arr [$i] ['num_accepted_comments'] =$j;
 			$i ++;
 		}
 		if (DEBUG) {
