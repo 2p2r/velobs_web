@@ -25,8 +25,6 @@
             if (isset($_POST['id_poi'])) {
                 $id_poi = $_POST['id_poi'];
             }
-
-
 		}
 		if (DEBUG){
 			error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - dans database.php, task = $task \n", 3, LOG_FILE);
@@ -159,9 +157,9 @@
 				isModerate();
 				break;
 
-			case "UPDATEGEOPOI":
-				updateGeoPoi();
-				break;			
+// 			case "UPDATEGEOPOI":
+// 				updateGeoPoi();
+// 				break;			
 			case "RESETGEOPOI":
 				resetGeoPoi();
 				break;

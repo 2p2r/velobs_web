@@ -35,6 +35,7 @@
 						$arr['territoire_users'] = $row['territoire_id_territoire'];
 
 						$arr['success'] = TRUE;
+						$_SESSION['id_users'] = $row['id_users'];
 						$_SESSION['user'] = $row['lib_users'];
 						$_SESSION['pole'] = $row['num_pole'];
 

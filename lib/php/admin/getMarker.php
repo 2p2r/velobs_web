@@ -21,13 +21,15 @@ if (isset ( $_SESSION ['user'] )) {
 						priorite.lib_priorite,
 						lib_pole,
 						lib_status,
-						color_status
+						color_status,
+						users.lib_users
 					FROM poi 
 					INNER JOIN subcategory ON (subcategory.id_subcategory = poi.subcategory_id_subcategory) 
 					INNER JOIN commune ON (commune.id_commune = poi.commune_id_commune) 
 					INNER JOIN priorite ON (poi.priorite_id_priorite = priorite.id_priorite)
 					INNER JOIN pole ON (poi.pole_id_pole = pole.id_pole) 
-					INNER JOIN status ON (poi.status_id_status = status.id_status)";
+					INNER JOIN status ON (poi.status_id_status = status.id_status) 
+					LEFT JOIN users ON (poi.lastmodif_user_poi = users.id_users)";
 			$sqlappend = ' WHERE ';
 			// TODO : chek user type and pole
 			
@@ -127,7 +129,7 @@ if (isset ( $_SESSION ['user'] )) {
 				$arr [$i] ['color_status'] = stripslashes ( $row ['color_status'] );
 				$arr [$i] ['icon'] = 'resources/icon/marker/' . $row ['icon_subcategory'] . '.png';
 				$arr [$i] ['iconCls'] = $row ['icon_subcategory'];
-				
+				$arr [$i] ['lastmodif_user_poi'] = $row ['lib_users'];
 				$arr [$i] ['lat'] = $row ['Y'];
 				$arr [$i] ['lon'] = $row ['X'];
 				$arr [$i] ['lastdatemodif_poi'] = $row ['lastdatemodif_poi'];

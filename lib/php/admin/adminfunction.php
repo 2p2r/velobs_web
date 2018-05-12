@@ -1,7 +1,6 @@
 <?php
 include_once '../key.php';
 include_once '../commonfunction.php';
-
 /*
  * List of functions - getMarkerIcon - updateMarkerIcon - getCategory - updateCategory - createCategory - deleteCategorys - getSubCategory - updateSubCategory - createSubCategory - deleteSubCategorys - getPoi - updatePoi - deletePois - deletePoisCorbeille - getCommune - updateCommune - createCommune - deleteCommunes - getPole - updatePole - createPole - deletePoles - getQuartier - updateQuartier - createQuartier - deleteQuartiers - getPriorite - updatePriorite - createPriorite - deletePriorites - getStatus - updateStatus - createStatus - deleteStatuss - getUser - updateUser - createUser - deleteUsers - resetPhotoPoi - isModerate - updateGeoPoi - resetGeoPoi - updateGeoDefaultMap - createPublicPoi - isPropPublic - normalize - is_in_polygon - getNumPageIdParam - getComments - displayComment - editComment - getPhotos
  */ 
@@ -1906,44 +1905,44 @@ function resetPhotoPoi() {
 /*
  * Function name 	: updateGeoPoi Input			: Output			: success => '1' / failed => '2' Object			: modif geo poi Date			: Jan. 23, 2012
  */
-function updateGeoPoi() {
-	$id_poi = $_POST ['id_poi'];
-	$latitude_poi = $_POST ['latitude_poi'];
-	$longitude_poi = $_POST ['longitude_poi'];
-	switch (SGBD) {
-		case 'mysql' :
-			$link = mysql_connect ( DB_HOST, DB_USER, DB_PASS );
-			mysql_select_db ( DB_NAME );
-			mysql_query ( "SET NAMES utf8mb4" );
-			$locations = getLocations ( $latitude_poi, $longitude_poi );
-			if (DEBUG) {
-				// error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - " . getLocations($latitude_poi,$longitude_poi)[1]."\n", 3, LOG_FILE);
-				error_log ( date ( "Y-m-d H:i:s" ) . " " . __FUNCTION__ . " - locations - " . $locations [0] . ", " . $locations [1] . ", " . $locations [2] . ", " . $locations [3] . "\n", 3, LOG_FILE );
-			}
-			$commune_id_commune = $locations [0];
-			$lib_commune = $locations [1];
-			$pole_id_pole = $locations [2];
-			$lib_pole = $locations [3];
+// function updateGeoPoi() {
+// 	$id_poi = $_POST ['id_poi'];
+// 	$latitude_poi = $_POST ['latitude_poi'];
+// 	$longitude_poi = $_POST ['longitude_poi'];
+// 	switch (SGBD) {
+// 		case 'mysql' :
+// 			$link = mysql_connect ( DB_HOST, DB_USER, DB_PASS );
+// 			mysql_select_db ( DB_NAME );
+// 			mysql_query ( "SET NAMES utf8mb4" );
+// 			$locations = getLocations ( $latitude_poi, $longitude_poi );
+// 			if (DEBUG) {
+// 				// error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - " . getLocations($latitude_poi,$longitude_poi)[1]."\n", 3, LOG_FILE);
+// 				error_log ( date ( "Y-m-d H:i:s" ) . " " . __FUNCTION__ . " - locations - " . $locations [0] . ", " . $locations [1] . ", " . $locations [2] . ", " . $locations [3] . "\n", 3, LOG_FILE );
+// 			}
+// 			$commune_id_commune = $locations [0];
+// 			$lib_commune = $locations [1];
+// 			$pole_id_pole = $locations [2];
+// 			$lib_pole = $locations [3];
 			
-			$lastdatemodif_poi = date ( "Y-m-d H:i:s" );
-			$sql = "UPDATE poi SET commune_id_commune = " . $commune_id_commune . ", pole_id_pole = " . $pole_id_pole . ", geom_poi = GeomFromText('POINT(" . $longitude_poi . " " . $latitude_poi . ")'), geolocatemode_poi = 1, lastdatemodif_poi = '$lastdatemodif_poi' WHERE id_poi = $id_poi";
-			$result = mysql_query ( $sql );
+// 			$lastdatemodif_poi = date ( "Y-m-d H:i:s" );
+// 			$sql = "UPDATE poi SET commune_id_commune = " . $commune_id_commune . ", pole_id_pole = " . $pole_id_pole . ", geom_poi = GeomFromText('POINT(" . $longitude_poi . " " . $latitude_poi . ")'), geolocatemode_poi = 1, lastdatemodif_poi = '$lastdatemodif_poi' WHERE id_poi = $id_poi";
+// 			$result = mysql_query ( $sql );
 			
-			if (! $result) {
-				echo '2';
-			} else {
-				// echo $sql2;
-				echo '1';
-			}
+// 			if (! $result) {
+// 				echo '2';
+// 			} else {
+// 				// echo $sql2;
+// 				echo '1';
+// 			}
 			
-			mysql_free_result ( $result );
-			mysql_close ( $link );
-			break;
-		case 'postgresql' :
-			// TODO
-			break;
-	}
-}
+// 			mysql_free_result ( $result );
+// 			mysql_close ( $link );
+// 			break;
+// 		case 'postgresql' :
+// 			// TODO
+// 			break;
+// 	}
+// }
 
 /*
  * Function name 	: resetGeoPoi Input			: Output			: success => '1' / failed => '2' Object			: reset geo poi Date			: Jan. 23, 2012
@@ -2576,7 +2575,7 @@ function editComment($id_comment, $text_comment, $status_comment) {
 			$id_poi = $row [0];
 			
 			$lastdatemodif_poi = date ( "Y-m-d H:i:s" );
-			$sql3 = "UPDATE poi SET lastdatemodif_poi = '$lastdatemodif_poi' WHERE id_poi = $id_poi";
+			$sql3 = "UPDATE poi SET lastdatemodif_poi = '$lastdatemodif_poi', lastmodif_user_poi = ".$_SESSION ['id_users']." WHERE id_poi = $id_poi";
 			$result3 = mysql_query ( $sql3 );
 			
 			if (! $result) {
@@ -2704,7 +2703,7 @@ function createPublicComment() {
 					$return ['pb'] = "Erreur lors de l'ajout du commentaire.";
 				} else {
 					$lastdatemodif_poi = date ( "Y-m-d H:i:s" );
-					$sql3 = "UPDATE poi SET lastdatemodif_poi = '$lastdatemodif_poi' WHERE id_poi = $id_poi";
+					$sql3 = "UPDATE poi SET lastdatemodif_poi = '$lastdatemodif_poi', lastmodif_user_poi = ".$_SESSION ['id_users']." WHERE id_poi = $id_poi";
 					if (DEBUG) {
 						error_log ( date ( "Y-m-d H:i:s" ) . " " . __FUNCTION__ . " sql $sql3 \n", 3, LOG_FILE );
 						error_log ( date ( "Y-m-d H:i:s" ) . " " . __FUNCTION__ . " Erreur " . mysql_errno ( $link ) . " : " . mysql_error ( $link ) . "\n", 3, LOG_FILE );
