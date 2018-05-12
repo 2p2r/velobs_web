@@ -544,7 +544,7 @@ function getPoi($start, $limit, $asc, $sort, $dir) {
 					$result2 = mysql_query ( $sql2 );
 					$nb2 = mysql_num_rows ( $result2 );
 					
-					$j = 1;
+					$j = 0;
 					$comments = '<b>Commentaires</b><br />';
 					$acceptedCommentCount = 0;
 					while ( $row2 = mysql_fetch_array ( $result2 ) ) {
@@ -556,7 +556,7 @@ function getPoi($start, $limit, $asc, $sort, $dir) {
 							} else if ($row2 ['display_commentaires'] == 'Modéré refusé') {
 								$color = 'red';
 							}
-							$comments .= '<ul><li style="color:' . $color . ';">' . $j . '. ';
+							$comments .= '<ul><li style="color:' . $color . ';">' . ($j+1) . '. ';
 							if ($row2 ['datecreation'] != '0000-00-00 00:00:00') {
 								$comments .= 'Ajouté le ' . $row2 ['datecreation'] . '';
 							} else {
@@ -576,7 +576,7 @@ function getPoi($start, $limit, $asc, $sort, $dir) {
 						} else if ($_SESSION ["type"] == 2 || $_SESSION ["type"] == 3) {
 							if ($row2 ['display_commentaires'] == 'Modéré accepté') {
 								$acceptedCommentCount ++;
-								$comments .= '<ul><li>' . $j . '. ';
+								$comments .= '<ul><li>' . $acceptedCommentCount . '. ';
 								if ($row2 ['datecreation'] != '0000-00-00 00:00:00') {
 									$comments .= 'Ajouté le ' . $row2 ['datecreation'] . ' : ';
 								} else {
@@ -594,11 +594,16 @@ function getPoi($start, $limit, $asc, $sort, $dir) {
 					}
 					$arr [$i] ['num_comments'] = $j;
 					$arr [$i] ['num_accepted_comments'] = $acceptedCommentCount;
-					if ($j > 1) {
+					if ($j > 0) {
 						if ($_SESSION ["type"] == 4 || $_SESSION ["type"] == 1) {
 							$comments .= "Cliquer sur le bouton \"Commentaires\" ci-dessous pour le(s) modérer.";
-						} else if ($acceptedCommentCount > 0) {
-							$comments .= "Cliquer sur le bouton \"Commentaires\" ci-dessous pour le(s) afficher en vue tableau.";
+						} else {
+							$arr [$i] ['num_comments'] = $acceptedCommentCount;
+							if ($acceptedCommentCount > 0) {
+								$comments .= "Cliquer sur le bouton \"Commentaires\" ci-dessous pour le(s) afficher en vue tableau.";
+							} else {
+								$comments .= "Encore aucun commentaire associé";
+							}
 						}
 					} else {
 						$comments .= "Encore aucun commentaire associé";
@@ -2529,7 +2534,11 @@ function getComments($id_poi) {
 					$arr [$i] ['display_commentaires'] = $row ['display_commentaires'];
 					$arr [$i] ['url_photo'] = $row ['url_photo'];
 					$arr [$i] ['datecreation'] = $row ['datecreation'];
-					$arr [$i] ['mail_commentaires'] = $row ['mail_commentaires'];
+					if ($_SESSION ["type"] == 4 || $_SESSION ["type"] == 1) {
+						$arr [$i] ['mail_commentaires'] = stripslashes ( $row ['mail_commentaires'] );
+					}else{
+						$arr [$i] ['mail_commentaires'] = "******";
+					}
 					$i ++;
 				}
 				echo '({"total":"' . $nbrows . '","results":' . json_encode ( $arr ) . '})';
