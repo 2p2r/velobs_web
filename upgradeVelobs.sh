@@ -58,6 +58,9 @@ echo "$(tput setaf 4)Toutes les conditions semblent réunies pour passer la nouv
 echo "Copie des photos de "$velobsProd"/resources/pictures/ dans "$velobsDev"/resources"
 cp -r $velobsProd/resources/pictures/ $velobsDev/resources/
 
+echo "Copie des logos de "$velobsProd"/resources/images/ dans "$velobsDev"/resources"
+cp -rf $velobsProd/resources/images/ $velobsDev/resources/
+
 echo "Copie de "$velobsProd"/lib/php/key.php dans "$velobsDev"/lib/php/"
 cp $velobsProd/lib/php/key.php $velobsDev/lib/php/
 
