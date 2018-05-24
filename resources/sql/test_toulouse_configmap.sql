@@ -3,4 +3,4 @@
 --
 
 INSERT INTO `configmap` (`id_configmap`, `lat_configmap`, `lon_configmap`, `zoom_configmap`, `baselayer_configmap`) VALUES
-(1, 43.6647, 1.48076, 19, 0);
+(1, 43.6032, 1.4321, 13, 0);
