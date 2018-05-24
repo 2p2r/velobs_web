@@ -1,6 +1,7 @@
-<?php header('Content-Type: text/html; charset=UTF-8');
+<?php 
+//header('Content-Type: text/html; charset=UTF-8');
 	session_start();
-	include_once 'lib/php/key.php.template';
+	//include_once 'lib/php/key.php.template';
 	include_once 'lib/php/key.php';
 	include_once 'lib/php/commonfunction.php';
 	if (DEBUG){
@@ -10,10 +11,11 @@
 		if (DEBUG){
 			error_log($_SESSION['user']." est connecté, utilisateur de type ".$_SESSION['type']."\n", 3, LOG_FILE);
 		}
+		$link = mysql_connect ( DB_HOST, DB_USER, DB_PASS );
+		mysql_select_db ( DB_NAME );
+		mysql_query ( "SET NAMES utf8mb4" );
 		?>
-		
-		
-		<!DOCTYPE >
+<!DOCTYPE html>
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">

@@ -64,8 +64,8 @@
 		if (isset($_SESSION['user'])){ 
 ?><div id="disconnect" title="<?php echo getTranslation($_SESSION['id_language'],'DISCONNECT'); ?>" onclick="self.location.href ='lib/php/admin/disconnect.php';"></div>
 <?php } ?>
-			<div id="gotopublicmap" title="<?php echo getTranslation($_SESSION['id_language'],'OPENPUBLICMAP'); ?>" onclick="self.location.href='<?php echo URL."/admin.php" ?>';"></div>
-			<div id="hellouser""><?php if ($_SESSION['nom'] != '') {echo "[".$_SESSION['nom']."]";} ?></div>
+			<div id="gotopublicmap" title="<?php if (isset($_SESSION['id_language'])){echo getTranslation($_SESSION['id_language'],'OPENPUBLICMAP');} ?>" onclick="self.location.href='<?php echo URL."/admin.php" ?>';"></div>
+			<div id="hellouser""><?php if (isset($_SESSION['nom']) && $_SESSION['nom'] != '') {echo "[".$_SESSION['nom']."]";} ?></div>
 			<div id="update" style="display:none;"></div>
 		</div>
 <?php 

@@ -11,11 +11,19 @@
 			$task = $_POST['task'];
 			$start = (integer) (isset($_POST['start']) ? $_POST['start'] : $_GET['start']);
 			$end = (integer) (isset($_POST['limit']) ? $_POST['limit'] : $_GET['limit']);
-			$asc = $_POST['asc'];
-
-			$usertype = $_POST['usertype'];
-			$numRecordPerPage = $_POST['numRecordPerPage'];
-			$idToFind = $_POST['idToFind'];
+			$asc = 'DESC';
+			if (isset($_POST['asc'])){
+				$asc = $_POST['asc'];
+			}
+			if (isset($_POST['usertype'])){
+				$usertype = $_POST['usertype'];
+			}
+			if (isset($_POST['numRecordPerPage'])){
+				$numRecordPerPage = $_POST['numRecordPerPage'];
+			}
+			if (isset($_POST['idToFind'])){
+				$idToFind = $_POST['idToFind'];
+			}
 
             if (isset($_POST['sort']) && isset($_POST['dir'])) {
                 $sort = $_POST['sort'];
