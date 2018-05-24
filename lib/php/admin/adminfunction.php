@@ -2566,15 +2566,20 @@ function editComment($id_comment, $text_comment, $status_comment) {
 			
 			$text = mysql_real_escape_string ( $text_comment );
 			$status = mysql_real_escape_string ( $status_comment );
-			$sql = "UPDATE commentaires SET text_commentaires = '$text', display_commentaires = '$status' WHERE id_commentaires = $id_comment";
+			$lastdatemodif_poi = date ( "Y-m-d H:i:s" );
+			$sql = "UPDATE commentaires SET text_commentaires = '$text', display_commentaires = '$status', lastdatemodif_comment = '$lastdatemodif_poi',lastmodif_user_comment = ".$_SESSION ['id_users']." WHERE id_commentaires = $id_comment";
+			
 			$result = mysql_query ( $sql );
+			if (DEBUG) {
+				error_log ( date ( "Y-m-d H:i:s" ) . " " . __FUNCTION__ . ", $sql \n", 3, LOG_FILE );
+			}
 			
 			$sql = "SELECT poi_id_poi FROM commentaires WHERE id_commentaires = " . $id_comment;
 			$res = mysql_query ( $sql );
 			$row = mysql_fetch_row ( $res );
 			$id_poi = $row [0];
 			
-			$lastdatemodif_poi = date ( "Y-m-d H:i:s" );
+			
 			$sql3 = "UPDATE poi SET lastdatemodif_poi = '$lastdatemodif_poi', lastmodif_user_poi = ".$_SESSION ['id_users']." WHERE id_poi = $id_poi";
 			$result3 = mysql_query ( $sql3 );
 			
