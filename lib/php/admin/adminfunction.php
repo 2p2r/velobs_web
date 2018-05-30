@@ -1742,15 +1742,15 @@ function updateUser() {
 				$message .= "	- Mot de passe : " . $_POST ['pass_users'] . "\n";
 			}
 			
-			if (is_numeric ( $_POST ['territoire_id_territoire'] )) {
+			if (isset($_POST ['territoire_id_territoire'] ) && is_numeric ( $_POST ['territoire_id_territoire'] )) {
 				$territoire_id_territoire = $_POST ['territoire_id_territoire'];
 				$sql .= " territoire_id_territoire = $territoire_id_territoire,";
 			}
-			if (is_numeric ( $_POST ['usertype_id_usertype'] )) {
+			if (isset($_POST ['usertype_id_usertype'] ) && is_numeric ( $_POST ['usertype_id_usertype'] )) {
 				$usertype_id_usertype = $_POST ['usertype_id_usertype'];
 				$sql .= "usertype_id_usertype = $usertype_id_usertype,";
 			}
-			if (is_numeric ( $_POST ['num_pole'] )) {
+			if (isset($_POST ['num_pole'] ) && is_numeric ( $_POST ['num_pole'] )) {
 				$num_pole = $_POST ['num_pole'];
 				$sql .= " num_pole = $num_pole ,";
 			}
