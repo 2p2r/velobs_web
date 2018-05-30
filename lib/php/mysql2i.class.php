@@ -251,7 +251,9 @@
       }      
 
       public static function mysql_free_result($result){
-          
+      	if (DEBUG){
+      		error_log(date("Y-m-d H:i:s") . " ".__FILE__." " .__FUNCTION__ . " \n", 3, LOG_FILE);
+      	}
           return mysqli_free_result($result);
           
       }
@@ -404,7 +406,9 @@
           if( empty($link) ){
               $link = self::$currObj;
           }
-          
+          if (DEBUG){
+          	error_log(date("Y-m-d H:i:s") . " ".__FILE__." " .__FUNCTION__ . " - link =  , query = ".$query."\n", 3, LOG_FILE);
+          }
           $r = mysqli_query($link,$query);
           
           return $r;

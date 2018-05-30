@@ -72,7 +72,6 @@ function updateMarkerIcon() {
 				echo '1';
 			}
 			
-			mysql_free_result ( $result );
 			mysql_close ( $link );
 			
 			break;
@@ -148,7 +147,6 @@ function updateCategory() {
 				echo '1';
 			}
 			
-			mysql_free_result ( $result );
 			mysql_close ( $link );
 			break;
 		case 'postgresql' :
@@ -188,7 +186,6 @@ function createCategory() {
 				echo '1';
 			}
 			
-			mysql_free_result ( $result );
 			mysql_close ( $link );
 			break;
 		case 'postgresql' :
@@ -344,7 +341,6 @@ function updateSubCategory() {
 				echo '1';
 			}
 			
-			mysql_free_result ( $result );
 			mysql_close ( $link );
 			break;
 		case 'postgresql' :
@@ -388,7 +384,6 @@ function createSubCategory() {
 				echo '1';
 			}
 			
-			mysql_free_result ( $result );
 			mysql_close ( $link );
 			break;
 		case 'postgresql' :
@@ -650,7 +645,11 @@ function updatePoi() {
 				$mails = array ();
 				// usertype_id_usertype : 1=Admin, 2=comcom, 3=pole tech, 4=moderateur
 				// mail à la comcom si un pole a édité le champ 'Réponse pole'
-				$poleedit = mysql_real_escape_string ( $_POST ['poleedit'] );
+				$poleedit = 0;
+				if (isset( $_POST ['poleedit'] )){
+					$poleedit = mysql_real_escape_string ( $_POST ['poleedit'] );
+				}
+				
 				// mail aux comptes comcom du territoire concerné par l'observation et aux modérateurs
 				if ($poleedit == 1) {
 					$subject = 'Modification de l\'observation n°' . $arrayObs ['id_poi'] . ' par le pole ' . $arrayObs ['lib_pole'];
@@ -730,13 +729,13 @@ Lien vers la modération : " . URL . '/admin.php?id=' . $arrayObs ['id_poi'] . "
 						echo '3';
 					} else {
 						// si la mise à jour de l'observation s'est bien déroulée, on envoie les mails
-						if ($mailsComComModo) {
+						if (isset($mailsComComModo)) {
 							$succes = sendMails ( $mailsComComModo );
 						}
-						if ($mailsAsso) {
+						if (isset($mailsAsso)) {
 							$succes = sendMails ( $mailsAsso );
 						}
-						if ($mails) {
+						if (isset($mails)) {
 							$succes = sendMails ( $mails );
 						}
 						// on retourne un code de succès à l'interface
@@ -752,7 +751,6 @@ Lien vers la modération : " . URL . '/admin.php?id=' . $arrayObs ['id_poi'] . "
 				// aucune mise à jour n'a été effectuée, car aucune information n'a été modifiée
 				echo 2;
 			}
-			mysql_free_result ( $result );
 			mysql_close ( $link );
 			break;
 		case 'postgresql' :
@@ -841,7 +839,6 @@ function deletePoisCorbeille() {
 				echo '1';
 			}
 			
-			mysql_free_result ( $result );
 			mysql_close ( $link );
 			break;
 		case 'postgresql' :
@@ -909,7 +906,6 @@ function updateCommune() {
 				echo '1';
 			}
 			
-			mysql_free_result ( $result );
 			mysql_close ( $link );
 			break;
 		case 'postgresql' :
@@ -939,7 +935,6 @@ function createCommune() {
 				echo '1';
 			}
 			
-			mysql_free_result ( $result );
 			mysql_close ( $link );
 			break;
 		case 'postgresql' :
@@ -1050,7 +1045,6 @@ function updatePole() {
 				echo '1';
 			}
 			
-			mysql_free_result ( $result );
 			mysql_close ( $link );
 			break;
 		case 'postgresql' :
@@ -1080,7 +1074,6 @@ function createPole() {
 				echo '1';
 			}
 			
-			mysql_free_result ( $result );
 			mysql_close ( $link );
 			break;
 		case 'postgresql' :
@@ -1349,7 +1342,6 @@ function updatePriorite() {
 				echo '1';
 			}
 			
-			mysql_free_result ( $result );
 			mysql_close ( $link );
 			break;
 		case 'postgresql' :
@@ -1378,7 +1370,6 @@ function createPriorite() {
 				echo '1';
 			}
 			
-			mysql_free_result ( $result );
 			mysql_close ( $link );
 			break;
 		case 'postgresql' :
@@ -1489,7 +1480,6 @@ function updateStatus() {
 				echo '1';
 			}
 			
-			mysql_free_result ( $result );
 			mysql_close ( $link );
 			break;
 		case 'postgresql' :
@@ -1518,7 +1508,6 @@ function createStatus() {
 				echo '1';
 			}
 			
-			mysql_free_result ( $result );
 			mysql_close ( $link );
 			break;
 		case 'postgresql' :
@@ -1702,7 +1691,6 @@ Votre compte sur VelObs a été mis à jour. Vous pouvez vous connecter à l'int
 				sendMail ( $userMail, "Réinitialisation mote de passe sur VelObs", $message );
 			}
 			
-			mysql_free_result ( $result );
 			mysql_close ( $link );
 			break;
 		case 'postgresql' :
@@ -1815,7 +1803,6 @@ Vos identifiants sont :
 	- Mot de passe : " . $_POST ['pass_users'] . "
 En cas de question, vous pouvez trouver des informations sur https://github.com/2p2r/velobs_web. N'hésitez pas à envoyer un courriel à " . MAIL_ALIAS_OBSERVATION_ADHERENTS . " pour toute question sur VelObs.";
 			sendMail ( $mail_users, "Création compte sur VelObs", $message );
-			mysql_free_result ( $result );
 			mysql_close ( $link );
 			break;
 		case 'postgresql' :
@@ -1892,7 +1879,6 @@ function resetPhotoPoi() {
 				echo '1';
 			}
 			
-			mysql_free_result ( $result );
 			mysql_close ( $link );
 			break;
 		case 'postgresql' :
@@ -1963,7 +1949,6 @@ function resetGeoPoi() {
 				echo '1';
 			}
 			
-			mysql_free_result ( $result );
 			mysql_close ( $link );
 			break;
 		case 'postgresql' :
@@ -1996,7 +1981,6 @@ function updateGeoDefaultMap() {
 				echo '1';
 			}
 			
-			mysql_free_result ( $result );
 			mysql_close ( $link );
 			break;
 		case 'postgresql' :
@@ -2226,7 +2210,6 @@ Cordialement, l'Association " . VELOBS_ASSOCIATION . " :)";
 			}
 			// retourne le résultat du traitement du commentaire
 			echo json_encode ( $return );
-			mysql_free_result ( $result );
 			mysql_close ( $link );
 			
 			break;
@@ -2588,7 +2571,6 @@ function editComment($id_comment, $text_comment, $status_comment) {
 				echo '1';
 			}
 			
-			mysql_free_result ( $result );
 			mysql_close ( $link );
 			break;
 		case 'postgresql' :
@@ -2613,7 +2595,8 @@ function createPublicComment() {
 			$id_poi = $_POST ['id_poi'];
 			$text = mysql_real_escape_string ( $_POST ['text_comment'] );
 			$mail_commentaires = mysql_real_escape_string ( $_POST ['mail_comment'] );
-			
+			$url_photo = '';
+			$return = array();
 			// si une photo a été associée au commentaire, on la traite
 			if (isset ( $_FILES ['photo-path'] ) && $_FILES ['photo-path'] ['name'] != "") {
 				if (DEBUG) {
@@ -2685,7 +2668,7 @@ function createPublicComment() {
 			}
 			
 			// si une photo a été associée au commentaire et que tout s'est bien passé, ou bien s'il n'y avaotr pas de photo, on peut crer le commentaire dans la base de données
-			if ((isset ( $_FILES ['photo-path'] ['name'] ) && $return ['success'] == true) || (isset ( $_FILES ['photo-path'] ['name'] ) && $_FILES ['photo-path'] ['name'] == "")) {
+			if ((isset ( $_FILES ['photo-path'] ['name'] ) && isset($return ['success']) && $return ['success'] == true) || (isset ( $_FILES ['photo-path'] ['name'] ) && $_FILES ['photo-path'] ['name'] == "")) {
 				// si le mail est un administrateur ou un modérateur alors on bypasse la modération
 				$sql2 = "SELECT id_users FROM users WHERE (usertype_id_usertype = 1 OR usertype_id_usertype = 4) AND mail_users LIKE '" . $mail_commentaires . "'";
 				$result2 = mysql_query ( $sql2 );
@@ -2755,7 +2738,6 @@ Cordialement, l'Association " . VELOBS_ASSOCIATION . " :)";
 			
 			// retourne le résultat du traitement du commentaire
 			echo json_encode ( $return );
-			mysql_free_result ( $result );
 			mysql_close ( $link );
 			break;
 		case 'postgresql' :

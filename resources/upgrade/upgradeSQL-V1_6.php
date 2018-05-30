@@ -72,7 +72,7 @@ ALTER TABLE `poi_history` MODIFY `history_id` int(11) NOT NULL AUTO_INCREMENT;";
 	echo $sqlUpdate . " : " . $resultUpdate . "<br />";
 	
 	
-	echo "Update comentaires table<br />\n";
+	echo "Update commentaires table<br />\n";
 	$sqlUpdate = "ALTER TABLE `commentaires` ADD `lastdatemodif_comment` DATE NULL;";
 	$resultUpdate = mysql_query ( $sqlUpdate );
 	echo $sqlUpdate . " : " . $resultUpdate . "<br />";
