@@ -1773,7 +1773,6 @@ En cas de question, vous pouvez trouver des informations sur https://github.com/
 				sendMail ( $mail_users, "Modification coordonnées sur VelObs", $message );
 			}
 			
-			mysql_free_result ( $result );
 			mysql_close ( $link );
 			break;
 		case 'postgresql' :
