@@ -56,18 +56,22 @@ if (isset ( $_SESSION ['type'] ) && $_SESSION ['type'] == 1) {
   `history_id` int(11) NOT NULL,
   `history_date` timestamp NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-ALTER TABLE `poi_history` ADD PRIMARY KEY (`history_id`);
-
-ALTER TABLE `poi_history` MODIFY `history_id` int(11) NOT NULL AUTO_INCREMENT;";
+";
 	$resultUpdate = mysql_query ( $sqlUpdate );
 	echo $sqlUpdate . " : " . $resultUpdate . "<br />";
 	
+	$sqlUpdate = "ALTER TABLE `poi_history` ADD PRIMARY KEY (`history_id`);";
+	$resultUpdate = mysql_query ( $sqlUpdate );
+	echo $sqlUpdate . " : " . $resultUpdate . "<br />";
+	
+	$sqlUpdate = "ALTER TABLE `poi_history` MODIFY `history_id` int(11) NOT NULL AUTO_INCREMENT;";
+	$resultUpdate = mysql_query ( $sqlUpdate );
+	echo $sqlUpdate . " : " . $resultUpdate . "<br />";
+	
+	
 	echo "Create generate_poi_history trigger on poi table<br />\n";
-	$sqlUpdate  = "DELIMITER $$
-	CREATE TRIGGER `generate_history` BEFORE UPDATE ON `poi`
-	FOR EACH ROW INSERT INTO poi_history SELECT p.*,NULL,NOW() FROM poi p WHERE p.id_poi = OLD.id_poi
-	$$
-	DELIMITER ;";
+	$sqlUpdate  = "CREATE TRIGGER `generate_history` BEFORE UPDATE ON `poi`
+	FOR EACH ROW INSERT INTO poi_history SELECT p.*,NULL,NOW() FROM poi p WHERE p.id_poi = OLD.id_poi;";
 	$resultUpdate = mysql_query ( $sqlUpdate );
 	echo $sqlUpdate . " : " . $resultUpdate . "<br />";
 	
@@ -94,19 +98,22 @@ ALTER TABLE `poi_history` MODIFY `history_id` int(11) NOT NULL AUTO_INCREMENT;";
   `history_id` int(11) NOT NULL,
   `history_date` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-ALTER TABLE `comment_history` ADD PRIMARY KEY (`history_id`);
-ALTER TABLE `comment_history` MODIFY `history_id` int(11) NOT NULL AUTO_INCREMENT;";
+";
 	$resultUpdate = mysql_query ( $sqlUpdate );
 	echo $sqlUpdate . " : " . $resultUpdate . "<br />";
 	
+	$sqlUpdate = "ALTER TABLE `comment_history` ADD PRIMARY KEY (`history_id`);";
+	$resultUpdate = mysql_query ( $sqlUpdate );
+	echo $sqlUpdate . " : " . $resultUpdate . "<br />";
 	
+	$sqlUpdate = "ALTER TABLE `comment_history` MODIFY `history_id` int(11) NOT NULL AUTO_INCREMENT;";
+	$resultUpdate = mysql_query ( $sqlUpdate );
+	echo $sqlUpdate . " : " . $resultUpdate . "<br />";
 	
 	echo "Create generate_comment_history trigger on commentaires table <br />\n";
-	$sqlUpdate  = "DELIMITER $$
-CREATE TRIGGER `generate_comment_history` BEFORE UPDATE ON `commentaires`
- FOR EACH ROW INSERT INTO comment_history SELECT c.*,NULL,NOW() FROM commentaires c WHERE c.id_commentaires = OLD.id_commentaires
-$$
-DELIMITER ;";
+	$sqlUpdate  = "CREATE TRIGGER `generate_comment_history` BEFORE UPDATE ON `commentaires`
+ FOR EACH ROW INSERT INTO comment_history SELECT c.*,NULL,NOW() FROM commentaires c WHERE c.id_commentaires = OLD.id_commentaires;";
+
 	$resultUpdate = mysql_query ( $sqlUpdate );
 	echo $sqlUpdate . " : " . $resultUpdate . "<br />";
 	

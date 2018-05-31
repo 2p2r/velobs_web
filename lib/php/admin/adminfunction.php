@@ -2565,7 +2565,7 @@ function editComment($id_comment, $text_comment, $status_comment) {
 			$sql3 = "UPDATE poi SET lastdatemodif_poi = '$lastdatemodif_poi', lastmodif_user_poi = ".$_SESSION ['id_users']." WHERE id_poi = $id_poi";
 			$result3 = mysql_query ( $sql3 );
 			
-			if (! $result) {
+			if (! $result || ! $result3) {
 				echo '2';
 			} else {
 				echo '1';
