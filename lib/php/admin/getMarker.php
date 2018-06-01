@@ -21,13 +21,15 @@ if (isset ( $_SESSION ['user'] )) {
 						priorite.lib_priorite,
 						lib_pole,
 						lib_status,
-						color_status
+						color_status,
+						users.lib_users
 					FROM poi 
 					INNER JOIN subcategory ON (subcategory.id_subcategory = poi.subcategory_id_subcategory) 
 					INNER JOIN commune ON (commune.id_commune = poi.commune_id_commune) 
 					INNER JOIN priorite ON (poi.priorite_id_priorite = priorite.id_priorite)
 					INNER JOIN pole ON (poi.pole_id_pole = pole.id_pole) 
-					INNER JOIN status ON (poi.status_id_status = status.id_status)";
+					INNER JOIN status ON (poi.status_id_status = status.id_status) 
+					LEFT JOIN users ON (poi.lastmodif_user_poi = users.id_users)";
 			$sqlappend = ' WHERE ';
 			// TODO : chek user type and pole
 			
@@ -127,7 +129,7 @@ if (isset ( $_SESSION ['user'] )) {
 				$arr [$i] ['color_status'] = stripslashes ( $row ['color_status'] );
 				$arr [$i] ['icon'] = 'resources/icon/marker/' . $row ['icon_subcategory'] . '.png';
 				$arr [$i] ['iconCls'] = $row ['icon_subcategory'];
-				
+				$arr [$i] ['lastmodif_user_poi'] = $row ['lib_users'];
 				$arr [$i] ['lat'] = $row ['Y'];
 				$arr [$i] ['lon'] = $row ['X'];
 				$arr [$i] ['lastdatemodif_poi'] = $row ['lastdatemodif_poi'];
@@ -140,7 +142,11 @@ if (isset ( $_SESSION ['user'] )) {
 				while ( $row2 = mysql_fetch_array ( $result2 ) ) {
 					$arr [$i] ['commentaires'] [$j] = stripslashes ( $row2 ['text_commentaires'] );
 					$arr [$i] ['photos'] [$j] = stripslashes ( $row2 ['url_photo'] );
-					$arr [$i] ['mail_commentaires'] [$j] = stripslashes ( $row2 ['mail_commentaires'] );
+					if ($_SESSION ["type"] == 4 || $_SESSION ["type"] == 1) {
+						$arr [$i] ['mail_commentaires'] [$j] = stripslashes ( $row2 ['mail_commentaires'] );
+					}else{
+						$arr [$i] ['mail_commentaires'] [$j] = "******";
+					}
 					$arr [$i] ['datecreation'] [$j] = stripslashes ( $row2 ['datecreation'] );
 					$arr [$i] ['affiche'] [$j] = stripslashes ( $row2 ['display_commentaires'] );
 					
@@ -151,7 +157,7 @@ if (isset ( $_SESSION ['user'] )) {
 						} else if ($row2 ['display_commentaires'] == 'Modéré refusé') {
 							$color = 'red';
 						}
-						$comments .= '<ul><li style="color:' . $color . ';">' . $j . '. ';
+						$comments .= '<ul><li style="color:' . $color . ';">' . ($j+1) . '. ';
 						if ($row2 ['datecreation'] != '0000-00-00 00:00:00') {
 							$comments .= 'Ajouté le ' . $row2 ['datecreation'] . '';
 						} else {
@@ -171,7 +177,7 @@ if (isset ( $_SESSION ['user'] )) {
 					} else if ($_SESSION ["type"] == 2 || $_SESSION ["type"] == 3) {
 						if ($row2 ['display_commentaires'] == 'Modéré accepté') {
 							$acceptedCommentCount ++;
-							$comments .= '<ul><li>' . $j . '. ';
+							$comments .= '<ul><li>' . $acceptedCommentCount . '. ';
 							if ($row2 ['datecreation'] != '0000-00-00 00:00:00') {
 								$comments .= 'Ajouté le ' . $row2 ['datecreation'] . ' : ';
 							} else {
@@ -190,11 +196,16 @@ if (isset ( $_SESSION ['user'] )) {
 				$arr [$i] ['num_comments'] = $j;
 				$arr [$i] ['num_accepted_comments'] = $acceptedCommentCount;
 				
-				if ($j > 1) {
+				if ($j > 0) {
 					if ($_SESSION ["type"] == 4 || $_SESSION ["type"] == 1) {
 						$comments .= "Cliquer sur le bouton \"Commentaires\" ci-dessous pour le(s) modérer.";
-					} else if ($acceptedCommentCount > 0) {
-						$comments .= "Cliquer sur le bouton \"Commentaires\" ci-dessous pour le(s) afficher en vue tableau.";
+					} else {
+						$arr [$i] ['num_comments'] = $acceptedCommentCount;
+						if ($acceptedCommentCount > 0) {
+							$comments .= "Cliquer sur le bouton \"Commentaires\" ci-dessous pour le(s) afficher en vue tableau.";
+						} else {
+							$comments .= "Encore aucun commentaire associé";
+						}
 					}
 				} else {
 					$comments .= "Encore aucun commentaire associé";

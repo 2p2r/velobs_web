@@ -643,7 +643,7 @@
 		if ($sqlUpdate != ""){
 			$helpReadingDetailsOfPOI = "(les lignes avec un alinéa correspondent aux informations modifiées)";
 			$lastdatemodif_poi = date("Y-m-d H:i:s");
-			$sqlUpdate = " lastdatemodif_poi = '$lastdatemodif_poi' ".$sqlUpdate;
+			$sqlUpdate = " lastdatemodif_poi = '$lastdatemodif_poi', lastmodif_user_poi = ".$_SESSION ['id_users']." ".$sqlUpdate;
 		}
 		$DetailObservation = "------------- Détails de l'observation ------------- \n" . $helpReadingDetailsOfPOI."\n# Numéro observation : ". $arrayObservation['id_poi']."\n".$DetailObservation;
 		$arrayDetailsAndUpdateSQL=array();

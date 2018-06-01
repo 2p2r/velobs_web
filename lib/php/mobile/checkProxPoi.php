@@ -43,12 +43,13 @@
                 	FROM poi
                 	INNER JOIN subcategory ON subcategory.id_subcategory = poi.subcategory_id_subcategory
                 	INNER JOIN commune ON commune.id_commune = poi.commune_id_commune
+                	INNER JOIN priorite ON poi.priorite_id_priorite = priorite.id_priorite
                 	WHERE priorite.non_visible_par_public = 0
                 				AND moderation_poi = 1 
                 	HAVING distance < ".$buffer." 
                 	ORDER BY distance";
                 if (DEBUG){
-                	error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - checkProxPOI.php pour $centerlat et $centerlng \n", 3, LOG_FILE);
+                	error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - checkProxPOI.php pour $centerlat et $centerlng, $sql \n", 3, LOG_FILE);
                 }
                 $result = mysql_query($sql);
                 $num_rows = mysql_num_rows($result);
@@ -77,7 +78,7 @@
 								
                             print '<listcomment>';
 														
-							$sql4 = "SELECT * FROM commentaires WHERE poi_id_poi = ".$row['id_poi']." AND display_commentaires = \'Modéré accepté\'";
+							$sql4 = "SELECT * FROM commentaires WHERE poi_id_poi = ".$row['id_poi']." AND display_commentaires = 'Modéré accepté'";
 							$result4 = mysql_query($sql4);
 															
 							while ($row4 = mysql_fetch_array($result4)) {

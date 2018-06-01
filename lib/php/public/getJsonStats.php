@@ -26,6 +26,7 @@ include_once '../key.php';
 					WHERE p.status_id_status =  ".$row['id_status'] . "
 						AND p.delete_poi = 0 ";
 				$sqlappend = "";
+				if (isset($_SESSION ["type"])){
 				if ($_SESSION ["type"] == 2) { // is communaute de communes
 					$sqlappend .= ' AND p.moderation_poi = 1 
 							AND p.commune_id_commune IN (' . str_replace ( ';', ',', $_SESSION ['territoire'] ) . ') 
@@ -38,10 +39,14 @@ include_once '../key.php';
 				} elseif ($_SESSION ["type"] == 4) { // is moderateur
 					$sqlappend .= ' AND p.pole_id_pole = ' . $_SESSION ["pole"] . ' ';
 				}
+				if (DEBUG){
+					error_log(date("Y-m-d H:i:s") . " - getJsonStats.php ".$_SESSION["type"]."\n", 3, LOG_FILE);
+				}
+				}
 				$sqlGetStats .= $sqlappend;
 				
 				if (DEBUG){
-					error_log(date("Y-m-d H:i:s") . " - getJsonStats.php ".$_SESSION["type"].", ". $sqlGetStats ."\n", 3, LOG_FILE);
+					error_log(date("Y-m-d H:i:s") . " - getJsonStats.php ".$sqlGetStats."\n", 3, LOG_FILE);
 				}
 				$result2 = mysql_query($sqlGetStats);
 				while ($row2 = mysql_fetch_array($result2)){	

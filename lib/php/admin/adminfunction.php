@@ -1,7 +1,6 @@
 <?php
 include_once '../key.php';
 include_once '../commonfunction.php';
-
 /*
  * List of functions - getMarkerIcon - updateMarkerIcon - getCategory - updateCategory - createCategory - deleteCategorys - getSubCategory - updateSubCategory - createSubCategory - deleteSubCategorys - getPoi - updatePoi - deletePois - deletePoisCorbeille - getCommune - updateCommune - createCommune - deleteCommunes - getPole - updatePole - createPole - deletePoles - getQuartier - updateQuartier - createQuartier - deleteQuartiers - getPriorite - updatePriorite - createPriorite - deletePriorites - getStatus - updateStatus - createStatus - deleteStatuss - getUser - updateUser - createUser - deleteUsers - resetPhotoPoi - isModerate - updateGeoPoi - resetGeoPoi - updateGeoDefaultMap - createPublicPoi - isPropPublic - normalize - is_in_polygon - getNumPageIdParam - getComments - displayComment - editComment - getPhotos
  */ 
@@ -73,7 +72,6 @@ function updateMarkerIcon() {
 				echo '1';
 			}
 			
-			mysql_free_result ( $result );
 			mysql_close ( $link );
 			
 			break;
@@ -149,7 +147,6 @@ function updateCategory() {
 				echo '1';
 			}
 			
-			mysql_free_result ( $result );
 			mysql_close ( $link );
 			break;
 		case 'postgresql' :
@@ -189,7 +186,6 @@ function createCategory() {
 				echo '1';
 			}
 			
-			mysql_free_result ( $result );
 			mysql_close ( $link );
 			break;
 		case 'postgresql' :
@@ -345,7 +341,6 @@ function updateSubCategory() {
 				echo '1';
 			}
 			
-			mysql_free_result ( $result );
 			mysql_close ( $link );
 			break;
 		case 'postgresql' :
@@ -389,7 +384,6 @@ function createSubCategory() {
 				echo '1';
 			}
 			
-			mysql_free_result ( $result );
 			mysql_close ( $link );
 			break;
 		case 'postgresql' :
@@ -544,7 +538,7 @@ function getPoi($start, $limit, $asc, $sort, $dir) {
 					$result2 = mysql_query ( $sql2 );
 					$nb2 = mysql_num_rows ( $result2 );
 					
-					$j = 1;
+					$j = 0;
 					$comments = '<b>Commentaires</b><br />';
 					$acceptedCommentCount = 0;
 					while ( $row2 = mysql_fetch_array ( $result2 ) ) {
@@ -556,7 +550,7 @@ function getPoi($start, $limit, $asc, $sort, $dir) {
 							} else if ($row2 ['display_commentaires'] == 'Modéré refusé') {
 								$color = 'red';
 							}
-							$comments .= '<ul><li style="color:' . $color . ';">' . $j . '. ';
+							$comments .= '<ul><li style="color:' . $color . ';">' . ($j+1) . '. ';
 							if ($row2 ['datecreation'] != '0000-00-00 00:00:00') {
 								$comments .= 'Ajouté le ' . $row2 ['datecreation'] . '';
 							} else {
@@ -576,7 +570,7 @@ function getPoi($start, $limit, $asc, $sort, $dir) {
 						} else if ($_SESSION ["type"] == 2 || $_SESSION ["type"] == 3) {
 							if ($row2 ['display_commentaires'] == 'Modéré accepté') {
 								$acceptedCommentCount ++;
-								$comments .= '<ul><li>' . $j . '. ';
+								$comments .= '<ul><li>' . $acceptedCommentCount . '. ';
 								if ($row2 ['datecreation'] != '0000-00-00 00:00:00') {
 									$comments .= 'Ajouté le ' . $row2 ['datecreation'] . ' : ';
 								} else {
@@ -594,11 +588,16 @@ function getPoi($start, $limit, $asc, $sort, $dir) {
 					}
 					$arr [$i] ['num_comments'] = $j;
 					$arr [$i] ['num_accepted_comments'] = $acceptedCommentCount;
-					if ($j > 1) {
+					if ($j > 0) {
 						if ($_SESSION ["type"] == 4 || $_SESSION ["type"] == 1) {
 							$comments .= "Cliquer sur le bouton \"Commentaires\" ci-dessous pour le(s) modérer.";
-						} else if ($acceptedCommentCount > 0) {
-							$comments .= "Cliquer sur le bouton \"Commentaires\" ci-dessous pour le(s) afficher en vue tableau.";
+						} else {
+							$arr [$i] ['num_comments'] = $acceptedCommentCount;
+							if ($acceptedCommentCount > 0) {
+								$comments .= "Cliquer sur le bouton \"Commentaires\" ci-dessous pour le(s) afficher en vue tableau.";
+							} else {
+								$comments .= "Encore aucun commentaire associé";
+							}
 						}
 					} else {
 						$comments .= "Encore aucun commentaire associé";
@@ -646,7 +645,11 @@ function updatePoi() {
 				$mails = array ();
 				// usertype_id_usertype : 1=Admin, 2=comcom, 3=pole tech, 4=moderateur
 				// mail à la comcom si un pole a édité le champ 'Réponse pole'
-				$poleedit = mysql_real_escape_string ( $_POST ['poleedit'] );
+				$poleedit = 0;
+				if (isset( $_POST ['poleedit'] )){
+					$poleedit = mysql_real_escape_string ( $_POST ['poleedit'] );
+				}
+				
 				// mail aux comptes comcom du territoire concerné par l'observation et aux modérateurs
 				if ($poleedit == 1) {
 					$subject = 'Modification de l\'observation n°' . $arrayObs ['id_poi'] . ' par le pole ' . $arrayObs ['lib_pole'];
@@ -726,13 +729,13 @@ Lien vers la modération : " . URL . '/admin.php?id=' . $arrayObs ['id_poi'] . "
 						echo '3';
 					} else {
 						// si la mise à jour de l'observation s'est bien déroulée, on envoie les mails
-						if ($mailsComComModo) {
+						if (isset($mailsComComModo)) {
 							$succes = sendMails ( $mailsComComModo );
 						}
-						if ($mailsAsso) {
+						if (isset($mailsAsso)) {
 							$succes = sendMails ( $mailsAsso );
 						}
-						if ($mails) {
+						if (isset($mails)) {
 							$succes = sendMails ( $mails );
 						}
 						// on retourne un code de succès à l'interface
@@ -748,7 +751,6 @@ Lien vers la modération : " . URL . '/admin.php?id=' . $arrayObs ['id_poi'] . "
 				// aucune mise à jour n'a été effectuée, car aucune information n'a été modifiée
 				echo 2;
 			}
-			mysql_free_result ( $result );
 			mysql_close ( $link );
 			break;
 		case 'postgresql' :
@@ -837,7 +839,6 @@ function deletePoisCorbeille() {
 				echo '1';
 			}
 			
-			mysql_free_result ( $result );
 			mysql_close ( $link );
 			break;
 		case 'postgresql' :
@@ -905,7 +906,6 @@ function updateCommune() {
 				echo '1';
 			}
 			
-			mysql_free_result ( $result );
 			mysql_close ( $link );
 			break;
 		case 'postgresql' :
@@ -935,7 +935,6 @@ function createCommune() {
 				echo '1';
 			}
 			
-			mysql_free_result ( $result );
 			mysql_close ( $link );
 			break;
 		case 'postgresql' :
@@ -1046,7 +1045,6 @@ function updatePole() {
 				echo '1';
 			}
 			
-			mysql_free_result ( $result );
 			mysql_close ( $link );
 			break;
 		case 'postgresql' :
@@ -1076,7 +1074,6 @@ function createPole() {
 				echo '1';
 			}
 			
-			mysql_free_result ( $result );
 			mysql_close ( $link );
 			break;
 		case 'postgresql' :
@@ -1345,7 +1342,6 @@ function updatePriorite() {
 				echo '1';
 			}
 			
-			mysql_free_result ( $result );
 			mysql_close ( $link );
 			break;
 		case 'postgresql' :
@@ -1374,7 +1370,6 @@ function createPriorite() {
 				echo '1';
 			}
 			
-			mysql_free_result ( $result );
 			mysql_close ( $link );
 			break;
 		case 'postgresql' :
@@ -1485,7 +1480,6 @@ function updateStatus() {
 				echo '1';
 			}
 			
-			mysql_free_result ( $result );
 			mysql_close ( $link );
 			break;
 		case 'postgresql' :
@@ -1514,7 +1508,6 @@ function createStatus() {
 				echo '1';
 			}
 			
-			mysql_free_result ( $result );
 			mysql_close ( $link );
 			break;
 		case 'postgresql' :
@@ -1698,7 +1691,6 @@ Votre compte sur VelObs a été mis à jour. Vous pouvez vous connecter à l'int
 				sendMail ( $userMail, "Réinitialisation mote de passe sur VelObs", $message );
 			}
 			
-			mysql_free_result ( $result );
 			mysql_close ( $link );
 			break;
 		case 'postgresql' :
@@ -1738,15 +1730,15 @@ function updateUser() {
 				$message .= "	- Mot de passe : " . $_POST ['pass_users'] . "\n";
 			}
 			
-			if (is_numeric ( $_POST ['territoire_id_territoire'] )) {
+			if (isset($_POST ['territoire_id_territoire'] ) && is_numeric ( $_POST ['territoire_id_territoire'] )) {
 				$territoire_id_territoire = $_POST ['territoire_id_territoire'];
 				$sql .= " territoire_id_territoire = $territoire_id_territoire,";
 			}
-			if (is_numeric ( $_POST ['usertype_id_usertype'] )) {
+			if (isset($_POST ['usertype_id_usertype'] ) && is_numeric ( $_POST ['usertype_id_usertype'] )) {
 				$usertype_id_usertype = $_POST ['usertype_id_usertype'];
 				$sql .= "usertype_id_usertype = $usertype_id_usertype,";
 			}
-			if (is_numeric ( $_POST ['num_pole'] )) {
+			if (isset($_POST ['num_pole'] ) && is_numeric ( $_POST ['num_pole'] )) {
 				$num_pole = $_POST ['num_pole'];
 				$sql .= " num_pole = $num_pole ,";
 			}
@@ -1769,7 +1761,6 @@ En cas de question, vous pouvez trouver des informations sur https://github.com/
 				sendMail ( $mail_users, "Modification coordonnées sur VelObs", $message );
 			}
 			
-			mysql_free_result ( $result );
 			mysql_close ( $link );
 			break;
 		case 'postgresql' :
@@ -1812,7 +1803,6 @@ Vos identifiants sont :
 	- Mot de passe : " . $_POST ['pass_users'] . "
 En cas de question, vous pouvez trouver des informations sur https://github.com/2p2r/velobs_web. N'hésitez pas à envoyer un courriel à " . MAIL_ALIAS_OBSERVATION_ADHERENTS . " pour toute question sur VelObs.";
 			sendMail ( $mail_users, "Création compte sur VelObs", $message );
-			mysql_free_result ( $result );
 			mysql_close ( $link );
 			break;
 		case 'postgresql' :
@@ -1889,7 +1879,6 @@ function resetPhotoPoi() {
 				echo '1';
 			}
 			
-			mysql_free_result ( $result );
 			mysql_close ( $link );
 			break;
 		case 'postgresql' :
@@ -1901,44 +1890,44 @@ function resetPhotoPoi() {
 /*
  * Function name 	: updateGeoPoi Input			: Output			: success => '1' / failed => '2' Object			: modif geo poi Date			: Jan. 23, 2012
  */
-function updateGeoPoi() {
-	$id_poi = $_POST ['id_poi'];
-	$latitude_poi = $_POST ['latitude_poi'];
-	$longitude_poi = $_POST ['longitude_poi'];
-	switch (SGBD) {
-		case 'mysql' :
-			$link = mysql_connect ( DB_HOST, DB_USER, DB_PASS );
-			mysql_select_db ( DB_NAME );
-			mysql_query ( "SET NAMES utf8mb4" );
-			$locations = getLocations ( $latitude_poi, $longitude_poi );
-			if (DEBUG) {
-				// error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - " . getLocations($latitude_poi,$longitude_poi)[1]."\n", 3, LOG_FILE);
-				error_log ( date ( "Y-m-d H:i:s" ) . " " . __FUNCTION__ . " - locations - " . $locations [0] . ", " . $locations [1] . ", " . $locations [2] . ", " . $locations [3] . "\n", 3, LOG_FILE );
-			}
-			$commune_id_commune = $locations [0];
-			$lib_commune = $locations [1];
-			$pole_id_pole = $locations [2];
-			$lib_pole = $locations [3];
+// function updateGeoPoi() {
+// 	$id_poi = $_POST ['id_poi'];
+// 	$latitude_poi = $_POST ['latitude_poi'];
+// 	$longitude_poi = $_POST ['longitude_poi'];
+// 	switch (SGBD) {
+// 		case 'mysql' :
+// 			$link = mysql_connect ( DB_HOST, DB_USER, DB_PASS );
+// 			mysql_select_db ( DB_NAME );
+// 			mysql_query ( "SET NAMES utf8mb4" );
+// 			$locations = getLocations ( $latitude_poi, $longitude_poi );
+// 			if (DEBUG) {
+// 				// error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - " . getLocations($latitude_poi,$longitude_poi)[1]."\n", 3, LOG_FILE);
+// 				error_log ( date ( "Y-m-d H:i:s" ) . " " . __FUNCTION__ . " - locations - " . $locations [0] . ", " . $locations [1] . ", " . $locations [2] . ", " . $locations [3] . "\n", 3, LOG_FILE );
+// 			}
+// 			$commune_id_commune = $locations [0];
+// 			$lib_commune = $locations [1];
+// 			$pole_id_pole = $locations [2];
+// 			$lib_pole = $locations [3];
 			
-			$lastdatemodif_poi = date ( "Y-m-d H:i:s" );
-			$sql = "UPDATE poi SET commune_id_commune = " . $commune_id_commune . ", pole_id_pole = " . $pole_id_pole . ", geom_poi = GeomFromText('POINT(" . $longitude_poi . " " . $latitude_poi . ")'), geolocatemode_poi = 1, lastdatemodif_poi = '$lastdatemodif_poi' WHERE id_poi = $id_poi";
-			$result = mysql_query ( $sql );
+// 			$lastdatemodif_poi = date ( "Y-m-d H:i:s" );
+// 			$sql = "UPDATE poi SET commune_id_commune = " . $commune_id_commune . ", pole_id_pole = " . $pole_id_pole . ", geom_poi = GeomFromText('POINT(" . $longitude_poi . " " . $latitude_poi . ")'), geolocatemode_poi = 1, lastdatemodif_poi = '$lastdatemodif_poi' WHERE id_poi = $id_poi";
+// 			$result = mysql_query ( $sql );
 			
-			if (! $result) {
-				echo '2';
-			} else {
-				// echo $sql2;
-				echo '1';
-			}
+// 			if (! $result) {
+// 				echo '2';
+// 			} else {
+// 				// echo $sql2;
+// 				echo '1';
+// 			}
 			
-			mysql_free_result ( $result );
-			mysql_close ( $link );
-			break;
-		case 'postgresql' :
-			// TODO
-			break;
-	}
-}
+// 			mysql_free_result ( $result );
+// 			mysql_close ( $link );
+// 			break;
+// 		case 'postgresql' :
+// 			// TODO
+// 			break;
+// 	}
+// }
 
 /*
  * Function name 	: resetGeoPoi Input			: Output			: success => '1' / failed => '2' Object			: reset geo poi Date			: Jan. 23, 2012
@@ -1960,7 +1949,6 @@ function resetGeoPoi() {
 				echo '1';
 			}
 			
-			mysql_free_result ( $result );
 			mysql_close ( $link );
 			break;
 		case 'postgresql' :
@@ -1993,7 +1981,6 @@ function updateGeoDefaultMap() {
 				echo '1';
 			}
 			
-			mysql_free_result ( $result );
 			mysql_close ( $link );
 			break;
 		case 'postgresql' :
@@ -2223,7 +2210,6 @@ Cordialement, l'Association " . VELOBS_ASSOCIATION . " :)";
 			}
 			// retourne le résultat du traitement du commentaire
 			echo json_encode ( $return );
-			mysql_free_result ( $result );
 			mysql_close ( $link );
 			
 			break;
@@ -2529,7 +2515,11 @@ function getComments($id_poi) {
 					$arr [$i] ['display_commentaires'] = $row ['display_commentaires'];
 					$arr [$i] ['url_photo'] = $row ['url_photo'];
 					$arr [$i] ['datecreation'] = $row ['datecreation'];
-					$arr [$i] ['mail_commentaires'] = $row ['mail_commentaires'];
+					if ($_SESSION ["type"] == 4 || $_SESSION ["type"] == 1) {
+						$arr [$i] ['mail_commentaires'] = stripslashes ( $row ['mail_commentaires'] );
+					}else{
+						$arr [$i] ['mail_commentaires'] = "******";
+					}
 					$i ++;
 				}
 				echo '({"total":"' . $nbrows . '","results":' . json_encode ( $arr ) . '})';
@@ -2558,25 +2548,29 @@ function editComment($id_comment, $text_comment, $status_comment) {
 			
 			$text = mysql_real_escape_string ( $text_comment );
 			$status = mysql_real_escape_string ( $status_comment );
-			$sql = "UPDATE commentaires SET text_commentaires = '$text', display_commentaires = '$status' WHERE id_commentaires = $id_comment";
+			$lastdatemodif_poi = date ( "Y-m-d H:i:s" );
+			$sql = "UPDATE commentaires SET text_commentaires = '$text', display_commentaires = '$status', lastdatemodif_comment = '$lastdatemodif_poi',lastmodif_user_comment = ".$_SESSION ['id_users']." WHERE id_commentaires = $id_comment";
+			
 			$result = mysql_query ( $sql );
+			if (DEBUG) {
+				error_log ( date ( "Y-m-d H:i:s" ) . " " . __FUNCTION__ . ", $sql \n", 3, LOG_FILE );
+			}
 			
 			$sql = "SELECT poi_id_poi FROM commentaires WHERE id_commentaires = " . $id_comment;
 			$res = mysql_query ( $sql );
 			$row = mysql_fetch_row ( $res );
 			$id_poi = $row [0];
 			
-			$lastdatemodif_poi = date ( "Y-m-d H:i:s" );
-			$sql3 = "UPDATE poi SET lastdatemodif_poi = '$lastdatemodif_poi' WHERE id_poi = $id_poi";
+			
+			$sql3 = "UPDATE poi SET lastdatemodif_poi = '$lastdatemodif_poi', lastmodif_user_poi = ".$_SESSION ['id_users']." WHERE id_poi = $id_poi";
 			$result3 = mysql_query ( $sql3 );
 			
-			if (! $result) {
+			if (! $result || ! $result3) {
 				echo '2';
 			} else {
 				echo '1';
 			}
 			
-			mysql_free_result ( $result );
 			mysql_close ( $link );
 			break;
 		case 'postgresql' :
@@ -2601,7 +2595,8 @@ function createPublicComment() {
 			$id_poi = $_POST ['id_poi'];
 			$text = mysql_real_escape_string ( $_POST ['text_comment'] );
 			$mail_commentaires = mysql_real_escape_string ( $_POST ['mail_comment'] );
-			
+			$url_photo = '';
+			$return = array();
 			// si une photo a été associée au commentaire, on la traite
 			if (isset ( $_FILES ['photo-path'] ) && $_FILES ['photo-path'] ['name'] != "") {
 				if (DEBUG) {
@@ -2673,7 +2668,7 @@ function createPublicComment() {
 			}
 			
 			// si une photo a été associée au commentaire et que tout s'est bien passé, ou bien s'il n'y avaotr pas de photo, on peut crer le commentaire dans la base de données
-			if ((isset ( $_FILES ['photo-path'] ['name'] ) && $return ['success'] == true) || (isset ( $_FILES ['photo-path'] ['name'] ) && $_FILES ['photo-path'] ['name'] == "")) {
+			if ((isset ( $_FILES ['photo-path'] ['name'] ) && isset($return ['success']) && $return ['success'] == true) || (isset ( $_FILES ['photo-path'] ['name'] ) && $_FILES ['photo-path'] ['name'] == "")) {
 				// si le mail est un administrateur ou un modérateur alors on bypasse la modération
 				$sql2 = "SELECT id_users FROM users WHERE (usertype_id_usertype = 1 OR usertype_id_usertype = 4) AND mail_users LIKE '" . $mail_commentaires . "'";
 				$result2 = mysql_query ( $sql2 );
@@ -2695,7 +2690,7 @@ function createPublicComment() {
 					$return ['pb'] = "Erreur lors de l'ajout du commentaire.";
 				} else {
 					$lastdatemodif_poi = date ( "Y-m-d H:i:s" );
-					$sql3 = "UPDATE poi SET lastdatemodif_poi = '$lastdatemodif_poi' WHERE id_poi = $id_poi";
+					$sql3 = "UPDATE poi SET lastdatemodif_poi = '$lastdatemodif_poi', lastmodif_user_poi = ".$_SESSION ['id_users']." WHERE id_poi = $id_poi";
 					if (DEBUG) {
 						error_log ( date ( "Y-m-d H:i:s" ) . " " . __FUNCTION__ . " sql $sql3 \n", 3, LOG_FILE );
 						error_log ( date ( "Y-m-d H:i:s" ) . " " . __FUNCTION__ . " Erreur " . mysql_errno ( $link ) . " : " . mysql_error ( $link ) . "\n", 3, LOG_FILE );
@@ -2743,7 +2738,6 @@ Cordialement, l'Association " . VELOBS_ASSOCIATION . " :)";
 			
 			// retourne le résultat du traitement du commentaire
 			echo json_encode ( $return );
-			mysql_free_result ( $result );
 			mysql_close ( $link );
 			break;
 		case 'postgresql' :
