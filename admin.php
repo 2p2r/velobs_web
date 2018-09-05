@@ -11,6 +11,7 @@
 		}
 		switch ($_SESSION['type']) {
 			case '1':
+			/* Rôle : Administrateur */
 ?>
 <!DOCTYPE >
 <html>
@@ -20,10 +21,23 @@
 		<link rel="shortcut icon" type="image/png" href="resources/favicon/favicon.jpg" />
 	</head>
 	<body onunload="setCookie()">
-		<div id="loading"> 
-			<div class="loading-indicator">
-				<img alt="VelObs" src="resources/images/logo-admin.png" height="64" style="margin-right:8px;float:left;vertical-align:top;"/>Cyclo-fiches - <a href="https://www.velo-cite.org/" target="_blank">Vélo-Cité</a><br /><span id="loading-msg">Loading styles and images ...</span>
+		<div id="loading"
+			 class="loading"> 
+			 <div class="loading-indicator">
+				<img src="resources/images/logo-main.png"
+					 class="loading__logo"
+					 title="Logo Vélo-Cité"
+					 alt="Logo Vélo-Cité"
+					 height="64"
+					 style="margin-right:8px;float:left;vertical-align:top;"/>
+				
+				<span class="loading__message">
+					<p>Cyclo-fiches - <a href="https://www.velo-cite.org/" target="_blank">Vélo-Cité</a></p>
+
+					<p id="loading-msg">Loading styles and images ...</p>
+				</span>
 			</div>
+
 			<link rel="stylesheet" type="text/css" href="resources/css/icon.css" />
 			<link rel="stylesheet" type="text/css" href="lib/js/framework/ext-3.4.0/resources/css/ext-all.css" />
 			<link rel="stylesheet" type="text/css" href="lib/js/framework/ext-3.4.0/resources/css/xtheme-gray.css" />
@@ -84,10 +98,11 @@
 	 
 			<script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Initialization...';</script> 
 		</div>
+
 		<div>
 			<div id="disconnect" title="<?php echo getTranslation($_SESSION['id_language'],'DISCONNECT'); ?>" onclick="self.location.href ='lib/php/admin/disconnect.php';"></div>
 			<div id="gotopublicmap" title=<?php echo getTranslation($_SESSION['id_language'],'OPENPUBLICMAP'); ?> onclick="window.open('./');"></div>
-			<div id="hellouser""><?php if ($_SESSION['nom'] != '') {echo "[".$_SESSION['nom']."]";} ?></div>
+			<div id="hellouser"><?php if ($_SESSION['nom'] != '') {echo "[".$_SESSION['nom']."]";} ?></div>
 			<div id="update" style="display:none;"></div>
 		</div>
 	</body>
@@ -95,6 +110,7 @@
 <?php			
 				break;
 			case '2':
+			/* Rôle : Communauté de communes */
 ?>
 <!DOCTYPE >
 <html>
@@ -170,6 +186,11 @@
 	 
 			<script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Initialization...';</script> 
 		</div>
+		
+		<img src="resources/images/bmheader.png"
+			 title="Logo Bordeaux Métropole"
+			 alt="Logo Bordeaux Métropole"
+			 style="height: 85px; position: absolute; left: 85px; top: 10px;"/>
 
 		<div>
 			<div id="disconnect" title="<?php echo getTranslation($_SESSION['id_language'],'DISCONNECT'); ?>" onclick="self.location.href ='lib/php/admin/disconnect.php';"></div>
@@ -182,6 +203,7 @@
 <?php
 				break;
 			case '3':
+			/* Rôle : Pôle technique */
 ?>
 <!DOCTYPE >
 <html>
@@ -270,7 +292,8 @@
 </html>			
 <?php
 				break;
-		    case '4':
+			case '4':
+			/* Rôle : Responsable pôle modérateur */
 ?>
 <!DOCTYPE >
 <html>
