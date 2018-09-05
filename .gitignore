@@ -4,3 +4,5 @@ lib/php/key.php
 .vscode/
 resources/pictures/
 !resources/pictures/README
+v2/node_modules
+v2/npm-debug.log
