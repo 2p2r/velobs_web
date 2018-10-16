@@ -734,7 +734,7 @@ Le pole '.$arrayObs['lib_pole'].' a modifié l\'observation n°'.$arrayObs['id_p
 							$subject = 'Nouvelle cyclofiche ' . $arrayObs['ref_poi'];
 							$message = "Bonjour,
 Une nouvelle cyclofiche a été renseignée sous la référence ".$arrayObs['ref_poi']." et modérée par l'Association ".VELOBS_ASSOCIATION.".
-Voici le lien pour visualiser la cyclofiche: " . URL . "/lib/php/admin/print.php?id_poi=" . $arrayObs['id_poi'];
+Voici le lien pour visualiser la cyclofiche: " . URL . "/lib/php/admin/print.php?id_poi=" . $arrayObs['id_poi'] . "\n";
 							$message .= "Cordialement, l'Association ".VELOBS_ASSOCIATION." :)";
 							$whereClause = "(u.usertype_id_usertype = 2 AND u.territoire_id_territoire = ".$arrayObs['territoire_id_territoire'].") OR (u.usertype_id_usertype = 4 AND u.num_pole = ".$arrayObs['pole_id_pole'].")";
 							$mailsComComModo = getMailsToSend($whereClause, $subject, $message );
