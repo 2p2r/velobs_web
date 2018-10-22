@@ -683,7 +683,7 @@
 		$arrayDetailsAndUpdateSQL=array();
 		$arrayDetailsAndUpdateSQL['updateObsBoolean'] = $updateObservationBoolean;
 		$arrayDetailsAndUpdateSQL['sqlUpdate'] = $sqlUpdate;
-		$arrayDetailsAndUpdateSQL['detailObservationString'] = $DetailObservation;
+		$arrayDetailsAndUpdateSQL['detailObservationString'] = str_replace('\n', '<br />', $DetailObservation);
 		return $arrayDetailsAndUpdateSQL;
 	}
 	/*	Function name	: getMailsToSend
