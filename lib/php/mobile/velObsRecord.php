@@ -157,9 +157,9 @@
                     	/* envoi d'un mail aux administrateurs de l'association et modérateurs */
                     	$whereClause = "u.usertype_id_usertype = 1 OR (u.usertype_id_usertype = 4 AND u.num_pole = ".$arrayObs['pole_id_pole'].")";
                     	$subject = 'Nouvelle observation à modérer sur le pole '.$arrayObs['lib_pole'];
-                    	$message = "Bonjour !
-Une nouvelle observation a été ajoutée sur le pole ".$arrayObs['lib_pole'].". Veuillez vous connecter à l'interface d'administration pour la modérer.
-Lien vers la modération : ".URL.'/admin.php?id='.$arrayObs['id_poi']."\n".$arrayDetailsAndUpdateSQL['detailObservationString']."\n";
+                    	$message = "Bonjour !<br />
+Une nouvelle observation a été ajoutée sur le pole ".$arrayObs['lib_pole'].". Veuillez vous connecter à l'interface d'administration pour la modérer.<br />
+<a href=\"".URL.'/admin.php?id='.$arrayObs['id_poi']."\">Lien vers la modération</a>.".$arrayDetailsAndUpdateSQL['detailObservationString']."\n";
                     	$mails = array();
                     	$mails = getMailsToSend($whereClause, $subject, $message );
                     	if (DEBUG){
@@ -169,9 +169,9 @@ Lien vers la modération : ".URL.'/admin.php?id='.$arrayObs['id_poi']."\n".$arra
                     
                     	/* debut envoi d'un mail au contributeur */
                     	$subject = 'Observation en attente de modération';
-                    	$message = "Bonjour !
-Vous venez d'ajouter une observation à VelObs et nous vous en remercions. Celle-ci devrait être administrée sous peu.\n".
-                    $arrayDetailsAndUpdateSQL['detailObservationString']."\n
+                    	$message = "Bonjour !<br />
+Vous venez d'ajouter une observation à VelObs et nous vous en remercions. Celle-ci devrait être administrée sous peu.<br />".
+                    $arrayDetailsAndUpdateSQL['detailObservationString']."<br />
 Cordialement, l'Association ".VELOBS_ASSOCIATION." :)";
                     	$mailArray = [$arrayObs['mail_poi'],"Soumetteur", $subject, $message ];
                     	array_push($mails,$mailArray);

@@ -719,11 +719,12 @@
 						//mail aux comptes comcom du territoire concerné par l'observation et aux modérateurs
 						if ($poleedit == 1) {
 							$subject = 'Modification de l\'observation n°'.$arrayObs['id_poi'].' par le pole '.$arrayObs['lib_pole'];
-							$message = 'Bonjour !
-Le pole '.$arrayObs['lib_pole'].' a modifié l\'observation n°'.$arrayObs['id_poi']."\n";
-							$message .= "Lien vers la modération : ".URL.'/admin.php?id='.$arrayObs['id_poi']."\n".$arrayDetailsAndUpdateSQL['detailObservationString']."\n";
+							$message = 'Bonjour !<br />
+							<br />
+Le pole '.$arrayObs['lib_pole'].' a modifié l\'observation n°'.$arrayObs['id_poi']."<br />";
+							$message .= '<a href="http://' .URL.'/admin.php?id='.$arrayObs['id_poi']."<br />".$arrayDetailsAndUpdateSQL['detailObservationString']. '">Lien vers la modération</a><br />';
 						
-							$message .= "Cordialement, l'Association ".VELOBS_ASSOCIATION." :)";
+							$message .= "Cordialement, <br />l'Association ".VELOBS_ASSOCIATION." :)";
 							$whereClause = "(u.usertype_id_usertype = 2 AND u.territoire_id_territoire = ".$arrayObs['territoire_id_territoire'].") OR (u.usertype_id_usertype = 4 AND u.num_pole = ".$arrayObs['pole_id_pole'].")";
 							$mailsComComModo = getMailsToSend($whereClause, $subject, $message );
 							
@@ -732,10 +733,14 @@ Le pole '.$arrayObs['lib_pole'].' a modifié l\'observation n°'.$arrayObs['id_p
 						// Modération
 						if ($arrayObs['moderation_poi'] != $_POST['moderation_poi'] && $_POST['moderation_poi']) {
 							$subject = 'Nouvelle cyclofiche ' . $arrayObs['ref_poi'];
-							$message = "Bonjour,
-Une nouvelle cyclofiche a été renseignée sous la référence ".$arrayObs['ref_poi']." et modérée par l'Association ".VELOBS_ASSOCIATION.".
-Voici le lien pour visualiser la cyclofiche: " . URL . "/lib/php/admin/print.php?id_poi=" . $arrayObs['id_poi'] . "\n";
-							$message .= "Cordialement, l'Association ".VELOBS_ASSOCIATION." :)";
+							$message = "Bonjour,<br />
+							<br />
+Une nouvelle cyclofiche a été renseignée sous la référence ".$arrayObs['ref_poi']." et modérée par l'Association ".VELOBS_ASSOCIATION."<br />
+<a href=\"http://" . URL . "/lib/php/admin/print.php?id_poi=" . $arrayObs['id_poi'] . "\">Voici le lien pour visualiser la cyclofiche</a>.<br />
+<br />
+Cordialement, <br />
+<br />		
+l'Association " . VELOBS_ASSOCIATION . " :)";
 							$whereClause = "(u.usertype_id_usertype = 2 AND u.territoire_id_territoire = ".$arrayObs['territoire_id_territoire'].") OR (u.usertype_id_usertype = 4 AND u.num_pole = ".$arrayObs['pole_id_pole'].")";
 							$mailsComComModo = getMailsToSend($whereClause, $subject, $message );
 						}
@@ -761,9 +766,10 @@ Voici le lien pour visualiser la cyclofiche: " . URL . "/lib/php/admin/print.php
 							// changement du workflow : si priorite == 1 ou priorite == 2 alors on modère par défaut
 							if (($new_id_priorite == 1 || $new_id_priorite == 2)) {
 								$subject = 'Merci pour votre participation';
-								$message = "Bonjour !
-L'observation que vous avez envoyée sur VelObs a changé de statut. Le problème identifié a été transmis aux services municipaux.\n".$arrayDetailsAndUpdateSQL['detailObservationString']
-							.$signature;
+								$message = "Bonjour !<br />
+								<br />
+L'observation que vous avez envoyée sur VelObs a changé de statut. Le problème identifié a été transmis aux services municipaux.".$arrayDetailsAndUpdateSQL['detailObservationString']
+							."<br />".$signature;
 									
 							}
 							
@@ -775,8 +781,9 @@ L'observation que vous avez envoyée sur VelObs a changé de statut. Le problèm
 									$returnCode = 10; // pour cloturer il faut que le commentaire final ne soit pas vide
 								}
 								$subject = 'Observation prise en compte';
-								$message = "Bonjour !
-L'Association ".VELOBS_ASSOCIATION." vous remercie. Le problème a bien été pris en compte et réglé par la collectivité.\n".$arrayDetailsAndUpdateSQL['detailObservationString'].'
+								$message = "Bonjour !<br />
+								<br />
+L'Association ".VELOBS_ASSOCIATION." vous remercie. Le problème a bien été pris en compte et réglé par la collectivité.<br />".$arrayDetailsAndUpdateSQL['detailObservationString'].'<br />
 '.$signature;
 							}
 							// mail à la personne qui a envoyé la proposition pour le prévenir que son intervention ne sera pas prise en compte par l'asso, que si le champ commentfinal_poi n'est pas vide, sinon erreur
@@ -787,10 +794,11 @@ L'Association ".VELOBS_ASSOCIATION." vous remercie. Le problème a bien été pr
 									$returnCode = 10; // pour cloturer il faut que le commentaire final ne soit pas vide
 								}
 								$subject = 'Observation non transmise à la collectivité';
-								$message = "Bonjour !
-L'Association ".VELOBS_ASSOCIATION." et la collectivité vous remercient de votre participation.
-Cependant le problème rapporté a été refusé par l'association et n'a pas été transmis à la collectivité.\n".$arrayDetailsAndUpdateSQL['detailObservationString'].'
-							
+								$message = "Bonjour !<br />
+								<br />
+L'Association ".VELOBS_ASSOCIATION." et la collectivité vous remercient de votre participation.<br />
+Cependant le problème rapporté a été refusé par l'association et n'a pas été transmis à la collectivité.<br />".$arrayDetailsAndUpdateSQL['detailObservationString'].'<br />
+<br />
 '.$signature;
 									
 							}
@@ -802,10 +810,11 @@ Cependant le problème rapporté a été refusé par l'association et n'a pas é
 									$returnCode = 10; // pour cloturer il faut que le commentaire final ne soit pas vide
 								}
 								$subject = 'Observation refusée par la collectivité';
-								$message = "Bonjour !
-L'Association ".VELOBS_ASSOCIATION." et la collectivité vous remercient de votre participation.
-Cependant le problème rapporté a été refusé par la collectivité.\n".$arrayDetailsAndUpdateSQL['detailObservationString'].'
-				
+								$message = "Bonjour !<br />
+								<br />
+L'Association ".VELOBS_ASSOCIATION." et la collectivité vous remercient de votre participation.<br />
+Cependant le problème rapporté a été refusé par la collectivité.\n".$arrayDetailsAndUpdateSQL['detailObservationString'].'<br />
+<br />
 '.$signature;
 									
 							}
@@ -817,11 +826,12 @@ Cependant le problème rapporté a été refusé par la collectivité.\n".$array
 									$returnCode = 11; // pour cloturer il faut que le commentaire final ne soit pas vide, et donner le numero du doublon
 								}
 								$subject = 'Observation doublon';
-								$message = "Bonjour !
-L'Association ".VELOBS_ASSOCIATION." et la collectivité vous remercient de votre participation.
-Le problème que vous avez identifié nous a déjà été rapporté par un autre observateur.\n".$arrayDetailsAndUpdateSQL['detailObservationString'].'
-							
-Vous pouvez ajouter de nouvelles photos et ou commentaires à l\'observation existante.
+								$message = "Bonjour !<br />
+								<br />
+L'Association ".VELOBS_ASSOCIATION." et la collectivité vous remercient de votre participation.<br />
+Le problème que vous avez identifié nous a déjà été rapporté par un autre observateur.\n".$arrayDetailsAndUpdateSQL['detailObservationString'].'<br />
+<br />		
+Vous pouvez ajouter de nouvelles photos et ou commentaires à l\'observation existante.<br />
 '.$signature;
 							}
 							// mail à la personne qui a envoyé la proposition pour le prévenir que son intervention est une urgence, que si le champ commentfinal_poi n'est pas vide, sinon erreur
@@ -833,7 +843,8 @@ Vous pouvez ajouter de nouvelles photos et ou commentaires à l\'observation exi
 								}
 								/* envoi d'un mail à l'observateur*/
 								$subject = 'Merci pour votre participation';
-								$message = 'Bonjour !
+								$message = 'Bonjour !<br />
+<br />
 L\'observation que vous avez envoyée a été modérée par l\'association. Le problème identifié est une urgence qui nécessite une intervention rapide des services techniques de la collectivité. Merci de faire le nécessaire.';
 								//si la commune fait partie d'un territoire
 								//premier territoire
@@ -858,12 +869,12 @@ L\'observation que vous avez envoyée a été modérée par l\'association. Le p
 						if (isset($_SESSION['type']) && ($_SESSION['type'] == 2 || $_SESSION['type'] == 3) ){
 							// mail à l'association vélo pour prévenir d'une modif + mail au(x) responsable(s) du pole
 							$subject = 'Modification sur l\'observation n°'.$arrayObs['id_poi'].' - '.$arrayObs['lib_pole'];
-							$message = 'Bonjour !
-La collectivité ou un pôle technique (compte '.$_SESSION['user'].') a modifié l\'observation n°'.$arrayObs['id_poi'].' du pole '.$arrayObs['lib_pole']."\n
+							$message = 'Bonjour !<br />
+<br />
+La collectivité ou un pôle technique (compte '.$_SESSION['user'].') a modifié l\'observation n°'.$arrayObs['id_poi'].' du pole '.$arrayObs['lib_pole']."
 Veuillez consulter l'interface d'administration pour consulter les informations relatives.
-Lien vers la modération : ".URL.'/admin.php?id='.$arrayObs['id_poi']."\n".
-							$arrayDetailsAndUpdateSQL['detailObservationString'].'
-'.$signature;
+<a href=\"http://" . URL.'/admin.php?id='.$arrayObs['id_poi']. "\">Lien vers la modération</a>".
+							$arrayDetailsAndUpdateSQL['detailObservationString'].'<br />'.$signature;
 							//usertype_id_usertype : 1=Admin, 2=comcom, 3=pole tech, 4=moderateur
 							//mail aux admins velobs et aux modérateurs du pole concerné par l'observation
 							$whereClause = " u.usertype_id_usertype = 1 OR (u.usertype_id_usertype = 4 AND u.num_pole = ".$arrayObs['pole_id_pole'].")";
@@ -1966,12 +1977,13 @@ Lien vers la modération : ".URL.'/admin.php?id='.$arrayObs['id_poi']."\n".
 				} else {
 					echo '1';
 				}
-				$message = "Bonjour,
-Vous disposez maintenant d'un compte sur velobs vous permettant de mettre à jour les observations enregistrées dans le système. Vous pouvez vous connecter à l'interface d'administration à l'adresse : 
-".URL."/admin.php
-Vos identifiants sont :
-	- Login : $lib_users
-	- Mot de passe : $pass_users
+				$message = "Bonjour,<br />
+				<br />
+Vous disposez maintenant d'un compte sur velobs vous permettant de mettre à jour les observations enregistrées dans le système. Vous pouvez vous connecter à l'interface d'administration à l'adresse : <br />
+<a href=\"".URL."/admin.php\">Connexion</a><br />
+Vos identifiants sont :<br />
+	- Login : $lib_users<br />
+	- Mot de passe : $pass_users<br />
 En cas de question, vous pouvez trouver des informations sur https://github.com/2p2r/velobs_web. N'hésitez pas à envoyer un courriel à ". MAIL_ALIAS_OBSERVATION_ADHERENTS . " pour toute question sur VelObs.";
 				sendMail($mail_users, "Création compte sur VelObs", $message);
 				mysql_free_result($result);
@@ -2385,9 +2397,9 @@ En cas de question, vous pouvez trouver des informations sur https://github.com/
 						/* envoi d'un mail aux administrateurs de l'association et modérateurs */
 						$whereClause = "u.usertype_id_usertype = 1 OR (u.usertype_id_usertype = 4 AND u.num_pole = ".$arrayObs['pole_id_pole'].")";
 						$subject = 'Nouvelle observation à modérer sur le pole '.$arrayObs['lib_pole'];
-						$message = "Bonjour !
-Une nouvelle observation a été ajoutée sur le pole ".$arrayObs['lib_pole'].". Veuillez vous connecter à l'interface d'administration pour la modérer.
-Lien vers la modération : ".URL.'/admin.php?id='.$arrayObs['id_poi']."\n".$arrayDetailsAndUpdateSQL['detailObservationString']."\n";
+						$message = "Bonjour !<br />
+Une nouvelle observation a été ajoutée sur le pole ".$arrayObs['lib_pole'].". Veuillez vous connecter à l'interface d'administration pour la modérer.<br />
+<a href=\"".URL.'/admin.php?id='.$arrayObs['id_poi']."\">Lien vers la modération</a>.<br />".$arrayDetailsAndUpdateSQL['detailObservationString']."<br />";
 						$mails = array();
 						$mails = getMailsToSend($whereClause, $subject, $message );
 						if (DEBUG){
@@ -2408,20 +2420,20 @@ Lien vers la modération : ".URL.'/admin.php?id='.$arrayObs['id_poi']."\n".$arra
 						$commune_lib = $rowLibCommune['lib_commune'];
 
 						$subject = 'Observation en attente de modération';
-						$message = "Bonjour,
-Vous venez​ de signaler un problème sur la plateforme Cyclo-fiche de Vélo-Cité et ​nous ​vous en remercions​!​
-​Cette information ​sera ​modérée ​prochainement par notre équipe et transférée aux services de Bordeaux Métropole.​
-Vélo-Cité vous informera des suites données à votre demande.
-​Si vous observez une amélioration, n'hésitez pas à nous ​la ​signaler​.​
-
-Référence: ".$arrayObs['ref_poi']."
-Catégorie: ".$subcategory_lib."
-Nom de la voie: ".$arrayObs['rue_poi']."
-Nom de la commune: ".$commune_lib."
-Description du problème: ".$arrayObs['desc_poi']."
-Lien vers l'observation (non visible tant que la modération n'a pas été effectuée): ".(substr(URL, 0, 7) === "http://" ? 'http://': '').URL.'?id='.$arrayObs['id_poi']."\n\n
-Cordialement, l'équipe ".VELOBS_ASSOCIATION." :)
-05 56 81 63 89
+						$message = "Bonjour,<br />
+Vous venez​ de signaler un problème sur la plateforme Cyclo-fiche de Vélo-Cité et ​nous ​vous en remercions​!​<br />
+​Cette information ​sera ​modérée ​prochainement par notre équipe et transférée aux services de Bordeaux Métropole.​<br />
+Vélo-Cité vous informera des suites données à votre demande.<br />
+​Si vous observez une amélioration, n'hésitez pas à nous ​la ​signaler​.​<br />
+<br />
+Référence: ".$arrayObs['ref_poi']."<br />
+Catégorie: ".$subcategory_lib."<br />
+Nom de la voie: ".$arrayObs['rue_poi']."<br />
+Nom de la commune: ".$commune_lib."<br />
+Description du problème: ".$arrayObs['desc_poi']."<br />
+Lien vers l'observation (non visible tant que la modération n'a pas été effectuée): ".(substr(URL, 0, 7) === "http://" ? 'http://': '').URL.'?id='.$arrayObs['id_poi']."<br /><br />
+Cordialement, l'équipe ".VELOBS_ASSOCIATION." :)<br />
+05 56 81 63 89<br />
 velo-cite.org";
 						$mailArray = [$arrayObs['mail_poi'],"Soumetteur", $subject, $message ];
 						array_push($mails,$mailArray);
@@ -2888,18 +2900,18 @@ velo-cite.org";
 							/* envoi d'un mail aux administrateurs de l'association et modérateurs */
 							$whereClause = "u.usertype_id_usertype = 1 OR (u.usertype_id_usertype = 4 AND u.num_pole = ".$arrayObs['pole_id_pole'].")";
 							$subject = 'Nouveau commentaire à modérer sur le pole '.$arrayObs['lib_pole'];
-							$message = "Bonjour !
-Un nouveau commentaire a été ajouté sur le pole ".$arrayObs['lib_pole'].". Veuillez vous connecter à l'interface d'administration pour le modérer (cliquer sur le bouton \"Commentaires\", en bas à droite, une fois les détails de l'observation affichés).
-Lien vers la modération : ".URL.'/admin.php?id='.$arrayObs['id_poi']."\n".
-$newCommentInfo. $arrayDetailsAndUpdateSQL['detailObservationString']."\n";
+							$message = "Bonjour !<br />
+Un nouveau commentaire a été ajouté sur le pole ".$arrayObs['lib_pole'].". Veuillez vous connecter à l'interface d'administration pour le modérer (cliquer sur le bouton \"Commentaires\", en bas à droite, une fois les détails de l'observation affichés).<br />
+<a href=\"".URL.'/admin.php?id='.$arrayObs['id_poi']."\">Lien vers la modération</a>.<br />".
+$newCommentInfo. $arrayDetailsAndUpdateSQL['detailObservationString']."<br />";
 							$mails = array();
 							$mails = getMailsToSend($whereClause, $subject, $message );
 					
 							/* debut envoi d'un mail au contributeur */
 							$subject = 'Commentaire en attente de modération';
-							$message = "Bonjour !
-Vous venez d'ajouter un commentaire à l'observation ".$arrayObs['id_poi']." sur VelObs et nous vous en remercions. Celui-ci devrait être administré sous peu.\n".
-$newCommentInfo.$arrayDetailsAndUpdateSQL['detailObservationString']."\n
+							$message = "Bonjour !<br />
+Vous venez d'ajouter un commentaire à l'observation ".$arrayObs['id_poi']." sur VelObs et nous vous en remercions. Celui-ci devrait être administré sous peu.<br />".
+$newCommentInfo.$arrayDetailsAndUpdateSQL['detailObservationString']."<br />
 Cordialement, l'Association ".VELOBS_ASSOCIATION." :)";
 							$mailArray = [$mail_commentaires,"Soumetteur", $subject, $message ];
 							array_push($mails,$mailArray);

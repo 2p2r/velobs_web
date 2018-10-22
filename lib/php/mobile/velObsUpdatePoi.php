@@ -72,19 +72,19 @@
 						/* envoi d'un mail aux administrateurs de l'association et modérateurs */
 						$whereClause = "u.usertype_id_usertype = 1 OR (u.usertype_id_usertype = 4 AND u.num_pole = ".$arrayObs['pole_id_pole'].")";
 						$subject = 'Nouveau commentaire à modérer sur le pole '.$arrayObs['lib_pole'];
-						$message = "Bonjour !
-Un nouveau commentaire a été ajouté sur le pole ".$arrayObs['lib_pole'].". Veuillez vous connecter à l'interface d'administration pour le modérer (cliquer sur le bouton \"Commentaires\", en bas à droite, une fois les détails de l'observation affichés).
-Lien vers la modération : ".URL.'/admin.php?id='.$arrayObs['id_poi']."\n".
+						$message = "Bonjour !<br />
+Un nouveau commentaire a été ajouté sur le pole ".$arrayObs['lib_pole'].". Veuillez vous connecter à l'interface d'administration pour le modérer (cliquer sur le bouton \"Commentaires\", en bas à droite, une fois les détails de l'observation affichés).<br />
+<a href=\"".URL.'/admin.php?id='.$arrayObs['id_poi']."\">Lien vers la modération</a>.<br />".
 $newCommentInfo. $arrayDetailsAndUpdateSQL['detailObservationString']."\n";
 						$mails = array();
 						$mails = getMailsToSend($whereClause, $subject, $message );
 					
 						/* debut envoi d'un mail au contributeur */
 						$subject = 'Commentaire en attente de modération';
-						$message = "Bonjour !
-Vous venez d'ajouter un commentaire à l'observation ".$arrayObs['id_poi']." sur VelObs et nous vous en remercions. Celui-ci devrait être administré sous peu.\n".
-$newCommentInfo.$arrayDetailsAndUpdateSQL['detailObservationString']."\n
-Cordialement, l'Association ".VELOBS_ASSOCIATION." :)";
+						$message = "Bonjour !<br />
+Vous venez d'ajouter un commentaire à l'observation ".$arrayObs['id_poi']." sur VelObs et nous vous en remercions. Celui-ci devrait être administré sous peu.<br />".
+$newCommentInfo.$arrayDetailsAndUpdateSQL['detailObservationString']."<br />
+Cordialement, l'Association ".VELOBS_ASSOCIATION." :)<br />";
 					$mailArray = [$mail_commentaires,"Soumetteur", $subject, $message ];
 					array_push($mails,$mailArray);
 					if (DEBUG){
