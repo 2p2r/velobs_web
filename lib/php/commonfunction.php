@@ -360,7 +360,7 @@
 		$numberOfColumns++;
 		$arrayColumns[$numberOfColumns]['columnSQL'] = 'reponsegrandtoulouse_poi' ;
 		$arrayColumns[$numberOfColumns]['columnPOST'] = 'reponsegrandtoulouse_poi' ;
-		$arrayColumns[$numberOfColumns]['columnIntitule'] = '# [Public] Réponse de la collectivité : ' ;
+		$arrayColumns[$numberOfColumns]['columnIntitule'] = '# Réponse de la collectivité : ' ;
 		$arrayColumns[$numberOfColumns]['dataType'] = 'string' ;
 		$numberOfColumns++;
 		$arrayColumns[$numberOfColumns]['columnSQL'] = 'status_id_status' ;
@@ -385,7 +385,7 @@
 		$numberOfColumns++;
 		$arrayColumns[$numberOfColumns]['columnSQL'] = 'commentfinal_poi' ;
 		$arrayColumns[$numberOfColumns]['columnPOST'] = 'commentfinal_poi' ;
-		$arrayColumns[$numberOfColumns]['columnIntitule'] = '# Commentaire final de l\'association : ' ;
+		$arrayColumns[$numberOfColumns]['columnIntitule'] = '# Commentaire Vélo-Cité : ' ;
 		$arrayColumns[$numberOfColumns]['dataType'] = 'string' ;
 		$numberOfColumns++;
 		$arrayColumns[$numberOfColumns]['columnSQL'] = 'datefix_poi' ;
