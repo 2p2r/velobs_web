@@ -360,7 +360,7 @@
 		$numberOfColumns++;
 		$arrayColumns[$numberOfColumns]['columnSQL'] = 'reponsegrandtoulouse_poi' ;
 		$arrayColumns[$numberOfColumns]['columnPOST'] = 'reponsegrandtoulouse_poi' ;
-		$arrayColumns[$numberOfColumns]['columnIntitule'] = '# Réponse de la collectivité : ' ;
+		$arrayColumns[$numberOfColumns]['columnIntitule'] = '# [Public] Réponse de la collectivité : ' ;
 		$arrayColumns[$numberOfColumns]['dataType'] = 'string' ;
 		$numberOfColumns++;
 		$arrayColumns[$numberOfColumns]['columnSQL'] = 'status_id_status' ;
@@ -375,7 +375,7 @@
 		$numberOfColumns++;
 		$arrayColumns[$numberOfColumns]['columnSQL'] = 'reponsepole_poi' ;
 		$arrayColumns[$numberOfColumns]['columnPOST'] = 'reponsepole_poi' ;
-		$arrayColumns[$numberOfColumns]['columnIntitule'] = '# Réponse du pôle technique : ' ;
+		$arrayColumns[$numberOfColumns]['columnIntitule'] = '# [Privé] Réponse du pôle technique : ' ;
 		$arrayColumns[$numberOfColumns]['dataType'] = 'string' ;
 		$numberOfColumns++;
 		$arrayColumns[$numberOfColumns]['columnSQL'] = 'traiteparpole_poi' ;
