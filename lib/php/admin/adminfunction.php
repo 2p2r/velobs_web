@@ -732,11 +732,12 @@ Le pole '.$arrayObs['lib_pole'].' a modifié l\'observation n°'.$arrayObs['id_p
 
 						// Modération
 						if ($arrayObs['moderation_poi'] != $_POST['moderation_poi'] && $_POST['moderation_poi']) {
-							$subject = 'Nouvelle cyclofiche ' . $arrayObs['ref_poi'];
+							$subject = 'Nouvelle Cyclo-fiche: ' . $arrayObs['ref_poi'];
 							$message = "Bonjour,<br />
 							<br />
-Une nouvelle cyclofiche a été renseignée sous la référence ".$arrayObs['ref_poi']." et modérée par l'Association ".VELOBS_ASSOCIATION."<br />
-<a href=\"http://" . URL . "/lib/php/admin/print.php?id_poi=" . $arrayObs['id_poi'] . "\">Voici le lien pour visualiser la cyclofiche</a>.<br />
+Une nouvelle cyclo-fiche a été renseignée sous la référence ".$arrayObs['ref_poi']." et modérée par l'Association ".VELOBS_ASSOCIATION."<br />
+<a href=\"http://" . URL . "/lib/php/admin/print.php?id_poi=" . $arrayObs['id_poi'] . "\">Voici le lien pour imprimer la cyclo-fiche</a>.<br /><br />
+<a href=\"".URL.'/admin.php?id='.$arrayObs['id_poi']."\">Voici le lien pour visualiser la cyclo-fiche</a>.<br />
 <br />
 Cordialement, <br />
 <br />		
@@ -2396,7 +2397,7 @@ En cas de question, vous pouvez trouver des informations sur https://github.com/
 							
 						/* envoi d'un mail aux administrateurs de l'association et modérateurs */
 						$whereClause = "u.usertype_id_usertype = 1 OR (u.usertype_id_usertype = 4 AND u.num_pole = ".$arrayObs['pole_id_pole'].")";
-						$subject = 'Nouvelle observation à modérer sur le pole '.$arrayObs['lib_pole'];
+						$subject = "Nouvelle cyclo-fiche à modérer: " . $arrayObs['ref_poi'];
 						$message = "Bonjour !<br />
 Une nouvelle observation a été ajoutée sur le pole ".$arrayObs['lib_pole'].". Veuillez vous connecter à l'interface d'administration pour la modérer.<br />
 <a href=\"".URL.'/admin.php?id='.$arrayObs['id_poi']."\">Lien vers la modération</a>.<br />".$arrayDetailsAndUpdateSQL['detailObservationString']."<br />";
@@ -2910,7 +2911,7 @@ $newCommentInfo. $arrayDetailsAndUpdateSQL['detailObservationString']."<br />";
 							/* debut envoi d'un mail au contributeur */
 							$subject = 'Commentaire en attente de modération';
 							$message = "Bonjour !<br />
-Vous venez d'ajouter un commentaire à l'observation ".$arrayObs['id_poi']." sur VelObs et nous vous en remercions. Celui-ci devrait être administré sous peu.<br />".
+Vous venez d'ajouter un commentaire à l'observation ".$arrayObs['id_poi']." sur Cyclo-fiche et nous vous en remercions. Celui-ci devrait être administré sous peu.<br />".
 $newCommentInfo.$arrayDetailsAndUpdateSQL['detailObservationString']."<br />
 Cordialement, l'Association ".VELOBS_ASSOCIATION." :)";
 							$mailArray = [$mail_commentaires,"Soumetteur", $subject, $message ];

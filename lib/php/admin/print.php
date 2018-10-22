@@ -17,7 +17,7 @@
         $pdf->Cell(170, 15, utf8_decode('Cyclofiche'), '', 2, 'C');
 
         $pdf->SetFont('Arial', '', 12);
-        $pdf->Text(170, 10, utf8_decode('Date: ' . strftime("%d/%m/%Y", $poi_data['datecreation_poi'])));
+        $pdf->Text(170, 10, utf8_decode('Date: ' . strftime("%d/%m/%Y", strtotime($poi_data['datecreation_poi']))));
 
         $pdf->SetFont('Arial', 'B', 35);
         $pdf->Cell(170, 15, utf8_decode($poi_data['ref_poi']), '', 0, 'C');
