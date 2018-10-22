@@ -17,7 +17,7 @@
         $pdf->Cell(170, 15, utf8_decode('Cyclofiche'), '', 2, 'C');
 
         $pdf->SetFont('Arial', '', 12);
-        $pdf->Text(170, 10, utf8_decode('Date: ' . $poi_data['datecreation_poi']));
+        $pdf->Text(170, 10, utf8_decode('Date: ' . strftime("%d/%m/%Y", $poi_data['datecreation_poi'])));
 
         $pdf->SetFont('Arial', 'B', 35);
         $pdf->Cell(170, 15, utf8_decode($poi_data['ref_poi']), '', 0, 'C');
@@ -27,7 +27,7 @@
         $pdf->Text(8, 48, utf8_decode('16 rue Ausone'));
         $pdf->Text(8, 53, utf8_decode('33000 Bordeaux'));
         $pdf->Text(8, 58, utf8_decode('Tél : 05 56 81 63 89'));
-        $pdf->Text(8, 63, utf8_decode('Courriel : bordeaux@fubicy.org'));
+        $pdf->Text(8, 63, utf8_decode('Courriel : contact@velo-cite.org'));
 
         $pdf->SetFont('Arial', 'B', 16);
         $pdf->Text(78, 48, utf8_decode('Localisation de la demande'));
