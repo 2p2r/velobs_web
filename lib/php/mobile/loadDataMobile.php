@@ -128,8 +128,8 @@
 			
 			/* envoi d'un mail aux administrateurs */
 			$subject = 'Nouvelle observation à modérer';
-			$message = 'Bonjour !
-Une nouvelle observation a été ajoutée. Veuillez vous connecter à l\'interface d\'administration pour la modérer.
+			$message = 'Bonjour !<br />
+Une nouvelle observation a été ajoutée. Veuillez vous connecter à l\'interface d\'administration pour la modérer.<br />
 Cordialement, l\'application velobs)';
 			$details = '
 				

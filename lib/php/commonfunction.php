@@ -741,14 +741,15 @@
 	function sendMail ($to, $subject, $body){
 		$headers = 'From: '. MAIL_FROM . "\r\n" .
 				'Reply-To: ' . MAIL_REPLY_TO ."\r\n" .
-				'Content-Type: text/plain; charset=UTF-8' . "\r\n" .
+				'Content-Type: text/html; charset=UTF-8' . "\r\n" .
 				'X-Mailer: PHP/' . phpversion();
 		if (DEBUG){
 			error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - commonfunction.php - Mail avec comme sujet = ".MAIL_SUBJECT_PREFIX . ' '.$subject ." et envoyé à " . $to ."\n", 3, LOG_FILE);
 		}
 	
-		mail($to, MAIL_SUBJECT_PREFIX . ' '.$subject, $body, $headers);
+		$message = "<html><body>$body</body></html>";
+
+		mail($to, MAIL_SUBJECT_PREFIX . ' '.$subject, $message, $headers);
 		//mail($to, MAIL_SUBJECT_PREFIX . ' '.$subject, $body);
-	
 	}
 ?>
