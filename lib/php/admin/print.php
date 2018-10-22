@@ -59,7 +59,7 @@
         if (isset($poi_data['photo_poi'])) {
             $photo_filename = '../../../resources/pictures/' . $poi_data['photo_poi'];
             if (file_exists($photo_filename) && is_file($photo_filename))
-                $pdf->Image('../../../resources/pictures/' . $poi_data['photo_poi']);
+                $pdf->Image('../../../resources/pictures/' . $poi_data['photo_poi'], NULL, NULL, 180, 0);
         }
 
         return $pdf;
