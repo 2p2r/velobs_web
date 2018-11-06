@@ -16,6 +16,11 @@
 	define('MAIL_FROM', 'xxx');
 	define('MAIL_REPLY_TO', 'xxx');
 	define('MAIL_SUBJECT_PREFIX', '[Test][VelObs]');
+
+	define('MAIL_SIGNATURE', '<br />L\'équipe Vélo-Cité Bordeaux :)<br />05 56 81 63 89<br />
+<br />
+<a href="http://velo-cite.org/contact/adherer/">Vous aimez nos actions? Soutenez nous !</a><br />
+<a href="http://www.velo-cite.org/">www.velo-cite.org</a> / <a href="https://fr-fr.facebook.com/velocite.bordeauxmetropole">Facebook</a>');
 	
 	define('VELOBS_ASSOCIATION', '2 pieds 2 roues');
 	define('VELOBS_COLLECTIVITE1', 'Toulouse Métropole');

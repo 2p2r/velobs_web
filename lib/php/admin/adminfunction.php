@@ -693,6 +693,7 @@
 	
 	function updatePoi() {
 		$id_poi = stripslashes($_POST['id_poi']);
+		$signature = MAIL_SIGNATURE;
 		switch (SGBD) {
 			case 'mysql':
 				$link = mysql_connect(HOST,DB_USER,DB_PASS);
@@ -724,7 +725,7 @@
 Le pole '.$arrayObs['lib_pole'].' a modifié l\'observation n°'.$arrayObs['id_poi']."<br />";
 							$message .= '<a href="http://' .URL.'/admin.php?id='.$arrayObs['id_poi']."<br />".$arrayDetailsAndUpdateSQL['detailObservationString']. '">Lien vers la modération</a><br />';
 						
-							$message .= "Cordialement, <br />l'Association ".VELOBS_ASSOCIATION." :)";
+							$message .= "Cordialement, <br />".MAIL_SIGNATURE;
 							$whereClause = "(u.usertype_id_usertype = 2 AND u.territoire_id_territoire = ".$arrayObs['territoire_id_territoire'].") OR (u.usertype_id_usertype = 4 AND u.num_pole = ".$arrayObs['pole_id_pole'].")";
 							$mailsComComModo = getMailsToSend($whereClause, $subject, $message );
 							
@@ -740,8 +741,7 @@ Une nouvelle cyclo-fiche a été renseignée sous la référence ".$arrayObs['re
 <a href=\"".URL.'/admin.php?id='.$arrayObs['id_poi']."\">Voici le lien pour visualiser la cyclo-fiche</a>.<br />
 <br />
 Cordialement, <br />
-<br />		
-l'Association " . VELOBS_ASSOCIATION . " :)";
+".MAIL_SIGNATURE;
 							$whereClause = "(u.usertype_id_usertype = 2 AND u.territoire_id_territoire = ".$arrayObs['territoire_id_territoire'].") OR (u.usertype_id_usertype = 4 AND u.num_pole = ".$arrayObs['pole_id_pole'].")";
 							$mailsComComModo = getMailsToSend($whereClause, $subject, $message );
 						}
@@ -770,7 +770,7 @@ l'Association " . VELOBS_ASSOCIATION . " :)";
 								$message = "Bonjour !<br />
 								<br />
 L'observation que vous avez envoyée sur VelObs a changé de statut. Le problème identifié a été transmis aux services municipaux.".$arrayDetailsAndUpdateSQL['detailObservationString']
-							."<br />".$signature;
+							."<br />".MAIL_SIGNATURE;
 									
 							}
 							
@@ -785,7 +785,7 @@ L'observation que vous avez envoyée sur VelObs a changé de statut. Le problèm
 								$message = "Bonjour !<br />
 								<br />
 L'Association ".VELOBS_ASSOCIATION." vous remercie. Le problème a bien été pris en compte et réglé par la collectivité.<br />".$arrayDetailsAndUpdateSQL['detailObservationString'].'<br />
-'.$signature;
+'.MAIL_SIGNATURE;
 							}
 							// mail à la personne qui a envoyé la proposition pour le prévenir que son intervention ne sera pas prise en compte par l'asso, que si le champ commentfinal_poi n'est pas vide, sinon erreur
 							//Priorité Refusé par l'association
@@ -800,7 +800,7 @@ L'Association ".VELOBS_ASSOCIATION." vous remercie. Le problème a bien été pr
 L'Association ".VELOBS_ASSOCIATION." et la collectivité vous remercient de votre participation.<br />
 Cependant le problème rapporté a été refusé par l'association et n'a pas été transmis à la collectivité.<br />".$arrayDetailsAndUpdateSQL['detailObservationString'].'<br />
 <br />
-'.$signature;
+'.MAIL_SIGNATURE;
 									
 							}
 							// mail à la personne qui a envoyé la proposition pour le prévenir que son intervention ne sera pas prise en compte par l'asso, que si le champ commentfinal_poi n'est pas vide, sinon erreur
@@ -816,7 +816,7 @@ Cependant le problème rapporté a été refusé par l'association et n'a pas é
 L'Association ".VELOBS_ASSOCIATION." et la collectivité vous remercient de votre participation.<br />
 Cependant le problème rapporté a été refusé par la collectivité.\n".$arrayDetailsAndUpdateSQL['detailObservationString'].'<br />
 <br />
-'.$signature;
+'.MAIL_SIGNATURE;
 									
 							}
 							// mail à la personne qui a envoyé la proposition pour le prévenir que son intervention est en doublon, que si le champ commentfinal_poi n'est pas vide, sinon erreur
@@ -833,7 +833,7 @@ L'Association ".VELOBS_ASSOCIATION." et la collectivité vous remercient de votr
 Le problème que vous avez identifié nous a déjà été rapporté par un autre observateur.\n".$arrayDetailsAndUpdateSQL['detailObservationString'].'<br />
 <br />		
 Vous pouvez ajouter de nouvelles photos et ou commentaires à l\'observation existante.<br />
-'.$signature;
+'.MAIL_SIGNATURE;
 							}
 							// mail à la personne qui a envoyé la proposition pour le prévenir que son intervention est une urgence, que si le champ commentfinal_poi n'est pas vide, sinon erreur
 							//URGENCE
@@ -852,10 +852,10 @@ L\'observation que vous avez envoyée a été modérée par l\'association. Le p
 								switch ($arrayObs['territoire_id_territoire']) {
 									case 1:
 										$message .= '
-'.VELOBS_EMERGENCY_MAIL1."\n".$arrayDetailsAndUpdateSQL['detailObservationString'].$signature;
+'.VELOBS_EMERGENCY_MAIL1."\n".$arrayDetailsAndUpdateSQL['detailObservationString'].MAIL_SIGNATURE;
 										break;
 									default:
-										$message .= "\n".$arrayDetailsAndUpdateSQL['detailObservationString'].$signature;
+										$message .= "\n".$arrayDetailsAndUpdateSQL['detailObservationString'].MAIL_SIGNATURE;
 										break;
 								}
 							}
@@ -875,7 +875,7 @@ L\'observation que vous avez envoyée a été modérée par l\'association. Le p
 La collectivité ou un pôle technique (compte '.$_SESSION['user'].') a modifié l\'observation n°'.$arrayObs['id_poi'].' du pole '.$arrayObs['lib_pole']."
 Veuillez consulter l'interface d'administration pour consulter les informations relatives.
 <a href=\"http://" . URL.'/admin.php?id='.$arrayObs['id_poi']. "\">Lien vers la modération</a>".
-							$arrayDetailsAndUpdateSQL['detailObservationString'].'<br />'.$signature;
+							$arrayDetailsAndUpdateSQL['detailObservationString'].'<br />'.MAIL_SIGNATURE;
 							//usertype_id_usertype : 1=Admin, 2=comcom, 3=pole tech, 4=moderateur
 							//mail aux admins velobs et aux modérateurs du pole concerné par l'observation
 							$whereClause = " u.usertype_id_usertype = 1 OR (u.usertype_id_usertype = 4 AND u.num_pole = ".$arrayObs['pole_id_pole'].")";
@@ -1984,8 +1984,7 @@ Vous disposez maintenant d'un compte sur velobs vous permettant de mettre à jou
 <a href=\"".URL."/admin.php\">Connexion</a><br />
 Vos identifiants sont :<br />
 	- Login : $lib_users<br />
-	- Mot de passe : $pass_users<br />
-En cas de question, vous pouvez trouver des informations sur https://github.com/2p2r/velobs_web. N'hésitez pas à envoyer un courriel à ". MAIL_ALIAS_OBSERVATION_ADHERENTS . " pour toute question sur VelObs.";
+	- Mot de passe : $pass_users";
 				sendMail($mail_users, "Création compte sur VelObs", $message);
 				mysql_free_result($result);
 				mysql_close($link);
@@ -2421,7 +2420,7 @@ Une nouvelle observation a été ajoutée sur le pole ".$arrayObs['lib_pole'].".
 						$commune_lib = $rowLibCommune['lib_commune'];
 
 						$subject = 'Observation en attente de modération';
-						$message = "Bonjour,<br />
+						$message = "Bonjour,<br /><br />
 Vous venez​ de signaler un problème sur la plateforme Cyclo-fiche de Vélo-Cité et ​nous ​vous en remercions​!​<br />
 ​Cette information ​sera ​modérée ​prochainement par notre équipe et transférée aux services de Bordeaux Métropole.​<br />
 Vélo-Cité vous informera des suites données à votre demande.<br />
@@ -2433,9 +2432,8 @@ Nom de la voie: ".$arrayObs['rue_poi']."<br />
 Nom de la commune: ".$commune_lib."<br />
 Description du problème: ".$arrayObs['desc_poi']."<br />
 Lien vers l'observation (non visible tant que la modération n'a pas été effectuée): ".(substr(URL, 0, 7) === "http://" ? 'http://': '').URL.'?id='.$arrayObs['id_poi']."<br /><br />
-Cordialement, l'équipe ".VELOBS_ASSOCIATION." :)<br />
-05 56 81 63 89<br />
-velo-cite.org";
+Cordialement,<br />
+".MAIL_SIGNATURE;
 						$mailArray = [$arrayObs['mail_poi'],"Soumetteur", $subject, $message ];
 						array_push($mails,$mailArray);
 				
@@ -2913,7 +2911,7 @@ $newCommentInfo. $arrayDetailsAndUpdateSQL['detailObservationString']."<br />";
 							$message = "Bonjour !<br />
 Vous venez d'ajouter un commentaire à l'observation ".$arrayObs['id_poi']." sur Cyclo-fiche et nous vous en remercions. Celui-ci devrait être administré sous peu.<br />".
 $newCommentInfo.$arrayDetailsAndUpdateSQL['detailObservationString']."<br />
-Cordialement, l'Association ".VELOBS_ASSOCIATION." :)";
+Cordialement, <br />".MAIL_SIGNATURE;
 							$mailArray = [$mail_commentaires,"Soumetteur", $subject, $message ];
 							array_push($mails,$mailArray);
 							if (DEBUG){
