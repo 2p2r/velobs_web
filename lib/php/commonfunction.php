@@ -739,7 +739,7 @@
 	* 	Date			: septembre 19 2017
 	*/
 	function sendMail ($to, $subject, $body){
-		$NL = '\r\n';
+		$NL = "\r\n";
 		$headers = 'From: '. MAIL_FROM . $NL .
 				'Reply-To: ' . MAIL_REPLY_TO . $NL .
 				'Mime-Version: 1.0' . $NL .
