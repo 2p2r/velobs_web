@@ -749,7 +749,7 @@
 			error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - commonfunction.php - Mail avec comme sujet = ".MAIL_SUBJECT_PREFIX . ' '.$subject ." et envoyé à " . $to ."\n", 3, LOG_FILE);
 		}
 
-		$logodata = file_get_contents('./logo-main.png');
+		$logodata = file_get_contents('../../resources/images/logo-main.png');
 		$b64logo = base64_encode($logodata);
 	
 		$message = '--boundary-string' . $NL . $NL .
@@ -760,7 +760,7 @@
 			"<p>$body</p>" . $NL . $NL .
 
 			'--boundary-string' . $NL . $NL .
-			
+
 			'Content-ID: <cid:assologo>' . $NL .
 			'Content-Type: IMAGE/PNG' . $NL .
 			'Content-Transfer-Encoding: BASE64' . $NL . $NL .
