@@ -16,11 +16,8 @@ div.logocredits {
 	margin-left: auto;
 	margin-right: auto;
 	padding-top: 15px;
-	width: 100%;
-	text-align: center;
 	height: 131px;
 	background: url('../../images/logo-main.png') center no-repeat;
-    background-size: 200px;
 }
 div.logo {
 	margin-left: auto;
