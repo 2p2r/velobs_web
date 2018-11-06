@@ -19,7 +19,7 @@ div.logocredits {
 	width: 100%;
 	text-align: center;
 	height: 131px;
-	background: url('../images/logo-main.png') center no-repeat;
+	background: url('../../images/logo-main.png') center no-repeat;
     background-size: 200px;
 }
 div.logo {
