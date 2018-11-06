@@ -743,7 +743,7 @@
 		$headers = 'From: '. MAIL_FROM . $NL .
 				'Reply-To: ' . MAIL_REPLY_TO . $NL .
 				'Mime-Version: 1.0' . $NL .
-				'Content-Type: multipart/alternative; boundary="boundary-string"' . $NL .
+				'Content-Type: multipart/related; boundary="boundary-example"; type="text/html"' . $NL .
 				'X-Mailer: PHP/' . phpversion();
 		if (DEBUG){
 			error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - commonfunction.php - Mail avec comme sujet = ".MAIL_SUBJECT_PREFIX . ' '.$subject ." et envoyé à " . $to ."\n", 3, LOG_FILE);
