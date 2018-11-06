@@ -739,16 +739,36 @@
 	* 	Date			: septembre 19 2017
 	*/
 	function sendMail ($to, $subject, $body){
-		$headers = 'From: '. MAIL_FROM . "\r\n" .
-				'Reply-To: ' . MAIL_REPLY_TO ."\r\n" .
-				'Content-Type: text/html; charset=UTF-8' . "\r\n" .
+		$NL = '\r\n';
+		$headers = 'From: '. MAIL_FROM . $NL .
+				'Reply-To: ' . MAIL_REPLY_TO . $NL .
+				'Mime-Version: 1.0' . $NL .
+				'Content-Type: multipart/alternative; boundary="boundary-string"' . $NL .
 				'X-Mailer: PHP/' . phpversion();
 		if (DEBUG){
 			error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - commonfunction.php - Mail avec comme sujet = ".MAIL_SUBJECT_PREFIX . ' '.$subject ." et envoyé à " . $to ."\n", 3, LOG_FILE);
 		}
-	
-		$message = "<html><body>$body</body></html>";
 
+		$logodata = file_get_contents('./logo-main.png');
+		$b64logo = base64_encode($logodata);
+	
+		$message = '--boundary-string' . $NL . $NL .
+
+			'Content-Type: text/html; charset="utf-8"' . $NL .
+			'Content-Transfer-Encoding: quoted-printable' . $NL .
+			'Content-Disposition: inline' . $NL . $NL .		
+			"<p>$body</p>" . $NL . $NL .
+
+			'--boundary-string' . $NL . $NL .
+			
+			'Content-ID: <cid:assologo>' . $NL .
+			'Content-Type: IMAGE/PNG' . $NL .
+			'Content-Transfer-Encoding: BASE64' . $NL . $NL .
+
+			$b64logo . $NL . $NL;
+
+			'--boundary-string' . $NL . $NL .
+			
 		mail($to, MAIL_SUBJECT_PREFIX . ' '.$subject, $message, $headers);
 		//mail($to, MAIL_SUBJECT_PREFIX . ' '.$subject, $body);
 	}

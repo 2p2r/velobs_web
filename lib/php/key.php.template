@@ -20,7 +20,10 @@
 	define('MAIL_SIGNATURE', '<br />L\'équipe Vélo-Cité Bordeaux :)<br />05 56 81 63 89<br />
 <br />
 <a href="http://velo-cite.org/contact/adherer/">Vous aimez nos actions? Soutenez nous !</a><br />
-<a href="http://www.velo-cite.org/">www.velo-cite.org</a> / <a href="https://fr-fr.facebook.com/velocite.bordeauxmetropole">Facebook</a>');
+<a href="http://www.velo-cite.org/">www.velo-cite.org</a> / <a href="https://fr-fr.facebook.com/velocite.bordeauxmetropole">Facebook</a><br />
+<br />
+<img src="cid:assologo" alt="Vélo-Cité" />
+');
 	
 	define('VELOBS_ASSOCIATION', '2 pieds 2 roues');
 	define('VELOBS_COLLECTIVITE1', 'Toulouse Métropole');
