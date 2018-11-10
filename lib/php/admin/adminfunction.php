@@ -899,7 +899,8 @@ Veuillez consulter l'interface d'administration pour consulter les informations 
 									error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " Erreur ". mysql_errno($link) . " : " . mysql_error($link), 3, LOG_FILE);
 								}
 								sendMail(MAIL_FROM,"Erreur méthode updatePoi", "Erreur = " .  mysql_error($link) . ", requête = " . $sql);
-								echo '3';
+								echo mysql_error($link);
+								//echo '3';
 							}else{
 								//si la mise à jour de l'observation s'est bien déroulée, on envoie les mails
 								if ($mailsComComModo){
