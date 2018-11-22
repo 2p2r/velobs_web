@@ -2909,7 +2909,7 @@ $newCommentInfo. $arrayDetailsAndUpdateSQL['detailObservationString']."<br />";
 							/* debut envoi d'un mail au contributeur */
 							$subject = 'Commentaire en attente de modération';
 							$message = "Bonjour !<br />
-Vous venez d'ajouter un commentaire à l'observation ".$arrayObs['id_poi']." sur Cyclo-fiche et nous vous en remercions. Celui-ci devrait être administré sous peu.<br />".
+Vous venez d'ajouter un commentaire à l'observation ".$arrayObs['id_poi']." sur la plateforme Cyclo-fiche et nous vous en remercions. Celui-ci devrait être administré sous peu.<br />".
 $newCommentInfo.$arrayDetailsAndUpdateSQL['detailObservationString']."<br />
 Cordialement, <br />".MAIL_SIGNATURE;
 							$mailArray = [$mail_commentaires,"Soumetteur", $subject, $message ];

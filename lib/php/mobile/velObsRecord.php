@@ -170,7 +170,7 @@ Une nouvelle observation a été ajoutée sur le pole ".$arrayObs['lib_pole'].".
                     	/* debut envoi d'un mail au contributeur */
                     	$subject = 'Observation en attente de modération';
                     	$message = "Bonjour !<br />
-Vous venez d'ajouter une observation à VelObs et nous vous en remercions. Celle-ci devrait être administrée sous peu.<br />".
+Vous venez d'ajouter une observation sur la plateforme Cyclo-fiche et nous vous en remercions. Celle-ci devrait être administrée sous peu.<br />".
                     $arrayDetailsAndUpdateSQL['detailObservationString']."<br />
 Cordialement, l'Association ".VELOBS_ASSOCIATION." :)";
                     	$mailArray = [$arrayObs['mail_poi'],"Soumetteur", $subject, $message ];
