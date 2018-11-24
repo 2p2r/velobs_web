@@ -87,10 +87,10 @@ if (isset ( $_SESSION ['user'] )) {
 			} else {
 				$datesqlappend = " AND (lastdatemodif_poi >= '" . mysql_real_escape_string ( $_GET ['dateLastModif'] ) . "' OR datecreation_poi >= '" . mysql_real_escape_string ( $_GET ['dateLastModif'] ) . "') ";
 				if (DEBUG) {
-					error_log ( date ( "Y-m-d H:i:s" ) . " - public/getMarker.php datesqlappend = " . $datesqlappend . "\n", 3, LOG_FILE );
+					error_log ( date ( "Y-m-d H:i:s" ) . " - admin/getMarker.php datesqlappend = " . $datesqlappend . "\n", 3, LOG_FILE );
 				}
 			}
-			$sql .= $datesqlappend . $sqlappend;
+			$sql .= $sqlappend . $datesqlappend;
 			if (DEBUG) {
 				error_log ( date ( "Y-m-d H:i:s" ) . " - admin/getMarker.php sql = $sql\n", 3, LOG_FILE );
 			}
