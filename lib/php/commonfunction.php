@@ -609,6 +609,15 @@
 						case 'priorite_id_priorite' :
 							$OldValue = $arrayObservation['lib_priorite'];
 							break;
+						case 'adherent_poi' :
+							$OldValue = 'Information uniquement accessible aux personnes en charge du traitement de l\'observation';
+							break;
+						case 'mail_poi' :
+							$OldValue = 'Information uniquement accessible aux personnes en charge du traitement de l\'observation';
+							break;
+						case 'tel_poi' :
+							$OldValue = 'Information uniquement accessible aux personnes en charge du traitement de l\'observation';
+							break;
 					}
 					if ($arrayColumns[$i]['dataType'] == 'boolean'){
 						$OldValue = 'Oui';

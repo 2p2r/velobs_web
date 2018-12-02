@@ -16,6 +16,7 @@
 				error_log(date("Y-m-d H:i:s") . " - getJsonTree.php $sql \n", 3, LOG_FILE);
 			}
 			$result = mysql_query($sql);
+			#for each category = branch of the tree
 			while ($row = mysql_fetch_array($result)){
 				$sql2 = "SELECT distinct(subcategory.id_subcategory), 
 							subcategory.lib_subcategory, 
@@ -37,6 +38,7 @@
 					error_log(date("Y-m-d H:i:s") . " - getJsonTree.php $sql2 \n", 3, LOG_FILE);
 				}
 				$result2 = mysql_query($sql2);
+				#for each sub category, add a leaf
 				if (mysql_num_rows($result2) > 0){
 					if (DEBUG){
 						error_log(date("Y-m-d H:i:s") . " - getJsonTree.php  ". $row['id_category'], 3, LOG_FILE);
@@ -61,7 +63,15 @@
 					$json .= "]";
 					$json .= "},";
 				} else {
-					$json .= "leaf: true";
+					$json .= "{";
+					$json .= "'id_': '".$row['id_category']."',";
+					$json .= "text: '".addslashes($row['lib_category'])."',";
+					$json .= "iconCls: '".$row['icon_category']."',";
+					$json .= "expanded: true,";
+					$json .= "checked: false,";
+					$json .= "leaf: true,";
+					$json .= "children: [";
+					$json .= "]";
 					$json .= "},";
 				}
 			}
