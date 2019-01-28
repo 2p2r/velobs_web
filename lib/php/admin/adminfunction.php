@@ -1590,6 +1590,8 @@ function getUsers($start, $limit) {
 					$arr [$i] ['lib_usertype'] = stripslashes ( $row ['lib_usertype'] );
 					$arr [$i] ['lib_userpole'] = stripslashes ( $row ['lib_pole'] );
 					$arr [$i] ['lib_territoire'] = stripslashes ( $row ['lib_territoire'] );
+					$arr [$i] ['is_active_user'] = stripslashes ( $row ['is_active_user'] );
+					
 					$i ++;
 				}
 				echo '({"total":"' . $nbrows . '","results":' . json_encode ( $arr ) . '})';
@@ -1638,6 +1640,7 @@ function getUser() {
 					$arr [$i] ['lib_usertype'] = stripslashes ( $row ['lib_usertype'] );
 					$arr [$i] ['lib_userpole'] = stripslashes ( $row ['lib_pole'] );
 					$arr [$i] ['lib_territoire'] = stripslashes ( $row ['lib_territoire'] );
+					$arr [$i] ['is_active_user'] = stripslashes ( $row ['is_active_user'] );
 					$i ++;
 				}
 				echo '({"total":"' . $nbrows . '","results":' . json_encode ( $arr ) . '})';
@@ -1741,6 +1744,10 @@ function updateUser() {
 			if (isset($_POST ['num_pole'] ) && is_numeric ( $_POST ['num_pole'] )) {
 				$num_pole = $_POST ['num_pole'];
 				$sql .= " num_pole = $num_pole ,";
+			}
+			if (isset($_POST ['is_active_user'] ) && $_POST ['is_active_user']  != '') {
+			    $is_active_user = $_POST ['is_active_user'];
+			    $sql .= " is_active_user = $is_active_user ,";
 			}
 			$sql = substr ( $sql, 0, - 1 );
 			$sql .= " WHERE id_users = " . mysql_real_escape_string ( $_POST ['id_users'] );

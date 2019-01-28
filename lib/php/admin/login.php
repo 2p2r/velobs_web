@@ -13,7 +13,7 @@
             }
 			$pseudo = mysql_real_escape_string($_POST['login']);
 			$pass = mysql_real_escape_string($_POST['password']);
-			$sql = "SELECT users.*, language.* FROM users INNER JOIN language ON (language.id_language = users.language_id_language) WHERE lib_users = '".$pseudo."'";
+			$sql = "SELECT users.*, language.* FROM users INNER JOIN language ON (language.id_language = users.language_id_language) WHERE lib_users = '".$pseudo."' AND is_active_user = true";
 			//$sql = "SELECT users.*, language.* FROM users INNER JOIN language ON (language.id_language = users.language_id_language) WHERE lib_users = '".$pseudo."' AND pass_users = '".$pass."'";
 			
 			$result = mysql_query($sql);

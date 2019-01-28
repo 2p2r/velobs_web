@@ -79,8 +79,6 @@ if (isset ( $_SESSION ['user'] )) {
 				if (DEBUG) {
 					error_log ( date ( "Y-m-d H:i:s" ) . " - admin/getJsonTree.php $sqlSubCategory\n", 3, LOG_FILE );
 				}
-				// $sql2 = "SELECT ,
-				// COUNT(poi.id_poi) as nb_poi, subcategory.* FROM subcategory WHERE display_subcategory = TRUE AND category_id_category = ".$row['id_category']." ORDER BY treerank_subcategory ASC";
 				$result2 = mysql_query ( $sqlSubCategory );
 				if (mysql_num_rows ( $result2 ) > 0) {
 					$json .= "leaf: false,";
@@ -110,7 +108,6 @@ if (isset ( $_SESSION ['user'] )) {
 			mysql_free_result ( $result );
 			mysql_free_result ( $result2 );
 			mysql_close ( $link );
-			
 			break;
 		case 'postgresql' :
 			// TODO
