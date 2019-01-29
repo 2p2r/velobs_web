@@ -71,11 +71,11 @@ if (isset ( $_SESSION ['user'] )) {
 			} elseif ($_SESSION ["type"] == 3) { // is pole technique
 				$sqlappend .= ' AND moderation_poi = 1  
 						AND transmission_poi = 1 
-						AND poi.pole_id_pole = ' . $_SESSION ["pole"] . ' 
+						AND poi.pole_id_pole IN (' . $_SESSION ["pole"] . ') 
 						AND priorite.non_visible_par_collectivite = 0 ';
 				$whereSelectCommentAppend = ' AND display_commentaires = \'Modéré accepté\' ';
 			} elseif ($_SESSION ["type"] == 4) { // is moderateur
-				$sqlappend .= ' AND poi.pole_id_pole = ' . $_SESSION ["pole"] . ' ';
+				$sqlappend .= ' AND poi.pole_id_pole IN (' . $_SESSION ["pole"] . ') ';
 			}
 			
 			if (isset ( $_GET ["status"] ) && $_GET ["status"] != '') { // filter by status given by the collectivity

@@ -467,7 +467,7 @@ function getPoi($start, $limit, $asc, $sort, $dir) {
 							AND poi.pole_id_pole = ' . $_SESSION ["pole"] . ' 
 							AND priorite.non_visible_par_collectivite = 0 ';
 			} elseif ($_SESSION ["type"] == 4) {
-				$whereClause .= ' AND poi.pole_id_pole = ' . $_SESSION ["pole"] . ' ';
+				$whereClause .= ' AND poi.pole_id_pole IN (' . $_SESSION ["pole"] . ') ';
 			}
 			$sql = "SELECT poi.*, subcategory.lib_subcategory, commune.lib_commune, pole.lib_pole, quartier.lib_quartier, priorite.lib_priorite, status.lib_status, x(poi.geom_poi) AS X, y(poi.geom_poi) AS Y FROM poi INNER JOIN subcategory ON (subcategory.id_subcategory = poi.subcategory_id_subcategory) INNER JOIN commune ON (commune.id_commune = poi.commune_id_commune) INNER JOIN pole ON (pole.id_pole = poi.pole_id_pole) INNER JOIN quartier ON (quartier.id_quartier = poi.quartier_id_quartier) INNER JOIN priorite ON (priorite.id_priorite = poi.priorite_id_priorite) INNER JOIN status ON (status.id_status = poi.status_id_status) WHERE $whereClause ";
 			
@@ -658,7 +658,7 @@ Le pole ' . $arrayObs ['lib_pole'] . ' a modifié l\'observation n°' . $arrayOb
 					$message .= "Lien vers la modération : " . URL . '/admin.php?id=' . $arrayObs ['id_poi'] . "\n" . $arrayDetailsAndUpdateSQL ['detailObservationString'] . "\n";
 					
 					$message .= "Cordialement, l'Association " . VELOBS_ASSOCIATION . " :)";
-					$whereClause = "(u.usertype_id_usertype = 2 AND u.territoire_id_territoire = " . $arrayObs ['territoire_id_territoire'] . ") OR (u.usertype_id_usertype = 4 AND u.num_pole = " . $arrayObs ['pole_id_pole'] . ")";
+					$whereClause = "(u.usertype_id_usertype = 2 AND ulp.territoire_id_territoire = " . $arrayObs ['territoire_id_territoire'] . ") OR (u.usertype_id_usertype = 4 AND ulp.num_pole = " . $arrayObs ['pole_id_pole'] . ")";
 					$mailsComComModo = getMailsToSend ( $whereClause, $subject, $message );
 				}
 				// Priorités et leur iD
@@ -707,7 +707,7 @@ Lien vers la modération : " . URL . '/admin.php?id=' . $arrayObs ['id_poi'] . "
 ' . $signature;
 					// usertype_id_usertype : 1=Admin, 2=comcom, 3=pole tech, 4=moderateur
 					// mail aux admins velobs et aux modérateurs du pole concerné par l'observation
-					$whereClause = " u.usertype_id_usertype = 1 OR (u.usertype_id_usertype = 4 AND u.num_pole = " . $arrayObs ['pole_id_pole'] . ")";
+					$whereClause = " u.usertype_id_usertype = 1 OR (u.usertype_id_usertype = 4 AND ulp.num_pole = " . $arrayObs ['pole_id_pole'] . ")";
 					$mailsAsso = getMailsToSend ( $whereClause, $subject, $message );
 				}
 				
@@ -2170,7 +2170,7 @@ function createPublicPoi() {
 						$return ['ok'] = "L'observation a bien été créée et est en attente de modération. Un courriel reprenant l'ensemble des informations de cette observation vous a été envoyé.";
 						
 						/* envoi d'un mail aux administrateurs de l'association et modérateurs */
-						$whereClause = "u.usertype_id_usertype = 1 OR (u.usertype_id_usertype = 4 AND u.num_pole = " . $arrayObs ['pole_id_pole'] . ")";
+						$whereClause = "u.usertype_id_usertype = 1 OR (u.usertype_id_usertype = 4 AND ulp.num_pole = " . $arrayObs ['pole_id_pole'] . ")";
 						$subject = 'Nouvelle observation à modérer sur le pole ' . $arrayObs ['lib_pole'];
 						$message = "Bonjour !
 Une nouvelle observation a été ajoutée sur le pole " . $arrayObs ['lib_pole'] . ". Veuillez vous connecter à l'interface d'administration pour la modérer.
@@ -2328,7 +2328,7 @@ function getNumPageIdParam($idToFind, $usertype, $numRecordPerPage) {
 								INNER JOIN quartier ON (quartier.id_quartier = poi.quartier_id_quartier) 
 								INNER JOIN priorite ON (priorite.id_priorite = poi.priorite_id_priorite) 
 								WHERE moderation_poi = 1 
-									AND pole_id_pole = " . $_SESSION ['pole'] . " 
+									AND pole_id_pole IN (" . $_SESSION ['pole'] . ") 
 									AND transmission_poi = 1 
 									AND delete_poi = FALSE 
 								ORDER BY id_poi DESC";
@@ -2367,7 +2367,7 @@ function getNumPageIdParam($idToFind, $usertype, $numRecordPerPage) {
 								INNER JOIN quartier ON (quartier.id_quartier = poi.quartier_id_quartier) 
 								INNER JOIN priorite ON (priorite.id_priorite = poi.priorite_id_priorite) 
 								INNER JOIN status ON (status.id_status = poi.status_id_status) 
-								WHERE pole_id_pole = " . $_SESSION ['pole'] . " 
+								WHERE pole_id_pole IN (" . $_SESSION ['pole'] . ") 
 									AND delete_poi = FALSE 
 								ORDER BY id_poi DESC";
 					$result = mysql_query ( $sql );
@@ -2715,7 +2715,7 @@ function createPublicComment() {
 							$newCommentInfo .= "Photo : " . URL . "/resources/pictures/" . $url_photo . "\n";
 						}
 						/* envoi d'un mail aux administrateurs de l'association et modérateurs */
-						$whereClause = "u.usertype_id_usertype = 1 OR (u.usertype_id_usertype = 4 AND u.num_pole = " . $arrayObs ['pole_id_pole'] . ")";
+						$whereClause = "u.usertype_id_usertype = 1 OR (u.usertype_id_usertype = 4 AND ulp.num_pole = " . $arrayObs ['pole_id_pole'] . ")";
 						$subject = 'Nouveau commentaire à modérer sur le pole ' . $arrayObs ['lib_pole'];
 						$message = "Bonjour !
 Un nouveau commentaire a été ajouté sur le pole " . $arrayObs ['lib_pole'] . ". Veuillez vous connecter à l'interface d'administration pour le modérer (cliquer sur le bouton \"Commentaires\", en bas à droite, une fois les détails de l'observation affichés).

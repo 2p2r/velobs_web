@@ -37,7 +37,7 @@ include_once '../key.php';
 							AND p.pole_id_pole = ' . $_SESSION ["pole"] . ' 
 							AND priorite.non_visible_par_collectivite = 0 ';
 				} elseif ($_SESSION ["type"] == 4) { // is moderateur
-					$sqlappend .= ' AND p.pole_id_pole = ' . $_SESSION ["pole"] . ' ';
+					$sqlappend .= ' AND p.pole_id_pole IN (' . $_SESSION ["pole"] . ') ';
 				}
 				if (DEBUG){
 					error_log(date("Y-m-d H:i:s") . " - getJsonStats.php ".$_SESSION["type"]."\n", 3, LOG_FILE);

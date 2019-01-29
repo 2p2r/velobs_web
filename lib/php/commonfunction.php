@@ -667,7 +667,7 @@
 	* 	Date			: septembre 19 2017
 	*/
 	function getMailsToSend($whereClauseSelectionUsers, $subject, $message){
-		$sql = "SELECT u.mail_users, ut.lib_usertype, u.lib_users FROM users u inner join usertype ut on ut.id_usertype = u.usertype_id_usertype WHERE " . $whereClauseSelectionUsers;
+		$sql = "SELECT u.mail_users, ut.lib_usertype, u.lib_users FROM users u inner join users_link_pole ulp on ulp.id_user = u.id_users inner join usertype ut on ut.id_usertype = u.usertype_id_usertype WHERE " . $whereClauseSelectionUsers;
 		if (DEBUG){
 			error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " requete de recuperation des mails des utilisateurs ". $sql . " \n", 3, LOG_FILE);
 		}
