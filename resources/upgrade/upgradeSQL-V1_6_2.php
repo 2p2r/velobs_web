@@ -35,8 +35,36 @@ if (isset($_SESSION['type']) && $_SESSION['type'] == 1) {
     $sqlUpdate = "ALTER TABLE users RENAME COLUMN territoire_id_territoire TO territoire_id_territoire_toDelete;";
     $resultUpdate = mysql_query($sqlUpdate);
     echo $sqlUpdate . " : " . $resultUpdate . "<br />";
-    mysql_close($link);
+    $sqlUpdate = "CREATE TABLE IF NOT EXISTS `users_link_pole` (
+        `user_link_pole_id` int(11) NOT NULL,
+        `id_user` int(11) NOT NULL,
+        `territoire_id_territoire` int(11) NOT NULL,
+        `num_pole` int(11) NOT NULL
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='link between users and territoires/poles';";
     
+    $resultUpdate = mysql_query ( $sqlUpdate );
+    echo $sqlUpdate . " : " . $resultUpdate . "<br />";
+    
+    $sqlUpdate = " ALTER TABLE `users_link_pole`
+        ADD PRIMARY KEY (`user_link_pole_id`),
+        ADD KEY `id_user` (`id_user`),
+        ADD KEY `territoire_id_territoire` (`territoire_id_territoire`),
+        ADD KEY `num_pole` (`num_pole`);";
+    $resultUpdate = mysql_query ( $sqlUpdate );
+    echo $sqlUpdate . " : " . $resultUpdate . "<br />";
+    
+    $sqlUpdate = " ALTER TABLE `users_link_pole`
+        MODIFY `user_link_pole_id` int(11) NOT NULL AUTO_INCREMENT;";
+    $resultUpdate = mysql_query ( $sqlUpdate );
+    echo $sqlUpdate . " : " . $resultUpdate . "<br />";
+        
+    $sqlUpdate = " ALTER TABLE `users_link_pole`
+        ADD CONSTRAINT `poles_FK` FOREIGN KEY (`num_pole`) REFERENCES `pole` (`id_pole`),
+        ADD CONSTRAINT `territoires_FK` FOREIGN KEY (`territoire_id_territoire`) REFERENCES `territoire` (`id_territoire`),
+        ADD CONSTRAINT `users_FK` FOREIGN KEY (`id_user`) REFERENCES `users` (`id_users`);";
+    $resultUpdate = mysql_query ( $sqlUpdate );
+    echo $sqlUpdate . " : " . $resultUpdate . "<br />";
+        
     mysql_close($link);
 } else {
     echo "Vous n'êtes pas autorisé(e) à exécuter ce script.Vous devez être administrateur";

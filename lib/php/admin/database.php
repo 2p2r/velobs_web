@@ -194,6 +194,15 @@ if (isset ( $_SESSION ['user'] )) {
 		case "LISTINGUSER" :
 			getUsers ( $start, $limit );
 			break;
+		case "CREATELINKUSERPOLE" :
+		    createLinkUserPole ();
+		    break;
+		case "LISTINGLINKUSERPOLE" :
+		    getLinksUserPole ( $start, $limit );
+		    break;
+		case "DELETELINKUSERPOLE" :
+		    deleteLinkUserPole ();
+		    break;
 		case "UPDATEUSER" :
 			updateUser ();
 			break;

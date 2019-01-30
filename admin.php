@@ -90,6 +90,7 @@
 			<script type="text/javascript" src="lib/js/admin/category1.js?v1.6"></script>
 			<script type="text/javascript" src="lib/js/admin/mapadmin.js?v1.6"></script>
 			<script type="text/javascript" src="lib/js/admin/poiCommonBeforeRender.js?v1.6"></script>
+			<script type="text/javascript" src="lib/js/admin/users_link_pole1.js?v1.6"></script>
 			<script type="text/javascript" src="lib/js/admin/main1.js?v1.6"></script>
 	 
 <?php			

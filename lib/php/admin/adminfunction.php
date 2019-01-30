@@ -1589,6 +1589,151 @@ function deleteStatuss()
             break;
     }
 }
+/*
+ * Function name : createLinkUserPole
+ * Input :
+ * Output : success => '1' / failed => '2'
+ * Object : create link betwwen user and pole
+ * Date : Jan 30 2019
+ */
+function createLinkUserPole()
+{
+    switch (SGBD) {
+        case 'mysql':
+            $link = mysql_connect(DB_HOST, DB_USER, DB_PASS);
+            mysql_select_db(DB_NAME);
+            mysql_query("SET NAMES utf8mb4");
+            
+            $id_users = mysql_real_escape_string($_POST['id_user']);
+            $num_pole = $_POST['num_pole'];
+            
+            $sqlPole = "SELECT p.lib_pole, t.lib_territoire, t.id_territoire FROM pole p INNER JOIN territoire t ON t.id_territoire = p.territoire_id_territoire WHERE id_pole = $num_pole";
+            $resultPole = mysql_query($sqlPole);
+            $lib_pole = mysql_result($resultPole, 0, "lib_pole");
+            $lib_territoire = mysql_result($resultPole, 0, "lib_territoire");
+            $territoire_id_territoire = mysql_result($resultPole, 0, "id_territoire");
+            
+            $sql = "INSERT INTO users_link_pole (id_user, num_pole, territoire_id_territoire) VALUES ('$id_users', '$num_pole', '$territoire_id_territoire')";
+            if (DEBUG) {
+                error_log(date("Y-m-d H:i:s") . " " . __FUNCTION__ . " creating link user/pole $sql\n", 3, LOG_FILE);
+            }
+            $result = mysql_query($sql);
+            $error = 0;
+            if (! $result) {
+                $error = 1;
+                echo '2';
+            } else {
+                $sqlUser = "SELECT lib_users, mail_users FROM users WHERE id_users = $id_users";
+                $resultUser = mysql_query($sqlUser);
+                $lib_users = mysql_result($resultUser, 0, "lib_users");
+                $mail_users = mysql_result($resultUser, 0,"mail_users");
+                
+                $message = "Bonjour,
+Votre compte ".$lib_users." est maintenant modérateur sur le pôle ".$lib_pole." (territoire ".$lib_territoire."). Vous pouvez vous connecter à l'interface d'administration à l'adresse :
+" . URL . "/admin.php
+En cas de question, vous pouvez trouver des informations sur https://github.com/2p2r/velobs_web. N'hésitez pas à envoyer un courriel à " . MAIL_ALIAS_OBSERVATION_ADHERENTS . " pour toute question sur VelObs.";
+                                 sendMail($mail_users, "Création lien compte modérateur / pôle", $message);
+                                 echo '1';
+            }
+            
+            
+            mysql_close($link);
+            break;
+        case 'postgresql':
+            // TODO
+            break;
+    }
+}
+function getLinksUserPole($start, $limit){
+    
+    switch (SGBD) {
+        case 'mysql':
+            $link = mysql_connect(DB_HOST, DB_USER, DB_PASS);
+            mysql_select_db(DB_NAME);
+            mysql_query("SET NAMES utf8mb4");
+            
+            $sql = "SELECT ulp.user_link_pole_id, u.id_users, u.lib_users, t.lib_territoire, p.lib_pole FROM users_link_pole ulp INNER JOIN territoire t ON t.id_territoire = ulp.territoire_id_territoire INNER JOIN pole p on p.id_pole = ulp.num_pole INNER JOIN users u ON u.id_users = ulp.id_user ORDER BY u.lib_users ASC ";
+            if (DEBUG) {
+                // error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - " . getLocations($latitude_poi,$longitude_poi)[1]."\n", 3, LOG_FILE);
+                error_log(date("Y-m-d H:i:s") . " " . __FUNCTION__ . " - sql - " . $sql . "\n", 3, LOG_FILE);
+            }
+            $result = mysql_query($sql);
+            $nbrows = mysql_num_rows($result);
+            $sql .= " LIMIT " . $limit . " OFFSET " . $start;
+            $result = mysql_query($sql);
+            
+            $i = 0;
+            if ($nbrows > 0) {
+                while ($row = mysql_fetch_array($result)) {
+                    $arr[$i]['user_link_pole_id'] = $row['user_link_pole_id'];
+                    $arr[$i]['id_users'] = $row['id_users'];
+                    $arr[$i]['lib_users'] = stripslashes($row['lib_users']);
+                    $arr[$i]['lib_territoire'] = stripslashes($row['lib_territoire']);
+                    $arr[$i]['lib_pole'] = stripslashes($row['lib_pole']);
+                    
+                    $i ++;
+                }
+                echo '({"total":"' . $nbrows . '","results":' . json_encode($arr) . '})';
+            } else {
+                echo '({"total":"0", "results":""})';
+            }
+            if (DEBUG) {
+                // error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - " . getLocations($latitude_poi,$longitude_poi)[1]."\n", 3, LOG_FILE);
+                error_log(date("Y-m-d H:i:s") . " " . __FUNCTION__ . " - nbrows - " . $nbrows . "\n", 3, LOG_FILE);
+            }
+            mysql_free_result($result);
+            mysql_close($link);
+            break;
+        case 'postgresql':
+            // TODO
+            break;
+    }
+    
+}
+
+/*
+ * Function name : deleteUsers Input : Output : success => '1' / failed => '2' Object : delete user(s) Date : July 9, 2015
+ */
+function deleteLinkUserPole()
+{
+    $ids = $_POST['ids'];
+    $idLinksUserPole = json_decode(stripslashes($ids));
+    
+    switch (SGBD) {
+        case 'mysql':
+            $link = mysql_connect(DB_HOST, DB_USER, DB_PASS);
+            mysql_select_db(DB_NAME);
+            mysql_query("SET NAMES utf8mb4");
+            
+            if (sizeof($idLinksUserPole) < 1) {
+                echo '0';
+            } else if (sizeof($idLinksUserPole) == 1) {
+                $sql = "DELETE FROM users_link_pole WHERE user_link_pole_id = " . $idLinksUserPole[0];
+                $result = mysql_query($sql);
+            } else {
+                $sql = "DELETE FROM users_link_pole WHERE ";
+                for ($i = 0; $i < sizeof($idLinksUserPole); $i ++) {
+                    $sql = $sql . "user_link_pole_id = " . $idLinksUserPole[$i];
+                    if ($i < sizeof($idLinksUserPole) - 1) {
+                        $sql = $sql . " OR ";
+                    }
+                }
+                $result = mysql_query($sql);
+            }
+            if (! $result) {
+                echo '2';
+            } else {
+                echo '1';
+            }
+            
+            mysql_free_result($result);
+            mysql_close($link);
+            break;
+        case 'postgresql':
+            // TODO
+            break;
+    }
+}
 
 /*
  * Function name : getUsers Input : start, limit Output : json status Object : populate user grid Date : July 9, 2015
