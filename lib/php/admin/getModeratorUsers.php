@@ -9,7 +9,7 @@
 				mysql_select_db(DB_NAME);
 				mysql_query("SET NAMES utf8mb4");
 				
-				$sql = "SELECT id_users, lib_users, nom_users, mail_users FROM users WHERE is_active_user = TRUE AND usertype_id_usertype = 4 ";
+				$sql = "SELECT id_users, lib_users, nom_users, mail_users FROM users WHERE is_active_user = TRUE AND usertype_id_usertype = 4 ORDER BY lib_users ASC";
 				$result = mysql_query($sql);
 				$i = 0;
 				while ($row = mysql_fetch_array($result)){
