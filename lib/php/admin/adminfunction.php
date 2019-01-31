@@ -1621,7 +1621,10 @@ function createLinkUserPole()
             $error = 0;
             if (! $result) {
                 $error = 1;
-                echo '2';
+                echo '2:Erreur lors de l\'insertion du lien Modérateur/Pôle en base de données.';
+                if (mysql_errno($link) == 1062){
+                    echo 'Ce lien existe déjà';
+                }
             } else {
                 $sqlUser = "SELECT lib_users, mail_users FROM users WHERE id_users = $id_users";
                 $resultUser = mysql_query($sqlUser);
@@ -1633,7 +1636,7 @@ Votre compte ".$lib_users." est maintenant modérateur sur le pôle ".$lib_pole.
 " . URL . "/admin.php
 En cas de question, vous pouvez trouver des informations sur https://github.com/2p2r/velobs_web. N'hésitez pas à envoyer un courriel à " . MAIL_ALIAS_OBSERVATION_ADHERENTS . " pour toute question sur VelObs.";
                                  sendMail($mail_users, "Création lien compte modérateur / pôle", $message);
-                                 echo '1';
+                                 echo '1:OK';
             }
             
             
@@ -1692,7 +1695,7 @@ function getLinksUserPole($start, $limit){
 }
 
 /*
- * Function name : deleteUsers Input : Output : success => '1' / failed => '2' Object : delete user(s) Date : July 9, 2015
+ * Function name : deleteLinkUserPole Input : Output : success => '1' / failed => '2' Object : delete link user / pole (s) Date : Jan 30, 2019
  */
 function deleteLinkUserPole()
 {
@@ -1704,9 +1707,16 @@ function deleteLinkUserPole()
             $link = mysql_connect(DB_HOST, DB_USER, DB_PASS);
             mysql_select_db(DB_NAME);
             mysql_query("SET NAMES utf8mb4");
-            
+            //Allow only moderator link to be deleted
+            $sqlSelectUser = "SELECT u.usertype_id_usertype FROM users u INNER JOIN users_link_pole ulp ON ulp.id_user = u.id_users WHERE ulp.user_link_pole_id = " . $idLinksUserPole[0];
+            $resultSelectUser = mysql_query($sqlSelectUser);
+            $usertype = mysql_result($resultSelectUser,0);
+            mysql_free_result($resultSelectUser);
+            if ($usertype!= 4){
+                echo '0:Uniquement les comptes modérateurs peuvent être déliés d\'un pôle.';
+            }else{
             if (sizeof($idLinksUserPole) < 1) {
-                echo '0';
+                echo '0:Aucun lien modérateur/pôle ne semble avoir été fourni.';
             } else if (sizeof($idLinksUserPole) == 1) {
                 $sql = "DELETE FROM users_link_pole WHERE user_link_pole_id = " . $idLinksUserPole[0];
                 $result = mysql_query($sql);
@@ -1721,11 +1731,11 @@ function deleteLinkUserPole()
                 $result = mysql_query($sql);
             }
             if (! $result) {
-                echo '2';
+                echo '2:Une erreur s\'est produite lors de la suppression du lien Modérateur/Pôle n° ' + $idLinksUserPole;
             } else {
-                echo '1';
+                echo '1:Le lien Modérateur/Pôle a bien été supprimé.';
             }
-            
+            }
             mysql_free_result($result);
             mysql_close($link);
             break;
