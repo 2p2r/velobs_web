@@ -210,7 +210,15 @@ if (isset ( $_SESSION ['user'] )) {
 				} else {
 					$comments .= "Encore aucun commentaire associé";
 				}
-				
+				//Récupération du soutien
+				$sqlSupport = "SELECT count(*) FROM support_poi WHERE poi_poi_id = " . $row ['id_poi'];
+				$resultSupport = mysql_query ( $sqlSupport );
+				$nb_support = mysql_result($resultSupport,0);
+				if ($nb_support>0) {
+				    $comments .= '<br /><b>Nombre de personnes soutenant cette fiche </b> : ' . $nb_support;
+				}else {
+				    $comments .= '<br /><b>Nombre de personnes soutenant cette fiche </b> : 0';
+				}
 				$arr [$i] ['comments'] = stripslashes ( $comments );
 				
 				$i ++;

@@ -229,6 +229,12 @@ if (isset ( $_SESSION ['user'] )) {
 		case "CREATEPUBLICCOMMENTS" :
 			createPublicComment ();
 			break;
+		case "CREATESUPPORT" :
+		    if (DEBUG) {
+		        error_log(date("Y-m-d H:i:s") . " Before createSupport() \n", 3, LOG_FILE);
+		    }
+		    createSupport ();
+		    break;
 		case "LISTINGPHOTOS" :
 			getComments ( $id_poi );
 			break;
@@ -249,6 +255,12 @@ if (isset ( $_SESSION ['user'] )) {
 		case "CREATEPUBLICCOMMENTS" :
 			createPublicComment ();
 			break;
+		case "CREATESUPPORT" :
+		    if (DEBUG) {
+		        error_log(date("Y-m-d H:i:s") . " Before createSupport() \n", 3, LOG_FILE);
+		    }
+		    createSupport ();
+		    break;
 	}
 }
 ?>

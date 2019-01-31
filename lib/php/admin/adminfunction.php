@@ -2990,7 +2990,100 @@ Cordialement, l'Association " . VELOBS_ASSOCIATION . " :)";
             break;
     }
 }
-
+/*
+ * Function name : createSupport Output : json Object : add support on POI Date : Jan 30 2019
+ */
+function createSupport()
+{
+    switch (SGBD) {
+        case 'mysql':
+            if (DEBUG) {
+                error_log(date("Y-m-d H:i:s") . " " . __FUNCTION__ . "\n", 3, LOG_FILE);
+            }
+            $link = mysql_connect(DB_HOST, DB_USER, DB_PASS);
+            mysql_select_db(DB_NAME);
+            mysql_query("SET NAMES utf8mb4");
+             
+            $id_poi = $_POST['id_poi'];
+            $follow = mysql_real_escape_string($_POST['beInformedSupportField']);
+            if ($follow == 'on'){
+                $follow = 1;
+            }
+            $mail = mysql_real_escape_string($_POST['mailSupportField']);
+            $return = array();
+            // si une photo a été associée au commentaire et que tout s'est bien passé, ou bien s'il n'y avaotr pas de photo, on peut crer le commentaire dans la base de données
+                // si le mail est un administrateur ou un modérateur alors on bypasse la modération
+            $sql = "INSERT INTO support_poi (poi_poi_id, support_poi_mail, support_poi_follow) VALUES ($id_poi,'$mail', '$follow')";
+                $result = mysql_query($sql);
+                if (DEBUG) {
+                    error_log(date("Y-m-d H:i:s") . " " . __FUNCTION__ . " " . $_POST['task'] . ", sql : $sql\n", 3, LOG_FILE);
+                    error_log(date("Y-m-d H:i:s") . " " . __FUNCTION__ . " Erreur " . mysql_errno($link) . " : " . mysql_error($link) . "\n", 3, LOG_FILE);
+                }
+                
+                if (! $result) {
+                    $return['success'] = false;
+                    $return['pb'] = "Erreur lors de l'ajout du commentaire.";
+                } else {
+                    $lastdatemodif_poi = date("Y-m-d H:i:s");
+                    $sql3 = "UPDATE poi SET lastdatemodif_poi = '$lastdatemodif_poi', lastmodif_user_poi = " . $_SESSION['id_users'] . " WHERE id_poi = $id_poi";
+                    if (DEBUG) {
+                        error_log(date("Y-m-d H:i:s") . " " . __FUNCTION__ . " sql $sql3 \n", 3, LOG_FILE);
+                        error_log(date("Y-m-d H:i:s") . " " . __FUNCTION__ . " Erreur " . mysql_errno($link) . " : " . mysql_error($link) . "\n", 3, LOG_FILE);
+                    }
+                    $result3 = mysql_query($sql3);
+                    $return['success'] = true;
+                    $return['ok'] = "Le support a été correctement ajouté, nous vous remercions.";
+                    if($follow){
+                        $return['ok'] .= " Vous serez averti(e) à chaque mise à jour de cette fiche.";
+                    }else{
+                        $return['ok'] .= " Vous avez choisi de ne pas être averti(e) à chaque mise à jour de cette fiche.";
+                    }
+                    // si le contributeur n'est pas un modérateur ni un administrateur par ailleurs, on envoie des mails
+//                     if ($num_rows2 == 0) {
+//                         $return['ok'] = "Le commentaire a été correctement ajouté et est en attente de modération. Merci pour votre aide.";
+//                         $arrayObs = getObservationDetailsInArray($id_poi);
+//                         $arrayDetailsAndUpdateSQL = getObservationDetailsInString($arrayObs);
+//                         $newCommentInfo = "Nouveau commentaire : $text \nPosté par $mail_commentaires \n";
+//                         if ($url_photo != "") {
+//                             $newCommentInfo .= "Photo : " . URL . "/resources/pictures/" . $url_photo . "\n";
+//                         }
+//                         /* envoi d'un mail aux administrateurs de l'association et modérateurs */
+//                         $whereClause = "u.usertype_id_usertype = 1 OR (u.usertype_id_usertype = 4 AND ulp.num_pole = " . $arrayObs['pole_id_pole'] . ")";
+//                         $subject = 'Nouveau commentaire à modérer sur le pole ' . $arrayObs['lib_pole'];
+//                         $message = "Bonjour !
+// Un nouveau commentaire a été ajouté sur le pole " . $arrayObs['lib_pole'] . ". Veuillez vous connecter à l'interface d'administration pour le modérer (cliquer sur le bouton \"Commentaires\", en bas à droite, une fois les détails de l'observation affichés).
+// Lien vers la modération : " . URL . '/admin.php?id=' . $arrayObs['id_poi'] . "\n" . $newCommentInfo . $arrayDetailsAndUpdateSQL['detailObservationString'] . "\n";
+//                         $mails = array();
+//                         $mails = getMailsToSend($whereClause, $subject, $message);
+                        
+//                         /* debut envoi d'un mail au contributeur */
+//                         $subject = 'Commentaire en attente de modération';
+//                         $message = "Bonjour !
+// Vous venez d'ajouter un commentaire à l'observation " . $arrayObs['id_poi'] . " sur VelObs et nous vous en remercions. Celui-ci devrait être administré sous peu.\n" . $newCommentInfo . $arrayDetailsAndUpdateSQL['detailObservationString'] . "\n
+// Cordialement, l'Association " . VELOBS_ASSOCIATION . " :)";
+//                         $mailArray = [
+//                             $mail_commentaires,
+//                             "Soumetteur",
+//                             $subject,
+//                             $message
+//                         ];
+//                         array_push($mails, $mailArray);
+//                         if (DEBUG) {
+//                             error_log(date("Y-m-d H:i:s") . " " . __FUNCTION__ . " - Il y a " . count($mails) . " mails à envoyer\n", 3, LOG_FILE);
+//                         }
+//                         $succes = sendMails($mails);
+//                     }
+            }
+            
+            // retourne le résultat du traitement du commentaire
+            echo json_encode($return);
+            mysql_close($link);
+            break;
+        case 'postgresql':
+            // TODO
+            break;
+    }
+}
 // When you need to hash a password, just feed it to the function
 // and it will return the hash which you can store in your database.
 // The important thing here is that you don’t have to provide a salt
