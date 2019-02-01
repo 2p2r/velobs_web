@@ -2,7 +2,7 @@
 	session_start();
 	include_once '../key.php';
 	include_once 'adminfunction.php';
-	
+	 
 	switch (SGBD) {
 		case 'mysql':
 			$link = mysql_connect(DB_HOST,DB_USER,DB_PASS);
@@ -13,7 +13,14 @@
             }
 			$pseudo = mysql_real_escape_string($_POST['login']);
 			$pass = mysql_real_escape_string($_POST['password']);
-			$sql = "SELECT users.*, language.* FROM users INNER JOIN language ON (language.id_language = users.language_id_language) WHERE lib_users = '".$pseudo."' AND is_active_user = true";
+			
+			$sql = "SELECT users.*, language.* FROM users INNER JOIN language ON (language.id_language = users.language_id_language) WHERE lib_users = '".$pseudo."'";
+			$result = mysql_query("SHOW COLUMNS FROM `users` LIKE 'is_active_users'");
+			$exists = (mysql_num_rows($result))?TRUE:FALSE;
+			
+			if($exists){
+			    $sql .= " AND is_active_user = true";
+			}
 			
 			$result = mysql_query($sql);
 			if (!$result) {
