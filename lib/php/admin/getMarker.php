@@ -87,8 +87,14 @@ if (isset ( $_SESSION ['user'] )) {
 			} else {
 				$datesqlappend = " AND (lastdatemodif_poi >= '" . mysql_real_escape_string ( $_GET ['dateLastModif'] ) . "' OR datecreation_poi >= '" . mysql_real_escape_string ( $_GET ['dateLastModif'] ) . "') ";
 				if (DEBUG) {
-					error_log ( date ( "Y-m-d H:i:s" ) . " - public/getMarker.php datesqlappend = " . $datesqlappend . "\n", 3, LOG_FILE );
+					error_log ( date ( "Y-m-d H:i:s" ) . " - admin/getMarker.php datesqlappend = " . $datesqlappend . "\n", 3, LOG_FILE );
 				}
+			}
+			if (DEBUG) {
+			    error_log ( date ( "Y-m-d H:i:s" ) . " - admin/getMarker.php nbSupportMinimum = " . $_GET ["nbSupportMinimum"] . "\n", 3, LOG_FILE );
+			}
+			if (isset ( $_GET ["nbSupportMinimum"] ) && $_GET ["nbSupportMinimum"] != '' && $_GET ["nbSupportMinimum"] > 0) { // filter by status given by the collectivity
+			    $sqlappend .= ' AND poi.id_poi IN (select poi_poi_id from support_poi group by poi_poi_id having count(*) >= '.$_GET ["nbSupportMinimum"].')';
 			}
 			$sql .= $datesqlappend . $sqlappend;
 			if (DEBUG) {
