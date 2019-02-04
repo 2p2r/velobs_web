@@ -54,7 +54,9 @@ switch (SGBD) {
 			if (isset($_GET ['priorite']) && $_GET ['priorite'] != "") {
 				$sqlappend .= " AND priorite.id_priorite =  " . mysql_real_escape_string($_GET ['priorite']);
 			} 
-			
+			if (isset ( $_GET ["nbSupportMinimum"] ) && $_GET ["nbSupportMinimum"] != '' && $_GET ["nbSupportMinimum"] > 0) { // filter by status given by the collectivity
+			    $sqlappend .= ' AND poi.id_poi IN (select poi_poi_id from support_poi group by poi_poi_id having count(*) >= '.$_GET ["nbSupportMinimum"].')';
+			}
 			$sqlappend .= $datesqlappend . $statussqlappend;
 		}
 		$sql .= $sqlappend;
