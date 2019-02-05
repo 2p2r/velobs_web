@@ -1809,7 +1809,7 @@ function getUser()
             mysql_select_db(DB_NAME);
             mysql_query("SET NAMES utf8mb4");
             
-            $sql = "SELECT users.*, usertype.lib_usertype, pole.lib_pole, territoire.lib_territoire FROM users INNER JOIN usertype ON (usertype.id_usertype = users.usertype_id_usertype) INNER JOIN pole ON (pole.id_pole = users.num_pole) INNER JOIN territoire ON (territoire.id_territoire = users.territoire_id_territoire) WHERE lib_users = '" . $_SESSION['user'] . "'";
+            $sql = "SELECT users.*, usertype.lib_usertype FROM users INNER JOIN usertype ON (usertype.id_usertype = users.usertype_id_usertype) WHERE lib_users = '" . $_SESSION['user'] . "'";
             if (DEBUG) {
                 // error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - " . getLocations($latitude_poi,$longitude_poi)[1]."\n", 3, LOG_FILE);
                 error_log(date("Y-m-d H:i:s") . " " . __FUNCTION__ . " - sql - " . $sql . "\n", 3, LOG_FILE);
@@ -1827,8 +1827,6 @@ function getUser()
                     $arr[$i]['nom_users'] = stripslashes($row['nom_users']);
                     $arr[$i]['mail_users'] = stripslashes($row['mail_users']);
                     $arr[$i]['lib_usertype'] = stripslashes($row['lib_usertype']);
-                    $arr[$i]['lib_userpole'] = stripslashes($row['lib_pole']);
-                    $arr[$i]['lib_territoire'] = stripslashes($row['lib_territoire']);
                     $arr[$i]['is_active_user'] = stripslashes($row['is_active_user']);
                     $i ++;
                 }
