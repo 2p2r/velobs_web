@@ -1471,6 +1471,7 @@ function getStatus($start, $limit)
                     $arr[$i]['id_status'] = $row['id_status'];
                     $arr[$i]['lib_status'] = stripslashes($row['lib_status']);
                     $arr[$i]['color_status'] = stripslashes($row['color_status']);
+                    $arr[$i]['is_active_status'] = stripslashes($row['is_active_status']);
                     $i ++;
                 }
                 echo '({"total":"' . $nbrows . '","results":' . json_encode($arr) . '})';
@@ -1498,10 +1499,19 @@ function updateStatus()
             mysql_select_db(DB_NAME);
             mysql_query("SET NAMES utf8mb4");
             
-            $id_status = mysql_real_escape_string($_POST['id_status']);
-            $lib_status = mysql_real_escape_string($_POST['lib_status']);
-            $color_status = mysql_real_escape_string($_POST['color_status']);
-            $sql = "UPDATE status SET lib_status = '$lib_status', color_status = '$color_status' WHERE id_status = $id_status";
+            $sql = "UPDATE status SET ";
+            if (isset($_POST['lib_status']) && $_POST['lib_status'] != '') {
+                $sql .= "lib_status = '" . mysql_real_escape_string($_POST['lib_status']) . "',";
+            }
+            if (isset($_POST['color_status']) && $_POST['color_status'] != '') {
+                $sql .= "color_status = '" . mysql_real_escape_string($_POST['color_status']) . "',";
+            }
+            if (isset($_POST['is_active_status']) && $_POST['is_active_status'] != '') {
+                $sql .= "is_active_status = '" . mysql_real_escape_string($_POST['is_active_status']) . "',";
+            }
+            $sql = substr($sql, 0, - 1);
+            $sql .= " WHERE id_status = " . mysql_real_escape_string($_POST['id_status']);
+            
             $result = mysql_query($sql);
             if (! $result) {
                 echo '2';
