@@ -13,6 +13,7 @@ include_once '../key.php';
 			
 			$sql = "SELECT s.id_status 
 					FROM status AS s
+                    WHERE s.is_active_status = true
 					ORDER BY s.lib_status ASC";
 		
 			$result = mysql_query($sql);

@@ -9,13 +9,14 @@
 				mysql_select_db(DB_NAME);
 				mysql_query("SET NAMES utf8mb4");
 				
-				$sql = "SELECT id_status, lib_status, color_status FROM status ORDER BY lib_status ASC";
+				$sql = "SELECT id_status, lib_status, color_status FROM status WHERE is_active_status = true ORDER BY lib_status ASC";
 				$result = mysql_query($sql);
 				$i = 0;
 				while ($row = mysql_fetch_array($result)){
 					$arr[$i]['id_status'] = $row['id_status'];
 					$arr[$i]['lib_status'] = stripslashes($row['lib_status']);
 					$arr[$i]['color_status'] = stripslashes($row['color_status']);
+					$arr[$i]['is_active_status'] = stripslashes($row['is_active_status']);
 					$i++;
 				}
 				echo '({"status":'.json_encode($arr).'})';

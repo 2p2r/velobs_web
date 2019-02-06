@@ -1498,7 +1498,7 @@ function updateStatus()
             $link = mysql_connect(DB_HOST, DB_USER, DB_PASS);
             mysql_select_db(DB_NAME);
             mysql_query("SET NAMES utf8mb4");
-            
+            $id_status = mysql_real_escape_string($_POST['id_status']);
             $sql = "UPDATE status SET ";
             if (isset($_POST['lib_status']) && $_POST['lib_status'] != '') {
                 $sql .= "lib_status = '" . mysql_real_escape_string($_POST['lib_status']) . "',";
@@ -1507,16 +1507,26 @@ function updateStatus()
                 $sql .= "color_status = '" . mysql_real_escape_string($_POST['color_status']) . "',";
             }
             if (isset($_POST['is_active_status']) && $_POST['is_active_status'] != '') {
-                $sql .= "is_active_status = '" . mysql_real_escape_string($_POST['is_active_status']) . "',";
+                if ($_POST['is_active_status'] == 0) {
+                    $sqlNbPOI = "SELECT id_poi FROM poi WHERE status_id_status = $id_status";
+                    $resultNbPOI = mysql_query($sqlNbPOI);
+                    $nbrows = mysql_num_rows($resultNbPOI);
+                    //if obsevation exist with this status, do not allow to deactivate it
+                    if ($nbrows > 0) {
+                        echo '2: Erreur lors de la mise à jour du statut - vous ne pouvez pas le désactiver tant que des observations sont liées à ce statut';
+                    } else {
+                        $sql .= "is_active_status = '" . mysql_real_escape_string($_POST['is_active_status']) . "',";
+                    }
+                }
             }
             $sql = substr($sql, 0, - 1);
-            $sql .= " WHERE id_status = " . mysql_real_escape_string($_POST['id_status']);
+            $sql .= " WHERE id_status = " .$id_status;
             
             $result = mysql_query($sql);
             if (! $result) {
-                echo '2';
+                echo '2:Erreur lors de la mise à jour du statut.';
             } else {
-                echo '1';
+                echo '1:Mise à jour du statut effectuée';
             }
             
             mysql_close($link);
@@ -1599,6 +1609,7 @@ function deleteStatuss()
             break;
     }
 }
+
 /*
  * Function name : createLinkUserPole
  * Input :
@@ -1632,23 +1643,22 @@ function createLinkUserPole()
             if (! $result) {
                 $error = 1;
                 echo '2:Erreur lors de l\'insertion du lien Modérateur/Pôle en base de données.';
-                if (mysql_errno($link) == 1062){
+                if (mysql_errno($link) == 1062) {
                     echo 'Ce lien existe déjà';
                 }
             } else {
                 $sqlUser = "SELECT lib_users, mail_users FROM users WHERE id_users = $id_users";
                 $resultUser = mysql_query($sqlUser);
                 $lib_users = mysql_result($resultUser, 0, "lib_users");
-                $mail_users = mysql_result($resultUser, 0,"mail_users");
+                $mail_users = mysql_result($resultUser, 0, "mail_users");
                 
                 $message = "Bonjour,
-Votre compte ".$lib_users." est maintenant modérateur sur le pôle ".$lib_pole." (territoire ".$lib_territoire."). Vous pouvez vous connecter à l'interface d'administration à l'adresse :
+Votre compte " . $lib_users . " est maintenant modérateur sur le pôle " . $lib_pole . " (territoire " . $lib_territoire . "). Vous pouvez vous connecter à l'interface d'administration à l'adresse :
 " . URL . "/admin.php
 En cas de question, vous pouvez trouver des informations sur https://github.com/2p2r/velobs_web. N'hésitez pas à envoyer un courriel à " . MAIL_ALIAS_OBSERVATION_ADHERENTS . " pour toute question sur VelObs.";
-                                 sendMail($mail_users, "Création lien compte modérateur / pôle", $message);
-                                 echo '1:OK';
+                sendMail($mail_users, "Création lien compte modérateur / pôle", $message);
+                echo '1:OK';
             }
-            
             
             mysql_close($link);
             break;
@@ -1657,8 +1667,9 @@ En cas de question, vous pouvez trouver des informations sur https://github.com/
             break;
     }
 }
-function getLinksUserPole($start, $limit){
-    
+
+function getLinksUserPole($start, $limit)
+{
     switch (SGBD) {
         case 'mysql':
             $link = mysql_connect(DB_HOST, DB_USER, DB_PASS);
@@ -1701,7 +1712,6 @@ function getLinksUserPole($start, $limit){
             // TODO
             break;
     }
-    
 }
 
 /*
@@ -1717,34 +1727,34 @@ function deleteLinkUserPole()
             $link = mysql_connect(DB_HOST, DB_USER, DB_PASS);
             mysql_select_db(DB_NAME);
             mysql_query("SET NAMES utf8mb4");
-            //Allow only moderator link to be deleted
+            // Allow only moderator link to be deleted
             $sqlSelectUser = "SELECT u.usertype_id_usertype FROM users u INNER JOIN users_link_pole ulp ON ulp.id_user = u.id_users WHERE ulp.user_link_pole_id = " . $idLinksUserPole[0];
             $resultSelectUser = mysql_query($sqlSelectUser);
-            $usertype = mysql_result($resultSelectUser,0);
+            $usertype = mysql_result($resultSelectUser, 0);
             mysql_free_result($resultSelectUser);
-            if ($usertype!= 4){
+            if ($usertype != 4) {
                 echo '0:Uniquement les comptes modérateurs peuvent être déliés d\'un pôle.';
-            }else{
-            if (sizeof($idLinksUserPole) < 1) {
-                echo '0:Aucun lien modérateur/pôle ne semble avoir été fourni.';
-            } else if (sizeof($idLinksUserPole) == 1) {
-                $sql = "DELETE FROM users_link_pole WHERE user_link_pole_id = " . $idLinksUserPole[0];
-                $result = mysql_query($sql);
             } else {
-                $sql = "DELETE FROM users_link_pole WHERE ";
-                for ($i = 0; $i < sizeof($idLinksUserPole); $i ++) {
-                    $sql = $sql . "user_link_pole_id = " . $idLinksUserPole[$i];
-                    if ($i < sizeof($idLinksUserPole) - 1) {
-                        $sql = $sql . " OR ";
+                if (sizeof($idLinksUserPole) < 1) {
+                    echo '0:Aucun lien modérateur/pôle ne semble avoir été fourni.';
+                } else if (sizeof($idLinksUserPole) == 1) {
+                    $sql = "DELETE FROM users_link_pole WHERE user_link_pole_id = " . $idLinksUserPole[0];
+                    $result = mysql_query($sql);
+                } else {
+                    $sql = "DELETE FROM users_link_pole WHERE ";
+                    for ($i = 0; $i < sizeof($idLinksUserPole); $i ++) {
+                        $sql = $sql . "user_link_pole_id = " . $idLinksUserPole[$i];
+                        if ($i < sizeof($idLinksUserPole) - 1) {
+                            $sql = $sql . " OR ";
+                        }
                     }
+                    $result = mysql_query($sql);
                 }
-                $result = mysql_query($sql);
-            }
-            if (! $result) {
-                echo '2:Une erreur s\'est produite lors de la suppression du lien Modérateur/Pôle n° ' + $idLinksUserPole;
-            } else {
-                echo '1:Le lien Modérateur/Pôle a bien été supprimé.';
-            }
+                if (! $result) {
+                    echo '2:Une erreur s\'est produite lors de la suppression du lien Modérateur/Pôle n° ' + $idLinksUserPole;
+                } else {
+                    echo '1:Le lien Modérateur/Pôle a bien été supprimé.';
+                }
             }
             mysql_free_result($result);
             mysql_close($link);
@@ -2031,13 +2041,12 @@ function createUser()
                     
                     $sqlUPL = "INSERT INTO users_link_pole (id_user, territoire_id_territoire, num_pole) VALUES ($id_user, 0, 9)";
                 } else {
-                    if ($territoire_id_territoire == 0){
+                    if ($territoire_id_territoire == 0) {
                         $error = 1;
                         echo 3;
                     }
                     $sqlUPL = "INSERT INTO users_link_pole (id_user, territoire_id_territoire, num_pole) VALUES ($id_user, $territoire_id_territoire, $num_pole)";
                 }
-            
             }
             if (! $error) {
                 $result = mysql_query($sqlUPL);
@@ -2051,14 +2060,13 @@ En cas de question, vous pouvez trouver des informations sur https://github.com/
                 sendMail($mail_users, "Création compte sur VelObs", $message);
                 echo '1';
             }
-    
-    
-    mysql_close($link);
-    break;
+            
+            mysql_close($link);
+            break;
         case 'postgresql':
             // TODO
             break;
-}
+    }
 }
 
 /*
@@ -3006,6 +3014,7 @@ Cordialement, l'Association " . VELOBS_ASSOCIATION . " :)";
             break;
     }
 }
+
 /*
  * Function name : createSupport Output : json Object : add support on POI Date : Jan 30 2019
  */
@@ -3019,76 +3028,76 @@ function createSupport()
             $link = mysql_connect(DB_HOST, DB_USER, DB_PASS);
             mysql_select_db(DB_NAME);
             mysql_query("SET NAMES utf8mb4");
-             
+            
             $id_poi = $_POST['id_poi'];
             $follow = mysql_real_escape_string($_POST['beInformedSupportField']);
-            if ($follow == 'on'){
+            if ($follow == 'on') {
                 $follow = 1;
             }
             $mail = mysql_real_escape_string($_POST['mailSupportField']);
             $return = array();
             // si une photo a été associée au commentaire et que tout s'est bien passé, ou bien s'il n'y avaotr pas de photo, on peut crer le commentaire dans la base de données
-                // si le mail est un administrateur ou un modérateur alors on bypasse la modération
+            // si le mail est un administrateur ou un modérateur alors on bypasse la modération
             $sql = "INSERT INTO support_poi (poi_poi_id, support_poi_mail, support_poi_follow) VALUES ($id_poi,'$mail', '$follow')";
-                $result = mysql_query($sql);
+            $result = mysql_query($sql);
+            if (DEBUG) {
+                error_log(date("Y-m-d H:i:s") . " " . __FUNCTION__ . " " . $_POST['task'] . ", sql : $sql\n", 3, LOG_FILE);
+                error_log(date("Y-m-d H:i:s") . " " . __FUNCTION__ . " Erreur " . mysql_errno($link) . " : " . mysql_error($link) . "\n", 3, LOG_FILE);
+            }
+            
+            if (! $result) {
+                $return['success'] = false;
+                $return['pb'] = "Erreur lors de l'ajout du commentaire.";
+            } else {
+                $lastdatemodif_poi = date("Y-m-d H:i:s");
+                $sql3 = "UPDATE poi SET lastdatemodif_poi = '$lastdatemodif_poi', lastmodif_user_poi = " . $_SESSION['id_users'] . " WHERE id_poi = $id_poi";
                 if (DEBUG) {
-                    error_log(date("Y-m-d H:i:s") . " " . __FUNCTION__ . " " . $_POST['task'] . ", sql : $sql\n", 3, LOG_FILE);
+                    error_log(date("Y-m-d H:i:s") . " " . __FUNCTION__ . " sql $sql3 \n", 3, LOG_FILE);
                     error_log(date("Y-m-d H:i:s") . " " . __FUNCTION__ . " Erreur " . mysql_errno($link) . " : " . mysql_error($link) . "\n", 3, LOG_FILE);
                 }
-                
-                if (! $result) {
-                    $return['success'] = false;
-                    $return['pb'] = "Erreur lors de l'ajout du commentaire.";
+                $result3 = mysql_query($sql3);
+                $return['success'] = true;
+                $return['ok'] = "Le support a été correctement ajouté, nous vous remercions.";
+                if ($follow) {
+                    $return['ok'] .= " Vous serez averti(e) à chaque mise à jour de cette fiche.";
                 } else {
-                    $lastdatemodif_poi = date("Y-m-d H:i:s");
-                    $sql3 = "UPDATE poi SET lastdatemodif_poi = '$lastdatemodif_poi', lastmodif_user_poi = " . $_SESSION['id_users'] . " WHERE id_poi = $id_poi";
-                    if (DEBUG) {
-                        error_log(date("Y-m-d H:i:s") . " " . __FUNCTION__ . " sql $sql3 \n", 3, LOG_FILE);
-                        error_log(date("Y-m-d H:i:s") . " " . __FUNCTION__ . " Erreur " . mysql_errno($link) . " : " . mysql_error($link) . "\n", 3, LOG_FILE);
-                    }
-                    $result3 = mysql_query($sql3);
-                    $return['success'] = true;
-                    $return['ok'] = "Le support a été correctement ajouté, nous vous remercions.";
-                    if($follow){
-                        $return['ok'] .= " Vous serez averti(e) à chaque mise à jour de cette fiche.";
-                    }else{
-                        $return['ok'] .= " Vous avez choisi de ne pas être averti(e) à chaque mise à jour de cette fiche.";
-                    }
-                    // si le contributeur n'est pas un modérateur ni un administrateur par ailleurs, on envoie des mails
-//                     if ($num_rows2 == 0) {
-//                         $return['ok'] = "Le commentaire a été correctement ajouté et est en attente de modération. Merci pour votre aide.";
-//                         $arrayObs = getObservationDetailsInArray($id_poi);
-//                         $arrayDetailsAndUpdateSQL = getObservationDetailsInString($arrayObs);
-//                         $newCommentInfo = "Nouveau commentaire : $text \nPosté par $mail_commentaires \n";
-//                         if ($url_photo != "") {
-//                             $newCommentInfo .= "Photo : " . URL . "/resources/pictures/" . $url_photo . "\n";
-//                         }
-//                         /* envoi d'un mail aux administrateurs de l'association et modérateurs */
-//                         $whereClause = "u.usertype_id_usertype = 1 OR (u.usertype_id_usertype = 4 AND ulp.num_pole = " . $arrayObs['pole_id_pole'] . ")";
-//                         $subject = 'Nouveau commentaire à modérer sur le pole ' . $arrayObs['lib_pole'];
-//                         $message = "Bonjour !
-// Un nouveau commentaire a été ajouté sur le pole " . $arrayObs['lib_pole'] . ". Veuillez vous connecter à l'interface d'administration pour le modérer (cliquer sur le bouton \"Commentaires\", en bas à droite, une fois les détails de l'observation affichés).
-// Lien vers la modération : " . URL . '/admin.php?id=' . $arrayObs['id_poi'] . "\n" . $newCommentInfo . $arrayDetailsAndUpdateSQL['detailObservationString'] . "\n";
-//                         $mails = array();
-//                         $mails = getMailsToSend($whereClause, $subject, $message);
-                        
-//                         /* debut envoi d'un mail au contributeur */
-//                         $subject = 'Commentaire en attente de modération';
-//                         $message = "Bonjour !
-// Vous venez d'ajouter un commentaire à l'observation " . $arrayObs['id_poi'] . " sur VelObs et nous vous en remercions. Celui-ci devrait être administré sous peu.\n" . $newCommentInfo . $arrayDetailsAndUpdateSQL['detailObservationString'] . "\n
-// Cordialement, l'Association " . VELOBS_ASSOCIATION . " :)";
-//                         $mailArray = [
-//                             $mail_commentaires,
-//                             "Soumetteur",
-//                             $subject,
-//                             $message
-//                         ];
-//                         array_push($mails, $mailArray);
-//                         if (DEBUG) {
-//                             error_log(date("Y-m-d H:i:s") . " " . __FUNCTION__ . " - Il y a " . count($mails) . " mails à envoyer\n", 3, LOG_FILE);
-//                         }
-//                         $succes = sendMails($mails);
-//                     }
+                    $return['ok'] .= " Vous avez choisi de ne pas être averti(e) à chaque mise à jour de cette fiche.";
+                }
+                // si le contributeur n'est pas un modérateur ni un administrateur par ailleurs, on envoie des mails
+                // if ($num_rows2 == 0) {
+                // $return['ok'] = "Le commentaire a été correctement ajouté et est en attente de modération. Merci pour votre aide.";
+                // $arrayObs = getObservationDetailsInArray($id_poi);
+                // $arrayDetailsAndUpdateSQL = getObservationDetailsInString($arrayObs);
+                // $newCommentInfo = "Nouveau commentaire : $text \nPosté par $mail_commentaires \n";
+                // if ($url_photo != "") {
+                // $newCommentInfo .= "Photo : " . URL . "/resources/pictures/" . $url_photo . "\n";
+                // }
+                // /* envoi d'un mail aux administrateurs de l'association et modérateurs */
+                // $whereClause = "u.usertype_id_usertype = 1 OR (u.usertype_id_usertype = 4 AND ulp.num_pole = " . $arrayObs['pole_id_pole'] . ")";
+                // $subject = 'Nouveau commentaire à modérer sur le pole ' . $arrayObs['lib_pole'];
+                // $message = "Bonjour !
+                // Un nouveau commentaire a été ajouté sur le pole " . $arrayObs['lib_pole'] . ". Veuillez vous connecter à l'interface d'administration pour le modérer (cliquer sur le bouton \"Commentaires\", en bas à droite, une fois les détails de l'observation affichés).
+                // Lien vers la modération : " . URL . '/admin.php?id=' . $arrayObs['id_poi'] . "\n" . $newCommentInfo . $arrayDetailsAndUpdateSQL['detailObservationString'] . "\n";
+                // $mails = array();
+                // $mails = getMailsToSend($whereClause, $subject, $message);
+                
+                // /* debut envoi d'un mail au contributeur */
+                // $subject = 'Commentaire en attente de modération';
+                // $message = "Bonjour !
+                // Vous venez d'ajouter un commentaire à l'observation " . $arrayObs['id_poi'] . " sur VelObs et nous vous en remercions. Celui-ci devrait être administré sous peu.\n" . $newCommentInfo . $arrayDetailsAndUpdateSQL['detailObservationString'] . "\n
+                // Cordialement, l'Association " . VELOBS_ASSOCIATION . " :)";
+                // $mailArray = [
+                // $mail_commentaires,
+                // "Soumetteur",
+                // $subject,
+                // $message
+                // ];
+                // array_push($mails, $mailArray);
+                // if (DEBUG) {
+                // error_log(date("Y-m-d H:i:s") . " " . __FUNCTION__ . " - Il y a " . count($mails) . " mails à envoyer\n", 3, LOG_FILE);
+                // }
+                // $succes = sendMails($mails);
+                // }
             }
             
             // retourne le résultat du traitement du commentaire
@@ -3100,6 +3109,7 @@ function createSupport()
             break;
     }
 }
+
 // When you need to hash a password, just feed it to the function
 // and it will return the hash which you can store in your database.
 // The important thing here is that you don’t have to provide a salt
