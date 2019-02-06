@@ -64,7 +64,7 @@ var ClusterStrategyNumberOfGroupedObservations = 6;
 var ClusterStrategyDistance = 30;
 
 
-
+//Color Management
 //pre-defined colors usable to link the status with. The color linked with a status is used to display the statistics and for the shadow of icons of the corresponding observations
 //to add a new color colorX oin this array
 //copy this array in key.js
