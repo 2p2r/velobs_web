@@ -1529,8 +1529,8 @@ function createStatus()
             mysql_query("SET NAMES utf8mb4");
             
             $lib_status = mysql_real_escape_string($_POST['lib_status']);
-            
-            $sql = "INSERT INTO status (lib_status) VALUES ('$lib_status')";
+            $color_status = mysql_real_escape_string($_POST['color_status']);
+            $sql = "INSERT INTO status (lib_status, color_status) VALUES ('$lib_status', '$color_status')";
             $result = mysql_query($sql);
             if (! $result) {
                 echo '2';
@@ -1775,8 +1775,6 @@ function getUsers($start, $limit)
                     $arr[$i]['nom_users'] = stripslashes($row['nom_users']);
                     $arr[$i]['mail_users'] = stripslashes($row['mail_users']);
                     $arr[$i]['lib_usertype'] = stripslashes($row['lib_usertype']);
-                    $arr[$i]['lib_userpole'] = stripslashes($row['lib_pole']);
-                    $arr[$i]['lib_territoire'] = stripslashes($row['lib_territoire']);
                     $arr[$i]['is_active_user'] = stripslashes($row['is_active_user']);
                     
                     $i ++;
