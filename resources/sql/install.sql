@@ -215,13 +215,13 @@ CREATE TABLE `quartier` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE = utf8mb4_unicode_ci AUTO_INCREMENT=1;
 INSERT INTO `quartier` (`id_quartier`, `lib_quartier`) VALUES (99999, 'Inutile');
 
-CREATE TABLE `status` (
-`id_status` int(11) NOT NULL AUTO_INCREMENT,
-  `lib_status` varchar(100) DEFAULT NULL,
+CREATE TABLE IF NOT EXISTS `status` (
+  `id_status` int(11) NOT NULL,
+  `lib_status` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `color_status` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `is_active_status` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id_status`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE = utf8mb4_unicode_ci AUTO_INCREMENT=1;
-
 
 CREATE TABLE `iconmarker` (
 `id_iconmarker` int(11) NOT NULL AUTO_INCREMENT,
