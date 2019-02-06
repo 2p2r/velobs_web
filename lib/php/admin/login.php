@@ -73,7 +73,6 @@
 						$arr['mail_users'] = $row['mail_users'];
 						//$arr['role_users'] = $row['role_users'];
 						$arr['nom_users'] = $row['nom_users'];
-						$arr['territoire_users'] = $row['territoire_id_territoire'];
 
 						$arr['success'] = TRUE;
 						$_SESSION['id_users'] = $row['id_users'];

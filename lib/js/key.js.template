@@ -80,3 +80,6 @@ var arrayComponentsToDisableRole1Admin = ["latitude","longitude","emailPOIField"
 var arrayComponentsToDisableRole2CommunauteCommunes = ["RespPolePOIField","latitude","longitude","emailPOIField","sendMailButton","SubCategoryPOIField", "DescPOIField", "PropPOIField", "RuePOIField", "ObsPOIField", "NumPOIField","PrioritePOIField","CommentFinalPOIField","ModerationPOIField","DisplayPOIField"];
 var arrayComponentsToDisableRole3PoleTechnique = ["latitude","longitude","emailPOIField","sendMailButton","SubCategoryPOIField", "CommunePOIField", "PolePOIField", "RespComcomPOIField", "DescPOIField", "PropPOIField", "RuePOIField", "ObsPOIField", "NumPOIField", "PrioritePOIField","CommentFinalPOIField","ModerationPOIField","DisplayPOIField"];
 var arrayComponentsToDisableRole4Moderateur = ["latitude","longitude","emailPOIField","StatusPOIField","RespComcomPOIField","RespPolePOIField","TraitePolePOIField","TransmissionPolePOIField"];
+
+//Allow to get the street of the observation given by the user while submitting a new observation
+var activateReverseGeocoding = true;
