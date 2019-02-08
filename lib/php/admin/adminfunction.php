@@ -698,6 +698,7 @@ Le pole ' . $arrayObs['lib_pole'] . ' a modifié l\'observation n°' . $arrayObs
                         $updatePOI = 0;
                         $returnCode = 10;
                     }
+                    $mailsFollowers = getMailsToSendFromVotesAndComments($id_poi, $subject, "Message envoyé à la personne qui a remonté l'observation : ".$message);
                     if ($updatePOI == 1 && $subject != "") {
                         $mailArray = [
                             $arrayObs['mail_poi'],
@@ -749,6 +750,9 @@ Lien vers la modération : " . URL . '/admin.php?id=' . $arrayObs['id_poi'] . "\
                         }
                         if (isset($mails)) {
                             $succes = sendMails($mails);
+                        }
+                        if (isset($mailsFollowers)) {
+                            $succes = sendMails($mailsFollowers);
                         }
                         // on retourne un code de succès à l'interface
                         if ($checkModerateBoxOnPOIGrid) {
@@ -3047,7 +3051,7 @@ function createSupport()
             
             if (! $result) {
                 $return['success'] = false;
-                $return['pb'] = "Erreur lors de l'ajout du commentaire.";
+                $return['pb'] = "Erreur lors de l'ajout du vote. Ce lien existe sans doute déjà.";
             } else {
                 $lastdatemodif_poi = date("Y-m-d H:i:s");
                 $sql3 = "UPDATE poi SET lastdatemodif_poi = '$lastdatemodif_poi', lastmodif_user_poi = " . $_SESSION['id_users'] . " WHERE id_poi = $id_poi";
@@ -3063,43 +3067,7 @@ function createSupport()
                 } else {
                     $return['ok'] .= " Vous avez choisi de ne pas être averti(e) à chaque mise à jour de cette fiche.";
                 }
-                // si le contributeur n'est pas un modérateur ni un administrateur par ailleurs, on envoie des mails
-                // if ($num_rows2 == 0) {
-                // $return['ok'] = "Le commentaire a été correctement ajouté et est en attente de modération. Merci pour votre aide.";
-                // $arrayObs = getObservationDetailsInArray($id_poi);
-                // $arrayDetailsAndUpdateSQL = getObservationDetailsInString($arrayObs);
-                // $newCommentInfo = "Nouveau commentaire : $text \nPosté par $mail_commentaires \n";
-                // if ($url_photo != "") {
-                // $newCommentInfo .= "Photo : " . URL . "/resources/pictures/" . $url_photo . "\n";
-                // }
-                // /* envoi d'un mail aux administrateurs de l'association et modérateurs */
-                // $whereClause = "u.usertype_id_usertype = 1 OR (u.usertype_id_usertype = 4 AND ulp.num_pole = " . $arrayObs['pole_id_pole'] . ")";
-                // $subject = 'Nouveau commentaire à modérer sur le pole ' . $arrayObs['lib_pole'];
-                // $message = "Bonjour !
-                // Un nouveau commentaire a été ajouté sur le pole " . $arrayObs['lib_pole'] . ". Veuillez vous connecter à l'interface d'administration pour le modérer (cliquer sur le bouton \"Commentaires\", en bas à droite, une fois les détails de l'observation affichés).
-                // Lien vers la modération : " . URL . '/admin.php?id=' . $arrayObs['id_poi'] . "\n" . $newCommentInfo . $arrayDetailsAndUpdateSQL['detailObservationString'] . "\n";
-                // $mails = array();
-                // $mails = getMailsToSend($whereClause, $subject, $message);
-                
-                // /* debut envoi d'un mail au contributeur */
-                // $subject = 'Commentaire en attente de modération';
-                // $message = "Bonjour !
-                // Vous venez d'ajouter un commentaire à l'observation " . $arrayObs['id_poi'] . " sur VelObs et nous vous en remercions. Celui-ci devrait être administré sous peu.\n" . $newCommentInfo . $arrayDetailsAndUpdateSQL['detailObservationString'] . "\n
-                // Cordialement, l'Association " . VELOBS_ASSOCIATION . " :)";
-                // $mailArray = [
-                // $mail_commentaires,
-                // "Soumetteur",
-                // $subject,
-                // $message
-                // ];
-                // array_push($mails, $mailArray);
-                // if (DEBUG) {
-                // error_log(date("Y-m-d H:i:s") . " " . __FUNCTION__ . " - Il y a " . count($mails) . " mails à envoyer\n", 3, LOG_FILE);
-                // }
-                // $succes = sendMails($mails);
-                // }
             }
-            
             // retourne le résultat du traitement du commentaire
             echo json_encode($return);
             mysql_close($link);

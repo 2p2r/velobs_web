@@ -9,7 +9,7 @@
 				mysql_select_db(DB_NAME);
 				mysql_query("SET NAMES utf8mb4");
 				
-				$sql = "SELECT id_status, lib_status, color_status FROM status WHERE is_active_status = true ORDER BY lib_status ASC";
+				$sql = "SELECT id_status, lib_status, color_status, is_active_status FROM status WHERE is_active_status = true ORDER BY lib_status ASC";
 				$result = mysql_query($sql);
 				$i = 0;
 				while ($row = mysql_fetch_array($result)){

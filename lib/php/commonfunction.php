@@ -688,6 +688,36 @@
 		}
 		return $mails;
 	}
+	/*	Function name	: getMailsToSend
+	 * 	Input			: $whereClauseSelectionUsers : constraint to get e-mail of users
+	 * 	Input			: $subject of the e-mail to be sent to the selected users
+	 * 	Input			: $message, body of the e-mail to be sent to the selected users
+	 * 	Output			: $mails, an array containing e-mails, user status, subject and message
+	 * 	Object			: get the e-mail adresses and link th e subject and message to be sent
+	 * 	Date			: septembre 19 2017
+	 */
+	function getMailsToSendFromVotesAndComments($id_poi, $subject, $message){
+	    $sql = "SELECT distinct(support_poi_mail) FROM support_poi WHERE poi_poi_id = $id_poi AND support_poi_follow = 1";
+	    if (DEBUG){
+	        error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " requete de recuperation des mails des utilisateurs ayant voté ". $sql . " \n", 3, LOG_FILE);
+	    }
+	    $result = mysql_query($sql);
+	    $mails = array();
+	    if ($result){
+	        if (DEBUG){
+	            error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " Récupération des mails à envoyer \n", 3, LOG_FILE);
+	        }
+	        while ($row2 = mysql_fetch_array($result)) {
+	            $mailArray = [$row2['support_poi_mail'],"", $subject, $message ];
+	            array_push($mails,$mailArray);
+	        }
+	        
+	    }
+	    if (DEBUG){
+	        error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " Il y a ". count($mails) . " mails à envoyer \n", 3, LOG_FILE);
+	    }
+	    return $mails;
+	}
 	/*	Function name	: sendMails
 	 * 	Input			: array $mailsArray (created with getMailsToSend)
 	* 	Output			: true
