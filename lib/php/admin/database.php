@@ -224,7 +224,7 @@ if (isset ( $_SESSION ['user'] )) {
 			getComments ( $id_poi );
 			break;
 		case "EDITCOMMENTS" :
-			editComment ( $_POST ['id_comment'], $_POST ['text_comment'], $_POST ['display_commentaires'] );
+		    editComment ( $_POST ['id_comment'], $_POST ['text_comment'], $_POST ['display_commentaires']);
 			break;
 		case "CREATEPUBLICCOMMENTS" :
 			createPublicComment ();

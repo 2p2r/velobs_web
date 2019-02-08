@@ -394,8 +394,9 @@ CREATE TABLE IF NOT EXISTS `comment_history` (
   `url_photo` varchar(500) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `mail_commentaires` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `poi_id_poi` int(11) NOT NULL,
+  `comment_poi_follow` tinyint(1) NOT NULL DEFAULT '1',
   `lastdatemodif_comment` date DEFAULT NULL,
-  `lastmodif_user_poi` int(11) DEFAULT NULL,
+  `lastmodif_user_comment` int(11) DEFAULT NULL,
   `history_id` int(11) NOT NULL,
   `history_date` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -433,6 +434,7 @@ CREATE TABLE IF NOT EXISTS `commentaires` (
   `url_photo` varchar(500) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `mail_commentaires` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `poi_id_poi` int(11) NOT NULL,
+  `comment_poi_follow` tinyint(1) NOT NULL DEFAULT '1',
   `lastdatemodif_comment` date DEFAULT NULL,
   `lastmodif_user_comment` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

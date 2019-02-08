@@ -106,6 +106,14 @@ if (isset($_SESSION['type']) && $_SESSION['type'] == 1) {
     $sqlUpdate = " ALTER TABLE `status` ADD `is_active_status` BOOLEAN NOT NULL DEFAULT TRUE AFTER `color_status`";
     $resultUpdate = mysql_query ( $sqlUpdate );
     echo $sqlUpdate . " : " . $resultUpdate . "<br />";
+    
+    $sqlUpdate = " ALTER TABLE `commentaires` ADD `comment_poi_follow` BOOLEAN NOT NULL DEFAULT TRUE AFTER `poi_id_poi`";
+    $resultUpdate = mysql_query ( $sqlUpdate );
+    echo $sqlUpdate . " : " . $resultUpdate . "<br />";
+    
+    $sqlUpdate = " ALTER TABLE `comment_history` ADD `comment_poi_follow` BOOLEAN NOT NULL DEFAULT TRUE AFTER `poi_id_poi`";
+    $resultUpdate = mysql_query ( $sqlUpdate );
+    echo $sqlUpdate . " : " . $resultUpdate . "<br />";
     mysql_close($link);
 } else {
     echo "Vous n'êtes pas autorisé(e) à exécuter ce script.Vous devez être administrateur";

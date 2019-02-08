@@ -698,7 +698,7 @@ Le pole ' . $arrayObs['lib_pole'] . ' a modifié l\'observation n°' . $arrayObs
                         $updatePOI = 0;
                         $returnCode = 10;
                     }
-                    $mailsFollowers = getMailsToSendFromVotesAndComments($id_poi, $subject, "Message envoyé à la personne qui a remonté l'observation : ".$message);
+                    $mailsFollowers = getMailsToSendFromVotesAndComments($id_poi, $subject, "Vous recevez ce mail car vous avez souhaité suivre l'évolution de cette observation. Message envoyé à la personne qui a remonté l'observation : \n".$message);
                     if ($updatePOI == 1 && $subject != "") {
                         $mailArray = [
                             $arrayObs['mail_poi'],
@@ -2826,14 +2826,13 @@ function editComment($id_comment, $text_comment, $status_comment)
             
             $result = mysql_query($sql);
             if (DEBUG) {
-                error_log(date("Y-m-d H:i:s") . " " . __FUNCTION__ . ", $sql \n", 3, LOG_FILE);
+                error_log(date("Y-m-d H:i:s") . " " . __FUNCTION__ . ", $sql  \n", 3, LOG_FILE);
             }
             
-            $sql = "SELECT poi_id_poi FROM commentaires WHERE id_commentaires = " . $id_comment;
+            $sql = "SELECT c.poi_id_poi, p.mail_poi FROM commentaires c INNER JOIN poi p ON p.id_poi = c.poi_id_poi WHERE c.id_commentaires = " . $id_comment;
             $res = mysql_query($sql);
-            $row = mysql_fetch_row($res);
-            $id_poi = $row[0];
-            
+            $id_poi = mysql_result($res, 0, "poi_id_poi");
+            $mail_poi = mysql_result($res, 0, "mail_poi");
             $sql3 = "UPDATE poi SET lastdatemodif_poi = '$lastdatemodif_poi', lastmodif_user_poi = " . $_SESSION['id_users'] . " WHERE id_poi = $id_poi";
             $result3 = mysql_query($sql3);
             
@@ -2842,6 +2841,34 @@ function editComment($id_comment, $text_comment, $status_comment)
             } else {
                 echo '1';
             }
+            
+            if ($status == 'Modéré accepté'){
+                $subject = 'Nouveau commentaire validé sur l\'observation ' . $id_poi;
+                $message = "Bonjour !
+Un nouveau commentaire a été validé sur l'observation n° $id_poi.
+Lien vers l'observation : " . URL . '/index.php?id=' . $id_poi . "\n";
+                $mailsFollowers = array();
+                $mailsFollowers = getMailsToSendFromVotesAndComments($id_poi, $subject, "Vous recevez ce mail car vous avez souhaité suivre l'évolution de cette observation. Message envoyé à la personne qui a remonté l'observation : \n".$message);
+            
+                $mails = array();
+                
+                /* debut envoi d'un mail au contributeur */
+                $mailArray = [
+                    $mail_poi,
+                    "Soumetteur",
+                    $subject,
+                    $message
+                ];
+                array_push($mails, $mailArray);
+                
+                if (isset($mailsFollowers)) {
+                    $succes = sendMails($mailsFollowers);
+                }
+                if (isset($mails)) {
+                    $succes = sendMails($mails);
+                }
+            }
+            
             
             mysql_close($link);
             break;
@@ -2868,6 +2895,12 @@ function createPublicComment()
             $id_poi = $_POST['id_poi'];
             $text = mysql_real_escape_string($_POST['text_comment']);
             $mail_commentaires = mysql_real_escape_string($_POST['mail_comment']);
+            $follow = mysql_real_escape_string($_POST['beInformedField']);
+            if ($follow == 'on') {
+                $follow = 1;
+            }else{
+                $follow = 0;
+            }
             $url_photo = '';
             $return = array();
             // si une photo a été associée au commentaire, on la traite
@@ -3037,6 +3070,8 @@ function createSupport()
             $follow = mysql_real_escape_string($_POST['beInformedSupportField']);
             if ($follow == 'on') {
                 $follow = 1;
+            }else{
+                $follow = 0;
             }
             $mail = mysql_real_escape_string($_POST['mailSupportField']);
             $return = array();
@@ -3061,7 +3096,7 @@ function createSupport()
                 }
                 $result3 = mysql_query($sql3);
                 $return['success'] = true;
-                $return['ok'] = "Le support a été correctement ajouté, nous vous remercions.";
+                $return['ok'] = "Votre vote a été correctement ajouté, nous vous remercions.";
                 if ($follow) {
                     $return['ok'] .= " Vous serez averti(e) à chaque mise à jour de cette fiche.";
                 } else {

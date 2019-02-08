@@ -697,24 +697,42 @@
 	 * 	Date			: septembre 19 2017
 	 */
 	function getMailsToSendFromVotesAndComments($id_poi, $subject, $message){
-	    $sql = "SELECT distinct(support_poi_mail) FROM support_poi WHERE poi_poi_id = $id_poi AND support_poi_follow = 1";
-	    if (DEBUG){
-	        error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " requete de recuperation des mails des utilisateurs ayant voté ". $sql . " \n", 3, LOG_FILE);
-	    }
-	    $result = mysql_query($sql);
 	    $mails = array();
-	    if ($result){
+	    
+	    $sqlComment = "SELECT distinct(mail_commentaires) FROM commentaires WHERE poi_id_poi = $id_poi AND comment_poi_follow = 1";
+	    if (DEBUG){
+	        error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " requete de recuperation des mails des utilisateurs ayant voté ". $sqlComment . " \n", 3, LOG_FILE);
+	    }
+	    $resultComment = mysql_query($sqlComment);
+	    
+	    if ($resultComment){
 	        if (DEBUG){
 	            error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " Récupération des mails à envoyer \n", 3, LOG_FILE);
 	        }
-	        while ($row2 = mysql_fetch_array($result)) {
+	        while ($row2 = mysql_fetch_array($resultComment)) {
+	            $mailArray = [$row2['mail_commentaires'],"", $subject, $message ];
+	            array_push($mails,$mailArray);
+	        }
+	        
+	    }
+	    
+	    $sqlVote = "SELECT distinct(support_poi_mail) FROM support_poi WHERE poi_poi_id = $id_poi AND support_poi_follow = 1";
+	    if (DEBUG){
+	        error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " requete de recuperation des mails des utilisateurs ayant voté ". $sqlVote . " \n", 3, LOG_FILE);
+	    }
+	    $resultVote = mysql_query($sqlVote);
+	    if ($resultVote){
+	        if (DEBUG){
+	            error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " Récupération des mails à envoyer \n", 3, LOG_FILE);
+	        }
+	        while ($row2 = mysql_fetch_array($resultVote)) {
 	            $mailArray = [$row2['support_poi_mail'],"", $subject, $message ];
 	            array_push($mails,$mailArray);
 	        }
 	        
 	    }
 	    if (DEBUG){
-	        error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " Il y a ". count($mails) . " mails à envoyer \n", 3, LOG_FILE);
+	        error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " Il y a ". count($mails) . " mails à envoyer pour les followers \n", 3, LOG_FILE);
 	    }
 	    return $mails;
 	}
