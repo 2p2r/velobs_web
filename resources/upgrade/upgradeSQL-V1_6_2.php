@@ -88,18 +88,15 @@ if (isset($_SESSION['type']) && $_SESSION['type'] == 1) {
         ADD UNIQUE KEY `poi_poi_id_2` (`poi_poi_id`,`support_poi_mail`),
         ADD KEY `support_poi_mail` (`support_poi_mail`),
         ADD KEY `poi_poi_id` (`poi_poi_id`);";
+    $resultUpdate = mysql_query ( $sqlUpdate );
+    echo $sqlUpdate . " : " . $resultUpdate . "<br />";
+    
+    $sqlUpdate = " ALTER TABLE `support_poi` MODIFY `support_poi_id` int(11) NOT NULL AUTO_INCREMENT;";
 
     $resultUpdate = mysql_query ( $sqlUpdate );
     echo $sqlUpdate . " : " . $resultUpdate . "<br />";
     
-    $sqlUpdate = " ALTER TABLE `support_poi`
-        MODIFY `support_poi_id` int(11) NOT NULL AUTO_INCREMENT;";
-
-    $resultUpdate = mysql_query ( $sqlUpdate );
-    echo $sqlUpdate . " : " . $resultUpdate . "<br />";
-    
-    $sqlUpdate = " ALTER TABLE `support_poi`
-        ADD CONSTRAINT `support_poi_FK` FOREIGN KEY (`poi_poi_id`) REFERENCES `poi` (`id_poi`);";
+    $sqlUpdate = " ALTER TABLE `support_poi` ADD CONSTRAINT `support_poi_FK` FOREIGN KEY (`poi_poi_id`) REFERENCES `poi` (`id_poi`);";
     $resultUpdate = mysql_query ( $sqlUpdate );
     echo $sqlUpdate . " : " . $resultUpdate . "<br />";
     
@@ -116,7 +113,7 @@ if (isset($_SESSION['type']) && $_SESSION['type'] == 1) {
     echo $sqlUpdate . " : " . $resultUpdate . "<br />";
     mysql_close($link);
 } else {
-    echo "Vous n'êtes pas autorisé(e) à exécuter ce script.Vous devez être administrateur";
+    echo "Vous n'êtes pas autorisé(e) à exécuter ce script. Vous devez être administrateur";
 }
 ?>
 
