@@ -222,7 +222,9 @@ if (isset ( $_SESSION ['user'] )) {
 				$nb_support = mysql_result($resultSupport,0);
 				$comments .= '<br /><b>Nombre de votes pour cette fiche </b> : ' . $nb_support;
 				$arr [$i] ['comments'] = stripslashes ( $comments );
-				
+				if (DEBUG && isset ( $_GET ['id'] )) {
+				    error_log ( date ( "Y-m-d H:i:s" ) . " - admin/getMarker.php retour json avec comment for id ". $_GET ['id']." $comments\n", 3, LOG_FILE );
+				}
 				$i ++;
 			}
 			if (DEBUG) {
