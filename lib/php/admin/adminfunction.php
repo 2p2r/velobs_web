@@ -2017,12 +2017,13 @@ function createUser()
                 error_log(date("Y-m-d H:i:s") . " " . __FUNCTION__ . " creating user $sql\n", 3, LOG_FILE);
             }
             $result = mysql_query($sql);
+            $id_user = mysql_insert_id();
             $error = 0;
             if (! $result) {
                 $error = 1;
                 echo '2';
             } else {
-                $id_user = mysql_insert_id();
+                
                 if (DEBUG) {
                     error_log(date("Y-m-d H:i:s") . " " . __FUNCTION__ . " id created user =  - " . $id_user . "\n", 3, LOG_FILE);
                 }
@@ -2063,6 +2064,9 @@ Vos identifiants sont :
 En cas de question, vous pouvez trouver des informations sur https://github.com/2p2r/velobs_web. N'hésitez pas à envoyer un courriel à " . MAIL_ALIAS_OBSERVATION_ADHERENTS . " pour toute question sur VelObs.";
                 sendMail($mail_users, "Création compte sur VelObs", $message);
                 echo '1';
+            }else{
+                
+                $result = mysql_query("DELETE FROM users WHERE id_users = " .$id_user );
             }
             
             mysql_close($link);
