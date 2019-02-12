@@ -6,6 +6,9 @@ Application web permettant aux cyclistes de signaler les problèmes sur les amé
 VelObs est en  production à 
 * Toulouse pour 2 pieds 2 roues sur : http://velobs.2p2r.org/
 * Montpellier pour VéloCité : http://www.velocite-montpellier.fr/velobs/
+* Pays d’Aix : http://adava.fr/velobs/ (avril 2018), application android (avril 2018)
+* Les Ardennes : https://velobs08.ouvaton.org/ (mai 2018), application android (mai 2018)
+* Lyon : en cours de test (https://lavilleavelo.org/velobs/)
 
 # Quelques commentaires sur l'application :
 * VelObs est une application web nécessitant un serveur web avec php et MySQL/MariaDB comme base de données (versions minimum à venir)

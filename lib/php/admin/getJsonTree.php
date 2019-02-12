@@ -45,14 +45,11 @@ if (isset ( $_SESSION ['user'] )) {
 						 	AND p.delete_poi = FALSE ";
 			}
 			
-			$sql = "SELECT count(p.id_poi) as nbpoi, c.* FROM category AS c
-                    INNER JOIN subcategory sc ON c.id_category = sc.category_id_category
-                    INNER JOIN poi p ON p.subcategory_id_subcategory = sc.id_subcategory
-                    INNER JOIN priorite ON (p.priorite_id_priorite = priorite.id_priorite)
-                    WHERE $whereClauseSQL
-                    GROUP BY
-                        c.id_category, c.lib_category, c.icon_category, c.treerank_category, c.display_category
-                    ORDER BY c.treerank_category ASC";
+			$sql = "SELECT c.* 
+					FROM category AS c
+					WHERE c.display_category = TRUE 
+					ORDER BY c.treerank_category ASC";
+			
 			$sql2 = "SELECT distinct(subcategory.id_subcategory),
                         subcategory.lib_subcategory,
                         subcategory.icon_subcategory,

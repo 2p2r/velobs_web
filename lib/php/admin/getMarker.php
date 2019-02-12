@@ -12,7 +12,8 @@ if (isset ( $_SESSION ['user'] )) {
 			$link = mysql_connect ( DB_HOST, DB_USER, DB_PASS );
 			mysql_select_db ( DB_NAME );
 			mysql_query ( "SET NAMES utf8mb4" );
-			$sql = "SELECT poi.*, 
+			$sql = "SELECT DISTINCT(poi.id_poi) AS idd,
+						poi.*, 
 						commune.lib_commune, 
 						x(poi.geom_poi) AS X, 
 						y(poi.geom_poi) AS Y, 
@@ -39,11 +40,6 @@ if (isset ( $_SESSION ['user'] )) {
 				}
 				$sqlappend .= " delete_poi = FALSE AND poi.id_poi = " . $_GET ['id'];
 			} else {
-				if (isset ( $_GET ['commentToModerate'] ) && $_GET ['commentToModerate'] == 1 && ($_SESSION ["type"] == 4 || $_SESSION ["type"] == 1)) {
-					$sqlappend = " INNER JOIN commentaires ON (poi.id_poi = commentaires.poi_id_poi) " . $sqlappend . " commentaires.display_commentaires = 'Non modéré' AND ";
-				} elseif (isset ( $_GET ['priority'] ) && $_GET ['priority'] != '') {
-					$sqlappend .= " poi.priorite_id_priorite = " . $_GET ['priority'] . " AND ";
-				}
 				$listType = $_GET ['listType'];
 				if (DEBUG) {
 					error_log ( date ( "Y-m-d H:i:s" ) . " - admin/getMarker.php avec listType $listType\n", 3, LOG_FILE );
@@ -51,19 +47,25 @@ if (isset ( $_SESSION ['user'] )) {
 				// $tabListType = preg_split ( '#,#', $listType );
 				$sqlappend .= " poi.geom_poi IS NOT NULL AND subcategory_id_subcategory IN ( " . $listType . ") AND poi.display_poi = TRUE AND poi.fix_poi = FALSE AND delete_poi = FALSE ";
 				if (isset ( $_GET ['displayObservationsToBeAnalyzedByComCom'] ) && $_GET ['displayObservationsToBeAnalyzedByComCom'] == 1 && $_SESSION ["type"] == 2) {
-					$sqlappend .= " AND reponse_collectivite_poi = '' AND (transmission_poi IS NULL OR transmission_poi = 0) ";
+					$sqlappend .= " AND (reponse_collectivite_poi IS NULL OR reponse_collectivite_poi = '') AND (transmission_poi IS NULL OR transmission_poi = 0) ";
 				}
+				if (isset ( $_GET ['commentToModerate'] ) && $_GET ['commentToModerate'] == 1 && ($_SESSION ["type"] == 4 || $_SESSION ["type"] == 1)) {
+					$sql .= " INNER JOIN commentaires ON (poi.id_poi = commentaires.poi_id_poi) ";
+					$sqlappend .= " AND commentaires.display_commentaires = 'Non modéré' ";
+				}
+			  if (isset ( $_GET ['priority'] ) && $_GET ['priority'] != '') {
+					$sqlappend .= " AND poi.priorite_id_priorite = " . $_GET ['priority'] . ' ';
+			  }
+				
 				if (DEBUG) {
 					error_log ( date ( "Y-m-d H:i:s" ) . " - admin/getMarker.php displayObservationsToBeAnalyzedByPole = " . $_GET ['displayObservationsToBeAnalyzedByPole'] . ", type = " . $_SESSION ["type"] . "\n", 3, LOG_FILE );
 				}
 				if (isset ( $_GET ['displayObservationsToBeAnalyzedByPole'] ) && $_GET ['displayObservationsToBeAnalyzedByPole'] == 1 && $_SESSION ["type"] == 3) {
-					$sqlappend .= " AND reponsepole_poi = '' AND (traiteparpole_poi IS NULL OR traiteparpole_poi = 0) ";
+					$sqlappend .= " AND (reponsepole_poi is NULL OR reponsepole_poi = '') AND (traiteparpole_poi IS NULL OR traiteparpole_poi = 0) ";
 				}
 			}
 			$whereSelectCommentAppend = '';
-			if ($_SESSION ["type"] == 1 && isset ( $_POST ["priority"] )) { // is admin
-				$sqlappend .= ' AND priorite.id_priorite = ' . $_POST ["priority"];
-			} elseif ($_SESSION ["type"] == 2) { // is communaute de communes
+			if ($_SESSION ["type"] == 2) { // is communaute de communes
 				$sqlappend .= ' AND moderation_poi = 1 
 						AND commune_id_commune IN (' . str_replace ( ';', ',', $_SESSION ['territoire'] ) . ') 
 						AND priorite.non_visible_par_collectivite = 0 ';
@@ -90,6 +92,7 @@ if (isset ( $_SESSION ['user'] )) {
 					error_log ( date ( "Y-m-d H:i:s" ) . " - admin/getMarker.php datesqlappend = " . $datesqlappend . "\n", 3, LOG_FILE );
 				}
 			}
+
 			if (DEBUG) {
 			    error_log ( date ( "Y-m-d H:i:s" ) . " - admin/getMarker.php nbSupportMinimum = " . $_GET ["nbSupportMinimum"] . "\n", 3, LOG_FILE );
 			}
@@ -97,6 +100,7 @@ if (isset ( $_SESSION ['user'] )) {
 			    $sqlappend .= ' AND poi.id_poi IN (select poi_poi_id from support_poi group by poi_poi_id having count(*) >= '.$_GET ["nbSupportMinimum"].')';
 			}
 			$sql .= $datesqlappend . $sqlappend;
+
 			if (DEBUG) {
 				error_log ( date ( "Y-m-d H:i:s" ) . " - admin/getMarker.php sql = $sql\n", 3, LOG_FILE );
 			}
