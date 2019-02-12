@@ -2,7 +2,7 @@
 	session_start();
 	include_once '../key.php';
 	include_once 'adminfunction.php';
-	
+	 
 	switch (SGBD) {
 		case 'mysql':
 			$link = mysql_connect(DB_HOST,DB_USER,DB_PASS);
@@ -13,8 +13,14 @@
             }
 			$pseudo = mysql_real_escape_string($_POST['login']);
 			$pass = mysql_real_escape_string($_POST['password']);
+			
 			$sql = "SELECT users.*, language.* FROM users INNER JOIN language ON (language.id_language = users.language_id_language) WHERE lib_users = '".$pseudo."'";
-			//$sql = "SELECT users.*, language.* FROM users INNER JOIN language ON (language.id_language = users.language_id_language) WHERE lib_users = '".$pseudo."' AND pass_users = '".$pass."'";
+			$result = mysql_query("SHOW COLUMNS FROM `users` LIKE 'is_active_users'");
+			$exists = (mysql_num_rows($result))?TRUE:FALSE;
+			
+			if($exists){
+			    $sql .= " AND is_active_user = true";
+			}
 			
 			$result = mysql_query($sql);
 			if (!$result) {
@@ -24,7 +30,42 @@
 			} else {
 				if (mysql_num_rows($result) != 0) {
 					while ($row = mysql_fetch_array($result)) {
-						if (verify_password_hash($_POST['password'],$row['pass_users'])){
+					    if (verify_password_hash($_POST['password'],$row['pass_users'])){
+					        $sqlLinkUserPoles = "SELECT users_link_pole.* FROM users_link_pole WHERE id_user = ".$row['id_users'];
+					        $resultLinkUserPoles = mysql_query($sqlLinkUserPoles);
+					        $full_id_territoires = '';
+					        $poles = '';
+					        if (!$resultLinkUserPoles) {
+					            $arr['msg'] = 'Invalid request : '.mysql_error()."\n";
+					            //$arr['msg'] .= 'Request : '.$sql;
+					            $arr['success'] = FALSE;
+					        } else {
+					            while ($rowLinkUserPoles = mysql_fetch_array($resultLinkUserPoles)) {
+					                $poles .= $rowLinkUserPoles['num_pole'].',';
+					                //si l'utilisateur fait partie d'une communauté de commune
+					                if ($row['usertype_id_usertype'] == 2) {
+					                    $sql2 = "SELECT ids_territoire FROM territoire WHERE id_territoire = ".$rowLinkUserPoles['territoire_id_territoire'];
+					                    $result2 = mysql_query($sql2);
+					                    
+					                    while ($row2 = mysql_fetch_array($result2)) {
+					                        $full_id_territoires .= $row2['ids_territoire'].',';
+					                    }
+					                    if (DEBUG) {
+					                        error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - commonfunction.php, full_id_territoires " . $full_id_territoires . " \n", 3, LOG_FILE );
+					                    }
+					                    $full_id_territoires = substr ( $full_id_territoires, 0, - 1 );
+					                    $_SESSION['territoire'] = $full_id_territoires;
+					                }//si l'utilisateur fait partie d'un pole technique ou est responsable pole 2P2R
+					                else if (($row['usertype_id_usertype'] == 3) || ($row['usertype_id_usertype'] == 4)) {
+					                    $_SESSION['territoire'] = 0;
+					                }
+					                $_SESSION['header_logo'] = $row['territoire_id_territoire'];
+					            }
+					            if (DEBUG) {
+					                error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - commonfunction.php, pole " . $poles . " \n", 3, LOG_FILE );
+					            }
+					            $poles = substr ( $poles, 0, - 1 );
+					        }
 						$arr['id_users'] = $row['id_users'];
 						$arr['type_users'] = $row['usertype_id_usertype'];
 						$arr['who'] = $row['lib_users'];
@@ -32,29 +73,28 @@
 						$arr['mail_users'] = $row['mail_users'];
 						//$arr['role_users'] = $row['role_users'];
 						$arr['nom_users'] = $row['nom_users'];
-						$arr['territoire_users'] = $row['territoire_id_territoire'];
 
 						$arr['success'] = TRUE;
 						$_SESSION['id_users'] = $row['id_users'];
 						$_SESSION['user'] = $row['lib_users'];
-						$_SESSION['pole'] = $row['num_pole'];
+						$_SESSION['pole'] = $poles;
 
 						$_SESSION['mail'] = $row['mail_users'];
 						$_SESSION['role'] = $row['usertype_id_usertype'];
 						$_SESSION['nom'] = $row['nom_users'];
 						//si l'utilisateur fait partie d'une communauté de commune
-                        if ($row['usertype_id_usertype'] == 2) {
-                            $sql2 = "SELECT ids_territoire FROM territoire WHERE id_territoire = ".$row['territoire_id_territoire'];
-                        	$result2 = mysql_query($sql2);
-                        	while ($row2 = mysql_fetch_array($result2)) {
-                        	    $_SESSION['territoire'] = $row2['ids_territoire'];
-                        	}
-                        }//si l'utilisateur fait partie d'un pole technique ou est responsable pole 2P2R
-                        else if (($row['usertype_id_usertype'] == 3) || ($row['usertype_id_usertype'] == 4)) {
-                            $_SESSION['territoire'] = 0;
-                        }
+//                         if ($row['usertype_id_usertype'] == 2) {
+//                             $sql2 = "SELECT ids_territoire FROM territoire WHERE id_territoire = ".$row['territoire_id_territoire'];
+//                         	$result2 = mysql_query($sql2);
+//                         	while ($row2 = mysql_fetch_array($result2)) {
+//                         	    $_SESSION['territoire'] = $row2['ids_territoire'];
+//                         	}
+//                         }//si l'utilisateur fait partie d'un pole technique ou est responsable pole 2P2R
+//                         else if (($row['usertype_id_usertype'] == 3) || ($row['usertype_id_usertype'] == 4)) {
+//                             $_SESSION['territoire'] = 0;
+//                         }
 
-                        $_SESSION['header_logo'] = $row['territoire_id_territoire'];
+                        
 
 						$_SESSION['type'] = $row['usertype_id_usertype'];
 						$_SESSION['id_language'] = $row['language_id_language'];

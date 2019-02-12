@@ -100,28 +100,90 @@ CREATE TABLE `usertype` (
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE = utf8mb4_unicode_ci AUTO_INCREMENT=1;
 
 
-CREATE TABLE `users` (
-`id_users` int(11) NOT NULL AUTO_INCREMENT,
-  `lib_users` varchar(100) DEFAULT NULL,
-  `pass_users` varchar(100) DEFAULT NULL,
-  `num_pole` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `users` (
+  `id_users` int(11) NOT NULL,
+  `lib_users` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `pass_users` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `usertype_id_usertype` int(11) DEFAULT NULL,
   `language_id_language` int(11) DEFAULT NULL,
-  `territoire_id_territoire` int(11) DEFAULT NULL,
-  `mail_users` varchar(255) NOT NULL,
-  `nom_users` varchar(255) NOT NULL,
-  PRIMARY KEY (`id_users`), 
-  KEY `usertype_id_usertype` (`usertype_id_usertype`), 
-  KEY `language_id_language` (`language_id_language`), 
-  KEY `territoire_id_territoire` (`territoire_id_territoire`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE = utf8mb4_unicode_ci AUTO_INCREMENT=1;
+  `mail_users` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `nom_users` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `is_active_user` tinyint(1) DEFAULT '1'
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Index pour les tables exportées
+--
 
+--
+-- Index pour la table `users`
+--
 ALTER TABLE `users`
-ADD CONSTRAINT `users_ibfk_1` FOREIGN KEY (`usertype_id_usertype`) REFERENCES `usertype` (`id_usertype`) ON DELETE CASCADE ON UPDATE CASCADE,
-ADD CONSTRAINT `users_ibfk_2` FOREIGN KEY (`language_id_language`) REFERENCES `language` (`id_language`) ON DELETE CASCADE ON UPDATE CASCADE,
-ADD CONSTRAINT `users_ibfk_3` FOREIGN KEY (`territoire_id_territoire`) REFERENCES `territoire` (`id_territoire`);
+  ADD PRIMARY KEY (`id_users`),
+  ADD KEY `usertype_id_usertype` (`usertype_id_usertype`),
+  ADD KEY `language_id_language` (`language_id_language`);
 
+--
+-- AUTO_INCREMENT pour les tables exportées
+--
+
+--
+-- AUTO_INCREMENT pour la table `users`
+--
+ALTER TABLE `users`
+  MODIFY `id_users` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- Contraintes pour les tables exportées
+--
+
+--
+-- Contraintes pour la table `users`
+--
+ALTER TABLE `users`
+  ADD CONSTRAINT `users_ibfk_1` FOREIGN KEY (`usertype_id_usertype`) REFERENCES `usertype` (`id_usertype`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `users_ibfk_2` FOREIGN KEY (`language_id_language`) REFERENCES `language` (`id_language`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+
+CREATE TABLE IF NOT EXISTS `users_link_pole` (
+  `user_link_pole_id` int(11) NOT NULL,
+  `id_user` int(11) NOT NULL,
+  `territoire_id_territoire` int(11) NOT NULL,
+  `num_pole` int(11) NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='link between users and territoires/poles';
+
+--
+-- Index pour les tables exportées
+--
+
+--
+-- Index pour la table `users_link_pole`
+--
+ALTER TABLE `users_link_pole`
+  ADD PRIMARY KEY (`user_link_pole_id`),
+  ADD KEY `id_user` (`id_user`),
+  ADD KEY `territoire_id_territoire` (`territoire_id_territoire`),
+  ADD KEY `num_pole` (`num_pole`);
+
+--
+-- AUTO_INCREMENT pour les tables exportées
+--
+
+--
+-- AUTO_INCREMENT pour la table `users_link_pole`
+--
+ALTER TABLE `users_link_pole`
+  MODIFY `user_link_pole_id` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- Contraintes pour les tables exportées
+--
+
+--
+-- Contraintes pour la table `users_link_pole`
+--
+ALTER TABLE `users_link_pole`
+  ADD CONSTRAINT `poles_FK` FOREIGN KEY (`num_pole`) REFERENCES `pole` (`id_pole`),
+  ADD CONSTRAINT `territoires_FK` FOREIGN KEY (`territoire_id_territoire`) REFERENCES `territoire` (`id_territoire`),
+  ADD CONSTRAINT `users_FK` FOREIGN KEY (`id_user`) REFERENCES `users` (`id_users`);
 
 CREATE TABLE IF NOT EXISTS `priorite` (
   `id_priorite` int(11) NOT NULL,
@@ -153,13 +215,13 @@ CREATE TABLE `quartier` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE = utf8mb4_unicode_ci AUTO_INCREMENT=1;
 INSERT INTO `quartier` (`id_quartier`, `lib_quartier`) VALUES (99999, 'Inutile');
 
-CREATE TABLE `status` (
-`id_status` int(11) NOT NULL AUTO_INCREMENT,
-  `lib_status` varchar(100) DEFAULT NULL,
+CREATE TABLE IF NOT EXISTS `status` (
+  `id_status` int(11) NOT NULL,
+  `lib_status` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `color_status` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `is_active_status` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id_status`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE = utf8mb4_unicode_ci AUTO_INCREMENT=1;
-
 
 CREATE TABLE `iconmarker` (
 `id_iconmarker` int(11) NOT NULL AUTO_INCREMENT,
@@ -332,8 +394,9 @@ CREATE TABLE IF NOT EXISTS `comment_history` (
   `url_photo` varchar(500) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `mail_commentaires` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `poi_id_poi` int(11) NOT NULL,
+  `comment_poi_follow` tinyint(1) NOT NULL DEFAULT '0',
   `lastdatemodif_comment` date DEFAULT NULL,
-  `lastmodif_user_poi` int(11) DEFAULT NULL,
+  `lastmodif_user_comment` int(11) DEFAULT NULL,
   `history_id` int(11) NOT NULL,
   `history_date` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -371,6 +434,7 @@ CREATE TABLE IF NOT EXISTS `commentaires` (
   `url_photo` varchar(500) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `mail_commentaires` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `poi_id_poi` int(11) NOT NULL,
+  `comment_poi_follow` tinyint(1) NOT NULL DEFAULT '0',
   `lastdatemodif_comment` date DEFAULT NULL,
   `lastmodif_user_comment` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -404,6 +468,46 @@ ALTER TABLE `commentaires`
 ALTER TABLE `commentaires`
   MODIFY `id_commentaires` int(11) NOT NULL AUTO_INCREMENT;
 
+
+CREATE TABLE IF NOT EXISTS `support_poi` (
+  `support_poi_id` int(11) NOT NULL,
+  `poi_poi_id` int(11) NOT NULL,
+  `support_poi_mail` varchar(100) NOT NULL,
+  `support_poi_follow` tinyint(1) NOT NULL,
+  `support_poi_creationdate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Index pour les tables exportées
+--
+
+--
+-- Index pour la table `support_poi`
+--
+ALTER TABLE `support_poi`
+  ADD PRIMARY KEY (`support_poi_id`),
+  ADD UNIQUE KEY `poi_poi_id_2` (`poi_poi_id`,`support_poi_mail`),
+  ADD KEY `support_poi_mail` (`support_poi_mail`),
+  ADD KEY `poi_poi_id` (`poi_poi_id`);
+
+--
+-- AUTO_INCREMENT pour les tables exportées
+--
+
+--
+-- AUTO_INCREMENT pour la table `support_poi`
+--
+ALTER TABLE `support_poi`
+  MODIFY `support_poi_id` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- Contraintes pour les tables exportées
+--
+
+--
+-- Contraintes pour la table `support_poi`
+--
+ALTER TABLE `support_poi`
+  ADD CONSTRAINT `support_poi_FK` FOREIGN KEY (`poi_poi_id`) REFERENCES `poi` (`id_poi`);
 --
 -- Data DDL
 --
@@ -473,9 +577,10 @@ INSERT INTO `usertype` (`id_usertype`, `lib_usertype`) VALUES
 (3, 'Pôle technique'),
 (4, 'Responsable pôle modérateur');
 
-INSERT INTO `users` (`id_users`, `lib_users`, `pass_users`, `num_pole`, `usertype_id_usertype`, `language_id_language`, `territoire_id_territoire`, `mail_users`, `nom_users`) VALUES
-(1, 'admin', '$2y$10$LF2rVDO53KwRIzrb8BqoK.dVKa3kY2crgwWVl/NpRFUNtflClGJrG', 12, 1, 1, 0, 'test@velobs.org', 'Administrateur VelObs');
-
+INSERT INTO `users` (`id_users`, `lib_users`, `pass_users`, `usertype_id_usertype`, `language_id_language`, `mail_users`, `nom_users`) VALUES
+(1, 'admin', '$2y$10$LF2rVDO53KwRIzrb8BqoK.dVKa3kY2crgwWVl/NpRFUNtflClGJrG', 1, 1, 'test@velobs.org', 'Administrateur VelObs');
+INSERT INTO `users_link_pole` (`id_user`, `territoire_id_territoire`, `num_pole`) VALUES
+(1, 0, 12);
 
 --
 -- Contenu de la table `priorite`

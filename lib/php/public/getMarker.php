@@ -54,7 +54,9 @@ switch (SGBD) {
 			if (isset($_GET ['priorite']) && $_GET ['priorite'] != "") {
 				$sqlappend .= " AND priorite.id_priorite =  " . mysql_real_escape_string($_GET ['priorite']);
 			} 
-			
+			if (isset ( $_GET ["nbSupportMinimum"] ) && $_GET ["nbSupportMinimum"] != '' && $_GET ["nbSupportMinimum"] > 0) { // filter by status given by the collectivity
+			    $sqlappend .= ' AND poi.id_poi IN (select poi_poi_id from support_poi group by poi_poi_id having count(*) >= '.$_GET ["nbSupportMinimum"].')';
+			}
 			$sqlappend .= $datesqlappend . $statussqlappend;
 		}
 		$sql .= $sqlappend;
@@ -86,6 +88,7 @@ switch (SGBD) {
 			$arr [$i] ['lon'] = $row ['X'];
 			$arr [$i] ['mail_poi'] = stripslashes ( $row ['mail_poi'] );
 			$arr [$i] ['lastdatemodif_poi'] = $row ['lastdatemodif_poi'];
+			//récupération des commentaires
 			$sql2 = "SELECT * FROM commentaires WHERE poi_id_poi = " . $row ['id_poi'] . " AND display_commentaires = 'Modéré accepté'";
 			$result2 = mysql_query ( $sql2 );
 			$j = 0;
@@ -98,6 +101,10 @@ switch (SGBD) {
 			}
 			$arr [$i] ['num_comments'] =$j;
 			$arr [$i] ['num_accepted_comments'] =$j;
+			//Récupération du soutien
+			$sqlSupport = "SELECT count(*) FROM support_poi WHERE poi_poi_id = " . $row ['id_poi'];
+			$resultSupport = mysql_query ( $sqlSupport );
+			$arr [$i] ['support'] = mysql_result($resultSupport,0);
 			$i ++;
 		}
 		if (DEBUG) {

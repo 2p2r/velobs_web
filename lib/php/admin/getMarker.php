@@ -73,11 +73,11 @@ if (isset ( $_SESSION ['user'] )) {
 			} elseif ($_SESSION ["type"] == 3) { // is pole technique
 				$sqlappend .= ' AND moderation_poi = 1  
 						AND transmission_poi = 1 
-						AND poi.pole_id_pole = ' . $_SESSION ["pole"] . ' 
+						AND poi.pole_id_pole IN (' . $_SESSION ["pole"] . ') 
 						AND priorite.non_visible_par_collectivite = 0 ';
 				$whereSelectCommentAppend = ' AND display_commentaires = \'Modéré accepté\' ';
 			} elseif ($_SESSION ["type"] == 4) { // is moderateur
-				$sqlappend .= ' AND poi.pole_id_pole = ' . $_SESSION ["pole"] . ' ';
+				$sqlappend .= ' AND poi.pole_id_pole IN (' . $_SESSION ["pole"] . ') ';
 			}
 			
 			if (isset ( $_GET ["status"] ) && $_GET ["status"] != '') { // filter by status given by the collectivity
@@ -92,7 +92,15 @@ if (isset ( $_SESSION ['user'] )) {
 					error_log ( date ( "Y-m-d H:i:s" ) . " - admin/getMarker.php datesqlappend = " . $datesqlappend . "\n", 3, LOG_FILE );
 				}
 			}
-			$sql .= $sqlappend . $datesqlappend;
+
+			if (DEBUG) {
+			    error_log ( date ( "Y-m-d H:i:s" ) . " - admin/getMarker.php nbSupportMinimum = " . $_GET ["nbSupportMinimum"] . "\n", 3, LOG_FILE );
+			}
+			if (isset ( $_GET ["nbSupportMinimum"] ) && $_GET ["nbSupportMinimum"] != '' && $_GET ["nbSupportMinimum"] > 0) { // filter by status given by the collectivity
+			    $sqlappend .= ' AND poi.id_poi IN (select poi_poi_id from support_poi group by poi_poi_id having count(*) >= '.$_GET ["nbSupportMinimum"].')';
+			}
+			$sql .= $datesqlappend . $sqlappend;
+
 			if (DEBUG) {
 				error_log ( date ( "Y-m-d H:i:s" ) . " - admin/getMarker.php sql = $sql\n", 3, LOG_FILE );
 			}
@@ -212,9 +220,15 @@ if (isset ( $_SESSION ['user'] )) {
 				} else {
 					$comments .= "Encore aucun commentaire associé";
 				}
-				
+				//Récupération du soutien
+				$sqlSupport = "SELECT count(*) FROM support_poi WHERE poi_poi_id = " . $row ['id_poi'];
+				$resultSupport = mysql_query ( $sqlSupport );
+				$nb_support = mysql_result($resultSupport,0);
+				$comments .= '<br /><b>Nombre de votes pour cette fiche </b> : ' . $nb_support;
 				$arr [$i] ['comments'] = stripslashes ( $comments );
-				
+				if (DEBUG && isset ( $_GET ['id'] )) {
+				    error_log ( date ( "Y-m-d H:i:s" ) . " - admin/getMarker.php retour json avec comment for id ". $_GET ['id']." $comments\n", 3, LOG_FILE );
+				}
 				$i ++;
 			}
 			if (DEBUG) {

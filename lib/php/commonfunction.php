@@ -271,164 +271,166 @@
 		$sqlUpdate = '';
 		$updateObservationBoolean = 0;
 		
-		
 		$arrayColumns = array();
 		$numberOfColumns = 0;
 		$arrayColumns[$numberOfColumns]['columnSQL'] = 'subcategory_id_subcategory' ;
 		$arrayColumns[$numberOfColumns]['columnPOST'] = 'subcategory_id_subcategory' ;
-		$arrayColumns[$numberOfColumns]['columnIntitule'] = '# Catégorie : ' ;
+		$arrayColumns[$numberOfColumns]['columnIntitule'] = 'Catégorie' ;
 		$arrayColumns[$numberOfColumns]['dataType'] = 'integer' ;
 		$numberOfColumns++;
 		$arrayColumns[$numberOfColumns]['columnSQL'] = 'rue_poi' ;
 		$arrayColumns[$numberOfColumns]['columnPOST'] = 'rue_poi' ;
-		$arrayColumns[$numberOfColumns]['columnIntitule'] = '# Nom de la voie : ' ;
+		$arrayColumns[$numberOfColumns]['columnIntitule'] = 'Nom de la voie' ;
 		$arrayColumns[$numberOfColumns]['dataType'] = 'string' ;
 		$numberOfColumns++;
 		$arrayColumns[$numberOfColumns]['columnSQL'] = 'num_poi' ;
 		$arrayColumns[$numberOfColumns]['columnPOST'] = 'num_poi' ;
-		$arrayColumns[$numberOfColumns]['columnIntitule'] = '# Repère : ' ;
+		$arrayColumns[$numberOfColumns]['columnIntitule'] = 'Repère' ;
 		$arrayColumns[$numberOfColumns]['dataType'] = 'string' ;
 		$numberOfColumns++;
 		$arrayColumns[$numberOfColumns]['columnSQL'] = 'pole_id_pole' ;
 		$arrayColumns[$numberOfColumns]['columnPOST'] = 'pole_id_pole' ;
-		$arrayColumns[$numberOfColumns]['columnIntitule'] = '# Pôle : ' ;
+		$arrayColumns[$numberOfColumns]['columnIntitule'] = 'Pôle' ;
 		$arrayColumns[$numberOfColumns]['dataType'] = 'integer' ;
 		$numberOfColumns++;
 		$arrayColumns[$numberOfColumns]['columnSQL'] = 'commune_id_commune' ;
 		$arrayColumns[$numberOfColumns]['columnPOST'] = 'commune_id_commune' ;
-		$arrayColumns[$numberOfColumns]['columnIntitule'] = '# Commune : ' ;
+		$arrayColumns[$numberOfColumns]['columnIntitule'] = 'Commune' ;
 		$arrayColumns[$numberOfColumns]['dataType'] = 'integer' ;
 		$numberOfColumns++;
 		$arrayColumns[$numberOfColumns]['columnSQL'] = 'desc_poi' ;
 		$arrayColumns[$numberOfColumns]['columnPOST'] = 'desc_poi' ;
-		$arrayColumns[$numberOfColumns]['columnIntitule'] = '# Description du problème : ' ;
+		$arrayColumns[$numberOfColumns]['columnIntitule'] = 'Description du problème' ;
 		$arrayColumns[$numberOfColumns]['dataType'] = 'string' ;
 		$numberOfColumns++;
 		$arrayColumns[$numberOfColumns]['columnSQL'] = 'prop_poi' ;
 		$arrayColumns[$numberOfColumns]['columnPOST'] = 'prop_poi' ;
-		$arrayColumns[$numberOfColumns]['columnIntitule'] = '# Proposition : ' ;
+		$arrayColumns[$numberOfColumns]['columnIntitule'] = 'Proposition' ;
 		$arrayColumns[$numberOfColumns]['dataType'] = 'string' ;
 		$numberOfColumns++;
 		$arrayColumns[$numberOfColumns]['columnSQL'] = 'observationterrain_poi' ;
 		$arrayColumns[$numberOfColumns]['columnPOST'] = 'observationterrain_poi' ;
-		$arrayColumns[$numberOfColumns]['columnIntitule'] = '# Commentaire de terrain de l\'association : ' ;
+		$arrayColumns[$numberOfColumns]['columnIntitule'] = 'Commentaire de terrain de l\'association' ;
 		$arrayColumns[$numberOfColumns]['dataType'] = 'string' ;
 		$numberOfColumns++;
 		$arrayColumns[$numberOfColumns]['columnSQL'] = 'priorite_id_priorite' ;
 		$arrayColumns[$numberOfColumns]['columnPOST'] = 'priorite_id_priorite' ;
-		$arrayColumns[$numberOfColumns]['columnIntitule'] = '# Priorité définie par l\'association : ' ;
+		$arrayColumns[$numberOfColumns]['columnIntitule'] = 'Priorité définie par l\'association' ;
 		$arrayColumns[$numberOfColumns]['dataType'] = 'integer' ;
 		$numberOfColumns++;
 		$arrayColumns[$numberOfColumns]['columnSQL'] = 'moderation_poi' ;
 		$arrayColumns[$numberOfColumns]['columnPOST'] = 'moderation_poi' ;
-		$arrayColumns[$numberOfColumns]['columnIntitule'] = '# Observation modérée : ' ;
+		$arrayColumns[$numberOfColumns]['columnIntitule'] = 'Observation modérée' ;
 		$arrayColumns[$numberOfColumns]['dataType'] = 'boolean' ;
 		$numberOfColumns++;
 		$arrayColumns[$numberOfColumns]['columnSQL'] = 'display_poi' ;
 		$arrayColumns[$numberOfColumns]['columnPOST'] = 'display_poi' ;
-		$arrayColumns[$numberOfColumns]['columnIntitule'] = '# Observation affichée sur l\'interface publique (valable si la priorité le permet) : ' ;
+		$arrayColumns[$numberOfColumns]['columnIntitule'] = 'Observation affichée sur l\'interface publique (valable si la priorité le permet)' ;
 		$arrayColumns[$numberOfColumns]['dataType'] = 'boolean' ;
 		$numberOfColumns++;
 		$arrayColumns[$numberOfColumns]['columnSQL'] = 'reponse_collectivite_poi' ;
 		$arrayColumns[$numberOfColumns]['columnPOST'] = 'reponse_collectivite_poi' ;
-		$arrayColumns[$numberOfColumns]['columnIntitule'] = '# Réponse de la collectivité : ' ;
+		$arrayColumns[$numberOfColumns]['columnIntitule'] = 'Réponse de la collectivité' ;
 		$arrayColumns[$numberOfColumns]['dataType'] = 'string' ;
 		$numberOfColumns++;
 		$arrayColumns[$numberOfColumns]['columnSQL'] = 'status_id_status' ;
 		$arrayColumns[$numberOfColumns]['columnPOST'] = 'status_id_status' ;
-		$arrayColumns[$numberOfColumns]['columnIntitule'] = '# Statut positionné par la collectivité : ' ;
+		$arrayColumns[$numberOfColumns]['columnIntitule'] = 'Statut positionné par la collectivité' ;
 		$arrayColumns[$numberOfColumns]['dataType'] = 'integer' ;
 		$numberOfColumns++;
 		$arrayColumns[$numberOfColumns]['columnSQL'] = 'transmission_poi' ;
 		$arrayColumns[$numberOfColumns]['columnPOST'] = 'transmission_poi' ;
-		$arrayColumns[$numberOfColumns]['columnIntitule'] = '# La collectivité a transmis l\'observation au pôle technique : ' ;
+		$arrayColumns[$numberOfColumns]['columnIntitule'] = 'La collectivité a transmis l\'observation au pôle technique' ;
 		$arrayColumns[$numberOfColumns]['dataType'] = 'boolean' ;
 		$numberOfColumns++;
 		$arrayColumns[$numberOfColumns]['columnSQL'] = 'reponsepole_poi' ;
 		$arrayColumns[$numberOfColumns]['columnPOST'] = 'reponsepole_poi' ;
-		$arrayColumns[$numberOfColumns]['columnIntitule'] = '# Réponse du pôle technique : ' ;
+		$arrayColumns[$numberOfColumns]['columnIntitule'] = 'Réponse du pôle technique' ;
 		$arrayColumns[$numberOfColumns]['dataType'] = 'string' ;
 		$numberOfColumns++;
 		$arrayColumns[$numberOfColumns]['columnSQL'] = 'traiteparpole_poi' ;
 		$arrayColumns[$numberOfColumns]['columnPOST'] = 'traiteparpole_poi' ;
-		$arrayColumns[$numberOfColumns]['columnIntitule'] = '# Le pôle a traité l\'observation : ' ;
+		$arrayColumns[$numberOfColumns]['columnIntitule'] = 'Le pôle a traité l\'observation' ;
 		$arrayColumns[$numberOfColumns]['dataType'] = 'boolean' ;
 		$numberOfColumns++;
 		$arrayColumns[$numberOfColumns]['columnSQL'] = 'commentfinal_poi' ;
 		$arrayColumns[$numberOfColumns]['columnPOST'] = 'commentfinal_poi' ;
-		$arrayColumns[$numberOfColumns]['columnIntitule'] = '# Commentaire final de l\'association : ' ;
+		$arrayColumns[$numberOfColumns]['columnIntitule'] = 'Commentaire final de l\'association' ;
 		$arrayColumns[$numberOfColumns]['dataType'] = 'string' ;
 		$numberOfColumns++;
 		$arrayColumns[$numberOfColumns]['columnSQL'] = 'datefix_poi' ;
 		$arrayColumns[$numberOfColumns]['columnPOST'] = 'datefix_poi' ;
-		$arrayColumns[$numberOfColumns]['columnIntitule'] = '# Date de clôture de l\'observation : ' ;
+		$arrayColumns[$numberOfColumns]['columnIntitule'] = 'Date de clôture de l\'observation' ;
 		$arrayColumns[$numberOfColumns]['dataType'] = 'Date' ;
 // 		$numberOfColumns++;
 // 		$arrayColumns[$numberOfColumns]['columnSQL'] = 'fix_poi' ;
 // 		$arrayColumns[$numberOfColumns]['columnPOST'] = 'fix_poi' ;
-// 		$arrayColumns[$numberOfColumns]['columnIntitule'] = '# fix_poi (?) : ' ;
+// 		$arrayColumns[$numberOfColumns]['columnIntitule'] = 'fix_poi (?)' ;
 // 		$arrayColumns[$numberOfColumns]['dataType'] = 'boolean' ;
 		$numberOfColumns++;
 		//info personne qui a remonté l'observationr
 		$arrayColumns[$numberOfColumns]['columnSQL'] = 'adherent_poi' ;
 		$arrayColumns[$numberOfColumns]['columnPOST'] = 'adherent_poi' ;
-		$arrayColumns[$numberOfColumns]['columnIntitule'] = '# Nom du contributeur : ' ;
+		$arrayColumns[$numberOfColumns]['columnIntitule'] = 'Nom du contributeur' ;
 		$arrayColumns[$numberOfColumns]['dataType'] = 'string' ;
 		$numberOfColumns++;
 		$arrayColumns[$numberOfColumns]['columnSQL'] = 'mail_poi' ;
 		$arrayColumns[$numberOfColumns]['columnPOST'] = 'mail_poi' ;
-		$arrayColumns[$numberOfColumns]['columnIntitule'] = '# Mail du contributeur : ' ;
+		$arrayColumns[$numberOfColumns]['columnIntitule'] = 'Mail du contributeur' ;
 		$arrayColumns[$numberOfColumns]['dataType'] = 'mail' ;
 		$numberOfColumns++;
 		$arrayColumns[$numberOfColumns]['columnSQL'] = 'tel_poi' ;
 		$arrayColumns[$numberOfColumns]['columnPOST'] = 'tel_poi' ;
-		$arrayColumns[$numberOfColumns]['columnIntitule'] = '# Téléphone du contributeur : ' ;
+		$arrayColumns[$numberOfColumns]['columnIntitule'] = 'Téléphone du contributeur' ;
 		$arrayColumns[$numberOfColumns]['dataType'] = 'string' ;
 		$numberOfColumns++;
 		$arrayColumns[$numberOfColumns]['columnSQL'] = 'mailsentuser_poi' ;
 		$arrayColumns[$numberOfColumns]['columnPOST'] = 'mailsentuser_poi' ;
-		$arrayColumns[$numberOfColumns]['columnIntitule'] = '# Mail envoyé au contributeur : ' ;
+		$arrayColumns[$numberOfColumns]['columnIntitule'] = 'Mail envoyé au contributeur' ;
 		$arrayColumns[$numberOfColumns]['dataType'] = 'boolean' ;
 		$numberOfColumns++;
 		$arrayColumns[$numberOfColumns]['columnSQL'] = 'delete_poi' ;
 		$arrayColumns[$numberOfColumns]['columnPOST'] = 'delete_poi' ;
-		$arrayColumns[$numberOfColumns]['columnIntitule'] = '# Observation supprimée : ' ;
+		$arrayColumns[$numberOfColumns]['columnIntitule'] = 'Observation supprimée' ;
 		$arrayColumns[$numberOfColumns]['dataType'] = 'boolean' ;
 		$numberOfColumns++;
 		//informations générales observation
 		$arrayColumns[$numberOfColumns]['columnSQL'] = 'datecreation_poi' ;
 		$arrayColumns[$numberOfColumns]['columnPOST'] = 'datecreation_poi' ;
-		$arrayColumns[$numberOfColumns]['columnIntitule'] = '# Date de création de l\'observation : ' ;
+		$arrayColumns[$numberOfColumns]['columnIntitule'] = 'Date de création de l\'observation' ;
 		$arrayColumns[$numberOfColumns]['dataType'] = 'Date' ;
 		$numberOfColumns++;
 		$arrayColumns[$numberOfColumns]['columnSQL'] = 'lastdatemodif_poi' ;
 		$arrayColumns[$numberOfColumns]['columnPOST'] = 'lastdatemodif_poi' ;
-		$arrayColumns[$numberOfColumns]['columnIntitule'] = '# Date de dernière modification : ' ;
+		$arrayColumns[$numberOfColumns]['columnIntitule'] = 'Date de dernière modification' ;
 		$arrayColumns[$numberOfColumns]['dataType'] = 'Date' ;
 		$numberOfColumns++;
 		$arrayColumns[$numberOfColumns]['columnSQL'] = 'geolocatemode_poi' ;
 		$arrayColumns[$numberOfColumns]['columnPOST'] = 'geolocatemode_poi' ;
-		$arrayColumns[$numberOfColumns]['columnIntitule'] = '# Mode de géolocalisation utilisé : ' ;
+		$arrayColumns[$numberOfColumns]['columnIntitule'] = 'Mode de géolocalisation utilisé' ;
 		$arrayColumns[$numberOfColumns]['dataType'] = 'integer' ;
 		$numberOfColumns++;
 		$arrayColumns[$numberOfColumns]['columnSQL'] = 'latitude_poi' ;
 		$arrayColumns[$numberOfColumns]['columnPOST'] = 'latitude_poi' ;
-		$arrayColumns[$numberOfColumns]['columnIntitule'] = '# Latitude observation : ' ;
+		$arrayColumns[$numberOfColumns]['columnIntitule'] = 'Latitude observation' ;
 		$arrayColumns[$numberOfColumns]['dataType'] = 'position' ;
 		$numberOfColumns++;
 		$arrayColumns[$numberOfColumns]['columnSQL'] = 'longitude_poi' ;
 		$arrayColumns[$numberOfColumns]['columnPOST'] = 'longitude_poi' ;
-		$arrayColumns[$numberOfColumns]['columnIntitule'] = '# Longitude observation : ' ;
+		$arrayColumns[$numberOfColumns]['columnIntitule'] = 'Longitude observation' ;
 		$arrayColumns[$numberOfColumns]['dataType'] = 'position' ;
 		$numberOfColumns++;
 		$arrayColumns[$numberOfColumns]['columnSQL'] = 'photo_poi' ;
 		$arrayColumns[$numberOfColumns]['columnPOST'] = 'photo_poi' ;
-		$arrayColumns[$numberOfColumns]['columnIntitule'] = '# Photo : ' ;
+		$arrayColumns[$numberOfColumns]['columnIntitule'] = 'Photo' ;
 		$arrayColumns[$numberOfColumns]['dataType'] = 'photo' ;
 		
 		
-		
+		$DetailObservation .='<table>';
+		$DetailObservation .='<thead><tr><td>Champ</td><td>Valeur initialie</td><td>Valeur modifiée</td></tr></thead>';
 		for ($i = 0; $i < count($arrayColumns); $i++) {
+		    $DetailObservation .='<tr>';
+		    $DetailObservation .='<td>'. $arrayColumns [$i] ['columnIntitule'].'</td>';
 			$columnUpdated = 0;
 			if (DEBUG) {
 				error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - commonfunction.php, traitement de " . $arrayColumns[$i]['columnSQL'] . " \n", 3, LOG_FILE );
@@ -438,6 +440,7 @@
 					if (DEBUG) {
 						error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - commonfunction.php, " . $arrayColumns [$i] ['columnSQL'] . ", boolean\n", 3, LOG_FILE );
 					}
+					
 					$OldValue = (strlen($arrayObservation[$arrayColumns[$i]['columnSQL']]) > 0)?$arrayObservation[$arrayColumns[$i]['columnSQL']]:0;
 					switch ($_POST [$arrayColumns [$i] ['columnPOST']]){
 						case 'false':
@@ -579,7 +582,8 @@
 								break;
 						}
 					}
-					$DetailObservation .= "       ".$arrayColumns [$i] ['columnIntitule'] . "\"" .((strlen ( $OldValue ) > 0) ?  $OldValue : "Non Renseigné") . "\" remplacé par \"" . $NewValue . "\"\n";
+					$DetailObservation .='<td>'. ((strlen ( $OldValue ) > 0) ?  $OldValue : "Non Renseigné").'</td><td>'.$NewValue.'</td>';
+					//$DetailObservation .= "       ".$arrayColumns [$i] ['columnIntitule'] . "\"" .((strlen ( $OldValue ) > 0) ?  $OldValue : "Non Renseigné") . "\" remplacé par \"" . $NewValue . "\"\n";
 					
 					$updateObservationBoolean = 1;
 				} 
@@ -640,21 +644,23 @@
 								break;
 						}
 					}
-					$DetailObservation .= $arrayColumns [$i] ['columnIntitule'] . "\"" . ((strlen ( $OldValue ) > 0) ? $OldValue : "Non Renseigné") . "\"\n";
+					//$DetailObservation .= $arrayColumns [$i] ['columnIntitule'] . "\"" . ((strlen ( $OldValue ) > 0) ? $OldValue : "Non Renseigné") . "\"\n";
+					$DetailObservation .='<td>'. ((strlen ( $OldValue ) > 0) ?  $OldValue : "Non Renseigné").'</td><td></td>';
+					
 				}
+				$DetailObservation .='</tr>';
 		}
+		$DetailObservation .="</table>\n";
 		if (DEBUG) {
 			error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - commonfunction.php, sqlUpdate " . $sqlUpdate . " \n", 3, LOG_FILE );
 			error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - commonfunction.php, updateObservationBoolean " . $updateObservationBoolean . " \n", 3, LOG_FILE );
 		}
-		$DetailObservation .= "# Lien direct vers l'observation (non visible sur la carte tant que la modération n'a pas été effectuée) : ".URL.'?id='.$arrayObservation['id_poi'];
-		$helpReadingDetailsOfPOI = '';
+		$DetailObservation .= "Lien direct vers l'observation (non visible sur la carte tant que la modération n'a pas été effectuée) : ".URL.'?id='.$arrayObservation['id_poi'];
 		if ($sqlUpdate != ""){
-			$helpReadingDetailsOfPOI = "(les lignes avec un alinéa correspondent aux informations modifiées)";
 			$lastdatemodif_poi = date("Y-m-d H:i:s");
 			$sqlUpdate = " lastdatemodif_poi = '$lastdatemodif_poi', lastmodif_user_poi = ".$_SESSION ['id_users']." ".$sqlUpdate;
 		}
-		$DetailObservation = "------------- Détails de l'observation ------------- \n" . $helpReadingDetailsOfPOI."\n# Numéro observation : ". $arrayObservation['id_poi']."\n".$DetailObservation;
+		$DetailObservation = "------------- Détails de l'observation numéro : ". $arrayObservation['id_poi']."-------------\n".$DetailObservation;
 		$arrayDetailsAndUpdateSQL=array();
 		$arrayDetailsAndUpdateSQL['updateObsBoolean'] = $updateObservationBoolean;
 		$arrayDetailsAndUpdateSQL['sqlUpdate'] = $sqlUpdate;
@@ -670,7 +676,7 @@
 	* 	Date			: septembre 19 2017
 	*/
 	function getMailsToSend($whereClauseSelectionUsers, $subject, $message){
-		$sql = "SELECT u.mail_users, ut.lib_usertype, u.lib_users FROM users u inner join usertype ut on ut.id_usertype = u.usertype_id_usertype WHERE " . $whereClauseSelectionUsers;
+		$sql = "SELECT u.mail_users, ut.lib_usertype, u.lib_users FROM users u inner join users_link_pole ulp on ulp.id_user = u.id_users inner join usertype ut on ut.id_usertype = u.usertype_id_usertype WHERE " . $whereClauseSelectionUsers;
 		if (DEBUG){
 			error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " requete de recuperation des mails des utilisateurs ". $sql . " \n", 3, LOG_FILE);
 		}
@@ -690,6 +696,54 @@
 			error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " Il y a ". count($mails) . " mails à envoyer \n", 3, LOG_FILE);
 		}
 		return $mails;
+	}
+	/*	Function name	: getMailsToSend
+	 * 	Input			: $whereClauseSelectionUsers : constraint to get e-mail of users
+	 * 	Input			: $subject of the e-mail to be sent to the selected users
+	 * 	Input			: $message, body of the e-mail to be sent to the selected users
+	 * 	Output			: $mails, an array containing e-mails, user status, subject and message
+	 * 	Object			: get the e-mail adresses and link th e subject and message to be sent
+	 * 	Date			: septembre 19 2017
+	 */
+	function getMailsToSendFromVotesAndComments($id_poi, $subject, $message){
+	    $mails = array();
+	    
+	    $sqlComment = "SELECT distinct(mail_commentaires) FROM commentaires WHERE poi_id_poi = $id_poi AND comment_poi_follow = 1";
+	    if (DEBUG){
+	        error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " requete de recuperation des mails des utilisateurs ayant voté ". $sqlComment . " \n", 3, LOG_FILE);
+	    }
+	    $resultComment = mysql_query($sqlComment);
+	    
+	    if ($resultComment){
+	        if (DEBUG){
+	            error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " Récupération des mails à envoyer \n", 3, LOG_FILE);
+	        }
+	        while ($row2 = mysql_fetch_array($resultComment)) {
+	            $mailArray = [$row2['mail_commentaires'],"", $subject, $message ];
+	            array_push($mails,$mailArray);
+	        }
+	        
+	    }
+	    
+	    $sqlVote = "SELECT distinct(support_poi_mail) FROM support_poi WHERE poi_poi_id = $id_poi AND support_poi_follow = 1";
+	    if (DEBUG){
+	        error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " requete de recuperation des mails des utilisateurs ayant voté ". $sqlVote . " \n", 3, LOG_FILE);
+	    }
+	    $resultVote = mysql_query($sqlVote);
+	    if ($resultVote){
+	        if (DEBUG){
+	            error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " Récupération des mails à envoyer \n", 3, LOG_FILE);
+	        }
+	        while ($row2 = mysql_fetch_array($resultVote)) {
+	            $mailArray = [$row2['support_poi_mail'],"", $subject, $message ];
+	            array_push($mails,$mailArray);
+	        }
+	        
+	    }
+	    if (DEBUG){
+	        error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " Il y a ". count($mails) . " mails à envoyer pour les followers \n", 3, LOG_FILE);
+	    }
+	    return $mails;
 	}
 	/*	Function name	: sendMails
 	 * 	Input			: array $mailsArray (created with getMailsToSend)
@@ -716,13 +770,13 @@
 	function sendMail ($to, $subject, $body){
 		$headers = 'From: '. MAIL_FROM . "\r\n" .
 				'Reply-To: ' . MAIL_REPLY_TO ."\r\n" .
-				'Content-Type: text/plain; charset=UTF-8' . "\r\n" .
+				'Content-Type: text/html; charset=UTF-8' . "\r\n" .
 				'X-Mailer: PHP/' . phpversion();
 		if (DEBUG){
 			error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - commonfunction.php - Mail avec comme sujet = ".MAIL_SUBJECT_PREFIX . ' '.$subject ." et envoyé à " . $to ."\n", 3, LOG_FILE);
 		}
-	
-		mail($to, MAIL_SUBJECT_PREFIX . ' '.$subject, $body, $headers);
+		$body = "<html><head><style>table, td {border: 1px solid black;border-collapse: collapse;}tr:nth-child(odd) {background: #CCCCCC;}thead{background-color:#D0E3FA;font-weight: bold;}</style><title>".$subject."</title></head><body>".$body."</body></html>";
+		mail($to, MAIL_SUBJECT_PREFIX . ' '.$subject, nl2br($body), $headers);
 		//mail($to, MAIL_SUBJECT_PREFIX . ' '.$subject, $body);
 	
 	}

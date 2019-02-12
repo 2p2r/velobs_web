@@ -194,6 +194,15 @@ if (isset ( $_SESSION ['user'] )) {
 		case "LISTINGUSER" :
 			getUsers ( $start, $limit );
 			break;
+		case "CREATELINKUSERPOLE" :
+		    createLinkUserPole ();
+		    break;
+		case "LISTINGLINKUSERPOLE" :
+		    getLinksUserPole ( $start, $limit );
+		    break;
+		case "DELETELINKUSERPOLE" :
+		    deleteLinkUserPole ();
+		    break;
 		case "UPDATEUSER" :
 			updateUser ();
 			break;
@@ -215,11 +224,17 @@ if (isset ( $_SESSION ['user'] )) {
 			getComments ( $id_poi );
 			break;
 		case "EDITCOMMENTS" :
-			editComment ( $_POST ['id_comment'], $_POST ['text_comment'], $_POST ['display_commentaires'] );
+		    editComment ( $_POST ['id_comment'], $_POST ['text_comment'], $_POST ['display_commentaires']);
 			break;
 		case "CREATEPUBLICCOMMENTS" :
 			createPublicComment ();
 			break;
+		case "CREATESUPPORT" :
+		    if (DEBUG) {
+		        error_log(date("Y-m-d H:i:s") . " Before createSupport() \n", 3, LOG_FILE);
+		    }
+		    createSupport ();
+		    break;
 		case "LISTINGPHOTOS" :
 			getComments ( $id_poi );
 			break;
@@ -240,6 +255,12 @@ if (isset ( $_SESSION ['user'] )) {
 		case "CREATEPUBLICCOMMENTS" :
 			createPublicComment ();
 			break;
+		case "CREATESUPPORT" :
+		    if (DEBUG) {
+		        error_log(date("Y-m-d H:i:s") . " Before createSupport() \n", 3, LOG_FILE);
+		    }
+		    createSupport ();
+		    break;
 	}
 }
 ?>

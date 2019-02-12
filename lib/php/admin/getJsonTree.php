@@ -16,7 +16,7 @@ if (isset ( $_SESSION ['user'] )) {
 			
 			if ($_SESSION ['role'] == 3) { // pole technique
 				$whereClauseSQL = " display_subcategory = TRUE 
-						 	AND p.pole_id_pole = " . $_SESSION ['pole'] . " 
+						 	AND p.pole_id_pole IN (" . $_SESSION ['pole'] . ") 
 						 	AND priorite.non_visible_par_collectivite = 0  
 						 	AND delete_poi = FALSE 
 						 	AND p.geom_poi IS NOT NULL 	
@@ -26,7 +26,7 @@ if (isset ( $_SESSION ['user'] )) {
 						 	AND p.transmission_poi = TRUE ";
 			} else if ($_SESSION ['role'] == 4) { // moderateur
 				$whereClauseSQL = " display_subcategory = TRUE 
-						 	AND p.pole_id_pole = " . $_SESSION ['pole'] . " 
+						 	AND p.pole_id_pole IN (" . $_SESSION ['pole'] . " )
 						 	AND p.delete_poi = FALSE 
 						 	AND p.geom_poi IS NOT NULL 
 						 	AND p.display_poi = TRUE 
@@ -76,8 +76,6 @@ if (isset ( $_SESSION ['user'] )) {
 				if (DEBUG) {
 					error_log ( date ( "Y-m-d H:i:s" ) . " - admin/getJsonTree.php $sqlSubCategory\n", 3, LOG_FILE );
 				}
-				// $sql2 = "SELECT ,
-				// COUNT(poi.id_poi) as nb_poi, subcategory.* FROM subcategory WHERE display_subcategory = TRUE AND category_id_category = ".$row['id_category']." ORDER BY treerank_subcategory ASC";
 				$result2 = mysql_query ( $sqlSubCategory );
 				if (mysql_num_rows ( $result2 ) > 0) {
 					$json .= "leaf: false,";
@@ -107,7 +105,6 @@ if (isset ( $_SESSION ['user'] )) {
 			mysql_free_result ( $result );
 			mysql_free_result ( $result2 );
 			mysql_close ( $link );
-			
 			break;
 		case 'postgresql' :
 			// TODO
