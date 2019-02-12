@@ -99,7 +99,7 @@ if (isset ( $_SESSION ['user'] )) {
 			if (isset ( $_GET ["nbSupportMinimum"] ) && $_GET ["nbSupportMinimum"] != '' && $_GET ["nbSupportMinimum"] > 0) { // filter by status given by the collectivity
 			    $sqlappend .= ' AND poi.id_poi IN (select poi_poi_id from support_poi group by poi_poi_id having count(*) >= '.$_GET ["nbSupportMinimum"].')';
 			}
-			$sql .= $datesqlappend . $sqlappend;
+			$sql .= $sqlappend.$datesqlappend;
 
 			if (DEBUG) {
 				error_log ( date ( "Y-m-d H:i:s" ) . " - admin/getMarker.php sql = $sql\n", 3, LOG_FILE );
