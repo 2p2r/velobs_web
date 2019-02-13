@@ -55,11 +55,17 @@ fi
 
 echo "$(tput setaf 4)Toutes les conditions semblent réunies pour passer la nouvelle version de velobs en production$(tput sgr 0)"
 
-echo "Copie des photos de "$velobsProd"/resources/pictures/ dans "$velobsDev"/resources"
+echo "Copie des photos de "$velobsProd"/resources/pictures/ dans "$velobsDev"/resources/"
 cp -r $velobsProd/resources/pictures/ $velobsDev/resources/
 
-echo "Copie des logos de "$velobsProd"/resources/images/ dans "$velobsDev"/resources"
+echo "Copie des logos de "$velobsProd"/resources/images/ dans "$velobsDev"/resources/"
 cp -rf $velobsProd/resources/images/ $velobsDev/resources/
+
+echo "Copie des icones de "$velobsProd"/resources/icon/marker dans "$velobsDev"/resources/icon/"
+cp -rf $velobsProd/resources/icon/marker/ $velobsDev/resources/icon/
+
+echo "Copie du css des marker de "$velobsProd"/resources/css/iconmarker.css dans "$velobsDev"/resources/css/"
+cp -rf $velobsProd/resources/css/iconmarker.css $velobsDev/resources/css/
 
 echo "Copie de "$velobsProd"/lib/php/key.php dans "$velobsDev"/lib/php/"
 cp $velobsProd/lib/php/key.php $velobsDev/lib/php/
