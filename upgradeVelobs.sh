@@ -77,7 +77,7 @@ echo -n "$(tput setaf 2)Merci de modifier "$velobsDev"/lib/js/key.js et "$velobs
 read
 
 echo "Application des droits d'écriture sur le répertoire de sortie où sont générés les fichiers csv d'export de velobs : chmod 775 "$velobsDev"/resources/csv "$velobsDev"/resources/pictures"
-chmod 775 $velobsDev/resources/csv $velobsDev/resources/pictures $velobsDev/resources/icon/marker
+chmod -R 775 $velobsDev/resources/csv $velobsDev/resources/pictures $velobsDev/resources/icon/marker $velobsDev/resources/css
 
 echo "switch des version de velobs pour le passage en production : mv $velobsProd $velobsProd$timestamp; mv $velobsDev $velobsProd"
 mv $velobsProd $velobsProd.$timestamp;mv $velobsDev $velobsProd
