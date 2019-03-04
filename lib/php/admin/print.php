@@ -56,6 +56,10 @@
         $pdf->SetFont('Arial', '', 12);
         $pdf->MultiCell(0, 5, utf8_decode($poi_data['desc_poi'] . "\n\n"));
 
+        $pdf->MultiCell(0, 5, utf8_decode("Commentaire Vélo Cité: " . $poi_data['commentfinal_poi'] . "\n\n"));
+
+        $pdf->MultiCell(0, 5, utf8_decode("Commentaire Métropole: " . $poi_data['reponsegrandtoulouse_poi'] . "\n\n"));
+
         if (isset($poi_data['photo_poi'])) {
             $photo_filename = '../../../resources/pictures/' . $poi_data['photo_poi'];
             if (file_exists($photo_filename) && is_file($photo_filename))
