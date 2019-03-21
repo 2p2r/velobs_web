@@ -776,7 +776,7 @@ L'observation que vous avez envoyée sur VelObs a changé de statut. Le problèm
 							
 							// mail à la personne qui a envoyé la proposition pour le prévenir que son intervention a été prise en compte par la comcom et par l'asso, que si le champ commentfinal_poi n'est pas vide, sinon erreur
 							//Priorité Cloturé
-							if ($new_id_priorite == 6 ) {
+							if (false && $new_id_priorite == 6 ) {	// désactivation mail
 								if ($arrayObs['commentfinal_poi'] == '' && $_POST['commentfinal_poi'] == '' ){
 									$updatePOI  = 0;
 									$returnCode = 10; // pour cloturer il faut que le commentaire final ne soit pas vide
@@ -789,7 +789,7 @@ L'Association ".VELOBS_ASSOCIATION." vous remercie. Le problème a bien été pr
 							}
 							// mail à la personne qui a envoyé la proposition pour le prévenir que son intervention ne sera pas prise en compte par l'asso, que si le champ commentfinal_poi n'est pas vide, sinon erreur
 							//Priorité Refusé par l'association
-							if ($new_id_priorite == 7) {
+							if (false && $new_id_priorite == 7) {	// désactivation mail
 								if ($arrayObs['commentfinal_poi'] == '' && $_POST['commentfinal_poi'] == '' ){
 									$updatePOI  = 0;
 									$returnCode = 10; // pour cloturer il faut que le commentaire final ne soit pas vide
@@ -805,7 +805,7 @@ Cependant le problème rapporté a été refusé par l'association et n'a pas é
 							}
 							// mail à la personne qui a envoyé la proposition pour le prévenir que son intervention ne sera pas prise en compte par l'asso, que si le champ commentfinal_poi n'est pas vide, sinon erreur
 							//Priorité Refusé par la collectivité
-							if ($new_id_priorite == 12) {
+							if (false && new_id_priorite == 12) {	// désactivation mail
 								if ($arrayObs['commentfinal_poi'] == '' && $_POST['commentfinal_poi'] == '' ){
 									$updatePOI  = 0;
 									$returnCode = 10; // pour cloturer il faut que le commentaire final ne soit pas vide
@@ -821,7 +821,7 @@ Cependant le problème rapporté a été refusé par la collectivité.\n".$array
 							}
 							// mail à la personne qui a envoyé la proposition pour le prévenir que son intervention est en doublon, que si le champ commentfinal_poi n'est pas vide, sinon erreur
 							//Priorité DOUBLON
-							if ($new_id_priorite == 15) {
+							if (false && $new_id_priorite == 15) {	// désactivation mail
 								if ($arrayObs['commentfinal_poi'] == '' && $_POST['commentfinal_poi'] == '' ){
 									$updatePOI  = 0;
 									$returnCode = 11; // pour cloturer il faut que le commentaire final ne soit pas vide, et donner le numero du doublon
@@ -837,7 +837,7 @@ Vous pouvez ajouter de nouvelles photos et ou commentaires à l\'observation exi
 							}
 							// mail à la personne qui a envoyé la proposition pour le prévenir que son intervention est une urgence, que si le champ commentfinal_poi n'est pas vide, sinon erreur
 							//URGENCE
-							if ($new_id_priorite == 8) {
+							if (false && $new_id_priorite == 8) {	// désactivation mail
 								if ($arrayObs['commentfinal_poi'] == '' && $_POST['commentfinal_poi'] == '' ){
 									$updatePOI  = 0;
 									$returnCode = 10; // pour cloturer il faut que le commentaire final ne soit pas vide
