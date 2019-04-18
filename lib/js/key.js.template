@@ -75,7 +75,7 @@ var ClusterStrategyDistance = 30;
 //Be aware that an update of velobs will not keep the png files you added in resources/icon, you will have to copy them manually. Feel free to add your new colors in the velobs project on github (https://github.com/2p2r/velobs_web)
 var predefinedColorsForStatus = [['Vert','green'],['Noir','black'],['Rouge','red'],['Bleu','blue'],['Marron','brown'],['Violet','purple']];
 
-//fields to inactivate for each role (have a look at the install.odt file which lists all the ids usable in thes arrays
+//fields to inactivate for each role (have a look at the INSTALL.md file which lists all the ids usable in thes arrays
 var arrayComponentsToDisableRole1Admin = ["latitude","longitude","emailPOIField","StatusPOIField","RespComcomPOIField", "RespPolePOIField","TraitePolePOIField","TransmissionPolePOIField"];
 var arrayComponentsToDisableRole2CommunauteCommunes = ["RespPolePOIField","latitude","longitude","emailPOIField","sendMailButton","SubCategoryPOIField", "DescPOIField", "PropPOIField", "RuePOIField", "ObsPOIField", "NumPOIField","PrioritePOIField","CommentFinalPOIField","ModerationPOIField","DisplayPOIField"];
 var arrayComponentsToDisableRole3PoleTechnique = ["latitude","longitude","emailPOIField","sendMailButton","SubCategoryPOIField", "CommunePOIField", "PolePOIField", "RespComcomPOIField", "DescPOIField", "PropPOIField", "RuePOIField", "ObsPOIField", "NumPOIField", "PrioritePOIField","CommentFinalPOIField","ModerationPOIField","DisplayPOIField"];
