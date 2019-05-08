@@ -2,10 +2,8 @@
     text-align : center;
 }
 
-.header__logo {
-    height         : 100%;
-    vertical-align : middle;
-    margin-left    : 0px!important; /* TODO (CMR) : supprimer le !important quand style="margin-left:50px" aura été supprimé du template */
+.header__logo--velocite {
+    height : 100%;
 }
 
 .header__slogan {
