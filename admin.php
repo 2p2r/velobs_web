@@ -99,6 +99,11 @@
 			<script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Initialization...';</script> 
 		</div>
 
+		<img src="resources/images/cyclofiche.png"
+			 title="CycloFiche"
+			 alt="CycloFiche"
+			 style="height: 85px; position: absolute; left: 85px; top: 10px;"/>
+			 
 		<div>
 			<div id="disconnect" title="<?php echo getTranslation($_SESSION['id_language'],'DISCONNECT'); ?>" onclick="self.location.href ='lib/php/admin/disconnect.php';"></div>
 			<div id="gotopublicmap" title=<?php echo getTranslation($_SESSION['id_language'],'OPENPUBLICMAP'); ?> onclick="window.open('./');"></div>
@@ -187,10 +192,15 @@
 			<script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Initialization...';</script> 
 		</div>
 		
+		<img src="resources/images/cyclofiche.png"
+			 title="CycloFiche"
+			 alt="CycloFiche"
+			 style="height: 85px; position: absolute; left: 85px; top: 10px;"/>
+
 		<img src="resources/images/bmheader.png"
 			 title="Logo Bordeaux Métropole"
 			 alt="Logo Bordeaux Métropole"
-			 style="height: 85px; position: absolute; left: 85px; top: 10px;"/>
+			 style="height: 85px; position: absolute; left: 195px; top: 10px;"/>
 
 		<div>
 			<div id="disconnect" title="<?php echo getTranslation($_SESSION['id_language'],'DISCONNECT'); ?>" onclick="self.location.href ='lib/php/admin/disconnect.php';"></div>
