@@ -62,7 +62,7 @@ html, body{
 }
 .header .x-panel-body { 
 	background-color : #F0F0F0;
-	background       : url(../images/logo-admin.png) no-repeat;
+	background       : url(../images/logo-main.png) no-repeat;
 	background-size  : auto 100%;
 }
 .headergt .x-panel-body {
