@@ -10,7 +10,7 @@ VelObs est en  production à
 * Les Ardennes : https://velobs08.ouvaton.org/ (mai 2018), application android (mai 2018)
 * Lyon : en cours de test (https://lavilleavelo.org/velobs/)
 
-# Quelques commentaires sur l'application :
+## Quelques commentaires sur l'application :
 * VelObs est une application web nécessitant un serveur web avec php et MySQL/MariaDB comme base de données (versions minimum à venir)
 
 * le répertoire lib/js contient tous les scripts nécessaires à l'utilisation :
@@ -47,5 +47,8 @@ VelObs est en  production à
     * répertoire kml des fichiers de géométries (utile au début)
     * répertoire pictures contient toutes les images relatives aux enregistrements
     * répertoire sql contient toutes les tables de la base de données ) la date du 10 janvier 2016
+
+## Documentation
    
-Pour installer VelObs sur votre territoire, veuillez consulter le document INSTALL.odt
+Pour installer VelObs sur votre territoire, veuillez consulter le document [INSTALL.md](INSTALL.md) 
+Pour utiliser l'application, veuillez consulter le document [documentation_utilisateurs.md](documentation_utilisateurs.md)
