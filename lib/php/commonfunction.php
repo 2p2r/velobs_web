@@ -426,11 +426,11 @@
 		$arrayColumns[$numberOfColumns]['dataType'] = 'photo' ;
 		
 		
-		$DetailObservation .='<table>';
-		$DetailObservation .='<thead><tr><td>Champ</td><td>Valeur initialie</td><td>Valeur modifiée</td></tr></thead>';
+		$DetailObservation .="<table>\n";
+		$DetailObservation .="<thead>\n<tr><td>Champ</td>\n<td>Valeur initiale</td>\n<td>Valeur modifiée</td>\n</tr>\n</thead>\n";
 		for ($i = 0; $i < count($arrayColumns); $i++) {
-		    $DetailObservation .='<tr>';
-		    $DetailObservation .='<td>'. $arrayColumns [$i] ['columnIntitule'].'</td>';
+		    $DetailObservation .="<tr>\n";
+		    $DetailObservation .="<td>\n". $arrayColumns [$i] ['columnIntitule']."</td>\n";
 			$columnUpdated = 0;
 			if (DEBUG) {
 				error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - commonfunction.php, traitement de " . $arrayColumns[$i]['columnSQL'] . " \n", 3, LOG_FILE );
@@ -569,7 +569,7 @@
 						}
 						switch ($arrayObservation [$arrayColumns [$i] ['columnSQL']]) {
 							case 1:
-								$OldValue = "Positionnement manuel sur une carte";
+								$OldValue = "Positionnement manuel sur une carte\n";
 								break;
 							case 2:
 								$OldValue = "GPS";
@@ -582,7 +582,7 @@
 								break;
 						}
 					}
-					$DetailObservation .='<td>'. ((strlen ( $OldValue ) > 0) ?  $OldValue : "Non Renseigné").'</td><td>'.$NewValue.'</td>';
+					$DetailObservation .="<td>\n". ((strlen ( $OldValue ) > 0) ?  wordwrap($OldValue,70) : "Non Renseigné")."</td>\n<td>\n".wordwrap($NewValue,70)."</td>\n";
 					//$DetailObservation .= "       ".$arrayColumns [$i] ['columnIntitule'] . "\"" .((strlen ( $OldValue ) > 0) ?  $OldValue : "Non Renseigné") . "\" remplacé par \"" . $NewValue . "\"\n";
 					
 					$updateObservationBoolean = 1;
@@ -614,13 +614,13 @@
 							$OldValue = $arrayObservation['lib_priorite'];
 							break;
 						case 'adherent_poi' :
-							$OldValue = 'Information uniquement accessible aux personnes en charge du traitement de l\'observation';
+							$OldValue = "Information uniquement accessible\n aux personnes en charge du traitement de l'observation";
 							break;
 						case 'mail_poi' :
-							$OldValue = 'Information uniquement accessible aux personnes en charge du traitement de l\'observation';
+							$OldValue = "Information uniquement accessible\n aux personnes en charge du traitement de l'observation";
 							break;
 						case 'tel_poi' :
-							$OldValue = 'Information uniquement accessible aux personnes en charge du traitement de l\'observation';
+							$OldValue = "Information uniquement accessible\n aux personnes en charge du traitement de l'observation";
 							break;
 					}
 					if ($arrayColumns[$i]['dataType'] == 'boolean'){
@@ -631,7 +631,7 @@
 					}elseif($arrayColumns [$i] ['columnSQL'] =='geolocatemode_poi'){
 						switch ($arrayObservation [$arrayColumns [$i] ['columnSQL']]) {
 							case 1:
-								$OldValue = "Positionnement manuel sur une carte";
+								$OldValue = "Positionnement manuel sur une carte\n";
 								break;
 							case 2:
 								$OldValue = "GPS";
@@ -645,22 +645,22 @@
 						}
 					}
 					//$DetailObservation .= $arrayColumns [$i] ['columnIntitule'] . "\"" . ((strlen ( $OldValue ) > 0) ? $OldValue : "Non Renseigné") . "\"\n";
-					$DetailObservation .='<td>'. ((strlen ( $OldValue ) > 0) ?  $OldValue : "Non Renseigné").'</td><td></td>';
+					$DetailObservation .="<td>\n". ((strlen ( $OldValue ) > 0) ?  wordwrap($OldValue,70) : "Non Renseigné\n")."</td>\n<td></td>\n";
 					
 				}
-				$DetailObservation .='</tr>';
+				$DetailObservation .="</tr>\n";
 		}
 		$DetailObservation .="</table>\n";
 		if (DEBUG) {
 			error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - commonfunction.php, sqlUpdate " . $sqlUpdate . " \n", 3, LOG_FILE );
 			error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - commonfunction.php, updateObservationBoolean " . $updateObservationBoolean . " \n", 3, LOG_FILE );
 		}
-		$DetailObservation .= "Lien direct vers l'observation (non visible sur la carte tant que la modération n'a pas été effectuée) : ".URL.'?id='.$arrayObservation['id_poi'];
+		$DetailObservation .= "Lien direct vers l'observation \n(non visible sur la carte tant que la modération \nn'a pas été effectuée) : \n".URL.'?id='.$arrayObservation['id_poi']."\n<br >";
 		if ($sqlUpdate != ""){
 			$lastdatemodif_poi = date("Y-m-d H:i:s");
 			$sqlUpdate = " lastdatemodif_poi = '$lastdatemodif_poi', lastmodif_user_poi = ".$_SESSION ['id_users']." ".$sqlUpdate;
 		}
-		$DetailObservation = "------------- Détails de l'observation numéro : ". $arrayObservation['id_poi']."-------------\n".$DetailObservation;
+		$DetailObservation = "------------- Détails de l'observation numéro\n : ". $arrayObservation['id_poi']." -------------\n".$DetailObservation;
 		$arrayDetailsAndUpdateSQL=array();
 		$arrayDetailsAndUpdateSQL['updateObsBoolean'] = $updateObservationBoolean;
 		$arrayDetailsAndUpdateSQL['sqlUpdate'] = $sqlUpdate;
@@ -775,8 +775,8 @@
 		if (DEBUG){
 			error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - commonfunction.php - Mail avec comme sujet = ".MAIL_SUBJECT_PREFIX . ' '.$subject ." et envoyé à " . $to ."\n", 3, LOG_FILE);
 		}
-		$body = "<html><head><style>table, td {border: 1px solid black;border-collapse: collapse;}tr:nth-child(odd) {background: #CCCCCC;}thead{background-color:#D0E3FA;font-weight: bold;}</style><title>".$subject."</title></head><body>".$body."</body></html>";
-		mail($to, MAIL_SUBJECT_PREFIX . ' '.$subject, nl2br($body), $headers);
+		$body = "<html>\n<head>\n<style\n>table, td \n{border: 1px solid black;\nborder-collapse: collapse;\n}tr:nth-child(odd)\n {background: #CCCCCC;}\nthead{background-color:#D0E3FA;\nfont-weight: bold;\n}</style>\n<title>\n".$subject."</title>\n</head>\n<body>\n".$body."</body>\n</html>\n";
+		mail($to, MAIL_SUBJECT_PREFIX . ' '.$subject, $body, $headers);
 		//mail($to, MAIL_SUBJECT_PREFIX . ' '.$subject, $body);
 	
 	}

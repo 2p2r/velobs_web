@@ -665,11 +665,11 @@ function updatePoi()
                 // mail aux comptes comcom du territoire concerné par l'observation et aux modérateurs
                 if ($poleedit == 1) {
                     $subject = 'Modification de l\'observation n°' . $arrayObs['id_poi'] . ' par le pole ' . $arrayObs['lib_pole'];
-                    $message = 'Bonjour !
-Le pole ' . $arrayObs['lib_pole'] . ' a modifié l\'observation n°' . $arrayObs['id_poi'] . "\n";
-                    $message .= "Lien vers la modération : " . URL . '/admin.php?id=' . $arrayObs['id_poi'] . "\n" . $arrayDetailsAndUpdateSQL['detailObservationString'] . "\n";
+                    $message = 'Bonjour !<br />
+Le pole ' . $arrayObs['lib_pole'] . ' a modifié l\'observation n°' . $arrayObs['id_poi'] . "<br />\n";
+                    $message .= "Lien vers la modération : " . URL . '/admin.php?id=' . $arrayObs['id_poi'] . "\n" . $arrayDetailsAndUpdateSQL['detailObservationString'] . "<br />\n";
                     
-                    $message .= "Cordialement, l'Association " . VELOBS_ASSOCIATION . " :)";
+                    $message .= "Cordialement, l'Association " . VELOBS_ASSOCIATION . " :)<br />";
                     $whereClause = "(u.usertype_id_usertype = 2 AND ulp.territoire_id_territoire = " . $arrayObs['territoire_id_territoire'] . ") OR (u.usertype_id_usertype = 4 AND ulp.num_pole = " . $arrayObs['pole_id_pole'] . ")";
                     $mailsComComModo = getMailsToSend($whereClause, $subject, $message);
                 }
@@ -713,10 +713,10 @@ Le pole ' . $arrayObs['lib_pole'] . ' a modifié l\'observation n°' . $arrayObs
                 if (isset($_SESSION['type']) && ($_SESSION['type'] == 2 || $_SESSION['type'] == 3)) {
                     // mail à l'association vélo pour prévenir d'une modif + mail au(x) responsable(s) du pole
                     $subject = 'Modification sur l\'observation n°' . $arrayObs['id_poi'] . ' - ' . $arrayObs['lib_pole'];
-                    $message = 'Bonjour !
-La collectivité ou un pôle technique (compte ' . $_SESSION['user'] . ') a modifié l\'observation n°' . $arrayObs['id_poi'] . ' du pole ' . $arrayObs['lib_pole'] . "\n
-Veuillez consulter l'interface d'administration pour consulter les informations relatives.
-Lien vers la modération : " . URL . '/admin.php?id=' . $arrayObs['id_poi'] . "\n" . $arrayDetailsAndUpdateSQL['detailObservationString'] . '
+                    $message = 'Bonjour !<br />
+La collectivité ou un pôle technique (compte ' . $_SESSION['user'] . ') a modifié l\'observation n°' . $arrayObs['id_poi'] . ' du pole ' . $arrayObs['lib_pole'] . "<br />\n
+Veuillez consulter l'interface d'administration pour consulter les informations relatives.<br />
+Lien vers la modération : " . URL . '/admin.php?id=' . $arrayObs['id_poi'] . "<br />\n" . $arrayDetailsAndUpdateSQL['detailObservationString'] . '
 ' . $signature;
                     // usertype_id_usertype : 1=Admin, 2=comcom, 3=pole tech, 4=moderateur
                     // mail aux admins velobs et aux modérateurs du pole concerné par l'observation
@@ -1656,10 +1656,10 @@ function createLinkUserPole()
                 $lib_users = mysql_result($resultUser, 0, "lib_users");
                 $mail_users = mysql_result($resultUser, 0, "mail_users");
                 
-                $message = "Bonjour,
-Votre compte " . $lib_users . " est maintenant modérateur sur le pôle " . $lib_pole . " (territoire " . $lib_territoire . "). Vous pouvez vous connecter à l'interface d'administration à l'adresse :
-" . URL . "/admin.php
-En cas de question, vous pouvez trouver des informations sur https://github.com/2p2r/velobs_web. N'hésitez pas à envoyer un courriel à " . MAIL_ALIAS_OBSERVATION_ADHERENTS . " pour toute question sur VelObs.";
+                $message = "Bonjour,<br />
+Votre compte " . $lib_users . " est maintenant modérateur sur le pôle \n" . $lib_pole . " (territoire " . $lib_territoire . ").\n Vous pouvez vous connecter à l'interface d'administration à l'adresse :
+" . URL . "/admin.php\n<br />
+En cas de question, vous pouvez trouver des informations sur\n https://github.com/2p2r/velobs_web.\n N'hésitez pas à envoyer un courriel à " . MAIL_ALIAS_OBSERVATION_ADHERENTS . " pour toute question sur VelObs.\n<br />";
                 sendMail($mail_users, "Création lien compte modérateur / pôle", $message);
                 echo '1:OK';
             }
@@ -1895,13 +1895,13 @@ function resetUserPassword()
                 echo '2';
             } else {
                 echo '1';
-                $message = "Bonjour,
-Votre compte sur VelObs a été mis à jour. Vous pouvez vous connecter à l'interface d'administration à l'adresse :
+                $message = "Bonjour,<br />
+Votre compte sur VelObs a été mis à jour.\n Vous pouvez vous connecter à l'interface d'administration à l'adresse :\n<br />
 " . URL . "/admin.php
-					Vos identifiants sont :
-					- Login : $userLogin
-					- Mot de passe : " . $clearPassword . "
-					En cas de question, vous pouvez trouver des informations sur https://github.com/2p2r/velobs_web. N'hésitez pas à envoyer un courriel à " . MAIL_ALIAS_OBSERVATION_ADHERENTS . " pour toute question sur VelObs.";
+					Vos identifiants sont :\n<br />
+					- Login : ".$userLogin."\n<br />
+					- Mot de passe : " . $clearPassword . "\n<br />
+					En cas de question, vous pouvez trouver des informations\n sur https://github.com/2p2r/velobs_web. N'hésitez pas à envoyer un courriel à\n " . MAIL_ALIAS_OBSERVATION_ADHERENTS . " pour toute question sur VelObs.\n<br />";
                 sendMail($userMail, "Réinitialisation mote de passe sur VelObs", $message);
             }
             
@@ -1972,11 +1972,11 @@ function updateUser()
                 echo '2';
             } else {
                 echo '1';
-                $message = "Bonjour,
-Votre compte sur VelObs a été mis à jour. Vous pouvez vous connecter à l'interface d'administration à l'adresse :
-" . URL . "/admin.php
+                $message = "Bonjour,<br />
+Votre compte sur VelObs a été mis à jour.\n Vous pouvez vous connecter à l'interface d'administration à l'adresse :<br />\n
+" . URL . "/admin.php\n<br />
 " . $message . "
-En cas de question, vous pouvez trouver des informations sur https://github.com/2p2r/velobs_web. N'hésitez pas à envoyer un courriel à " . MAIL_ALIAS_OBSERVATION_ADHERENTS . " pour toute question sur VelObs.";
+En cas de question, vous pouvez trouver des informations\n sur https://github.com/2p2r/velobs_web. \nN'hésitez pas à envoyer un courriel à \n" . MAIL_ALIAS_OBSERVATION_ADHERENTS . " pour toute question sur VelObs.\n<br />";
                 sendMail($mail_users, "Modification coordonnées sur VelObs", $message);
             }
             
@@ -2055,13 +2055,13 @@ function createUser()
             }
             if (! $error) {
                 $result = mysql_query($sqlUPL);
-                $message = "Bonjour,
-Vous disposez maintenant d'un compte sur velobs vous permettant de mettre à jour les observations enregistrées dans le système. Vous pouvez vous connecter à l'interface d'administration à l'adresse :
-" . URL . "/admin.php
-Vos identifiants sont :
-	- Login : $lib_users
-	- Mot de passe : " . $_POST['pass_users'] . "
-En cas de question, vous pouvez trouver des informations sur https://github.com/2p2r/velobs_web. N'hésitez pas à envoyer un courriel à " . MAIL_ALIAS_OBSERVATION_ADHERENTS . " pour toute question sur VelObs.";
+                $message = "Bonjour,<br />
+Vous disposez maintenant d'un compte sur velobs\n vous permettant de mettre à jour les observations\n enregistrées dans le système. Vous pouvez vous connecter\n à l'interface d'administration à l'adresse :\n<br />
+" . URL . "/admin.php\n<br />
+Vos identifiants sont :\n<br />
+	- Login : ".$lib_users."\n<br />
+	- Mot de passe : " . $_POST['pass_users'] . "\n<br />
+En cas de question, vous pouvez trouver des informations\n sur https://github.com/2p2r/velobs_web.\n N'hésitez pas à envoyer un courriel à\n " . MAIL_ALIAS_OBSERVATION_ADHERENTS . " pour toute question sur VelObs.\n<br />";
                 sendMail($mail_users, "Création compte sur VelObs", $message);
                 echo '1';
             }else{
@@ -2436,9 +2436,9 @@ function createPublicPoi()
                         /* envoi d'un mail aux administrateurs de l'association et modérateurs */
                         $whereClause = "u.usertype_id_usertype = 1 OR (u.usertype_id_usertype = 4 AND ulp.num_pole = " . $arrayObs['pole_id_pole'] . ")";
                         $subject = 'Nouvelle observation à modérer sur le pole ' . $arrayObs['lib_pole'];
-                        $message = "Bonjour !
-Une nouvelle observation a été ajoutée sur le pole " . $arrayObs['lib_pole'] . ". Veuillez vous connecter à l'interface d'administration pour la modérer.
-Lien vers la modération : " . URL . '/admin.php?id=' . $arrayObs['id_poi'] . "\n" . $arrayDetailsAndUpdateSQL['detailObservationString'] . "\n";
+                        $message = "Bonjour !\n<br />
+Une nouvelle observation a été ajoutée sur le pole\n " . $arrayObs['lib_pole'] . ".\n Veuillez vous connecter à l'interface\n d'administration pour la modérer.\n<br />
+Lien vers la modération : \n" . URL . '/admin.php?id=' . $arrayObs['id_poi'] . "\n<br />" . $arrayDetailsAndUpdateSQL['detailObservationString'] . "\n<br />";
                         $mails = array();
                         $mails = getMailsToSend($whereClause, $subject, $message);
                         if (DEBUG) {
@@ -2448,9 +2448,9 @@ Lien vers la modération : " . URL . '/admin.php?id=' . $arrayObs['id_poi'] . "\
                         
                         /* debut envoi d'un mail au contributeur */
                         $subject = 'Observation en attente de modération';
-                        $message = "Bonjour !
-Vous venez d'ajouter une observation à VelObs et vous en remercions. Celle-ci devrait être administrée sous peu.\n" . $arrayDetailsAndUpdateSQL['detailObservationString'] . "\n
-Cordialement, l'Association " . VELOBS_ASSOCIATION . " :)";
+                        $message = "Bonjour !\n<br />
+Vous venez d'ajouter une observation à VelObs\n et vous en remercions. Celle-ci devrait\n être administrée sous peu.\n<br />" . $arrayDetailsAndUpdateSQL['detailObservationString'] . "\n<br />
+Cordialement, l'Association " . VELOBS_ASSOCIATION . " :)\n<br />";
                         $mailArray = [
                             $arrayObs['mail_poi'],
                             "Soumetteur",
@@ -2848,11 +2848,11 @@ function editComment($id_comment, $text_comment, $status_comment)
             
             if ($status == 'Modéré accepté'){
                 $subject = 'Nouveau commentaire validé sur l\'observation ' . $id_poi;
-                $message = "Bonjour !
-Un nouveau commentaire a été validé sur l'observation n° $id_poi.
-Lien vers l'observation : " . URL . '/index.php?id=' . $id_poi . "\n";
+                $message = "Bonjour !\n<br />
+Un nouveau commentaire a été validé\n sur l'observation n° $id_poi.\n<br />
+Lien vers l'observation :\n " . URL . '/index.php?id=' . $id_poi . "\n<br />";
                 $mailsFollowers = array();
-                $mailsFollowers = getMailsToSendFromVotesAndComments($id_poi, $subject, "Vous recevez ce mail car vous avez souhaité suivre l'évolution de cette observation. Message envoyé à la personne qui a remonté l'observation : \n".$message);
+                $mailsFollowers = getMailsToSendFromVotesAndComments($id_poi, $subject, "Vous recevez ce mail car vous avez souhaité\n suivre l'évolution de cette observation.\n Message envoyé à la personne\n qui a remonté l'observation : \n<br />".$message);
             
                 $mails = array();
                 
@@ -3020,17 +3020,17 @@ function createPublicComment()
                         /* envoi d'un mail aux administrateurs de l'association et modérateurs */
                         $whereClause = "u.usertype_id_usertype = 1 OR (u.usertype_id_usertype = 4 AND ulp.num_pole = " . $arrayObs['pole_id_pole'] . ")";
                         $subject = 'Nouveau commentaire à modérer sur le pole ' . $arrayObs['lib_pole'];
-                        $message = "Bonjour !
-Un nouveau commentaire a été ajouté sur le pole " . $arrayObs['lib_pole'] . ". Veuillez vous connecter à l'interface d'administration pour le modérer (cliquer sur le bouton \"Commentaires\", en bas à droite, une fois les détails de l'observation affichés).
-Lien vers la modération : " . URL . '/admin.php?id=' . $arrayObs['id_poi'] . "\n" . $newCommentInfo . $arrayDetailsAndUpdateSQL['detailObservationString'] . "\n";
+                        $message = "Bonjour !\n<br />
+Un nouveau commentaire a été ajouté\n sur le pole " . $arrayObs['lib_pole'] . ".\n Veuillez vous connecter à l'interface d'administration\n pour le modérer (cliquer sur le bouton \"Commentaires\",\n en bas à droite, une fois les détails de l'observation affichés).\n<br />
+Lien vers la modération : " . URL . '/admin.php?id=' . $arrayObs['id_poi'] . "\n<br />" . $newCommentInfo . $arrayDetailsAndUpdateSQL['detailObservationString'] . "\n<br />";
                         $mails = array();
                         $mails = getMailsToSend($whereClause, $subject, $message);
                         
                         /* debut envoi d'un mail au contributeur */
                         $subject = 'Commentaire en attente de modération';
-                        $message = "Bonjour !
-Vous venez d'ajouter un commentaire à l'observation " . $arrayObs['id_poi'] . " sur VelObs et nous vous en remercions. Celui-ci devrait être administré sous peu.\n" . $newCommentInfo . $arrayDetailsAndUpdateSQL['detailObservationString'] . "\n
-Cordialement, l'Association " . VELOBS_ASSOCIATION . " :)";
+                        $message = "Bonjour !\n<br />
+Vous venez d'ajouter un commentaire à l'observation \n" . $arrayObs['id_poi'] . " sur VelObs et nous vous en remercions.\n Celui-ci devrait être administré sous peu.\n<br />" . $newCommentInfo . $arrayDetailsAndUpdateSQL['detailObservationString'] . "\n<br />
+Cordialement, l'Association " . VELOBS_ASSOCIATION . " :)\n<br />";
                         $mailArray = [
                             $mail_commentaires,
                             "Soumetteur",
