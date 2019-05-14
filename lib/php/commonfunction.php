@@ -468,14 +468,7 @@
 				error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - commonfunction.php, traitement de " . $arrayColumns[$i]['columnSQL'] . " \n", 3, LOG_FILE );
 			}
 			if (isset($_POST[$arrayColumns[$i]['columnPOST']])){
-				if ($arrayColumns[$i]['columnSQL'] == 'ref_poi') {
-					$OldValue = $arrayObservation[$arrayColumns[$i]['columnSQL']];
-					$NewValue = $_POST[$arrayColumns[$i]['columnPOST']];
-					if (DEBUG) {
-						error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - commonfunction.php, " . $arrayColumns [$i] ['columnSQL'] . ", tentative de modifier ref_poi bloquée. oldValue = ".$OldValue." et newValue = ".$NewValue."\n", 3, LOG_FILE );
-					}
-					$NewValue = $OldValue;
-				}elseif ($arrayColumns[$i]['dataType'] == 'boolean'){
+				if ($arrayColumns[$i]['dataType'] == 'boolean'){
 					if (DEBUG) {
 						error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - commonfunction.php, " . $arrayColumns [$i] ['columnSQL'] . ", boolean\n", 3, LOG_FILE );
 					}
