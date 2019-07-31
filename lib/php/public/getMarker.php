@@ -17,8 +17,7 @@
 			} else {
 				
 				if ($_GET['date'] == NULL) {
-					$datesqlappend = '';
-					//$datesqlappend = ' AND (TO_DAYS(NOW()) - TO_DAYS(datecreation_poi)) <= 365';
+					$datesqlappend = ' AND (TO_DAYS(NOW()) - TO_DAYS(datecreation_poi)) <= 730';
 				} else {
 					switch ($_GET['date']) {
 						case '1year':
@@ -27,6 +26,8 @@
 						case '2year':
 							$datesqlappend = ' AND (TO_DAYS(NOW()) - TO_DAYS(datecreation_poi)) > 365 AND (TO_DAYS(NOW()) - TO_DAYS(datecreation_poi)) <= 730';
 							break;
+						case 'less2year':
+							$datesqlappend = ' AND (TO_DAYS(NOW()) - TO_DAYS(datecreation_poi)) <= 730';
 						case '3year':
 							$datesqlappend = ' AND (TO_DAYS(NOW()) - TO_DAYS(datecreation_poi)) > 730';
 							break;
@@ -34,8 +35,7 @@
 							$datesqlappend = '';
 							break;
 						default:
-							$datesqlappend = '';
-							//$datesqlappend = ' AND (TO_DAYS(NOW()) - TO_DAYS(datecreation_poi)) <= 365';
+							$datesqlappend = ' AND (TO_DAYS(NOW()) - TO_DAYS(datecreation_poi)) <= 730';
 							break;
 					}
 				}
