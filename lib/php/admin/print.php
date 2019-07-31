@@ -54,7 +54,9 @@
         $pdf->Cell(0, 10, utf8_decode($poi_data['lib_subcategory']), '', 2, 'C');
 
         $pdf->SetFont('Arial', '', 12);
-        $pdf->MultiCell(0, 5, utf8_decode($poi_data['desc_poi'] . "\n\n"));
+        $pdf->MultiCell(0, 5, utf8_decode("Description: " . $poi_data['desc_poi'] . "\n\n"));
+
+        $pdf->MultiCell(0, 5, utf8_decode("Proposition: " . $poi_data['prop_poi'] . "\n\n"));
 
         $pdf->MultiCell(0, 5, utf8_decode("Commentaire Vélo Cité: " . $poi_data['commentfinal_poi'] . "\n\n"));
 
