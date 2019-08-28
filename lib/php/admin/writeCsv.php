@@ -2,13 +2,12 @@
 	session_start();
 	include_once '../key.php';
 	
-	if (isset($_SESSION['user'])) {
+// 	if (isset($_SESSION['user'])) {
 		switch (SGBD) {
 			case 'mysql':
 				$link = mysql_connect(DB_HOST,DB_USER,DB_PASS);
 				mysql_select_db(DB_NAME);
 				mysql_query("SET NAMES utf8mb4");
-				
 				if (isset($_GET['type'])) {
 					switch ($_GET['type']) {
 						case 'category':
@@ -52,7 +51,15 @@
 							break;	
 												
 						case 'poi':
-							$file = "velobs_poi_".date('Y-m-d').".csv";
+						    $filenamePrefix = 'velobs_poi_';
+						    if (isset($_GET['commune_poi'])&& $_GET['commune_poi'] != ''){
+						        $filenamePrefix .= 'commune_';
+						    }else if (isset($_GET['territoire_poi'])&& $_GET['territoire_poi'] != ''){
+						        $filenamePrefix .= 'territoire_';
+						    }else if (isset($_GET['customPolygon_poi'])&& $_GET['customPolygon_poi'] != ''){
+						        $filenamePrefix .= 'custom_';
+						    }
+						    $file = $filenamePrefix .date('Y-m-d').".csv";
 							$fh = fopen("../../../resources/csv/".$file, 'w');
 							if (!$fh) {
 								echo '{"success": false}';
@@ -74,6 +81,18 @@
 									elseif ($_SESSION['type'] == 4){
 										$extraSQL = " AND poi.pole_id_pole = " .$_SESSION['pole'] . " ";
 									}
+								}elseif (isset($_GET['commune_poi']) && $_GET['commune_poi'] != ''){
+								    $extraSQL = " AND commune.id_commune = " .$_GET['commune_poi'] . " "; 
+								}elseif (isset($_GET['territoire_poi']) && $_GET['territoire_poi'] != ''){
+								    $sqlTerritoire = "SELECT ids_territoire FROM territoire WHERE id_territoire = ". $_GET['territoire_poi'];
+								    $resultTerritoire = mysql_query($sqlTerritoire);
+								    
+								    while ($row = mysql_fetch_array($resultTerritoire)) {
+								       $ids_communes = $row['ids_territoire'];
+								    }
+								    $extraSQL = " AND commune.id_commune IN (" .str_replace(";",",",$ids_communes) . ") ";
+								}elseif (isset($_GET['customPolygon_poi']) && $_GET['customPolygon_poi'] != ''){
+								    $extraSQL = " AND ST_Within(poi.geom_poi,ST_GeomFromText('".$_GET['customPolygon_poi']."') )=1";
 								}
 								$sql = "SELECT 
 											poi.*, 
@@ -193,7 +212,8 @@
 							}
 							break;
 					}
-				} else {
+				}
+				else{
 					echo '{"success": false}';
 				}
 							
@@ -205,5 +225,5 @@
 				break;
 		}
 
-	}
+// 	}
 ?>
