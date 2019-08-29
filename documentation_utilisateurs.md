@@ -379,11 +379,12 @@ communes, pôle technique) de la personne connectée.
     actif. En cliquant dessus, les commentaires seront affichés dans une
     nouvelle fenêtre, permettant de les modérer :
 
-    ![](doc/utilisateurs/1000020100000405000001E324FF344EE9066806.png)
+    ![](doc/utilisateurs/moderation_commentaire.png)
     
     Pour que ces commentaires/photos soient accessibles à la collectivité et
-    sur l’interface publique, il faut cliquer sur la case à cocher présente
-    dans la colonne “Affichage”.
+    sur l’interface publique, il faut double-cliquer sur la case “Non modéré” 
+    présente dans la colonne “Affichage” et sélectionner “Modéré accepté” ou
+    “Modéré refusé” (le commentaire ne sera pas affiché)
 
 ## Prise en compte par la collectivité et les pôles techniques
 
