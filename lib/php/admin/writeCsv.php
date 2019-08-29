@@ -64,7 +64,7 @@
 							if (!$fh) {
 								echo '{"success": false}';
 							} else {
-								if (isset($_SESSION['type']) && isset($_SESSION['pole'])){
+							    if (isset($_SESSION['user']) && isset($_SESSION['type']) && isset($_SESSION['pole'])){
 									$extraSQL = "";
 									//si l'utilisateur fait partie d'un pole technique, on restreint les POI correspondant au pole et qui ne sont pas avec priorité à "A modérer", "refusé par 2P2R" et "Doublon"
 									if ($_SESSION['type'] == 3){
@@ -81,7 +81,9 @@
 									elseif ($_SESSION['type'] == 4){
 										$extraSQL = " AND poi.pole_id_pole = " .$_SESSION['pole'] . " ";
 									}
-								}elseif (isset($_GET['commune_poi']) && $_GET['commune_poi'] != ''){
+							    }elseif (isset($_GET['pole_poi']) && $_GET['pole_poi'] != ''){
+							        $extraSQL = " AND pole.id_pole = " .$_GET['pole_poi'] . " ";
+							    }elseif (isset($_GET['commune_poi']) && $_GET['commune_poi'] != ''){
 								    $extraSQL = " AND commune.id_commune = " .$_GET['commune_poi'] . " "; 
 								}elseif (isset($_GET['territoire_poi']) && $_GET['territoire_poi'] != ''){
 								    $sqlTerritoire = "SELECT ids_territoire FROM territoire WHERE id_territoire = ". $_GET['territoire_poi'];
@@ -93,6 +95,10 @@
 								    $extraSQL = " AND commune.id_commune IN (" .str_replace(";",",",$ids_communes) . ") ";
 								}elseif (isset($_GET['customPolygon_poi']) && $_GET['customPolygon_poi'] != ''){
 								    $extraSQL = " AND ST_Within(poi.geom_poi,ST_GeomFromText('".$_GET['customPolygon_poi']."') )=1";
+								}
+								//si personne n'est connecté, on ne récupère que les observations dont la priorité est visible par le public
+								if (!isset($_SESSION['user'])) {
+								    $extraSQL .= " AND priorite.non_visible_par_public = 0 "; 
 								}
 								$sql = "SELECT 
 											poi.*, 
@@ -118,8 +124,10 @@
 								$result = mysql_query($sql);
 								$csv = '"Identifiant";"Commentaire final de l\'association";"Réponse de la collectivité";"Observation terrain";"Priorité";"Pôle";"Adhérent";"Libellé observation";"Catégorie";"Sous-catégorie";"Repère";"Rue";"Commune";"Description";"Proposition";"Modération";"Affichage sur la carte";"Latitude";"Longitude";"Date création";"Mode géolocalisation";"Email";"Statut";"Traité par le pôle";"Transmis au pôle";"Lien administration"';
 								$csv .= "\r\n";
+								$numberOfRecords = 0;
 								while ($row = mysql_fetch_array($result)) {
-									if ($_SESSION ["type"] == 2 || $_SESSION ["type"] == 3) {
+								    $numberOfRecords++;
+								    if (!isset($_SESSION['user']) || ($_SESSION ["type"] == 2 || $_SESSION ["type"] == 3)) {
 										$row ['mail_poi'] = '******' ;
 										$row ['tel_poi'] = '******' ;
 										$row ['adherent_poi'] = '******' ;
@@ -129,7 +137,12 @@
 								}
 								fputs($fh, $csv);
 								fclose($fh);
-								echo '{"success": true, "file": "'.$file.'"}';
+								if ($numberOfRecords == 0){
+								    echo '{"success": false, "message": "Aucune observation ne correspond à la recherche"}';
+								}else{
+								    echo '{"success": true, "file": "'.$file.'"}';
+								}
+								
 							}
 							break;
 						case 'commune':
