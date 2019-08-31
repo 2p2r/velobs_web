@@ -59,7 +59,7 @@
 						    }else if (isset($_GET['customPolygon_poi'])&& $_GET['customPolygon_poi'] != ''){
 						        $filenamePrefix .= 'custom_';
 						    }
-						    $file = $filenamePrefix .date('Y-m-d').".csv";
+						    $file = $filenamePrefix .date('Y-m-d_H-i-s').".csv";
 							$fh = fopen("../../../resources/csv/".$file, 'w');
 							if (!$fh) {
 								echo '{"success": false}';
