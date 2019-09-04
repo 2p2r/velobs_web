@@ -675,8 +675,11 @@
 	* 	Object			: get the e-mail adresses and link th e subject and message to be sent
 	* 	Date			: septembre 19 2017
 	*/
-	function getMailsToSend($whereClauseSelectionUsers, $subject, $message){
-		$sql = "SELECT u.mail_users, ut.lib_usertype, u.lib_users FROM users u inner join users_link_pole ulp on ulp.id_user = u.id_users inner join usertype ut on ut.id_usertype = u.usertype_id_usertype WHERE " . $whereClauseSelectionUsers;
+	function getMailsToSend($whereClauseSelectionUsers, $subject, $message,$id_poi){
+	    if ($id_poi!=""){
+	        $message .= '<br /><br/><a href="'.URL.'/lib/php/public/exportPDF.php?id_poi='.$id_poi.'">Générer l\'observation au format pdf</a>';
+	    }
+	    $sql = "SELECT u.mail_users, ut.lib_usertype, u.lib_users FROM users u inner join users_link_pole ulp on ulp.id_user = u.id_users inner join usertype ut on ut.id_usertype = u.usertype_id_usertype WHERE " . $whereClauseSelectionUsers;
 		if (DEBUG){
 			error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " requete de recuperation des mails des utilisateurs ". $sql . " \n", 3, LOG_FILE);
 		}
@@ -684,7 +687,7 @@
 		$mails = array();
 		if ($result){
 			if (DEBUG){
-				error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " Récupération des mails à envoyer \n", 3, LOG_FILE);
+				error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " Récupération des mails à envoyer $message\n", 3, LOG_FILE);
 			}
 			while ($row2 = mysql_fetch_array($result)) {
 				$mailArray = [$row2['mail_users'],$row2['lib_usertype']." - ".$row2['lib_users'], $subject, $message ];
