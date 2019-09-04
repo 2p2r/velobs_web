@@ -29,9 +29,14 @@
                 if (DEBUG) {
                     error_log(date("Y-m-d H:i:s") . " " . __FUNCTION__ . " - in exportPDF.php id_poi = $id_poi $link\n", 3, LOG_FILE);
                 }
-                $sql = "SELECT poi.*, commune.lib_commune, subcategory.lib_subcategory FROM poi 
+                $sql = "SELECT poi.*, x(poi.geom_poi) AS X, y(poi.geom_poi) AS Y, users.lib_users, usertype.lib_usertype, commune.lib_commune, subcategory.lib_subcategory, pole.lib_pole,priorite.lib_priorite, status.lib_status FROM poi 
                 INNER JOIN commune ON commune.id_commune = poi.commune_id_commune
+                INNER JOIN pole ON pole.id_pole = poi.pole_id_pole
                 INNER JOIN subcategory ON subcategory.id_subcategory = poi.subcategory_id_subcategory
+                INNER JOIN priorite ON (priorite.id_priorite = poi.priorite_id_priorite) 
+                INNER JOIN status ON (status.id_status = poi.status_id_status)
+                INNER JOIN users ON users.id_users = poi.lastmodif_user_poi
+                INNER JOIN usertype ON users.usertype_id_usertype = usertype.id_usertype
                 WHERE id_poi = ". $id_poi;
                 if (DEBUG) {
                     error_log(date("Y-m-d H:i:s") . " " . __FUNCTION__ . " - in exportPDF.php $sql\n", 3, LOG_FILE);
@@ -60,14 +65,23 @@
                 if ($NbreVotes > 0){
                     $html .= '<p>Cette observation a obtenu ' . $NbreVotes . ' vote(s).</p>';
                 }
+                if ($poi ['lastdatemodif_poi'] != ""){
+                    $html .= '<p>Date de dernière modification de l\'observation : <i>'.strftime("%d/%m/%Y", strtotime($poi ['lastdatemodif_poi'])).'</i>, par <i>'.$poi['lib_users'].' ('.$poi['lib_usertype'].')</i></p>';
+                }
+                
                 
                 
                 $html .= '<br /><br /><hr><H1>Détails de l\'observation</H1>';
                 $html .= '<ul><li>Type de l\'observation : <i>'.$poi['lib_subcategory'].'</i></li>';
+                $html .= '<li>Pôle territorial : <i>'.$poi['lib_pole'].'</i></li>';
                 $html .= '<li>Commune : <i>'.$poi['lib_commune'].'</i></li>';
                 $html .= '<li>Localisation précise : <i>'.$poi['rue_poi'].'</i></li>';
+                $html .= '<li>Repère : <i>'.$poi['num_poi'].'</i></li>';
+                $html .= '<li>Position GPS : <i>'.$poi['X'].' ' . $poi['Y'] .'</i></li>';
                 $html .= '<li>Description : <i>'.$poi['desc_poi'].'</i></li>';
                 $html .= '<li>Proposition : <i>'.$poi['prop_poi'].'</i></li>';
+                $html .= '<li>Priorité 2P2R : <i>'.$poi['lib_priorite'].'</i></li>';
+                $html .= '<li>Statut positionné par la collectivité : <i>'.$poi['lib_status'].'</i></li>';
                 $html .= '<li>Commentaire bénévole 2P2R : <i>'.$poi['commentfinal_poi'].'</i></li>';
                 $html .= '<li>Commentaire collectivité : <i>'.$poi['reponse_collectivite_poi'].'</i></li>';
                 if (isset($poi['photo_poi'])) {
@@ -87,7 +101,7 @@
                             $html .= '<li>Photo : </li></ul><img src="'.$photo_filename.'" height="300px" />';
                         }
                 }
-                $html .= '<hr><H1>Commentaires éventuels</H1>';
+                $html .= '<br /><hr /><H1>Commentaires éventuels</H1>';
                 $whereSelectCommentAppend = '';
                 $whereSelectCommentAppend = ' AND display_commentaires = \'Modéré accepté\' ';
                 $sql2 = "SELECT * FROM commentaires WHERE poi_id_poi = " . $poi ['id_poi'] . " " . $whereSelectCommentAppend ." ORDER BY id_commentaires ASC";
