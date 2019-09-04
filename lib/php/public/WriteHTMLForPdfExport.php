@@ -146,7 +146,7 @@ class PDF extends FPDF
         //$this->SetFont('Arial','I',10);
         //$this->Cell(0,10,utf8_decode(' Date création :  '.$this->DATE_CREATION_POI),0,0,'R');
         // Line break
-        $this->Ln(10);
+        $this->Ln(20);
     }
     // Page footer
     function Footer()

@@ -35,8 +35,8 @@
                 INNER JOIN subcategory ON subcategory.id_subcategory = poi.subcategory_id_subcategory
                 INNER JOIN priorite ON (priorite.id_priorite = poi.priorite_id_priorite) 
                 INNER JOIN status ON (status.id_status = poi.status_id_status)
-                INNER JOIN users ON users.id_users = poi.lastmodif_user_poi
-                INNER JOIN usertype ON users.usertype_id_usertype = usertype.id_usertype
+                LEFT OUTER JOIN users ON users.id_users = poi.lastmodif_user_poi
+                LEFT OUTER JOIN usertype ON users.usertype_id_usertype = usertype.id_usertype
                 WHERE id_poi = ". $id_poi;
                 $whereSelectPOIAppend = '';
                 if (isset($_SESSION['user']) && isset($_SESSION['type']) && isset($_SESSION['pole'])){
@@ -44,12 +44,11 @@
                     if ($_SESSION['type'] == 3 || $_SESSION['type'] == 2){
                         $whereSelectPOIAppend = ' AND priorite.non_visible_par_collectivite = 0 ';
                     }//si l'utilisateur fait partie d'une communauté de communes, on restreint les POI à ceux qui ne sont pas avec priorité à "A modérer", "refusé par 2P2R" et "Doublon"
-                }
-                else{
+                } else{
                     //si le POI est dans une priorité non accessible par le public, on ne le retourne pas
                     $whereSelectPOIAppend = ' AND priorite.non_visible_par_public = 0 ';
                 }
-                
+                $sql .= $whereSelectPOIAppend;
                 
                 if (DEBUG) {
                     error_log(date("Y-m-d H:i:s") . " " . __FUNCTION__ . " - in exportPDF.php $sql\n", 3, LOG_FILE);
@@ -91,7 +90,7 @@
                 if ($poi ['lastdatemodif_poi'] != ""){
                     $html .= '<p>Date de dernière modification de l\'observation : <i>'.strftime("%d/%m/%Y", strtotime($poi ['lastdatemodif_poi'])).'</i>, par <i>'.$poi['lib_users'].' ('.$poi['lib_usertype'].')</i></p>';
                 }else{
-                    $html .= '<p><i>Cette observation n\a encore jamais été modifiée depuis sa création.</i></p>';
+                    $html .= '<p><i>Cette observation n\'a encore jamais été modifiée depuis sa création.</i></p>';
                 }
                 
                 
