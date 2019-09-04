@@ -104,9 +104,9 @@
                 $html .= '<li>Position GPS : <i><a href="'.URL.'/index.php?id='.$poi['id_poi'].'">'.$poi['X'].' ' . $poi['Y'] .'</a></i></li>';
                 $html .= '<li>Description : <i>'.$poi['desc_poi'].'</i></li>';
                 $html .= '<li>Proposition : <i>'.$poi['prop_poi'].'</i></li>';
-                $html .= '<li>Priorité 2P2R : <i>'.$poi['lib_priorite'].'</i></li>';
+                $html .= '<li>Priorité donnée par '.VELOBS_ASSOCIATION.' : <i>'.$poi['lib_priorite'].'</i></li>';
                 $html .= '<li>Statut positionné par la collectivité : <i>'.$poi['lib_status'].'</i></li>';
-                $html .= '<li>Commentaire bénévole 2P2R : <i>'.$poi['commentfinal_poi'].'</i></li>';
+                $html .= '<li>Commentaire bénévole '.VELOBS_ASSOCIATION.' : <i>'.$poi['commentfinal_poi'].'</i></li>';
                 $html .= '<li>Commentaire collectivité : <i>'.$poi['reponse_collectivite_poi'].'</i></li>';
                 if (isset($poi['photo_poi'])) {
                     $photo_filename = '../../../resources/pictures/' . $poi['photo_poi'];

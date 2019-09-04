@@ -127,11 +127,11 @@ class PDF extends FPDF
     function Header()
     {
         // Logo
-        $this->Image('../../../resources/images/2p2r.png',10,6,30);
+        $this->Image('../../../resources/images/'.PDF_VELOBS_ASSOCIATION_LOGO,10,6,30);
         
         $this->SetY(6);
         $this->SetX(40);
-        $this->MultiCell(110,5,utf8_decode("5 Avenue François Collignon\n31200 TOULOUSE\nTel : 05 34 30 94 18\nMail : toulouse@fubicy.org"));
+        $this->MultiCell(110,5,utf8_decode(VELOBS_ASSOCIATION."\n".PDF_VELOBS_ASSOCIATION_ADDRESS));
 //         $this->Cell(40,10,"31200 TOULOUSE",0,0,L);
         // Arial bold 15
         $this->SetY(6);
