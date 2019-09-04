@@ -677,7 +677,7 @@
 	*/
 	function getMailsToSend($whereClauseSelectionUsers, $subject, $message,$id_poi){
 	    if ($id_poi!=""){
-	        $message .= '<br /><br/><a href="'.URL.'/lib/php/public/exportPDF.php?id_poi='.$id_poi.'">Générer l\'observation au format pdf</a>';
+	        $message .= '<br /><br/><a href="'.URL.'/lib/php/public/exportPDF.php?id_poi='.$id_poi.'">Générer l\'observation au format pdf</a> (uniquement possible si l\'observation a été modérée positivement par l\'association)';
 	    }
 	    $sql = "SELECT u.mail_users, ut.lib_usertype, u.lib_users FROM users u inner join users_link_pole ulp on ulp.id_user = u.id_users inner join usertype ut on ut.id_usertype = u.usertype_id_usertype WHERE " . $whereClauseSelectionUsers;
 		if (DEBUG){
