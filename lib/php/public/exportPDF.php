@@ -16,7 +16,7 @@
 //         return $pdf;
 //     }
 
-	if (isset($_GET['id_poi'])) {
+    if (isset($_GET['id_poi']) && $_GET['id_poi'] != '') {
         switch (SGBD) {
 			case 'mysql':
 			    $link = mysql_connect(DB_HOST,DB_USER,DB_PASS);
@@ -38,11 +38,34 @@
                 INNER JOIN users ON users.id_users = poi.lastmodif_user_poi
                 INNER JOIN usertype ON users.usertype_id_usertype = usertype.id_usertype
                 WHERE id_poi = ". $id_poi;
+                $whereSelectPOIAppend = '';
+                if (isset($_SESSION['user']) && isset($_SESSION['type']) && isset($_SESSION['pole'])){
+                    //si l'utilisateur fait partie d'un pole technique, on restreint les POI correspondant au pole et qui ne sont pas avec priorité à "A modérer", "refusé par 2P2R" et "Doublon"
+                    if ($_SESSION['type'] == 3 || $_SESSION['type'] == 2){
+                        $whereSelectPOIAppend = ' AND priorite.non_visible_par_collectivite = 0 ';
+                    }//si l'utilisateur fait partie d'une communauté de communes, on restreint les POI à ceux qui ne sont pas avec priorité à "A modérer", "refusé par 2P2R" et "Doublon"
+                }
+                else{
+                    //si le POI est dans une priorité non accessible par le public, on ne le retourne pas
+                    $whereSelectPOIAppend = ' AND priorite.non_visible_par_public = 0 ';
+                }
+                
+                
                 if (DEBUG) {
                     error_log(date("Y-m-d H:i:s") . " " . __FUNCTION__ . " - in exportPDF.php $sql\n", 3, LOG_FILE);
                 }
                 $result = mysql_query($sql);
                 $poi = mysql_fetch_array($result);
+                
+                if (!isset($poi) || $poi == null){
+                    header("HTTP/1.1 404 Observation does not exist");
+                    // 	    header("Location: $newplace");
+                    header("Connection: close");
+                    ?>
+	    <html><body>L'observation que vous souhaitez imprimer n'est pas encore accessible. Soit elle n'a pas encore été modérée, soit l'état affecté par l'association ne permet pas sa diffusion.</body></html>
+	    <?php 
+	    exit();
+                }
                 if (DEBUG) {
                     error_log(date("Y-m-d H:i:s") . " " . __FUNCTION__ . " - in exportPDF.php ".$poi['id_poi']."\n", 3, LOG_FILE);
                 }
@@ -59,14 +82,16 @@
                     }
                 }
                 
-                $html = '<hr><p>Ce document est un export au format pdf de la fiche VelObs n°'.$poi['id_poi'].', en date du '.date('Y-m-d H:i:s').'</p>';
-                $html .= '<p>Lien vers l\'observation sur l\'<a href="http://esitoul-dev.toulouse.inra.fr/velobs/index.php?id='.$poi['id_poi'].'">interface publique</a> sur l\'application VelObs </p>';
-                $html .= '<p>Lien vers  l\'observation sur l\'<a href="http://esitoul-dev.toulouse.inra.fr/velobs/admin.php?id='.$poi['id_poi'].'">interface d\'administration</a> sur l\'application VelObs </p>';
+                $html = '<hr><p>Ce document est un export au format pdf de la fiche VelObs n°'.$poi['id_poi'].', en date du '.date('Y-m-d H:i:s').'.</p>';
+                $html .= '<p>Lien vers l\'observation sur l\'<a href="'.URL.'/index.php?id='.$poi['id_poi'].'">interface publique</a> de l\'application <a href="https://2p2r.org/articles-divers/page-sommaire/article/velobs">VelObs</a>.</p>';
+                $html .= '<p>Lien vers  l\'observation sur l\'<a href="'.URL.'/admin.php?id='.$poi['id_poi'].'">interface d\'administration</a> de l\'application <a href="https://2p2r.org/articles-divers/page-sommaire/article/velobs">VelObs</a>.</p>';
                 if ($NbreVotes > 0){
                     $html .= '<p>Cette observation a obtenu ' . $NbreVotes . ' vote(s).</p>';
                 }
                 if ($poi ['lastdatemodif_poi'] != ""){
                     $html .= '<p>Date de dernière modification de l\'observation : <i>'.strftime("%d/%m/%Y", strtotime($poi ['lastdatemodif_poi'])).'</i>, par <i>'.$poi['lib_users'].' ('.$poi['lib_usertype'].')</i></p>';
+                }else{
+                    $html .= '<p><i>Cette observation n\a encore jamais été modifiée depuis sa création.</i></p>';
                 }
                 
                 
@@ -77,7 +102,7 @@
                 $html .= '<li>Commune : <i>'.$poi['lib_commune'].'</i></li>';
                 $html .= '<li>Localisation précise : <i>'.$poi['rue_poi'].'</i></li>';
                 $html .= '<li>Repère : <i>'.$poi['num_poi'].'</i></li>';
-                $html .= '<li>Position GPS : <i>'.$poi['X'].' ' . $poi['Y'] .'</i></li>';
+                $html .= '<li>Position GPS : <i><a href="'.URL.'/index.php?id='.$poi['id_poi'].'">'.$poi['X'].' ' . $poi['Y'] .'</a></i></li>';
                 $html .= '<li>Description : <i>'.$poi['desc_poi'].'</i></li>';
                 $html .= '<li>Proposition : <i>'.$poi['prop_poi'].'</i></li>';
                 $html .= '<li>Priorité 2P2R : <i>'.$poi['lib_priorite'].'</i></li>';
@@ -98,25 +123,50 @@
                             if (DEBUG) {
                                 error_log(date("Y-m-d H:i:s") . " " . __FUNCTION__ . " - in exportPDF.php $width, $height\n", 3, LOG_FILE);
                             }
-                            $html .= '<li>Photo : </li></ul><img src="'.$photo_filename.'" height="300px" />';
+                            if($width > 250){
+                                $height = ($height*250)/$width;
+                                $width = 250;
+                            }
+                            $html .= '<li>Photo : </li></ul><img src="'.$photo_filename.'"  width="'.$width.'"px height="'.$height.'px"  />';
+                            $html .= '<li><a href="'.URL.'/resources/pictures/' . $poi['photo_poi'].'">Lien photo</a></li><br />';
                         }
                 }
                 $html .= '<br /><hr /><H1>Commentaires éventuels</H1>';
                 $whereSelectCommentAppend = '';
-                $whereSelectCommentAppend = ' AND display_commentaires = \'Modéré accepté\' ';
+                
+                if (isset($_SESSION['user']) && isset($_SESSION['type']) && isset($_SESSION['pole'])){
+                    $extraSQL = "";
+                    //si l'utilisateur fait partie d'un pole technique, on restreint les POI correspondant au pole et qui ne sont pas avec priorité à "A modérer", "refusé par 2P2R" et "Doublon"
+                    if ($_SESSION['type'] == 3){
+                        $whereSelectCommentAppend = ' AND display_commentaires = \'Modéré accepté\' ';
+                    }//si l'utilisateur fait partie d'une communauté de communes, on restreint les POI à ceux qui ne sont pas avec priorité à "A modérer", "refusé par 2P2R" et "Doublon"
+                    elseif ($_SESSION['type'] == 2){
+                        $whereSelectCommentAppend = ' AND display_commentaires = \'Modéré accepté\' ';
+                    }//si l'utilisateur fait partie des modérateurs, on récupère tous les commentaires
+                    
+                }else{
+                    $whereSelectCommentAppend = ' AND display_commentaires = \'Modéré accepté\' ';
+                }
+                
+                
                 $sql2 = "SELECT * FROM commentaires WHERE poi_id_poi = " . $poi ['id_poi'] . " " . $whereSelectCommentAppend ." ORDER BY id_commentaires ASC";
                 
                 $result2 = mysql_query ( $sql2 );
+                $nbComment = 0;
                 while ( $row2 = mysql_fetch_array ( $result2 ) ) {
                     if (DEBUG) {
                         error_log(date("Y-m-d H:i:s") . " " . __FUNCTION__ . " - AJout comment ".$row2['id_commentaires']." \n", 3, LOG_FILE);
+                    }
+                    if ($row2 ['display_commentaires'] =="Non modéré" || $row2 ['display_commentaires'] =="Modéré refusé"){
+                        $html .=  "<li>Statut : <i><red>".$row2 ['display_commentaires'] ."</red></i></li>";
+                    }else{
+                        $html .=  "<li>Statut : <i>".$row2 ['display_commentaires'] ."</i></li>";
                     }
                     $html .=  "<li>Date Création : <i>" . strftime("%d/%m/%Y", strtotime($row2 ['datecreation'])) . "</i></li>";
                     $html .=  "<li>Auteur : <i>*****</i></li>";
                     $html .=  "<li>Commentaire : <i>".nl2br(stripslashes ( $row2 ['text_commentaires'] ))."</i></li>";
                     
-                    //             $pdf->MultiCell(0, 5, utf8_decode("Auteur: *****\n\n"));
-                    //             $pdf->MultiCell(0, 5, utf8_decode("Commentaire: ".stripslashes ( $row2 ['text_commentaires'] )."\n\n"));
+                    
                     if (isset($row2 ['url_photo'])) {
                         $photo_filename = '../../../resources/pictures/' . $row2 ['url_photo'];
                         if (file_exists($photo_filename) && is_file($photo_filename))
@@ -131,56 +181,33 @@
                                 if (DEBUG) {
                                     error_log(date("Y-m-d H:i:s") . " " . __FUNCTION__ . " - in exportPDF.php $width, $height\n", 3, LOG_FILE);
                                 }
-                                if($width > 450){
-                                    $height = ($height*450)/$width;
-                                    $width = 450;
+                                if($width > 250){
+                                    $height = ($height*250)/$width;
+                                    $width = 250;
                                 }
                                 if (DEBUG) {
                                     error_log(date("Y-m-d H:i:s") . " " . __FUNCTION__ . " - in exportPDF.php $width, $height\n", 3, LOG_FILE);
                                 }
 //                                 $comment .= $pdf->Image('../../../resources/pictures/' . $row2 ['url_photo'], NULL, NULL, 0, 0, $imagefiletype);
                                 $html .= '<li>Photo : </li><img src="'.$photo_filename.'" width="'.$width.'"px height="'.$height.'px" />';
+                                $html .= '<li><a href="'.URL.'/resources/pictures/' . $row2 ['url_photo'].'">Lien photo</a></li><br />';
                                 //$html .= '<li>Photo : </li><img src="'.$photo_filename.'" height="300px" />';
                                 
                     }
                     $html .= '<HR width="150px"/>';
 //                     $pdf->MultiCell(0, 5, $comment,0,L,false);
                     
-//                     $j ++;
+                     $nbComment ++;
                 }
-                
-                $pdf=new createPDF(utf8_decode($html),"Fiche VelObs ".$poi['id_poi'],"2P2R",time(),$poi['id_poi'],strftime("%d/%m/%Y", strtotime($poi['datecreation_poi'])));
+                if ($nbComment == 0){
+                    $html .= '<li>Aucun commentaire n\'a encore été ajouté à cette observation. Pour en ajouter un, accédez à l\'<a href="'.URL.'/index.php?id='.$poi['id_poi'].'">interface publique</a> de l\'observation.</li>';
+                }
+                $pdf=new createPDF(utf8_decode($html),"Fiche VelObs n°".$poi['id_poi'],"2P2R",time(),$poi['id_poi'],strftime("%d/%m/%Y", strtotime($poi['datecreation_poi'])));
                 $pdf->run();
                  
-//                 $pdf->setDateCreationPOI(utf8_decode(strftime("%d/%m/%Y", strtotime($poi['datecreation_poi']))));
-//                 $pdf->AddPage();
-//                 $pdf->AliasNbPages();
-//                 $pdf->SetFont('Arial', '', 12);
-//                 $y = 35;
-//                 $decalage = 5;
-//                 $pdf->Text(8, $y, utf8_decode('5 Avenue François Collignon'));
-//                 $y += $decalage;
-//                 $pdf->Text(8, $y, utf8_decode('31200 Toulouse'));
-//                         $y += $decalage;
-//                         $pdf->Text(8, $y, utf8_decode('Tél : 05 34 30 94 18'));
-//                         $y += $decalage;
-//                         //PutLink('mailto:toulouse@fubicy.org','toulouse@fubicy.org');
-//                         $pdf->Text(8, $y, utf8_decode('Courriel : toulouse@fubicy.org'));
-//                         $y += $decalage;
-//                         $pdf->SetY($y);
-//                         //$pdf->SetFont('Arial', 'B', 16);
-                        
-//                         $pdf->WriteHTML(utf8_decode($html));
-//                         $pdf->Ln(10);
-//                 $pdf->SetFont('Arial');
-//                 $pdf->WriteHTML('On peut<br><p align="center">centrer du texte</p>et ajouter un trait de séparation :<br><hr>');
-//                 $pdf->Output();
-//                 $pdf_obj = get_pdf($poi);
-                
                 mysql_free_result($result);
                 mysql_close($link);
                 
-//                 $pdf_obj->Output("I", "cyclofiche-" . $poi['id_poi'] . ".pdf");
 				}
 
 				break;
@@ -188,5 +215,19 @@
 				// TODO
 				break;
 		}
-    }
+	}else{
+	    if (DEBUG) {
+	        error_log(date("Y-m-d H:i:s") . " " . __FUNCTION__ . " - in exportPDF.php aucun id_poi spécifié\n", 3, LOG_FILE);
+	    }
+	    header("HTTP/1.1 404 Observation does not exist");
+// 	    header("Location: $newplace");
+	    header("Connection: close");
+	    ?>
+	    <html><body>Aucun numéro d'observation n'a été spécifié</body></html>
+	    <?php 
+	    exit();
+// 	    $protocol = (isset($_SERVER['SERVER_PROTOCOL']) ? $_SERVER['SERVER_PROTOCOL'] : 'HTTP/1.0');
+// 	    header($protocol);
+// 	    http_response_code(404);
+	}
 ?>

@@ -128,16 +128,25 @@ class PDF extends FPDF
     {
         // Logo
         $this->Image('../../../resources/images/2p2r.png',10,6,30);
+        
+        $this->SetY(6);
+        $this->SetX(40);
+        $this->MultiCell(110,5,utf8_decode("5 Avenue François Collignon\n31200 TOULOUSE\nTel : 05 34 30 94 18\nMail : toulouse@fubicy.org"));
+//         $this->Cell(40,10,"31200 TOULOUSE",0,0,L);
         // Arial bold 15
+        $this->SetY(6);
         $this->SetFont('Arial','B',15);
         // Move to the right
-        $this->Cell((190-$this->GetStringWidth("Fiche VelObs "))/2);
+        $this->SetX(-90);
+        //$this->Cell((240-$this->GetStringWidth("Fiche VelObs "))/2);
         // Title
-        $this->Cell($this->GetStringWidth("Fiche VelObs ")+10,10,' Fiche VelObs '.$this->ID_POI,1,0,'C');
-        $this->SetFont('Arial','I',10);
-        $this->Cell(0,10,utf8_decode(' Date création :  '.$this->DATE_CREATION_POI),0,0,'R');
+        $this->SetFillColor(255,235,0);
+        $this->Cell($this->GetStringWidth("Fiche VelObs n°XXXX")+10,10,utf8_decode('Fiche VelObs n°').$this->ID_POI,1,0,'C',1);
+        $this->SetFillColor(255,255,255);
+        //$this->SetFont('Arial','I',10);
+        //$this->Cell(0,10,utf8_decode(' Date création :  '.$this->DATE_CREATION_POI),0,0,'R');
         // Line break
-        $this->Ln(20);
+        $this->Ln(10);
     }
     // Page footer
     function Footer()
