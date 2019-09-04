@@ -2316,8 +2316,15 @@ function createPublicPoi()
                 }
                 $dossier = '../../../resources/pictures/';
                 $fichier = basename($_FILES['photo-path']['name']);
-                $taille_maxi = 6291456;
+//                 $taille_maxi = 6291456;
+//                 $taille = filesize($_FILES['photo-path']['tmp_name']);
+                $taille_maxi = maximum_upload_size();
+                //$taille_maxi = 6291456;
                 $taille = filesize($_FILES['photo-path']['tmp_name']);
+                if (DEBUG) {
+                    error_log(date("Y-m-d H:i:s") . " " . __FUNCTION__ . " image size =  " . $taille . ", and apache upload_max_filesize = ".$taille_maxi."\n", 3, LOG_FILE);
+                }
+                
                 $extensions = array(
                     '.png',
                     '.gif',
@@ -2341,10 +2348,10 @@ function createPublicPoi()
                     $return['pb'] = getTranslation(1, 'PICTUREPNGGIFJPGJPEG');
                 }
                 
-                if ($taille > $taille_maxi) {
+                if ($taille =="") {
                     $erreur = getTranslation(1, 'ERROR');
                     $return['success'] = false;
-                    $return['pb'] = getTranslation(1, 'PICTURESIZE');
+                    $return['pb'] = getTranslation(1, 'PICTURESIZE')." Taille maximum autorisée : " .$taille_maxi;
                 }
                 
                 if (! isset($erreur)) {
@@ -2355,6 +2362,9 @@ function createPublicPoi()
                     $fichier = preg_replace('/([^.a-z0-9]+)/i', '-', $fichier);
                     $fichier = 'poi_' . $fichier;
                     $pathphoto = $dossier . $fichier;
+                    if (DEBUG) {
+                        error_log(date("Y-m-d H:i:s") . " " . __FUNCTION__ . " path photo ".$pathphoto." \n", 3, LOG_FILE);
+                    }
                     if (move_uploaded_file($_FILES['photo-path']['tmp_name'], $pathphoto)) {
                         if (DEBUG) {
                             error_log(date("Y-m-d H:i:s") . " " . __FUNCTION__ . " dans move_uploaded_file \n", 3, LOG_FILE);
@@ -2914,8 +2924,13 @@ function createPublicComment()
                 }
                 $dossier = '../../../resources/pictures/';
                 $fichier = basename($_FILES['photo-path']['name']);
-                $taille_maxi = 6291456;
+                
+                $taille_maxi = maximum_upload_size();
+                //$taille_maxi = 6291456;
                 $taille = filesize($_FILES['photo-path']['tmp_name']);
+                if (DEBUG) {
+                    error_log(date("Y-m-d H:i:s") . " " . __FUNCTION__ . " image size =  " . $taille . ", and apache upload_max_filesize = ".$taille_maxi."\n", 3, LOG_FILE);
+                }
                 $extensions = array(
                     '.png',
                     '.gif',
@@ -2934,10 +2949,10 @@ function createPublicComment()
                     $return['pb'] = getTranslation($_SESSION['id_language'], 'PICTUREPNGGIFJPGJPEG');
                 }
                 
-                if ($taille > $taille_maxi) {
+                if ($taille =="") {
                     $erreur = getTranslation($_SESSION['id_language'], 'ERROR');
                     $return['success'] = false;
-                    $return['pb'] = getTranslation($_SESSION['id_language'], 'PICTURESIZE');
+                    $return['pb'] = getTranslation($_SESSION['id_language'], 'PICTURESIZE')." Taille maximum autorisée : " .$taille_maxi;
                 }
                 
                 if (! isset($erreur)) {

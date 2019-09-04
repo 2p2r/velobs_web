@@ -181,6 +181,73 @@
 	
 		return true;
 	}
+	
+	/**
+	 * Convert number with unit byte to bytes unit
+	 * @link https://en.wikipedia.org/wiki/Metric_prefix
+	 * @param string $value a number of bytes with optinal SI decimal prefix (e.g. 7k, 5mb, 3GB or 1 Tb)
+	 * @return integer|float A number representation of the size in BYTES (can be 0). otherwise FALSE
+	 */
+	function str2bytes($value) {
+	    // only string
+	    $unit_byte = preg_replace('/[^a-zA-Z]/', '', $value);
+	    $unit_byte = strtolower($unit_byte);
+	    // only number (allow decimal point)
+	    $num_val = preg_replace('/\D\.\D/', '', $value);
+	    switch ($unit_byte) {
+	        case 'p':	// petabyte
+	        case 'pb':
+	            $num_val *= 1024;
+	        case 't':	// terabyte
+	        case 'tb':
+	            $num_val *= 1024;
+	        case 'g':	// gigabyte
+	        case 'gb':
+	            $num_val *= 1024;
+	        case 'm':	// megabyte
+	        case 'mb':
+	            $num_val *= 1024;
+	        case 'k':	// kilobyte
+	        case 'kb':
+	            $num_val *= 1024;
+	        case 'b':	// byte
+	            return $num_val *= 1;
+	            break; // make sure
+	        default:
+	            return FALSE;
+	    }
+	    return FALSE;
+	}
+	/**
+	 * The maximum file upload size by getting PHP settings
+	 * @return integer|float file size limit in BYTES based
+	 */
+	function maximum_upload_size() {
+	    static $upload_size = NULL;
+	    if ($upload_size === NULL) {
+	        $post_max_size = ini_get('post_max_size') ;
+	        $upload_max_filesize = ini_get('upload_max_filesize') ;
+	        $memory_limit = ini_get('memory_limit') ;
+	        $post_max_size_bytes = str2bytes( $post_max_size);
+	        $upload_max_filesize_bytes = str2bytes( $upload_max_filesize );
+	        $memory_limit_bytes = str2bytes($memory_limit);
+	        // Even though we disable all of variables in php.ini. These still use default value
+	        // Nearly impossible but check for sure
+	        if (empty($post_max_size_bytes) && empty($upload_max_filesize_bytes) && empty($memory_limit_bytes)) {
+	            return FALSE;
+	        }
+	        $upload_size = min($post_max_size_bytes, $upload_max_filesize_bytes, $memory_limit_bytes);
+	        if($upload_size == $post_max_size_bytes){
+	            return $post_max_size;
+	        }else if($upload_size == $upload_max_filesize_bytes){
+	            return $upload_max_filesize;
+	        }else{
+	            return $memory_limit;
+	        }
+	    }
+	    return $upload_size;
+	}
+	
 	/*	Function name	: getObservationDetailsInArray
 	 * 	Input			: $id_poi, id of the POI for which we want to extract data from database
 	* 	Output			: array $observationArray
