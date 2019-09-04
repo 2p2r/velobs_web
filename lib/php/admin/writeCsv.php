@@ -122,7 +122,7 @@
 											$extraSQL
 										ORDER BY id_poi DESC";
 								$result = mysql_query($sql);
-								$csv = '"Identifiant";"Commentaire final de l\'association";"Réponse de la collectivité";"Observation terrain";"Priorité";"Pôle";"Adhérent";"Libellé observation";"Catégorie";"Sous-catégorie";"Repère";"Rue";"Commune";"Description";"Proposition";"Modération";"Affichage sur la carte";"Latitude";"Longitude";"Date création";"Mode géolocalisation";"Email";"Statut";"Traité par le pôle";"Transmis au pôle";"Lien administration"';
+								$csv = '"Identifiant";"Commentaire final de l\'association";"Réponse de la collectivité";"Observation terrain";"Priorité";"Pôle";"Adhérent";"Libellé observation";"Catégorie";"Sous-catégorie";"Repère";"Rue";"Commune";"Description";"Proposition";"Modération";"Affichage sur la carte";"Latitude";"Longitude";"Date création";"Mode géolocalisation";"Email";"Statut";"Traité par le pôle";"Transmis au pôle";"Lien administration";"Créer pdf"';
 								$csv .= "\r\n";
 								$numberOfRecords = 0;
 								while ($row = mysql_fetch_array($result)) {
@@ -132,7 +132,7 @@
 										$row ['tel_poi'] = '******' ;
 										$row ['adherent_poi'] = '******' ;
 									}
-									$csv .= stripslashes($row['id_poi'].';"'.str_replace('"', "", $row['commentfinal_poi']).'";"'.str_replace('"', "", $row['reponse_collectivite_poi']).'";"'.str_replace('"', "", $row['observationterrain_poi']).'";"'.$row['lib_priorite'].'";"'.$row['lib_pole'].'";"'.$row['adherent_poi'].'";"'.str_replace('"', "", $row['lib_poi']).'";"'.stripslashes($row['lib_category']).'";"'.stripslashes($row['lib_subcategory']).'";"'.str_replace('"', "", $row['num_poi']).'";"'.str_replace('"', "", $row['rue_poi']).'";"'.$row['lib_commune'].'";"'.str_replace('"', "", $row['desc_poi']).'";"'.str_replace('"', "", $row['prop_poi']).'";'.$row['moderation_poi'].';'.$row['display_poi'].';'.$row['Y'].';'.$row['X'].';"'.$row['datecreation_poi'].'";'.$row['geolocatemode_poi'].';"'.$row['mail_poi'].'";"'.$row['lib_status'].'";"'.$row['traiteparpole_poi'].'";"'.$row['transmission_poi'].'";"'.URL.'/admin.php?id='.$row['id_poi'].'"');
+									$csv .= stripslashes($row['id_poi'].';"'.str_replace('"', "", $row['commentfinal_poi']).'";"'.str_replace('"', "", $row['reponse_collectivite_poi']).'";"'.str_replace('"', "", $row['observationterrain_poi']).'";"'.$row['lib_priorite'].'";"'.$row['lib_pole'].'";"'.$row['adherent_poi'].'";"'.str_replace('"', "", $row['lib_poi']).'";"'.stripslashes($row['lib_category']).'";"'.stripslashes($row['lib_subcategory']).'";"'.str_replace('"', "", $row['num_poi']).'";"'.str_replace('"', "", $row['rue_poi']).'";"'.$row['lib_commune'].'";"'.str_replace('"', "", $row['desc_poi']).'";"'.str_replace('"', "", $row['prop_poi']).'";'.$row['moderation_poi'].';'.$row['display_poi'].';'.$row['Y'].';'.$row['X'].';"'.$row['datecreation_poi'].'";'.$row['geolocatemode_poi'].';"'.$row['mail_poi'].'";"'.$row['lib_status'].'";"'.$row['traiteparpole_poi'].'";"'.$row['transmission_poi'].'";"'.URL.'/admin.php?id='.$row['id_poi'].'";"'.URL.'/lib/php/public/exportPDF.php?id_poi='.$row['id_poi'].'"');
 									$csv .= "\r\n";
 								}
 								fputs($fh, $csv);
