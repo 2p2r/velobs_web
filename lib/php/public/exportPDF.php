@@ -162,7 +162,7 @@
                     $html .=  "<li>Commentaire : <i>".nl2br(stripslashes ( $row2 ['text_commentaires'] ))."</i></li>";
                     
                     
-                    if (isset($row2 ['url_photo'])) {
+                    if (isset($row2 ['url_photo']) && $row2 ['url_photo'] != "") {
                         $photo_filename = '../../../resources/pictures/' . $row2 ['url_photo'];
                         if (file_exists($photo_filename) && is_file($photo_filename))
                             $exifimagetype = exif_imagetype ( $photo_filename );
@@ -189,7 +189,7 @@
                                 //$html .= '<li>Photo : </li><img src="'.$photo_filename.'" height="300px" />';
                                 
                     }
-                    $html .= '<HR width="150px"/>';
+                    $html .= '<BR /><HR width="150px"/>';
 //                     $pdf->MultiCell(0, 5, $comment,0,L,false);
                     
                      $nbComment ++;
