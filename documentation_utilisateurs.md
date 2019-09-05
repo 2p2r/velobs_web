@@ -406,6 +406,8 @@ au numéro unique de l’observation, e.g.
 - depuis le tableau d'administration des observations, en cliquant sur le bouton "Imprimer pdf" sur la ligne correspondante à l'observation souhaitée
 ![](doc/utilisateurs/generate_pdf_from_table_administration.png)
 
+NOTA : seules les observations qui ont été modérées positivement par les bénévoles de l'association seront exportables au format pdf, sans connexion préalable à l'interface d'administration
+
 ### Génération d'un fichier texte (.csv)
 
 Il est possible de générer un fichier texte (.csv) contenant un ensemble d'observations pour en avoir une vue d'ensemble. Il existe différentes possibilités : 
@@ -423,12 +425,17 @@ soit en donnant la définition d'un polygone correspondant  une zone qui vous in
     - fermez votre polygone en double cliquant sur la carte à l'endroit où vous souhaitez créer le dernier point du polygone
     - à ce moment là, le champ "Coordonnées d'un polygone" se rempli automatiquement
     
-    Il ne reste plus qu'à cliquer sur le bouton "Valider" pour accéder au fichier csv
+    Il ne reste plus qu'à cliquer sur le bouton "Valider" pour accéder au fichier csv (cf capture d'écran animée ci-dessous)
      ![](doc/utilisateurs/generate_csv_from_public_polygon.gif)
     
 - depuis le tableau d'administration des observations, en cliquant sur le bouton "Télécharger la liste des observations" 
 ![](doc/utilisateurs/generate_csv_from_table_administration.png)
 
+NOTA : les observations retournées dépendront de deux chose : 
+- la personne n'est pas authentifiée sur l'interface d'administration : elle ne pourra télécharger que les observations publiques (celles qui ont été modérées positivement par l'association)
+- la personne est authentifiée sur l'interface d'administration : elle pourra télécharger les observations en focntion de son statut
+    - Administrateur ou modérateur de l'associtation : accès à toutes les observations
+    - Communauté de commune ou Pôle technique : accès aux observations qui ont été modérées positivement par l'association
 
 ## Prise en compte par la collectivité et les pôles techniques
 
