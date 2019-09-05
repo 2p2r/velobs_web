@@ -159,7 +159,6 @@
                         $html .=  "<li>Statut : <i>".$row2 ['display_commentaires'] ."</i></li>";
                     }
                     $html .=  "<li>Date Création : <i>" . strftime("%d/%m/%Y", strtotime($row2 ['datecreation'])) . "</i></li>";
-                    $html .=  "<li>Auteur : <i>*****</i></li>";
                     $html .=  "<li>Commentaire : <i>".nl2br(stripslashes ( $row2 ['text_commentaires'] ))."</i></li>";
                     
                     
