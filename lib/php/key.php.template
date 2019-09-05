@@ -17,8 +17,8 @@
 	define('MAIL_SUBJECT_PREFIX', '[Test][VelObs]');
 	
 	define('VELOBS_ASSOCIATION', '2 pieds 2 roues');
-	define('PDF_VELOBS_ASSOCIATION_ADDRESS', "5 Avenue François Collignon\n31200 TOULOUSE\nTel : 05 34 30 94 18\nMail : toulouse@fubicy.org");
-	define('PDF_VELOBS_ASSOCIATION_LOGO', "2p2r.png");
+	define('PDF_VELOBS_ASSOCIATION_ADDRESS', "5 Avenue François Collignon\n31200 TOULOUSE\nTel : 05 34 30 94 18\nMail : toulouse@fubicy.org"); //address of the association : will be included in the header of the pdf file  (export of an observation)
+	define('PDF_VELOBS_ASSOCIATION_LOGO', "2p2r.png"); //logo filename found in resources/images : will be included in the header of the pdf file  (export of an observation)
 	define('VELOBS_COLLECTIVITE1', 'Toulouse Métropole');
 	define('VELOBS_COLLECTIVITE2', 'le Sicoval');
 	define('VELOBS_COLLECTIVITE3', 'la CAM');
