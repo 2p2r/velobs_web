@@ -379,11 +379,65 @@ communes, pôle technique) de la personne connectée.
     actif. En cliquant dessus, les commentaires seront affichés dans une
     nouvelle fenêtre, permettant de les modérer :
 
-    ![](doc/utilisateurs/1000020100000405000001E324FF344EE9066806.png)
+    ![](doc/utilisateurs/moderation_commentaire.png)
     
     Pour que ces commentaires/photos soient accessibles à la collectivité et
-    sur l’interface publique, il faut cliquer sur la case à cocher présente
-    dans la colonne “Affichage”.
+    sur l’interface publique, il faut double-cliquer sur la case “Non modéré” 
+    présente dans la colonne “Affichage” et sélectionner “Modéré accepté” ou
+    “Modéré refusé” (le commentaire ne sera pas affiché)
+
+## Exporter des observations
+
+Il existe deux méthodes pour exporter des observations :
+
+- génération d'un fichier pdf pour une observation
+- génération d'un fichier texte (.csv) pour une multitude d'observations
+
+### Génération d'un fichier pdf
+
+Il est possible de générer un fichier [pdf](doc/velobs_pdf_observation_25.pdf) pour une observation par différents moyens
+- `URLInstanceVelobs/lib/public/exportPDF.php?id=XXXX` (ou `XXXX` correspond
+au numéro unique de l’observation, e.g.
+[http://velobs.2p2r.org/lib/public/exportPDF.php?id=2916](http://velobs.2p2r.org/lib/public/exportPDF.php?id=2916)).
+- depuis la fiche publique de l'observation, en cliquant sur l'icône "Imprimante" en bas à droite 
+![](doc/utilisateurs/generate_pdf_from_public.png)
+- depuis la fiche d'administration de l'observation, en cliquant sur l'icône "Imprimante" en bas à droite 
+![](doc/utilisateurs/generate_pdf_from_administration.png)
+- depuis le tableau d'administration des observations, en cliquant sur le bouton "Imprimer pdf" sur la ligne correspondante à l'observation souhaitée
+![](doc/utilisateurs/generate_pdf_from_table_administration.png)
+
+NOTA : seules les observations qui ont été modérées positivement par les bénévoles de l'association seront exportables au format pdf, sans connexion préalable à l'interface d'administration
+
+### Génération d'un fichier texte (.csv)
+
+Il est possible de générer un fichier texte (.csv) contenant un ensemble d'observations pour en avoir une vue d'ensemble. Ce fichier peut-être ouvert avec un tableur (openOffice, LibreOffice, Excel..). Il existe différentes possibilités de créer ce fichier :  
+- depuis l'interface publique, en cliquant sur l'icône verte  
+![](doc/utilisateurs/generate_csv_from_public_icon.png) > un formulaire apparaît
+![](doc/utilisateurs/generate_csv_from_public_icon_form.png)
+Sélectionner soit un des champs prédéfinis de la base de données
+    - Territoire
+    - Pôle
+    - Commune
+soit en donnant la définition d'un polygone correspondant  une zone qui vous intéresse en la collant dans la zone dédiée, soit en dessiant les contours du polygone sur la carte de VelObs : 
+
+    - cliquer sur la carte à l'endroit où vous insérer le premier point du polygone
+    - cliquer à un autre endroit de la carte pour positionner le second point du polygone et ainsi de suite
+    - fermez votre polygone en double cliquant sur la carte à l'endroit où vous souhaitez créer le dernier point du polygone
+    - à ce moment là, le champ "Coordonnées d'un polygone" se rempli automatiquement
+    
+    Il ne reste plus qu'à cliquer sur le bouton "Valider" pour accéder au fichier csv (cf capture d'écran animée ci-dessous)
+     ![](doc/utilisateurs/generate_csv_from_public_polygon.gif)
+    
+- depuis le tableau d'administration des observations, en cliquant sur le bouton "Télécharger la liste des observations" 
+![](doc/utilisateurs/generate_csv_from_table_administration.png)
+
+Pour que les caractères spéciaux s'affichent correctement dans votre tableur, il faudra sélectionner l'encode UTF8 ou UNICODE dans les options :
+![](doc/utilisateurs/generate_csv_open_in_libreoffice.gif)
+NOTA : les observations retournées dépendront de deux choses : 
+- la personne n'est pas authentifiée sur l'interface d'administration : elle ne pourra télécharger que les observations publiques (celles qui ont été modérées positivement par l'association)
+- la personne est authentifiée sur l'interface d'administration : elle pourra télécharger les observations en focntion de son statut
+    - Administrateur ou modérateur de l'associtation : accès à toutes les observations
+    - Communauté de commune ou Pôle technique : accès aux observations qui ont été modérées positivement par l'association
 
 ## Prise en compte par la collectivité et les pôles techniques
 
