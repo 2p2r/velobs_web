@@ -55,7 +55,7 @@
 					                    }
 					                    $full_id_territoires = substr ( $full_id_territoires, 0, - 1 );
 					                    $_SESSION['territoire'] = $full_id_territoires;
-					                }//si l'utilisateur fait partie d'un pole technique ou est responsable pole 2P2R
+					                }//si l'utilisateur fait partie d'un pole technique ou est responsable pole au sein de l'association
 					                else if (($row['usertype_id_usertype'] == 3) || ($row['usertype_id_usertype'] == 4)) {
 					                    $_SESSION['territoire'] = 0;
 					                }
@@ -89,7 +89,7 @@
 //                         	while ($row2 = mysql_fetch_array($result2)) {
 //                         	    $_SESSION['territoire'] = $row2['ids_territoire'];
 //                         	}
-//                         }//si l'utilisateur fait partie d'un pole technique ou est responsable pole 2P2R
+//                         }//si l'utilisateur fait partie d'un pole technique ou est responsable pole au sein de l'assocation
 //                         else if (($row['usertype_id_usertype'] == 3) || ($row['usertype_id_usertype'] == 4)) {
 //                             $_SESSION['territoire'] = 0;
 //                         }

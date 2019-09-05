@@ -40,10 +40,10 @@
                 WHERE id_poi = ". $id_poi;
                 $whereSelectPOIAppend = '';
                 if (isset($_SESSION['user']) && isset($_SESSION['type']) && isset($_SESSION['pole'])){
-                    //si l'utilisateur fait partie d'un pole technique, on restreint les POI correspondant au pole et qui ne sont pas avec priorité à "A modérer", "refusé par 2P2R" et "Doublon"
+                    //si l'utilisateur fait partie d'un pole technique ou d'une communauté de communes, on vérifie que le POI correspons bien à une priorité qui lui est accessible
                     if ($_SESSION['type'] == 3 || $_SESSION['type'] == 2){
                         $whereSelectPOIAppend = ' AND priorite.non_visible_par_collectivite = 0 ';
-                    }//si l'utilisateur fait partie d'une communauté de communes, on restreint les POI à ceux qui ne sont pas avec priorité à "A modérer", "refusé par 2P2R" et "Doublon"
+                    }
                 } else{
                     //si le POI est dans une priorité non accessible par le public, on ne le retourne pas
                     $whereSelectPOIAppend = ' AND priorite.non_visible_par_public = 0 ';
@@ -58,7 +58,6 @@
                 
                 if (!isset($poi) || $poi == null){
                     header("HTTP/1.1 404 Observation does not exist");
-                    // 	    header("Location: $newplace");
                     header("Connection: close");
                     ?>
 	    <html><body>L'observation que vous souhaitez imprimer n'est pas encore accessible. Soit elle n'a pas encore été modérée, soit l'état affecté par l'association ne permet pas sa diffusion.</body></html>
@@ -135,15 +134,13 @@
                 
                 if (isset($_SESSION['user']) && isset($_SESSION['type']) && isset($_SESSION['pole'])){
                     $extraSQL = "";
-                    //si l'utilisateur fait partie d'un pole technique, on restreint les POI correspondant au pole et qui ne sont pas avec priorité à "A modérer", "refusé par 2P2R" et "Doublon"
-                    if ($_SESSION['type'] == 3){
+                    //si l'utilisateur fait partie d'un pole technique ou d'une communauté de communes, on restreint les commentaires aux seuls modérés positivement par l'assocation
+                    if ($_SESSION['type'] == 3 || $_SESSION['type'] == 2){
                         $whereSelectCommentAppend = ' AND display_commentaires = \'Modéré accepté\' ';
-                    }//si l'utilisateur fait partie d'une communauté de communes, on restreint les POI à ceux qui ne sont pas avec priorité à "A modérer", "refusé par 2P2R" et "Doublon"
-                    elseif ($_SESSION['type'] == 2){
-                        $whereSelectCommentAppend = ' AND display_commentaires = \'Modéré accepté\' ';
-                    }//si l'utilisateur fait partie des modérateurs, on récupère tous les commentaires
+                    }
                     
                 }else{
+                    //si personne n'est connecté, on restreint les commentaires aux seuls modérés positivement par l'assocation
                     $whereSelectCommentAppend = ' AND display_commentaires = \'Modéré accepté\' ';
                 }
                 
@@ -201,7 +198,7 @@
                 if ($nbComment == 0){
                     $html .= '<li>Aucun commentaire n\'a encore été ajouté à cette observation. Pour en ajouter un, accédez à l\'<a href="'.URL.'/index.php?id='.$poi['id_poi'].'">interface publique</a> de l\'observation.</li>';
                 }
-                $pdf=new createPDF(utf8_decode($html),"Fiche VelObs n°".$poi['id_poi'],"2P2R",time(),$poi['id_poi'],strftime("%d/%m/%Y", strtotime($poi['datecreation_poi'])));
+                $pdf=new createPDF(utf8_decode($html),utf8_decode("Fiche VelObs n°".$poi['id_poi']),VELOBS_ASSOCIATION,time(),$poi['id_poi'],strftime("%d/%m/%Y", strtotime($poi['datecreation_poi'])));
                 $pdf->run();
                  
                 mysql_free_result($result);
