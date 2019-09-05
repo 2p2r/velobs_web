@@ -27,7 +27,7 @@
 				
                 
                 if (DEBUG) {
-                    error_log(date("Y-m-d H:i:s") . " " . __FUNCTION__ . " - in exportPDF.php id_poi = $id_poi $link\n", 3, LOG_FILE);
+                    error_log(date("Y-m-d H:i:s") . " " . __FUNCTION__ . " - in exportPDF.php id_poi = $id_poi\n", 3, LOG_FILE);
                 }
                 $sql = "SELECT poi.*, x(poi.geom_poi) AS X, y(poi.geom_poi) AS Y, users.lib_users, usertype.lib_usertype, commune.lib_commune, subcategory.lib_subcategory, pole.lib_pole,priorite.lib_priorite, status.lib_status FROM poi 
                 INNER JOIN commune ON commune.id_commune = poi.commune_id_commune
