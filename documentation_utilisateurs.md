@@ -386,6 +386,50 @@ communes, pôle technique) de la personne connectée.
     présente dans la colonne “Affichage” et sélectionner “Modéré accepté” ou
     “Modéré refusé” (le commentaire ne sera pas affiché)
 
+## Exporter des observations
+
+Il existe deux méthodes pour exporter des observations :
+
+- génération d'un fichier pdf pour une observation
+- génération d'un fichier texte (.csv) pour une multitude d'observations
+
+### Génération d'un fichier pdf
+
+Il est possible de générer un fichier [pdf](doc/velobs_pdf_observation_25.pdf) pour une observation par différents moyens
+- `URLInstanceVelobs/lib/public/exportPDF.php?id=XXXX` (ou `XXXX` correspond
+au numéro unique de l’observation, e.g.
+[http://velobs.2p2r.org/lib/public/exportPDF.php?id=2916](http://velobs.2p2r.org/lib/public/exportPDF.php?id=2916)).
+- depuis la fiche publique de l'observation, en cliquant sur l'icône "Imprimante" en bas à droite 
+![](doc/utilisateurs/generate_pdf_from_public.png)
+- depuis la fiche d'administration de l'observation, en cliquant sur l'icône "Imprimante" en bas à droite 
+![](doc/generate_pdf_from_administration.png)
+- depuis le tableau d'administration des observations, en cliquant sur le bouton "Imprimer pdf" sur la ligne correspondante à l'observation souhaitée
+![](doc/generate_pdf_from_table_administration.png)
+
+### Génération d'un fichier texte (.csv)
+
+Il est possible de générer un fichier texte (.csv) contenant un ensemble d'observations pour en avoir une vue d'ensemble. Il existe différentes possibilités : 
+- depuis l'interface publique, en cliquant sur l'icône verte  
+![](doc/generate_csv_from_public_icon.png) > un formulaire apparaît
+![](doc/generate_csv_from_public_icon_form.png)
+Sélectionner soit un des champs prédéfinis de la base de données
+    - Territoire
+    - Pôle
+    - Commune
+soit en donnant la définition d'un polygone correspondant  une zone qui vous intéresse en la collant dans la zone dédiée, soit en dessiant les contours du polygone sur la carte de VelObs : 
+
+    - cliquer sur la carte à l'endroit où vous insérer le premier point du polygone
+    - cliquer à un autre endroit de la carte pour positionner le second point du polygone et ainsi de suite
+    - fermez votre polygone en double cliquant sur la carte à l'endroit où vous souhaitez créer le dernier point du polygone
+    - à ce moment là, le champ "Coordonnées d'un polygone" se rempli automatiquement
+    
+    Il ne reste plus qu'à cliquer sur le bouton "Valider" pour accéder au fichier csv
+     ![](doc/generate_csv_from_public_polygon.gif)
+    
+- depuis le tableau d'administration des observations, en cliquant sur le bouton "Télécharger la liste des observations" 
+![](doc/generate_csv_from_table_administration.png)
+
+
 ## Prise en compte par la collectivité et les pôles techniques
 
 Les collectivités référencées dans **VelObs** disposent d’identifiants leur
