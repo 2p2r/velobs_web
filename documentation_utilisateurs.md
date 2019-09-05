@@ -410,7 +410,7 @@ NOTA : seules les observations qui ont été modérées positivement par les bé
 
 ### Génération d'un fichier texte (.csv)
 
-Il est possible de générer un fichier texte (.csv) contenant un ensemble d'observations pour en avoir une vue d'ensemble. Il existe différentes possibilités : 
+Il est possible de générer un fichier texte (.csv) contenant un ensemble d'observations pour en avoir une vue d'ensemble. Ce fichier peut-être ouvert avec un tableur (openOffice, LibreOffice, Excel..). Il existe différentes possibilités de créer ce fichier :  
 - depuis l'interface publique, en cliquant sur l'icône verte  
 ![](doc/utilisateurs/generate_csv_from_public_icon.png) > un formulaire apparaît
 ![](doc/utilisateurs/generate_csv_from_public_icon_form.png)
@@ -431,7 +431,9 @@ soit en donnant la définition d'un polygone correspondant  une zone qui vous in
 - depuis le tableau d'administration des observations, en cliquant sur le bouton "Télécharger la liste des observations" 
 ![](doc/utilisateurs/generate_csv_from_table_administration.png)
 
-NOTA : les observations retournées dépendront de deux chose : 
+Pour que les caractères spéciaux s'affichent correctement dans votre tableur, il faudra sélectionner l'encode UTF8 ou UNICODE dans les options :
+![](doc/utilisateurs/generate_csv_open_in_libreoffice.gif)
+NOTA : les observations retournées dépendront de deux choses : 
 - la personne n'est pas authentifiée sur l'interface d'administration : elle ne pourra télécharger que les observations publiques (celles qui ont été modérées positivement par l'association)
 - la personne est authentifiée sur l'interface d'administration : elle pourra télécharger les observations en focntion de son statut
     - Administrateur ou modérateur de l'associtation : accès à toutes les observations
