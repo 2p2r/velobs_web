@@ -402,16 +402,16 @@ au numéro unique de l’observation, e.g.
 - depuis la fiche publique de l'observation, en cliquant sur l'icône "Imprimante" en bas à droite 
 ![](doc/utilisateurs/generate_pdf_from_public.png)
 - depuis la fiche d'administration de l'observation, en cliquant sur l'icône "Imprimante" en bas à droite 
-![](doc/generate_pdf_from_administration.png)
+![](doc/utilisateurs/generate_pdf_from_administration.png)
 - depuis le tableau d'administration des observations, en cliquant sur le bouton "Imprimer pdf" sur la ligne correspondante à l'observation souhaitée
-![](doc/generate_pdf_from_table_administration.png)
+![](doc/utilisateurs/generate_pdf_from_table_administration.png)
 
 ### Génération d'un fichier texte (.csv)
 
 Il est possible de générer un fichier texte (.csv) contenant un ensemble d'observations pour en avoir une vue d'ensemble. Il existe différentes possibilités : 
 - depuis l'interface publique, en cliquant sur l'icône verte  
-![](doc/generate_csv_from_public_icon.png) > un formulaire apparaît
-![](doc/generate_csv_from_public_icon_form.png)
+![](doc/utilisateurs/generate_csv_from_public_icon.png) > un formulaire apparaît
+![](doc/utilisateurs/generate_csv_from_public_icon_form.png)
 Sélectionner soit un des champs prédéfinis de la base de données
     - Territoire
     - Pôle
@@ -424,10 +424,10 @@ soit en donnant la définition d'un polygone correspondant  une zone qui vous in
     - à ce moment là, le champ "Coordonnées d'un polygone" se rempli automatiquement
     
     Il ne reste plus qu'à cliquer sur le bouton "Valider" pour accéder au fichier csv
-     ![](doc/generate_csv_from_public_polygon.gif)
+     ![](doc/utilisateurs/generate_csv_from_public_polygon.gif)
     
 - depuis le tableau d'administration des observations, en cliquant sur le bouton "Télécharger la liste des observations" 
-![](doc/generate_csv_from_table_administration.png)
+![](doc/utilisateurs/generate_csv_from_table_administration.png)
 
 
 ## Prise en compte par la collectivité et les pôles techniques
