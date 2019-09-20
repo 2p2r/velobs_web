@@ -6,6 +6,7 @@ switch (SGBD) {
 	case 'mysql' :
 		if (DEBUG) {
 			error_log ( date ( "Y-m-d H:i:s" ) . " - public/getMarker.php \n", 3, LOG_FILE );
+			error_log ( date ( "Y-m-d H:i:s" ) . " - bounds = ".$_GET['bounds']." \n", 3, LOG_FILE );
 		}
 		$link = mysql_connect ( DB_HOST, DB_USER, DB_PASS );
 		mysql_select_db ( DB_NAME );
@@ -39,7 +40,9 @@ switch (SGBD) {
 					error_log ( date ( "Y-m-d H:i:s" ) . " - public/getMarker.php datesqlappend = ".$datesqlappend."\n", 3, LOG_FILE );
 				}
 			}
-			
+			if (isset($_GET['bounds']) && $_GET['bounds'] != ''){
+			    $boundsSQL = " AND ST_Within(poi.geom_poi,ST_GeomFromText('".$_GET['bounds']."') )=1 ";
+			}
 			if (isset ($_GET ['status']) && ($_GET ['status'] == "" || $_GET ['status'] == 'all'|| $_GET ['status'] == 'undefined')) {
 				$statussqlappend = '';
 			} else {
@@ -57,13 +60,17 @@ switch (SGBD) {
 			if (isset ( $_GET ["nbSupportMinimum"] ) && $_GET ["nbSupportMinimum"] != '' && $_GET ["nbSupportMinimum"] > 0) { // filter by status given by the collectivity
 			    $sqlappend .= ' AND poi.id_poi IN (select poi_poi_id from support_poi group by poi_poi_id having count(*) >= '.$_GET ["nbSupportMinimum"].')';
 			}
-			$sqlappend .= $datesqlappend . $statussqlappend;
+			if (isset ( $_GET ["alreadyLoadedObservations"] ) && $_GET ["alreadyLoadedObservations"] != '') { // filter by status given by the collectivity
+			    $sqlappend .= ' AND poi.id_poi NOT IN ('.$_GET ["alreadyLoadedObservations"].')';
+			}
+			
+			$sqlappend .= $datesqlappend . $statussqlappend . $boundsSQL;
 		}
 		$sql .= $sqlappend;
 		$result = mysql_query ( $sql );
 		if (DEBUG) {
 			error_log ( date ( "Y-m-d H:i:s" ) . " - public/getMarker.php sql = $sql\n", 3, LOG_FILE );
-			error_log ( date ( "Y-m-d H:i:s" ) . " - public/getMarker.php sql = $datesqlappend\n", 3, LOG_FILE );
+			error_log ( date ( "Y-m-d H:i:s" ) . " - public/getMarker.php datesqlappend = $datesqlappend\n", 3, LOG_FILE );
 		}
 		$i = 0;
 		while ( $row = mysql_fetch_array ( $result ) ) {
