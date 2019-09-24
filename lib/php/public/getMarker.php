@@ -20,8 +20,12 @@ switch (SGBD) {
 					status.lib_status,
 					status.color_status,
 					priorite.lib_priorite
-					FROM poi
-					INNER JOIN subcategory ON (subcategory.id_subcategory = poi.subcategory_id_subcategory)
+					FROM poi ";
+		if ($_GET ['getCount']){
+		    $sql = "SELECT COUNT(poi.id_poi) as total_number_of_observations
+					FROM poi ";
+		}
+		$sql .= "	INNER JOIN subcategory ON (subcategory.id_subcategory = poi.subcategory_id_subcategory)
 					INNER JOIN commune ON (commune.id_commune = poi.commune_id_commune)
 					INNER JOIN priorite ON (poi.priorite_id_priorite = priorite.id_priorite)
 					INNER JOIN status ON (status.id_status = poi.status_id_status) ";
@@ -72,6 +76,16 @@ switch (SGBD) {
 			error_log ( date ( "Y-m-d H:i:s" ) . " - public/getMarker.php sql = $sql\n", 3, LOG_FILE );
 			error_log ( date ( "Y-m-d H:i:s" ) . " - public/getMarker.php datesqlappend = $datesqlappend\n", 3, LOG_FILE );
 		}
+		
+		if ($_GET ['getCount']){
+		    
+		    
+		    while ( $row = mysql_fetch_array ( $result ) ) {
+		        $total_number_of_observations = $row ['total_number_of_observations'];
+		        
+		    }
+		    echo '{"total_number_of_observations":' . $total_number_of_observations . '}';
+		}else{
 		$i = 0;
 		while ( $row = mysql_fetch_array ( $result ) ) {
 			$arr [$i] ['id'] = $row ['id_poi'];
@@ -118,6 +132,7 @@ switch (SGBD) {
 			error_log ( date ( "Y-m-d H:i:s" ) . " - public/getMarker.php Nombre d'observations correspondantes = " . $i."\n", 3, LOG_FILE );
 		}
 		echo '{"markers":' . json_encode ( $arr ) . '}';
+		}
 		
 		mysql_free_result ( $result );
 		mysql_close ( $link );
