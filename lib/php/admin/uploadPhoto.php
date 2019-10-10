@@ -15,26 +15,29 @@
 					}
 					$dossier = '../../../resources/pictures/';
 					$fichier = basename($_FILES['photo-path']['name']);
-					$taille_maxi = 6291456;
+					$taille_maxi = maximum_upload_size();
 					$taille = filesize($_FILES['photo-path']['tmp_name']);
 					$extensions = array('.png', '.gif', '.jpg', '.jpeg', '.PNG', '.GIF', '.JPG', '.JPEG');
 					$extension = strrchr($_FILES['photo-path']['name'], '.'); 
-					
+					if (DEBUG){
+					    error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " taille maxi = $taille_maxi, taille fichier = $taille \n", 3, LOG_FILE);
+					}
 					if (!in_array($extension, $extensions)) {
 						$erreur = getTranslation($_SESSION['id_language'],'ERROR');
 						$return['success'] = false;
 						$return['pb'] = getTranslation($_SESSION['id_language'],'PICTUREPNGGIFJPGJPEG');
-					}
-					
-					if ($taille > $taille_maxi) {
-						$erreur = getTranslation($_SESSION['id_language'],'ERROR');
-						$return['success'] = false;
-						$return['pb'] = getTranslation($_SESSION['id_language'],'PICTURESIZE');
+					}else if ($taille =="") {
+					    $erreur = getTranslation(1, 'ERROR');
+					    $return['success'] = false;
+					    $return['pb'] = getTranslation(1, 'PICTURESIZE')." Taille maximum autorisée : " .$taille_maxi;
 					}
 					if (DEBUG){
 						error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " $erreur\n", 3, LOG_FILE);
 					}
 					if (!isset($erreur)) {
+					    if (DEBUG){
+					        error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " Pas d'erreur, on continue le traitement\n", 3, LOG_FILE);
+					    }
 						$fichier = strtr($fichier, 
 								'ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïðòóôõöùúûüýÿ_', 
 								'AAAAAACEEEEIIIIOOOOOUUUUYaaaaaaceeeeiiiioooooouuuuyy-');
@@ -42,7 +45,10 @@
 						$fichier = 'poi_'.$_POST['id_POI'].'_'.$fichier;
 						$pathphoto = $dossier.$fichier;
 						if (move_uploaded_file($_FILES['photo-path']['tmp_name'], $pathphoto)){
-							$return['success'] = true;
+						    if (DEBUG){
+						        error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " Image déplacée vers $pathphoto \n", 3, LOG_FILE);
+						    }
+						    $return['success'] = true;
 							$return['ok'] = getTranslation($_SESSION['id_language'],'PHOTOTRANSFERTDONE');
 							$size = getimagesize($pathphoto);
 							
@@ -53,7 +59,9 @@
 									generate_image_thumbnail($pathphoto, $pathphoto, 768, 1024);
 								}
 							}
-							
+							if (DEBUG){
+							    error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " Après la génération de la miniature\n", 3, LOG_FILE);
+							}
 							$size = getimagesize($pathphoto);
 							$newnamefichier = $size[0].'x'.$size[1].'x'.$fichier;
 							$newpathphoto = $dossier.$newnamefichier;
@@ -76,8 +84,11 @@
 						$sql3 = "UPDATE poi SET lastdatemodif_poi = '$lastdatemodif_poi' WHERE id_poi = $id_poi";
 					$result = mysql_query($sql);
 				} else {
+				    if (DEBUG){
+				        error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " Erreur lors du traitement de la photo \n", 3, LOG_FILE);
+				    }
 					$return['success'] = false;
-					$return['pb'] = getTranslation($_SESSION['id_language'],'ICONTRANSFERTFALSE');
+					$return['pb'] = "Erreur lors de l'ajout de votre photo : ".$return['pb'];
 				}
 				echo json_encode($return);
 	

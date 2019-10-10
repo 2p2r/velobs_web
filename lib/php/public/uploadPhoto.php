@@ -18,7 +18,7 @@
 					
 					$dossier = '../../../resources/pictures/';
 					$fichier = basename($_FILES['photo-path']['name']);
-					$taille_maxi = 6291456;
+					$taille_maxi = maximum_upload_size();
 					$taille = filesize($_FILES['photo-path']['tmp_name']);
 					$extensions = array('.png', '.gif', '.jpg', '.jpeg', '.PNG', '.GIF', '.JPG', '.JPEG');
 					$extension = strrchr($_FILES['photo-path']['name'], '.'); 
@@ -27,13 +27,12 @@
 						$erreur = getTranslation($_SESSION['id_language'],'ERROR');
 						$return['success'] = false;
 						$return['pb'] = getTranslation($_SESSION['id_language'],'PICTUREPNGGIFJPGJPEG');
+					}else if ($taille =="") {
+					    $erreur = getTranslation(1, 'ERROR');
+					    $return['success'] = false;
+					    $return['pb'] = getTranslation(1, 'PICTURESIZE')." Taille maximum autorisée : " .$taille_maxi;
 					}
 					
-					if ($taille > $taille_maxi) {
-						$erreur = getTranslation($_SESSION['id_language'],'ERROR');
-						$return['success'] = false;
-						$return['pb'] = getTranslation($_SESSION['id_language'],'PICTURESIZE');
-					}
 					
 					if (!isset($erreur)) {
 						$fichier = strtr($fichier, 

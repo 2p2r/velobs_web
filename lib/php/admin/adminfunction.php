@@ -2346,9 +2346,7 @@ function createPublicPoi()
                     $erreur = getTranslation(1, 'ERROR');
                     $return['success'] = false;
                     $return['pb'] = getTranslation(1, 'PICTUREPNGGIFJPGJPEG');
-                }
-                
-                if ($taille =="") {
+                }else if ($taille =="") {
                     $erreur = getTranslation(1, 'ERROR');
                     $return['success'] = false;
                     $return['pb'] = getTranslation(1, 'PICTURESIZE')." Taille maximum autorisée : " .$taille_maxi;
