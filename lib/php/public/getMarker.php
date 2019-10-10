@@ -6,6 +6,7 @@ switch (SGBD) {
 	case 'mysql' :
 		if (DEBUG) {
 			error_log ( date ( "Y-m-d H:i:s" ) . " - public/getMarker.php \n", 3, LOG_FILE );
+			error_log ( date ( "Y-m-d H:i:s" ) . " - bounds = ".$_GET['bounds']." \n", 3, LOG_FILE );
 		}
 		$link = mysql_connect ( DB_HOST, DB_USER, DB_PASS );
 		mysql_select_db ( DB_NAME );
@@ -19,8 +20,12 @@ switch (SGBD) {
 					status.lib_status,
 					status.color_status,
 					priorite.lib_priorite
-					FROM poi
-					INNER JOIN subcategory ON (subcategory.id_subcategory = poi.subcategory_id_subcategory)
+					FROM poi ";
+		if ($_GET ['getCount']){
+		    $sql = "SELECT COUNT(poi.id_poi) as total_number_of_observations
+					FROM poi ";
+		}
+		$sql .= "	INNER JOIN subcategory ON (subcategory.id_subcategory = poi.subcategory_id_subcategory)
 					INNER JOIN commune ON (commune.id_commune = poi.commune_id_commune)
 					INNER JOIN priorite ON (poi.priorite_id_priorite = priorite.id_priorite)
 					INNER JOIN status ON (status.id_status = poi.status_id_status) ";
@@ -39,7 +44,9 @@ switch (SGBD) {
 					error_log ( date ( "Y-m-d H:i:s" ) . " - public/getMarker.php datesqlappend = ".$datesqlappend."\n", 3, LOG_FILE );
 				}
 			}
-			
+			if (isset($_GET['bounds']) && $_GET['bounds'] != ''){
+			    $boundsSQL = " AND ST_Within(poi.geom_poi,ST_GeomFromText('".$_GET['bounds']."') )=1 ";
+			}
 			if (isset ($_GET ['status']) && ($_GET ['status'] == "" || $_GET ['status'] == 'all'|| $_GET ['status'] == 'undefined')) {
 				$statussqlappend = '';
 			} else {
@@ -57,14 +64,28 @@ switch (SGBD) {
 			if (isset ( $_GET ["nbSupportMinimum"] ) && $_GET ["nbSupportMinimum"] != '' && $_GET ["nbSupportMinimum"] > 0) { // filter by status given by the collectivity
 			    $sqlappend .= ' AND poi.id_poi IN (select poi_poi_id from support_poi group by poi_poi_id having count(*) >= '.$_GET ["nbSupportMinimum"].')';
 			}
-			$sqlappend .= $datesqlappend . $statussqlappend;
+			if (isset ( $_GET ["alreadyLoadedObservations"] ) && $_GET ["alreadyLoadedObservations"] != '') { // filter by status given by the collectivity
+			    $sqlappend .= ' AND poi.id_poi NOT IN ('.$_GET ["alreadyLoadedObservations"].')';
+			}
+			
+			$sqlappend .= $datesqlappend . $statussqlappend . $boundsSQL;
 		}
 		$sql .= $sqlappend;
 		$result = mysql_query ( $sql );
 		if (DEBUG) {
 			error_log ( date ( "Y-m-d H:i:s" ) . " - public/getMarker.php sql = $sql\n", 3, LOG_FILE );
-			error_log ( date ( "Y-m-d H:i:s" ) . " - public/getMarker.php sql = $datesqlappend\n", 3, LOG_FILE );
+			error_log ( date ( "Y-m-d H:i:s" ) . " - public/getMarker.php datesqlappend = $datesqlappend\n", 3, LOG_FILE );
 		}
+		
+		if ($_GET ['getCount']){
+		    
+		    
+		    while ( $row = mysql_fetch_array ( $result ) ) {
+		        $total_number_of_observations = $row ['total_number_of_observations'];
+		        
+		    }
+		    echo '{"total_number_of_observations":' . $total_number_of_observations . '}';
+		}else{
 		$i = 0;
 		while ( $row = mysql_fetch_array ( $result ) ) {
 			$arr [$i] ['id'] = $row ['id_poi'];
@@ -111,6 +132,7 @@ switch (SGBD) {
 			error_log ( date ( "Y-m-d H:i:s" ) . " - public/getMarker.php Nombre d'observations correspondantes = " . $i."\n", 3, LOG_FILE );
 		}
 		echo '{"markers":' . json_encode ( $arr ) . '}';
+		}
 		
 		mysql_free_result ( $result );
 		mysql_close ( $link );
