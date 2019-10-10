@@ -155,7 +155,7 @@
                     }
                     if ($num_rows2 == 0){
                     	/* envoi d'un mail aux administrateurs de l'association et modérateurs */
-                    	$whereClause = "u.usertype_id_usertype = 1 OR (u.usertype_id_usertype = 4 AND u.num_pole = ".$arrayObs['pole_id_pole'].")";
+                    	$whereClause = "u.usertype_id_usertype = 1 OR (u.usertype_id_usertype = 4 AND ulp.num_pole = ".$arrayObs['pole_id_pole'].")";
                     	$subject = 'Nouvelle observation à modérer sur le pole '.$arrayObs['lib_pole'];
                     	$message = "Bonjour !
 Une nouvelle observation a été ajoutée sur le pole ".$arrayObs['lib_pole'].". Veuillez vous connecter à l'interface d'administration pour la modérer.
