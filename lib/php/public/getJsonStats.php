@@ -43,6 +43,9 @@ include_once '../key.php';
 				if (DEBUG){
 					error_log(date("Y-m-d H:i:s") . " - getJsonStats.php ".$_SESSION["type"]."\n", 3, LOG_FILE);
 				}
+				}else{
+				    $sqlappend .= ' AND p.moderation_poi = 1
+							AND priorite.non_visible_par_public = 0 ';
 				}
 				$sqlGetStats .= $sqlappend;
 				
