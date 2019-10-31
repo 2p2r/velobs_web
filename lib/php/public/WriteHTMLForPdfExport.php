@@ -349,7 +349,7 @@ class PDF extends FPDF
                 if(isset($attr['WIDTH'])){
                     $this->PutLine(1);
                 }else{
-                    $this->PutLine();
+                    $this->PutLine(0);
                 }
                 break;
             case 'FONT':
