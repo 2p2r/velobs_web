@@ -22,7 +22,7 @@ switch (SGBD) {
 					priorite.lib_priorite
 					FROM poi ";
 		if ($_GET ['getCount']){
-		    $sql = "SELECT COUNT(poi.id_poi) as total_number_of_observations
+		    $sql = "SELECT COUNT(DISTINCT(poi.id_poi)) as total_number_of_observations
 					FROM poi ";
 		}
 		$sql .= "	INNER JOIN subcategory ON (subcategory.id_subcategory = poi.subcategory_id_subcategory)

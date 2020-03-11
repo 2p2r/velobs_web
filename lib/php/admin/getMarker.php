@@ -24,7 +24,12 @@ if (isset ( $_SESSION ['user'] )) {
 						lib_status,
 						color_status,
 						users.lib_users
-					FROM poi 
+					FROM poi  ";
+			if ($_GET ['getCount']){
+		      $sql = "SELECT COUNT(DISTINCT(poi.id_poi)) as total_number_of_observations
+					FROM poi ";
+		      }
+		      $sql.="
 					INNER JOIN subcategory ON (subcategory.id_subcategory = poi.subcategory_id_subcategory) 
 					INNER JOIN commune ON (commune.id_commune = poi.commune_id_commune) 
 					INNER JOIN priorite ON (poi.priorite_id_priorite = priorite.id_priorite)
@@ -105,10 +110,20 @@ if (isset ( $_SESSION ['user'] )) {
 				error_log ( date ( "Y-m-d H:i:s" ) . " - admin/getMarker.php sql = $sql\n", 3, LOG_FILE );
 			}
 			$result = mysql_query ( $sql );
-			$i = 0;
 			if (DEBUG) {
 				error_log ( date ( "Y-m-d H:i:s" ) . " - admin/getMarker.php avant while\n", 3, LOG_FILE );
 			}
+			
+			if ($_GET ['getCount']){
+		    
+		    
+		    while ( $row = mysql_fetch_array ( $result ) ) {
+		        $total_number_of_observations = $row ['total_number_of_observations'];
+		        
+		    }
+		    echo '{"total_number_of_observations":' . $total_number_of_observations . '}';
+		}else{
+		$i = 0;
 			while ( $row = mysql_fetch_array ( $result ) ) {
 				$arr [$i] ['id'] = $row ['id_poi'];
 				$arr [$i] ['lib_subcategory'] = stripslashes ( $row ['lib_subcategory'] );
@@ -235,7 +250,7 @@ if (isset ( $_SESSION ['user'] )) {
 				error_log ( date ( "Y-m-d H:i:s" ) . " - admin/getMarker.php retour json avec $i obs\n", 3, LOG_FILE );
 			}
 			echo '{"markers":' . json_encode ( $arr ) . '}';
-			
+		}
 			mysql_free_result ( $result );
 			mysql_close ( $link );
 			break;
