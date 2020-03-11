@@ -1900,6 +1900,7 @@ Votre compte sur VelObs a été mis à jour.\n Vous pouvez vous connecter à l'i
 					Vos identifiants sont :\n<br />
 					- Login : ".$userLogin."\n<br />
 					- Mot de passe : " . $clearPassword . "\n<br />
+Pour modifier votre mot de passe, cliquer sur le menu \"Mes coordonnées\" à droite sur l'interface d'administration, puis sur \"Modifier mes coordonnées\".<br />
 					En cas de question, vous pouvez trouver des informations\n sur https://github.com/2p2r/velobs_web. N'hésitez pas à envoyer un courriel à\n " . MAIL_ALIAS_OBSERVATION_ADHERENTS . " pour toute question sur VelObs.\n<br />";
                 sendMail($userMail, "Réinitialisation mote de passe sur VelObs", $message);
             }
@@ -1927,21 +1928,21 @@ function updateUser()
             $sql = "UPDATE users SET ";
             if (isset($_POST['lib_users']) && $_POST['lib_users'] != '') {
                 $sql .= "lib_users = '" . mysql_real_escape_string($_POST['lib_users']) . "',";
-                $message .= "	- Login : " . $_POST['lib_users'] . "\n";
+                $message .= "	- Login : " . $_POST['lib_users'] . "<br />\n";
             }
             if (isset($_POST['mail_users']) && $_POST['mail_users'] != '') {
                 $mail_users = mysql_real_escape_string($_POST['mail_users']);
                 $sql .= "mail_users = '" . $mail_users . "',";
-                $message .= "	- Mail : " . $_POST['mail_users'] . "\n";
+                $message .= "	- Mail : " . $_POST['mail_users'] . "<br />\n";
             }
             if (isset($_POST['nom_users']) && $_POST['nom_users'] != '') {
                 $sql .= "nom_users = '" . mysql_real_escape_string($_POST['nom_users']) . "',";
-                $message .= "	- Nom : " . $_POST['nom_users'] . "\n";
+                $message .= "	- Nom : " . $_POST['nom_users'] . "<br />\n";
             }
             if (isset($_POST['pass_users']) && $_POST['pass_users'] != '') {
                 $pass_users = create_password_hash($_POST['pass_users'], PASSWORD_BCRYPT);
                 $sql .= "pass_users = '" . $pass_users . "',";
-                $message .= "	- Mot de passe : " . $_POST['pass_users'] . "\n";
+                $message .= "	- Mot de passe : " . $_POST['pass_users'] . "<br />\n";
             }
             
             if (isset($_POST['territoire_id_territoire']) && is_numeric($_POST['territoire_id_territoire'])) {
@@ -1974,7 +1975,8 @@ function updateUser()
                 $message = "Bonjour,<br />
 Votre compte sur VelObs a été mis à jour.\n Vous pouvez vous connecter à l'interface d'administration à l'adresse :<br />\n
 " . URL . "/admin.php\n<br />
-" . $message . "
+" . $message . "<br />
+Pour modifier votre mot de passe, cliquer sur le menu \"Mes coordonnées\" à droite sur l'interface d'administration, puis sur \"Modifier mes coordonnées\".<br />
 En cas de question, vous pouvez trouver des informations\n sur https://github.com/2p2r/velobs_web. \nN'hésitez pas à envoyer un courriel à \n" . MAIL_ALIAS_OBSERVATION_ADHERENTS . " pour toute question sur VelObs.\n<br />";
                 sendMail($mail_users, "Modification coordonnées sur VelObs", $message);
             }
