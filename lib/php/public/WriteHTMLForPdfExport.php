@@ -75,10 +75,11 @@ class createPDF {
         $pdf->SetCreator($this->author);
         $pdf->setIdPOI($this->idPOI);
         $pdf->setDateCreationPOI($this->dateCreationPOI);
-        
+        $pdf->SetAutoPageBreak(true,40);
         $pdf->SetDisplayMode('real');
         $pdf->SetTitle($this->_convert($this->title));
         $pdf->SetAuthor($this->author);
+        //$pdf->SetMargins(80,80,80);
         $pdf->AddPage();
         
         // header
@@ -88,7 +89,7 @@ class createPDF {
 //         $pdf->PutMinorTitle($this->_convert($this->author));
 //         $pdf->PutMinorHeading("Published: ".@date("F j, Y, g:i a",$this->date));
 //         $pdf->PutLine();
-        $pdf->Ln(10);
+        $pdf->Ln(20);
         
         // html
         $pdf->WriteHTML($this->_convert(stripslashes($this->html)),$this->bi);
@@ -126,6 +127,7 @@ class PDF extends FPDF
     // Page header
     function Header()
     {
+        $this->SetTextColor(0,0,0);
         // Logo
         $this->Image('../../../resources/images/'.PDF_VELOBS_ASSOCIATION_LOGO,10,6,30);
         
@@ -135,23 +137,28 @@ class PDF extends FPDF
 //         $this->Cell(40,10,"31200 TOULOUSE",0,0,L);
         // Arial bold 15
         $this->SetY(6);
+        
         $this->SetFont('Arial','B',15);
         // Move to the right
         $this->SetX(-90);
         //$this->Cell((240-$this->GetStringWidth("Fiche VelObs "))/2);
         // Title
         $this->SetFillColor(255,235,0);
-        $this->Cell($this->GetStringWidth("Fiche VelObs n°XXXX")+10,10,utf8_decode('Fiche VelObs n°').$this->ID_POI,1,0,'C',1);
+        $this->Cell($this->GetStringWidth("Fiche VelObs n°XXXX")+10,10,utf8_decode('Fiche VelObs n°').$this->ID_POI,1,1,'C',1);
         $this->SetFillColor(255,255,255);
         //$this->SetFont('Arial','I',10);
         //$this->Cell(0,10,utf8_decode(' Date création :  '.$this->DATE_CREATION_POI),0,0,'R');
         // Line break
-        $this->Ln(20);
+        //$this->Ln(10);
+        $this->SetY(31);
+        $this->PutLine(1);
+        
     }
     // Page footer
     function Footer()
     {
         // Position at 1.5 cm from bottom
+        $this->SetTextColor(0,0,0);
         $this->SetY(-15);
         $this->SetX(10);
         $this->SetFont('Arial', '', 8);
@@ -331,7 +338,7 @@ class PDF extends FPDF
                 break;
             case 'LI':
                 $this->Ln(5);
-                $this->SetTextColor(190,0,0);
+                $this->SetTextColor(0,0,0);
                 $this->Write(5,'     > ');
                 $this->mySetTextColor(-1);
                 break;

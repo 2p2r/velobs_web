@@ -80,7 +80,7 @@
                     }
                 }
                 
-                $html = '<hr><p>Ce document est un export au format pdf de la fiche VelObs n°'.$poi['id_poi'].', en date du '.date('Y-m-d H:i:s').'.</p>';
+                $html = '<p>Ce document est un export au format pdf de la fiche VelObs n°'.$poi['id_poi'].', en date du '.date('Y-m-d H:i:s').'.</p>';
                 $html .= '<p>Lien vers l\'observation sur l\'<a href="'.URL.'/index.php?id='.$poi['id_poi'].'">interface publique</a> de l\'application <a href="https://2p2r.org/articles-divers/page-sommaire/article/velobs">VelObs</a>.</p>';
                 $html .= '<p>Lien vers  l\'observation sur l\'<a href="'.URL.'/admin.php?id='.$poi['id_poi'].'">interface d\'administration</a> de l\'application <a href="https://2p2r.org/articles-divers/page-sommaire/article/velobs">VelObs</a>.</p>';
                 if ($NbreVotes > 0){
@@ -183,14 +183,12 @@
                                 if (DEBUG) {
                                     error_log(date("Y-m-d H:i:s") . " " . __FUNCTION__ . " - in exportPDF.php $width, $height\n", 3, LOG_FILE);
                                 }
-//                                 $comment .= $pdf->Image('../../../resources/pictures/' . $row2 ['url_photo'], NULL, NULL, 0, 0, $imagefiletype);
                                 $html .= '<li>Photo : </li><img src="'.$photo_filename.'" width="'.$width.'"px height="'.$height.'px" />';
                                 $html .= '<li><a href="'.URL.'/resources/pictures/' . $row2 ['url_photo'].'">Lien photo</a></li><br />';
-                                //$html .= '<li>Photo : </li><img src="'.$photo_filename.'" height="300px" />';
+                               
                                 
                     }
                     $html .= '<BR /><HR width="150px"/>';
-//                     $pdf->MultiCell(0, 5, $comment,0,L,false);
                     
                      $nbComment ++;
                 }
