@@ -77,7 +77,7 @@ Un nouveau commentaire a été ajouté sur le pole ".$arrayObs['lib_pole'].". Ve
 Lien vers la modération : ".URL.'/admin.php?id='.$arrayObs['id_poi']."\n".
 $newCommentInfo. $arrayDetailsAndUpdateSQL['detailObservationString']."\n";
 						$mails = array();
-						$mails = getMailsToSend($whereClause, $subject, $message );
+						$mails = getMailsToSend($whereClause, $subject, $message, $id_poi);
 					
 						/* debut envoi d'un mail au contributeur */
 						$subject = 'Commentaire en attente de modération';
