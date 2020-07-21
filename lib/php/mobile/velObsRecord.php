@@ -1,4 +1,5 @@
-<?php header('Content-Type: text/html; charset=UTF-8');
+<?php 
+//header('Content-Type: text/html; charset=UTF-8');
 
     include_once '../key.php';
 
@@ -140,6 +141,7 @@
                     $result = mysql_query($sql);
                     if (!$result) {
                         echo "La création de l'observation a échoué.";
+			    exit;
                     }else{
                     	$id_poi = mysql_insert_id();
                     	echo 'dataOK';
@@ -161,7 +163,7 @@
 Une nouvelle observation a été ajoutée sur le pole ".$arrayObs['lib_pole'].". Veuillez vous connecter à l'interface d'administration pour la modérer.
 Lien vers la modération : ".URL.'/admin.php?id='.$arrayObs['id_poi']."\n".$arrayDetailsAndUpdateSQL['detailObservationString']."\n";
                     	$mails = array();
-                    	$mails = getMailsToSend($whereClause, $subject, $message );
+                    	$mails = getMailsToSend($whereClause, $subject, $message, $id_poi);
                     	if (DEBUG){
                     		error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " Il y a ". count($mails) . " mails à envoyer \n", 3, LOG_FILE);
                     	}
