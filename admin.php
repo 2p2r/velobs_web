@@ -80,7 +80,7 @@
 			<script type="text/javascript" src="lib/js/admin/config1.js?v1.7.0"></script>
 			<script type="text/javascript" src="lib/js/admin/status1.js?v1.7.0"></script>
 			<script type="text/javascript" src="lib/js/admin/users1.js?v1.7.0"></script>
-			<script type="text/javascript" src="lib/js/admin/priorite1.js?v1.7.0"></script>
+			<script type="text/javascript" src="lib/js/admin/priorite1.js?v1.7.1"></script>
 			<script type="text/javascript" src="lib/js/admin/commune1.js?v1.7.0"></script>
 			<script type="text/javascript" src="lib/js/admin/pole1.js?v1.7.0"></script>
 			<script type="text/javascript" src="lib/js/admin/quartier1.js?v1.7.0"></script>

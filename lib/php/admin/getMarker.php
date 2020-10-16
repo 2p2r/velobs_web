@@ -58,9 +58,13 @@ if (isset ( $_SESSION ['user'] )) {
 					$sql .= " INNER JOIN commentaires ON (poi.id_poi = commentaires.poi_id_poi) ";
 					$sqlappend .= " AND commentaires.display_commentaires = 'Non modéré' ";
 				}
-			  if (isset ( $_GET ['priority'] ) && $_GET ['priority'] != '') {
-					$sqlappend .= " AND poi.priorite_id_priorite = " . $_GET ['priority'] . ' ';
-			  }
+				//une priorite a ete selectionnee, on n'affiche qu'elle
+			    if (isset ( $_GET ['priority'] ) && $_GET ['priority'] != '') {
+			      $sqlappend .= " AND poi.priorite_id_priorite = " . mysql_real_escape_string($_GET ['priority']);
+			    }else{
+			      //aucune priorite n'a ete selectionnee, on n'affiche que celles visibles par défaut par les moderateurs
+			      $sqlappend .= " AND priorite.visible_moderateur_par_defaut =  1 ";
+			    }
 				
 				if (DEBUG) {
 					error_log ( date ( "Y-m-d H:i:s" ) . " - admin/getMarker.php displayObservationsToBeAnalyzedByPole = " . $_GET ['displayObservationsToBeAnalyzedByPole'] . ", type = " . $_SESSION ["type"] . "\n", 3, LOG_FILE );
@@ -115,16 +119,13 @@ if (isset ( $_SESSION ['user'] )) {
 			}
 			
 			if ($_GET ['getCount']){
-		    
-		    
-		    while ( $row = mysql_fetch_array ( $result ) ) {
+		      while ( $row = mysql_fetch_array ( $result ) ) {
 		        $total_number_of_observations = $row ['total_number_of_observations'];
-		        
-		    }
-		    echo '{"total_number_of_observations":' . $total_number_of_observations . '}';
-		}else{
-		$i = 0;
-			while ( $row = mysql_fetch_array ( $result ) ) {
+		      }
+		      echo '{"total_number_of_observations":' . $total_number_of_observations . '}';
+		    }else{
+		     $i = 0;
+			 while ( $row = mysql_fetch_array ( $result ) ) {
 				$arr [$i] ['id'] = $row ['id_poi'];
 				$arr [$i] ['lib_subcategory'] = stripslashes ( $row ['lib_subcategory'] );
 				$arr [$i] ['date'] = $row ['datecreation_poi'];
