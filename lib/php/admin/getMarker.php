@@ -86,6 +86,7 @@ if (isset ( $_SESSION ['user'] )) {
 						AND priorite.non_visible_par_collectivite = 0 ';
 				$whereSelectCommentAppend = ' AND display_commentaires = \'Modéré accepté\' ';
 			} 
+			//#243
 // 			elseif ($_SESSION ["type"] == 4) { // is moderateur
 // 				$sqlappend .= ' AND poi.pole_id_pole IN (' . $_SESSION ["pole"] . ') ';
 // 			}
