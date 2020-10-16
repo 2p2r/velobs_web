@@ -85,9 +85,10 @@ if (isset ( $_SESSION ['user'] )) {
 						AND poi.pole_id_pole IN (' . $_SESSION ["pole"] . ') 
 						AND priorite.non_visible_par_collectivite = 0 ';
 				$whereSelectCommentAppend = ' AND display_commentaires = \'Modéré accepté\' ';
-			} elseif ($_SESSION ["type"] == 4) { // is moderateur
-				$sqlappend .= ' AND poi.pole_id_pole IN (' . $_SESSION ["pole"] . ') ';
-			}
+			} 
+// 			elseif ($_SESSION ["type"] == 4) { // is moderateur
+// 				$sqlappend .= ' AND poi.pole_id_pole IN (' . $_SESSION ["pole"] . ') ';
+// 			}
 			
 			if (isset ( $_GET ["status"] ) && $_GET ["status"] != '') { // filter by status given by the collectivity
 				$sqlappend .= ' AND poi.status_id_status = ' . $_GET ["status"];
