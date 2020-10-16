@@ -1322,6 +1322,7 @@ function getPriorite($start, $limit)
                     $arr[$i]['priorite_sujet_email'] = stripslashes($row['priorite_sujet_email']);
                     $arr[$i]['priorite_corps_email'] = stripslashes($row['priorite_corps_email']);
                     $arr[$i]['besoin_commentaire_association'] = stripslashes($row['besoin_commentaire_association']);
+                    $arr[$i]['visible_public_par_defaut'] = stripslashes($row['visible_public_par_defaut']);
                     $i ++;
                 }
                 echo '({"total":"' . $nbrows . '","results":' . json_encode($arr) . '})';
@@ -1356,12 +1357,14 @@ function updatePriorite()
             $priorite_sujet_email = mysql_real_escape_string($_POST['priorite_sujet_email']);
             $priorite_corps_email = mysql_real_escape_string($_POST['priorite_corps_email']);
             $besoin_commentaire_association = mysql_real_escape_string($_POST['besoin_commentaire_association']);
+            $visible_public_par_defaut = mysql_real_escape_string($_POST['visible_public_par_defaut']);
             $sql = "UPDATE priorite SET lib_priorite = '$lib_priorite', 
 					non_visible_par_collectivite = $non_visible_par_collectivite, 
 					non_visible_par_public = $non_visible_par_public,
 					priorite_sujet_email = '$priorite_sujet_email',
 					priorite_corps_email = '$priorite_corps_email',
-					besoin_commentaire_association = $besoin_commentaire_association
+					besoin_commentaire_association = $besoin_commentaire_association,
+					visible_public_par_defaut = $visible_public_par_defaut
 					 WHERE id_priorite = $id_priorite";
             $result = mysql_query($sql);
             if (! $result) {
