@@ -48,8 +48,7 @@
 						    if (DEBUG){
 						        error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " Image déplacée vers $pathphoto \n", 3, LOG_FILE);
 						    }
-						    $return['success'] = true;
-							$return['ok'] = getTranslation($_SESSION['id_language'],'PHOTOTRANSFERTDONE');
+						    
 							$size = getimagesize($pathphoto);
 							
 							if ($size[0] > 1024 || $size[1] > 1024) {
@@ -66,6 +65,9 @@
 							$newnamefichier = $size[0].'x'.$size[1].'x'.$fichier;
 							$newpathphoto = $dossier.$newnamefichier;
 							rename($pathphoto, $newpathphoto);
+							$return['success'] = true;
+							$return['ok'] = getTranslation($_SESSION['id_language'],'PHOTOTRANSFERTDONE');
+							$return['imageName'] = $newnamefichier;
 						} else {
 							$return['success'] = false;
 							$return['pb'] = getTranslation($_SESSION['id_language'],'ICONTRANSFERTFALSE');
