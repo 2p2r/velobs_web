@@ -130,7 +130,7 @@ if (isset ( $_SESSION ['user'] )) {
 			 while ( $row = mysql_fetch_array ( $result ) ) {
 				$arr [$i] ['id'] = $row ['id_poi'];
 				$arr [$i] ['lib_subcategory'] = stripslashes ( $row ['lib_subcategory'] );
-				$arr [$i] ['date'] = $row ['datecreation_poi'];
+				$arr [$i] ['datecreation_poi'] = $row ['datecreation_poi'];
 				$arr [$i] ['desc'] = stripslashes ( $row ['desc_poi'] );
 				$arr [$i] ['repgt'] = stripslashes ( $row ['reponse_collectivite_poi'] );
 				$arr [$i] ['cmt'] = stripslashes ( $row ['commentfinal_poi'] );
@@ -152,6 +152,7 @@ if (isset ( $_SESSION ['user'] )) {
 				}else{
 					$arr [$i] ['mail_poi'] = "******";
 				}
+				
 				$arr [$i] ['observationterrain_poi'] = stripslashes ( $row ['observationterrain_poi'] );
 				$arr [$i] ['lib_status'] = stripslashes ( $row ['lib_status'] );
 				$arr [$i] ['color_status'] = stripslashes ( $row ['color_status'] );
