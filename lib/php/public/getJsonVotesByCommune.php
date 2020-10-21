@@ -56,7 +56,8 @@ include_once '../key.php';
 			}
 			
 			//echo '{"statistiques":'.json_encode($arr).'}';
-			$html = "<html><head><title>Observations ouvertes les plus votées, par territoire et commune</title></head><body>\r\n";
+			$html = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\"
+   \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\"><html><head><title>Observations ouvertes les plus votées, par territoire et commune</title></head><body>\r\n";
 			$html.= "<link rel=\"stylesheet\" type=\"text/css\" href=\"../../../resources/css/public.css?v1.7.1\" />\r\n";
 			echo $html;
 			echo $topVotedText;
