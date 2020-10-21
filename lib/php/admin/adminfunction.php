@@ -2146,7 +2146,8 @@ function resetPhotoPoi()
             while ($row = mysql_fetch_array($result)) {
                 unlink("../../../resources/pictures/" . $row['photo_poi']);
             }
-            $sql = "UPDATE poi SET photo_poi = NULL WHERE id_poi = $id_poi";
+            $lastdatemodif_poi = date("Y-m-d H:i:s");
+            $sql = "UPDATE poi SET lastdatemodif_poi = '$lastdatemodif_poi', lastmodif_user_poi = " . $_SESSION['id_users'] . ", photo_poi = NULL WHERE id_poi = $id_poi";
             $result = mysql_query($sql);
             
             if (! $result) {
@@ -2216,8 +2217,8 @@ function resetGeoPoi()
             $link = mysql_connect(DB_HOST, DB_USER, DB_PASS);
             mysql_select_db(DB_NAME);
             mysql_query("SET NAMES utf8mb4");
-            
-            $sql = "UPDATE poi SET geom_poi = NULL, geolocatemode_poi = NULL WHERE id_poi = $id_poi";
+            $lastdatemodif_poi = date("Y-m-d H:i:s");
+            $sql = "UPDATE poi SET lastdatemodif_poi = '$lastdatemodif_poi', lastmodif_user_poi = " . $_SESSION['id_users'] . ",geom_poi = NULL, geolocatemode_poi = NULL WHERE id_poi = $id_poi";
             $result = mysql_query($sql);
             
             if (! $result) {
