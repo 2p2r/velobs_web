@@ -36,7 +36,7 @@
             			echo 'L\'extension du nom de la photo n\'est pas correct';
             			$createObservation = 0;
             		} else if (($_FILES["photo1"]["type"] != "image/gif") && ($_FILES["photo1"]["type"] != "image/jpeg") && ($_FILES["photo1"]["type"] != "image/jpg") && ($_FILES["photo1"]["type"] != "image/png")) {
-            			echo 'Le type du fichier soumis come photo n\'est pas correct';
+            			echo 'Le type du fichier soumis comme photo n\'est pas correct';
             			$createObservation = 0;
             		} else {
             	

@@ -337,3 +337,26 @@ div#update{
     margin: 10px;
     cursor: pointer;
 }
+
+.votes{
+	overflow:scroll;
+	background-color:white;
+}
+.voteTerritoire{
+	width:100%;
+	background-color:white;
+	margin-left:5em;
+	padding:0.2em;
+}
+.votePole{
+	width:90%;
+	background-color:#DDDDDD;
+	margin-left:7em;
+	padding:0.2em;
+}
+.voteCommune{
+	width:80%;
+	background-color:#CCCCCC;
+	margin-left:9em;
+	padding:0.2em;
+}

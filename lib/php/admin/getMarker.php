@@ -58,9 +58,13 @@ if (isset ( $_SESSION ['user'] )) {
 					$sql .= " INNER JOIN commentaires ON (poi.id_poi = commentaires.poi_id_poi) ";
 					$sqlappend .= " AND commentaires.display_commentaires = 'Non modéré' ";
 				}
-			  if (isset ( $_GET ['priority'] ) && $_GET ['priority'] != '') {
-					$sqlappend .= " AND poi.priorite_id_priorite = " . $_GET ['priority'] . ' ';
-			  }
+				//une priorite a ete selectionnee, on n'affiche qu'elle
+			    if (isset ( $_GET ['priority'] ) && $_GET ['priority'] != '') {
+			      $sqlappend .= " AND poi.priorite_id_priorite = " . mysql_real_escape_string($_GET ['priority']);
+			    }else{
+			      //aucune priorite n'a ete selectionnee, on n'affiche que celles visibles par défaut par les moderateurs
+			      $sqlappend .= " AND priorite.visible_moderateur_par_defaut =  1 ";
+			    }
 				
 				if (DEBUG) {
 					error_log ( date ( "Y-m-d H:i:s" ) . " - admin/getMarker.php displayObservationsToBeAnalyzedByPole = " . $_GET ['displayObservationsToBeAnalyzedByPole'] . ", type = " . $_SESSION ["type"] . "\n", 3, LOG_FILE );
@@ -81,9 +85,11 @@ if (isset ( $_SESSION ['user'] )) {
 						AND poi.pole_id_pole IN (' . $_SESSION ["pole"] . ') 
 						AND priorite.non_visible_par_collectivite = 0 ';
 				$whereSelectCommentAppend = ' AND display_commentaires = \'Modéré accepté\' ';
-			} elseif ($_SESSION ["type"] == 4) { // is moderateur
-				$sqlappend .= ' AND poi.pole_id_pole IN (' . $_SESSION ["pole"] . ') ';
-			}
+			} 
+			//#243
+// 			elseif ($_SESSION ["type"] == 4) { // is moderateur
+// 				$sqlappend .= ' AND poi.pole_id_pole IN (' . $_SESSION ["pole"] . ') ';
+// 			}
 			
 			if (isset ( $_GET ["status"] ) && $_GET ["status"] != '') { // filter by status given by the collectivity
 				$sqlappend .= ' AND poi.status_id_status = ' . $_GET ["status"];
@@ -115,19 +121,16 @@ if (isset ( $_SESSION ['user'] )) {
 			}
 			
 			if ($_GET ['getCount']){
-		    
-		    
-		    while ( $row = mysql_fetch_array ( $result ) ) {
+		      while ( $row = mysql_fetch_array ( $result ) ) {
 		        $total_number_of_observations = $row ['total_number_of_observations'];
-		        
-		    }
-		    echo '{"total_number_of_observations":' . $total_number_of_observations . '}';
-		}else{
-		$i = 0;
-			while ( $row = mysql_fetch_array ( $result ) ) {
+		      }
+		      echo '{"total_number_of_observations":' . $total_number_of_observations . '}';
+		    }else{
+		     $i = 0;
+			 while ( $row = mysql_fetch_array ( $result ) ) {
 				$arr [$i] ['id'] = $row ['id_poi'];
 				$arr [$i] ['lib_subcategory'] = stripslashes ( $row ['lib_subcategory'] );
-				$arr [$i] ['date'] = $row ['datecreation_poi'];
+				$arr [$i] ['datecreation_poi'] = $row ['datecreation_poi'];
 				$arr [$i] ['desc'] = stripslashes ( $row ['desc_poi'] );
 				$arr [$i] ['repgt'] = stripslashes ( $row ['reponse_collectivite_poi'] );
 				$arr [$i] ['cmt'] = stripslashes ( $row ['commentfinal_poi'] );
@@ -149,6 +152,7 @@ if (isset ( $_SESSION ['user'] )) {
 				}else{
 					$arr [$i] ['mail_poi'] = "******";
 				}
+				
 				$arr [$i] ['observationterrain_poi'] = stripslashes ( $row ['observationterrain_poi'] );
 				$arr [$i] ['lib_status'] = stripslashes ( $row ['lib_status'] );
 				$arr [$i] ['color_status'] = stripslashes ( $row ['color_status'] );

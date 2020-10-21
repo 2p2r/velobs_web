@@ -48,8 +48,7 @@
 						    if (DEBUG){
 						        error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " Image déplacée vers $pathphoto \n", 3, LOG_FILE);
 						    }
-						    $return['success'] = true;
-							$return['ok'] = getTranslation($_SESSION['id_language'],'PHOTOTRANSFERTDONE');
+						    
 							$size = getimagesize($pathphoto);
 							
 							if ($size[0] > 1024 || $size[1] > 1024) {
@@ -66,6 +65,9 @@
 							$newnamefichier = $size[0].'x'.$size[1].'x'.$fichier;
 							$newpathphoto = $dossier.$newnamefichier;
 							rename($pathphoto, $newpathphoto);
+							$return['success'] = true;
+							$return['ok'] = getTranslation($_SESSION['id_language'],'PHOTOTRANSFERTDONE');
+							$return['imageName'] = $newnamefichier;
 						} else {
 							$return['success'] = false;
 							$return['pb'] = getTranslation($_SESSION['id_language'],'ICONTRANSFERTFALSE');
@@ -74,14 +76,11 @@
 				}
 			
 				if ($return['success'] == true) {
-				
-					$sql = "UPDATE poi SET photo_poi = '$newnamefichier' WHERE id_poi = ".$_POST['id_POI'];
+					$lastdatemodif_poi = date("Y-m-d H:i:s");
+					$sql = "UPDATE poi SET lastdatemodif_poi = '$lastdatemodif_poi', lastmodif_user_poi = " . $_SESSION['id_users'] . ",photo_poi = '$newnamefichier' WHERE id_poi = ".$_POST['id_POI'];
 					if (DEBUG){
 						error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " Mise à jour observation avec $sql\n", 3, LOG_FILE);
 					}
-					$result = mysql_query($sql);
-					$lastdatemodif_poi = date("Y-m-d H:i:s");
-						$sql3 = "UPDATE poi SET lastdatemodif_poi = '$lastdatemodif_poi' WHERE id_poi = $id_poi";
 					$result = mysql_query($sql);
 				} else {
 				    if (DEBUG){

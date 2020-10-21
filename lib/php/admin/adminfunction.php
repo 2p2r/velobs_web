@@ -1322,6 +1322,8 @@ function getPriorite($start, $limit)
                     $arr[$i]['priorite_sujet_email'] = stripslashes($row['priorite_sujet_email']);
                     $arr[$i]['priorite_corps_email'] = stripslashes($row['priorite_corps_email']);
                     $arr[$i]['besoin_commentaire_association'] = stripslashes($row['besoin_commentaire_association']);
+                    $arr[$i]['visible_public_par_defaut'] = stripslashes($row['visible_public_par_defaut']);
+                    $arr[$i]['visible_moderateur_par_defaut'] = stripslashes($row['visible_moderateur_par_defaut']);
                     $i ++;
                 }
                 echo '({"total":"' . $nbrows . '","results":' . json_encode($arr) . '})';
@@ -1356,12 +1358,17 @@ function updatePriorite()
             $priorite_sujet_email = mysql_real_escape_string($_POST['priorite_sujet_email']);
             $priorite_corps_email = mysql_real_escape_string($_POST['priorite_corps_email']);
             $besoin_commentaire_association = mysql_real_escape_string($_POST['besoin_commentaire_association']);
+            $visible_public_par_defaut = mysql_real_escape_string($_POST['visible_public_par_defaut']);
+            $visible_moderateur_par_defaut = mysql_real_escape_string($_POST['visible_moderateur_par_defaut']);
+            
             $sql = "UPDATE priorite SET lib_priorite = '$lib_priorite', 
 					non_visible_par_collectivite = $non_visible_par_collectivite, 
 					non_visible_par_public = $non_visible_par_public,
 					priorite_sujet_email = '$priorite_sujet_email',
 					priorite_corps_email = '$priorite_corps_email',
-					besoin_commentaire_association = $besoin_commentaire_association
+					besoin_commentaire_association = $besoin_commentaire_association,
+					visible_public_par_defaut = $visible_public_par_defaut,
+					visible_moderateur_par_defaut = $visible_moderateur_par_defaut
 					 WHERE id_priorite = $id_priorite";
             $result = mysql_query($sql);
             if (! $result) {
@@ -2139,7 +2146,8 @@ function resetPhotoPoi()
             while ($row = mysql_fetch_array($result)) {
                 unlink("../../../resources/pictures/" . $row['photo_poi']);
             }
-            $sql = "UPDATE poi SET photo_poi = NULL WHERE id_poi = $id_poi";
+            $lastdatemodif_poi = date("Y-m-d H:i:s");
+            $sql = "UPDATE poi SET lastdatemodif_poi = '$lastdatemodif_poi', lastmodif_user_poi = " . $_SESSION['id_users'] . ", photo_poi = NULL WHERE id_poi = $id_poi";
             $result = mysql_query($sql);
             
             if (! $result) {
@@ -2209,8 +2217,8 @@ function resetGeoPoi()
             $link = mysql_connect(DB_HOST, DB_USER, DB_PASS);
             mysql_select_db(DB_NAME);
             mysql_query("SET NAMES utf8mb4");
-            
-            $sql = "UPDATE poi SET geom_poi = NULL, geolocatemode_poi = NULL WHERE id_poi = $id_poi";
+            $lastdatemodif_poi = date("Y-m-d H:i:s");
+            $sql = "UPDATE poi SET lastdatemodif_poi = '$lastdatemodif_poi', lastmodif_user_poi = " . $_SESSION['id_users'] . ",geom_poi = NULL, geolocatemode_poi = NULL WHERE id_poi = $id_poi";
             $result = mysql_query($sql);
             
             if (! $result) {
@@ -3105,7 +3113,7 @@ function createSupport()
             
             if (! $result) {
                 $return['success'] = false;
-                $return['pb'] = "Erreur lors de l'ajout du vote. Ce lien existe sans doute déjà.";
+                $return['pb'] = "Erreur lors de l'ajout du vote. Vous avez sans doute déjà voté pour cette observation avec l'adresse email ". $mail.".";
             } else {
                 $lastdatemodif_poi = date("Y-m-d H:i:s");
                 $sql3 = "UPDATE poi SET lastdatemodif_poi = '$lastdatemodif_poi', lastmodif_user_poi = " . $_SESSION['id_users'] . " WHERE id_poi = $id_poi";
