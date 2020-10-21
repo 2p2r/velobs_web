@@ -22,13 +22,15 @@ include_once '../key.php';
 			INNER JOIN territoire ON pole.territoire_id_territoire = territoire.id_territoire
 			INNER JOIN subcategory ON poi.subcategory_id_subcategory = subcategory.id_subcategory 
 			GROUP BY poi_poi_id 
-			ORDER BY territoire.lib_territoire ASC, commune.lib_commune ASC, nb_votes DESC 
-			LIMIT " . $nbObservationsToReturn;
+			ORDER BY territoire.lib_territoire ASC, commune.lib_commune ASC, nb_votes DESC";
 		
 			$result = mysql_query($sql);
 			$i = 0;
 			
 			while ($row = mysql_fetch_array($result)){
+				if (count($arr[$row['lib_territoire']][$row['lib_pole']][$row['lib_commune']]) >  $nbObservationsToReturn){
+					next;
+				}
 					$arr[$row['lib_territoire']][$row['lib_pole']][$row['lib_commune']][$i]['nbVotes'] = $row['nb_votes'];
 					$arr[$row['lib_territoire']][$row['lib_pole']][$row['lib_commune']][$i]['id_poi'] = $row['poi_poi_id'];
 					$arr[$row['lib_territoire']][$row['lib_pole']][$row['lib_commune']][$i]['url'] = URL."/index.php?id=".$row['poi_poi_id'];
@@ -47,7 +49,7 @@ include_once '../key.php';
 							$topVotedText .=  "<li>Nombre de votes : ".$arr[$territoire][$pole][$commune][$mostVoted]['nbVotes']." votes pour l'observation <a href=\"".$arr[$territoire][$pole][$commune][$mostVoted]['url']."\" targe=\"_blank\">".$arr[$territoire][$pole][$commune][$mostVoted]['id_poi']."</a> (catégorie ".$arr[$territoire][$pole][$commune][$mostVoted]['categorie'].")</li>";
 						
 						}
-						$topVotedText .=  "</div></ul>";
+						$topVotedText .=  "</ul></div>";
 					}
 				}
 			}
