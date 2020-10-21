@@ -23,7 +23,7 @@ include_once '../key.php';
 			INNER JOIN subcategory ON poi.subcategory_id_subcategory = subcategory.id_subcategory 
 			GROUP BY poi_poi_id 
 			ORDER BY territoire.lib_territoire ASC, commune.lib_commune ASC, nb_votes DESC, poi.id_poi ASC";
-		
+
 			$result = mysql_query($sql);
 			$i = 0;
 			
@@ -50,6 +50,7 @@ include_once '../key.php';
 						
 						}
 						$topVotedText .=  "</ul></div>\r\n";
+
 					}
 				}
 			}
