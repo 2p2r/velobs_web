@@ -337,3 +337,12 @@ div#update{
     margin: 10px;
     cursor: pointer;
 }
+.voteTerritoire{
+	margin-left:10em;
+}
+.votePole{
+	margin-left:15em;
+}
+.voteCommune{
+	margin-left:20em;
+}
