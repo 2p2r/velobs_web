@@ -3112,7 +3112,7 @@ function createSupport()
             
             if (! $result) {
                 $return['success'] = false;
-                $return['pb'] = "Erreur lors de l'ajout du vote. Ce lien existe sans doute déjà.";
+                $return['pb'] = "Erreur lors de l'ajout du vote. Vous avez sans doute déjà voté pour cette observation avec l'adresse email ". $mail.".";
             } else {
                 $lastdatemodif_poi = date("Y-m-d H:i:s");
                 $sql3 = "UPDATE poi SET lastdatemodif_poi = '$lastdatemodif_poi', lastmodif_user_poi = " . $_SESSION['id_users'] . " WHERE id_poi = $id_poi";
