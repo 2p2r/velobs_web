@@ -275,7 +275,6 @@ cursor: not-allowed;
 }
 .x-form-text, textarea.x-form-field {
     background-image: none;
-    white-space:normal;
 }
 .ext-webkit .x-small-editor .x-form-field {
     color: black !important;

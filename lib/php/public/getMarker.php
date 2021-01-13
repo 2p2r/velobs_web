@@ -95,10 +95,10 @@ switch (SGBD) {
 			$arr [$i] ['id'] = $row ['id_poi'];
 			$arr [$i] ['lib_subcategory'] = stripslashes ( $row ['lib_subcategory'] );
 			$arr [$i] ['date'] = $row ['datecreation_poi'];
-			$arr [$i] ['desc'] = stripslashes ( $row ['desc_poi'] );
-			$arr [$i] ['repgt'] = stripslashes ( $row ['reponse_collectivite_poi'] );
-			$arr [$i] ['cmt'] = stripslashes ( $row ['commentfinal_poi'] );
-			$arr [$i] ['prop'] = stripslashes ( $row ['prop_poi'] );
+			$arr [$i] ['desc'] = stripslashes ( nl2br($row ['desc_poi']) );
+			$arr [$i] ['repgt'] = stripslashes ( nl2br($row ['reponse_collectivite_poi']) );
+			$arr [$i] ['cmt'] = stripslashes ( nl2br($row ['commentfinal_poi']) );
+			$arr [$i] ['prop'] = stripslashes ( nl2br($row ['prop_poi']) );
 			$arr [$i] ['photo'] = $row ['photo_poi'];
 			$arr [$i] ['num'] = stripslashes ( $row ['num_poi'] );
 			$arr [$i] ['rue'] = stripslashes ( $row ['rue_poi'] );

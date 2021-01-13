@@ -649,7 +649,7 @@
 								break;
 						}
 					}
-					$DetailObservation .="<td>\n". ((strlen ( $OldValue ) > 0) ?  wordwrap($OldValue,70) : "Non Renseigné")."</td>\n<td>\n".wordwrap($NewValue,70)."</td>\n";
+					$DetailObservation .="<td>\n". ((strlen ( $OldValue ) > 0) ?  wordwrap(nl2br($OldValue),70) : "Non Renseigné")."</td>\n<td>\n".wordwrap(nl2br($NewValue),70)."</td>\n";
 					//$DetailObservation .= "       ".$arrayColumns [$i] ['columnIntitule'] . "\"" .((strlen ( $OldValue ) > 0) ?  $OldValue : "Non Renseigné") . "\" remplacé par \"" . $NewValue . "\"\n";
 					
 					$updateObservationBoolean = 1;
@@ -712,7 +712,7 @@
 						}
 					}
 					//$DetailObservation .= $arrayColumns [$i] ['columnIntitule'] . "\"" . ((strlen ( $OldValue ) > 0) ? $OldValue : "Non Renseigné") . "\"\n";
-					$DetailObservation .="<td>\n". ((strlen ( $OldValue ) > 0) ?  wordwrap($OldValue,70) : "Non Renseigné\n")."</td>\n<td></td>\n";
+					$DetailObservation .="<td>\n". ((strlen ( $OldValue ) > 0) ?  wordwrap(nl2br($OldValue),70) : "Non Renseigné\n")."</td>\n<td></td>\n";
 					
 				}
 				$DetailObservation .="</tr>\n";
