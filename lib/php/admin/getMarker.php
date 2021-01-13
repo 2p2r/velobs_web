@@ -94,11 +94,22 @@ if (isset ( $_SESSION ['user'] )) {
 			if (isset ( $_GET ["status"] ) && $_GET ["status"] != '') { // filter by status given by the collectivity
 				$sqlappend .= ' AND poi.status_id_status = ' . $_GET ["status"];
 			}
+			
+			if ($_GET ['dateNotModifiedSince'] == NULL || $_GET ['dateNotModifiedSince'] == 'undefined') {
+			    $dateNotModifiedSinceSqlAppend = '';
+			    // $datesqlappend = ' AND (TO_DAYS(NOW()) - TO_DAYS(datecreation_poi)) <= 365';
+			} else {
+			    $dateNotModifiedSinceSqlAppend = " AND COALESCE(lastdatemodif_poi,datecreation_poi) <= '" . mysql_real_escape_string ( $_GET ['dateNotModifiedSince'] ) . "' ";
+			    if (DEBUG) {
+			        error_log ( date ( "Y-m-d H:i:s" ) . " - admin/getMarker.php datesqlappend = " . $datesqlappend . "\n", 3, LOG_FILE );
+			    }
+			}
+			
 			if ($_GET ['dateLastModif'] == NULL || $_GET ['dateLastModif'] == 'undefined') {
 				$datesqlappend = '';
 				// $datesqlappend = ' AND (TO_DAYS(NOW()) - TO_DAYS(datecreation_poi)) <= 365';
 			} else {
-				$datesqlappend = " AND (lastdatemodif_poi >= '" . mysql_real_escape_string ( $_GET ['dateLastModif'] ) . "' OR datecreation_poi >= '" . mysql_real_escape_string ( $_GET ['dateLastModif'] ) . "') ";
+				$datesqlappend = " AND COALESCE(lastdatemodif_poi,datecreation_poi) >= '" . mysql_real_escape_string ( $_GET ['dateLastModif'] ) . "' ";
 				if (DEBUG) {
 					error_log ( date ( "Y-m-d H:i:s" ) . " - admin/getMarker.php datesqlappend = " . $datesqlappend . "\n", 3, LOG_FILE );
 				}
@@ -110,7 +121,7 @@ if (isset ( $_SESSION ['user'] )) {
 			if (isset ( $_GET ["nbSupportMinimum"] ) && $_GET ["nbSupportMinimum"] != '' && $_GET ["nbSupportMinimum"] > 0) { // filter by status given by the collectivity
 			    $sqlappend .= ' AND poi.id_poi IN (select poi_poi_id from support_poi group by poi_poi_id having count(*) >= '.$_GET ["nbSupportMinimum"].')';
 			}
-			$sql .= $sqlappend.$datesqlappend;
+			$sql .= $sqlappend.$datesqlappend.$dateNotModifiedSinceSqlAppend;
 
 			if (DEBUG) {
 				error_log ( date ( "Y-m-d H:i:s" ) . " - admin/getMarker.php sql = $sql\n", 3, LOG_FILE );
