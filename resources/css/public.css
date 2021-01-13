@@ -360,3 +360,6 @@ div#update{
 	margin-left:9em;
 	padding:0.2em;
 }
+.mandatory{
+	font-weight: bold;
+}
