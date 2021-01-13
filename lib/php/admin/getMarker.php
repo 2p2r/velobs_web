@@ -58,6 +58,9 @@ if (isset ( $_SESSION ['user'] )) {
 					$sql .= " INNER JOIN commentaires ON (poi.id_poi = commentaires.poi_id_poi) ";
 					$sqlappend .= " AND commentaires.display_commentaires = 'Non modéré' ";
 				}
+				if (isset ( $_GET ['observationsWithoutPicture'] ) && $_GET ['observationsWithoutPicture'] == 1 && ($_SESSION ["type"] == 4 || $_SESSION ["type"] == 1)) {
+				    $sqlappend .= " AND (photo_poi = '' OR photo_poi is null) ";
+				}
 				//une priorite a ete selectionnee, on n'affiche qu'elle
 			    if (isset ( $_GET ['priority'] ) && $_GET ['priority'] != '') {
 			      $sqlappend .= " AND poi.priorite_id_priorite = " . mysql_real_escape_string($_GET ['priority']);
