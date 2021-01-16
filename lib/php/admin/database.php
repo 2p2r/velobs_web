@@ -89,6 +89,9 @@ if (isset ( $_SESSION ['user'] )) {
 		case "UPDATEPOI" :
 			updatePoi ();
 			break;
+		case "FUSIONPOI" :
+		    fusionPoi ();
+		    break;
 		case "CREATEPOI" :
 			createPoi ();
 			break;

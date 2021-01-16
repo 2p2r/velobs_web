@@ -683,7 +683,7 @@ Le pole ' . $arrayObs['lib_pole'] . ' a modifié l\'observation n°' . $arrayObs
                 // "8","Urgence" : non affiché sur l'interface publique
                 // "12","Refusé par la collectivité"
                 // "15","Doublon"
-                // on ne traite priorite_id_priorite que si il a été mis à jour
+                // on ne traite priorite_id_priorite que si il a été mis à jour 
                 $checkModerateBoxOnPOIGrid = 0;
                 $updatePOI = 1; // flag permettant de savoir si on doit mettre à jour l'observation (en fonction de règles définies ci-dessous) et envoyer un mail au contributeur
                 $returnCode = 0;
@@ -724,7 +724,7 @@ Lien vers la modération : " . URL . '/admin.php?id=' . $arrayObs['id_poi'] . "<
                     $whereClause = " u.usertype_id_usertype = 1 OR (u.usertype_id_usertype = 4 AND ulp.num_pole = " . $arrayObs['pole_id_pole'] . ")";
                     $mailsAsso = getMailsToSend($whereClause, $subject, $message,$arrayObs['id_poi']);
                 }
-                // si une règle de modération n'est pas respectée, on ne met pas à jour l'observation et on n'evoie pas de mail, et on retourne un code d'erreur
+                // si une règle de modération n'est pas respectée, on ne met pas à jour l'observation et on n'envoie pas de mail, et on retourne un code d'erreur
                 if ($updatePOI == 0) {
                     echo $returnCode;
                 } else {
@@ -767,6 +767,144 @@ Lien vers la modération : " . URL . '/admin.php?id=' . $arrayObs['id_poi'] . "<
                 // aucune mise à jour n'a été effectuée, car aucune information n'a été modifiée
                 echo 2;
             }
+            mysql_close($link);
+            break;
+        case 'postgresql':
+            // TODO
+            break;
+    }
+}
+
+/*
+ * Function name : fusionPoi //methode appelée par poi1 et 4, pour fusionner 2 observations https://github.com/2p2r/velobs_web/issues/262#issue-747196059
+ */
+function fusionPoi()
+{
+    $id_poi1 = stripslashes($_POST['id_poi1']);
+    $id_poi2 = stripslashes($_POST['id_poi2']);
+    if ($id_poi1 == $id_poi2){
+        return 4;
+    }
+   
+    $newerPoi = $id_poi1;
+    $olderPoi = $id_poi2;
+    if (DEBUG) {
+        error_log(date("Y-m-d H:i:s") . " " . __FUNCTION__ . ", newerPoi : $newerPoi and olderPoi = $olderPoi\n", 3, LOG_FILE);
+    }
+    
+    if ($id_poi2 > $id_poi1){
+        $newerPoi = $id_poi2;
+        $olderPoi = $id_poi1;
+    }
+    if (DEBUG) {
+        error_log(date("Y-m-d H:i:s") . " " . __FUNCTION__ . ", newerPoi : $newerPoi and olderPoi = $olderPoi\n", 3, LOG_FILE);
+    }
+    
+    switch (SGBD) {
+        case 'mysql':
+            $link = mysql_connect(DB_HOST, DB_USER, DB_PASS);
+            mysql_select_db(DB_NAME);
+            mysql_query("SET NAMES utf8mb4");
+            
+            $arrayNewerPoi = getObservationDetailsInArray($newerPoi);
+            $arrayOlderPoi = getObservationDetailsInArray($olderPoi);
+            if (DEBUG) {
+                error_log(date("Y-m-d H:i:s") . " " . __FUNCTION__ . ", Observations récupérées\n", 3, LOG_FILE);
+            }
+            $message = '';
+            //si A n'a pas de photo et B en a une, de la reprendre
+            if ($arrayOlderPoi['photo_poi'] == "" && $arrayNewerPoi['photo_poi'] != ""){
+                if (DEBUG) {
+                    error_log(date("Y-m-d H:i:s") . " " . __FUNCTION__ . ", copie de photo de $newerPoi dans $olderPoi\n", 3, LOG_FILE);
+                }
+                $sql = "UPDATE poi SET photo_poi = '".$arrayNewerPoi['photo_poi']."' WHERE id_poi = " . $olderPoi;
+                $message .= "Copie de la photo de $newerPoi dans $olderPoi\n";
+            }
+                if (DEBUG) {
+                    error_log(date("Y-m-d H:i:s") . " " . __FUNCTION__ . ", copie de photo de $newerPoi dans $olderPoi\n", 3, LOG_FILE);
+                }
+                $message .= "Ajout d'un commentaire sur $olderPoi avec la proposition faite dans $newerPoi, et la photo le cas échéant\n";
+                //de créer un commentaire sur A avec l'e-mail de l'observateur de B (en mode silencieux) du type "{B.observation}.\nProposition : {B.proposition}" et, si A avait déjà une photo (étape précédente), la photo de B
+                $sql = "INSERT INTO commentaires (text_commentaires, display_commentaires, mail_commentaires, poi_id_poi,url_photo) VALUES ('Ajout de la photo et de la proposision de l\observation ' . $newerPoi . ' lors de la fusion d\'observations. Proposition : ".$arrayNewerPoi['prop_poi']."', 'Modéré accepté', '".$arrayNewerPoi['mail_poi']."',$olderPoi,'".$arrayNewerPoi['photo_poi']."')";
+                $result = mysql_query($sql);
+                if (DEBUG) {
+                    error_log(date("Y-m-d H:i:s") . " " . __FUNCTION__ . ", sql : $sql\n", 3, LOG_FILE);
+                }
+                $id_commentaire = mysql_insert_id();
+                
+                if (! $result) {
+                    $return['success'] = false;
+                    $return['pb'] = "Erreur lors de l'ajout du commentaire.";
+                } else {
+            }
+            $message .= "Ajout d'un vote sur $olderPoi avec le mail de la personne qui a créé l'observation $newerPoi\n";
+            //d'ajouter un vote à A avec l'e-mail de l'observateur de B (en mode silencieux mais en activant les notifications ultérieures)
+            $sql = "INSERT INTO support_poi (poi_poi_id, support_poi_mail, support_poi_follow) VALUES ($olderPoi,'".$arrayNewerPoi['mail_poi']."', 1)";
+            $result = mysql_query($sql);
+            if (DEBUG) {
+                error_log(date("Y-m-d H:i:s") . " " . __FUNCTION__ . ", sql : $sql\n", 3, LOG_FILE);
+            }
+            
+            //de copier dans A tous les commentaires de B
+            $sql2 = "SELECT * FROM commentaires WHERE poi_id_poi = " . $newerPoi;
+            $result2 = mysql_query($sql2);
+            if (DEBUG) {
+                error_log(date("Y-m-d H:i:s") . " " . __FUNCTION__ . ", sql : $sql2\n", 3, LOG_FILE);
+            }
+            $j=0;
+            while ($row2 = mysql_fetch_array($result2)) {
+                $sql = "INSERT INTO commentaires (text_commentaires, display_commentaires, mail_commentaires, poi_id_poi,url_photo) VALUES ('".$row2['text_commentaires']."', '".$row2['display_commentaires']."', '".$row2['mail_commentaires']."',$olderPoi,'".$row2['url_photo']."')";
+                $result = mysql_query($sql);
+                if (DEBUG) {
+                    error_log(date("Y-m-d H:i:s") . " " . __FUNCTION__ . ", sql : $sql\n", 3, LOG_FILE);
+                }
+                $j++;
+            }
+            if ($j>0){
+                $message .= "Ajout de(s) $j commentaire(s) de $newerPoi à $olderPoi \n";
+            }
+            
+            $j=0;
+            //de copier sur A tous les votes de B
+            $sql2 = "SELECT * FROM support_poi WHERE poi_poi_id = " . $newerPoi;
+            $result2 = mysql_query($sql2);
+            if (DEBUG) {
+                error_log(date("Y-m-d H:i:s") . " " . __FUNCTION__ . ", sql : $sql2\n", 3, LOG_FILE);
+            }
+            
+            while ($row2 = mysql_fetch_array($result2)) {
+                $sql = "INSERT INTO support_poi (poi_poi_id, support_poi_mail, support_poi_follow) VALUES ($olderPoi,'".$row2['support_poi_mail']."', '".$row2['support_poi_follow']."')";
+                $result = mysql_query($sql);
+                $j++;
+                if (DEBUG) {
+                    error_log(date("Y-m-d H:i:s") . " " . __FUNCTION__ . ", sql : $sql\n", 3, LOG_FILE);
+                }
+            }
+            if ($j>0){
+                $message .= "Ajout de(s) $j vote(s) de $newerPoi à $olderPoi \n";
+            }
+            
+            
+            $message .= "Ajout d'un commentaire à $newerPoi indiquant qu'il a été fusionné avec $olderPoi \n";
+            //d'ajouter un commentaire à B : "Observation fusionnée avec #{A.id} : https://velobs.2p2r.org/index.php?id={A.id}" et de marquer B comme "Doublon".
+            $sql = "INSERT INTO commentaires (text_commentaires, display_commentaires, mail_commentaires, poi_id_poi,url_photo) VALUES ('Observation fusionnée avec ".$olderPoi.". La priorité de cette observation doit être passée en Doublon', 'Modéré accepté', '',$newerPoi,'')";
+            $result = mysql_query($sql);
+            if (DEBUG) {
+                error_log(date("Y-m-d H:i:s") . " " . __FUNCTION__ . ", sql : $sql\n", 3, LOG_FILE);
+            }
+            
+            $subject = 'Fusion des observations ' . $olderPoi . ' et ' . $newerPoi ;
+            $messageMail = 'Bonjour !<br />
+Les observations '. $olderPoi . ' et ' . $newerPoi . ' viennent d\être fusionnées. Les actions suivantes ont automatiquement été réalisées :'.
+nl2br($message).'
+Lien vers la modération : ' . URL . '/admin.php?id=' . $newerPoi . " fusionné dans ".URL . '/admin.php?id=' . $olderPoi.'<br />\n' .  '
+' . $signature;
+            // usertype_id_usertype : 1=Admin, 2=comcom, 3=pole tech, 4=moderateur
+            // mail aux admins velobs et aux modérateurs du pole concerné par l'observation
+            $whereClause = " u.usertype_id_usertype = 1 OR (u.usertype_id_usertype = 4 AND ulp.num_pole = " . $arrayOlderPoi['pole_id_pole'] . ")";
+            $mailsAsso = getMailsToSend($whereClause, $subject, $messageMail,$olderPoi);
+            $succes = sendMails($mailsAsso);
+            echo 1;
             mysql_close($link);
             break;
         case 'postgresql':

@@ -550,6 +550,7 @@
 							//les latitude et longitude stockés sous forme d'un point par POI, et non pas comme 2 champs distincts
 							$sqlUpdate .= ", geom_poi = GeomFromText('POINT(".$_POST['longitude_poi']." ".$_POST['latitude_poi'].")')";
 							$positionAlreadyMoidified = 1;
+							//TODO have to modify pole and commune
 						}
 						
 					}else{
