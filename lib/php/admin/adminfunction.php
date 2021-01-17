@@ -792,7 +792,7 @@ function fusionPoi()
             $link = mysql_connect(DB_HOST, DB_USER, DB_PASS);
             mysql_select_db(DB_NAME);
             mysql_query("SET NAMES utf8mb4");
-            
+            //vérifie la validité des id des observations à fusionner 
             $newerPoi = $id_poi1;
             $olderPoi = $id_poi2;
             if (DEBUG) {
@@ -806,7 +806,7 @@ function fusionPoi()
             
             $arrayNewerPoi = getObservationDetailsInArray($newerPoi);
             $arrayOlderPoi = getObservationDetailsInArray($olderPoi);
-            
+            $return = array();
             if(!$arrayNewerPoi || !$arrayOlderPoi ){
                 $return['success'] = false;
                 $return['msg'] = "Au moins une des observations ".$newerPoi." / ".$olderPoi." semble ne pas exister. Merci de vérifier les numéros.";
@@ -815,21 +815,24 @@ function fusionPoi()
                 $return['success'] = false;
                 $return['msg'] = "Les numéros des observations à fusionner doivent être différents. Merci de vérifier les numéros.";
             }
-            
-            if (defined($return)){
+            //en cas d'incohérence, on retourne un message d'erreur 
+            if (array_key_exists('success',$return)){
                 echo json_encode($return);
                 exit;
             }
             if (DEBUG) {
                 error_log(date("Y-m-d H:i:s") . " " . __FUNCTION__ . ", Observations récupérées\n", 3, LOG_FILE);
             }
+            //les id sont cohérents, on fusionne les 2 observations dans la plus ancienne
             $message = '';
             //si A n'a pas de photo et B en a une, de la reprendre
             if ($arrayOlderPoi['photo_poi'] == "" && $arrayNewerPoi['photo_poi'] != ""){
-                if (DEBUG) {
-                    error_log(date("Y-m-d H:i:s") . " " . __FUNCTION__ . ", copie de photo de $newerPoi dans $olderPoi\n", 3, LOG_FILE);
-                }
+                
                 $sql = "UPDATE poi SET photo_poi = '".$arrayNewerPoi['photo_poi']."' WHERE id_poi = " . $olderPoi;
+                $result = mysql_query($sql);
+                if (DEBUG) {
+                    error_log(date("Y-m-d H:i:s") . " " . __FUNCTION__ . ", copie de photo de $newerPoi dans $olderPoi $sql\n", 3, LOG_FILE);
+                }
                 $message .= "Copie de la photo de $newerPoi dans $olderPoi\n";
             }
                 if (DEBUG) {
@@ -837,7 +840,7 @@ function fusionPoi()
                 }
                 $message .= "Ajout d'un commentaire sur $olderPoi avec la proposition faite dans $newerPoi, et la photo le cas échéant\n";
                 //de créer un commentaire sur A avec l'e-mail de l'observateur de B (en mode silencieux) du type "{B.observation}.\nProposition : {B.proposition}" et, si A avait déjà une photo (étape précédente), la photo de B
-                $sql = "INSERT INTO commentaires (text_commentaires, display_commentaires, mail_commentaires, poi_id_poi,url_photo) VALUES ('Ajout de la photo et de la proposision de l\observation ' . $newerPoi . ' lors de la fusion d\'observations. Proposition : ".$arrayNewerPoi['prop_poi']."', 'Modéré accepté', '".$arrayNewerPoi['mail_poi']."',$olderPoi,'".$arrayNewerPoi['photo_poi']."')";
+                $sql = "INSERT INTO commentaires (text_commentaires, display_commentaires, mail_commentaires, poi_id_poi,url_photo) VALUES ('Ajout de la photo et de la proposision de l\observation $newerPoi lors de la fusion d\'observations. Proposition : ".$arrayNewerPoi['prop_poi']."', 'Modéré accepté', '".$arrayNewerPoi['mail_poi']."',$olderPoi,'".$arrayNewerPoi['photo_poi']."')";
                 $result = mysql_query($sql);
                 if (DEBUG) {
                     error_log(date("Y-m-d H:i:s") . " " . __FUNCTION__ . ", sql : $sql\n", 3, LOG_FILE);
@@ -917,7 +920,7 @@ Lien vers la modération : ' . URL . '/admin.php?id=' . $newerPoi . " fusionné 
             $mailsAsso = getMailsToSend($whereClause, $subject, $messageMail,$olderPoi);
             $succes = sendMails($mailsAsso);
             $return['success'] = true;
-            $return['msg'] = "Les observations $olderPoi et $newerPoi ont été fusionnées. L'observation plus ancienne a reçu les observations et les votes de l'observation plus récente le cas échéant.L'observation plus récente doit être passée en priorité \"Doublon\" manuellement.";
+            $return['msg'] = "Les observations $olderPoi et $newerPoi ont été fusionnées. L'observation plus ancienne a reçu les observations et les votes de l'observation plus récente le cas échéant. L'observation plus récente doit être passée en priorité \"Doublon\" manuellement.";
             echo json_encode($return);
             mysql_close($link);
             break;
