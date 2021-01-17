@@ -784,7 +784,7 @@ function fusionPoi()
     $id_poi2 = stripslashes($_POST['id_poi2']);
     
     if (DEBUG) {
-        error_log(date("Y-m-d H:i:s") . " " . __FUNCTION__ . ", newerPoi : $newerPoi and olderPoi = $olderPoi\n", 3, LOG_FILE);
+        error_log(date("Y-m-d H:i:s") . " " . __FUNCTION__ . ", id_poi1 : $id_poi1 and id_poi2 = id_poi2\n", 3, LOG_FILE);
     }
     
     switch (SGBD) {
@@ -808,11 +808,16 @@ function fusionPoi()
             $arrayOlderPoi = getObservationDetailsInArray($olderPoi);
             
             if(!$arrayNewerPoi || !$arrayOlderPoi ){
-                echo 2;
-                exit;
+                $return['success'] = false;
+                $return['msg'] = "Au moins une des observations ".$newerPoi." / ".$olderPoi." semble ne pas exister. Merci de vérifier les numéros.";
             }
             if ($id_poi1 == $id_poi2){
-                echo 3;
+                $return['success'] = false;
+                $return['msg'] = "Les numéros des observations à fusionner doivent être différents. Merci de vérifier les numéros.";
+            }
+            
+            if (defined($return)){
+                echo json_encode($return);
                 exit;
             }
             if (DEBUG) {
@@ -904,14 +909,16 @@ function fusionPoi()
             $messageMail = 'Bonjour !<br />
 Les observations '. $olderPoi . ' et ' . $newerPoi . ' viennent d\être fusionnées. Les actions suivantes ont automatiquement été réalisées :'.
 nl2br($message).'
-Lien vers la modération : ' . URL . '/admin.php?id=' . $newerPoi . " fusionné dans ".URL . '/admin.php?id=' . $olderPoi.'<br />\n' .  '
+Lien vers la modération : ' . URL . '/admin.php?id=' . $newerPoi . " fusionné dans ".URL . '/admin.php?id=' . $olderPoi."<br />\n" .  '
 ' . $signature;
             // usertype_id_usertype : 1=Admin, 2=comcom, 3=pole tech, 4=moderateur
             // mail aux admins velobs et aux modérateurs du pole concerné par l'observation
             $whereClause = " u.usertype_id_usertype = 1 OR (u.usertype_id_usertype = 4 AND ulp.num_pole = " . $arrayOlderPoi['pole_id_pole'] . ")";
             $mailsAsso = getMailsToSend($whereClause, $subject, $messageMail,$olderPoi);
             $succes = sendMails($mailsAsso);
-            echo 1;
+            $return['success'] = true;
+            $return['msg'] = "Les observations $olderPoi et $newerPoi ont été fusionnées. L'observation plus ancienne a reçu les observations et les votes de l'observation plus récente le cas échéant.L'observation plus récente doit être passée en priorité \"Doublon\" manuellement.";
+            echo json_encode($return);
             mysql_close($link);
             break;
         case 'postgresql':
@@ -3256,10 +3263,9 @@ function createSupport()
                 error_log(date("Y-m-d H:i:s") . " " . __FUNCTION__ . " " . $_POST['task'] . ", sql : $sql\n", 3, LOG_FILE);
                 error_log(date("Y-m-d H:i:s") . " " . __FUNCTION__ . " Erreur " . mysql_errno($link) . " : " . mysql_error($link) . "\n", 3, LOG_FILE);
             }
-            
             if (! $result) {
                 $return['success'] = false;
-                $return['pb'] = "Erreur lors de l'ajout du vote. Vous avez sans doute déjà voté pour cette observation avec l'adresse email ". $mail.".";
+                $return['msg'] = "Erreur lors de l'ajout du vote. Vous avez sans doute déjà voté pour cette observation avec l'adresse email ". $mail.".";
             } else {
                 $lastdatemodif_poi = date("Y-m-d H:i:s");
                 $sql3 = "UPDATE poi SET lastdatemodif_poi = '$lastdatemodif_poi', lastmodif_user_poi = " . $_SESSION['id_users'] . " WHERE id_poi = $id_poi";
@@ -3269,11 +3275,11 @@ function createSupport()
                 }
                 $result3 = mysql_query($sql3);
                 $return['success'] = true;
-                $return['ok'] = "Votre vote a été correctement ajouté, nous vous remercions.";
+                $return['msg'] = "Votre vote a été correctement ajouté, nous vous remercions.";
                 if ($follow) {
-                    $return['ok'] .= " Vous serez averti(e) à chaque mise à jour de cette fiche.";
+                    $return['msg'] .= " Vous serez averti(e) à chaque mise à jour de cette fiche.";
                 } else {
-                    $return['ok'] .= " Vous avez choisi de ne pas être averti(e) à chaque mise à jour de cette fiche.";
+                    $return['msg'] .= " Vous avez choisi de ne pas être averti(e) à chaque mise à jour de cette fiche.";
                 }
             }
             // retourne le résultat du traitement du commentaire
