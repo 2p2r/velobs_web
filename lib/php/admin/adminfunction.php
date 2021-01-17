@@ -782,20 +782,7 @@ function fusionPoi()
 {
     $id_poi1 = stripslashes($_POST['id_poi1']);
     $id_poi2 = stripslashes($_POST['id_poi2']);
-    if ($id_poi1 == $id_poi2){
-        return 4;
-    }
-   
-    $newerPoi = $id_poi1;
-    $olderPoi = $id_poi2;
-    if (DEBUG) {
-        error_log(date("Y-m-d H:i:s") . " " . __FUNCTION__ . ", newerPoi : $newerPoi and olderPoi = $olderPoi\n", 3, LOG_FILE);
-    }
     
-    if ($id_poi2 > $id_poi1){
-        $newerPoi = $id_poi2;
-        $olderPoi = $id_poi1;
-    }
     if (DEBUG) {
         error_log(date("Y-m-d H:i:s") . " " . __FUNCTION__ . ", newerPoi : $newerPoi and olderPoi = $olderPoi\n", 3, LOG_FILE);
     }
@@ -806,8 +793,28 @@ function fusionPoi()
             mysql_select_db(DB_NAME);
             mysql_query("SET NAMES utf8mb4");
             
+            $newerPoi = $id_poi1;
+            $olderPoi = $id_poi2;
+            if (DEBUG) {
+                error_log(date("Y-m-d H:i:s") . " " . __FUNCTION__ . ", newerPoi : $newerPoi and olderPoi = $olderPoi\n", 3, LOG_FILE);
+            }
+            
+            if ($id_poi2 > $id_poi1){
+                $newerPoi = $id_poi2;
+                $olderPoi = $id_poi1;
+            }
+            
             $arrayNewerPoi = getObservationDetailsInArray($newerPoi);
             $arrayOlderPoi = getObservationDetailsInArray($olderPoi);
+            
+            if(!$arrayNewerPoi || !$arrayOlderPoi ){
+                echo 2;
+                exit;
+            }
+            if ($id_poi1 == $id_poi2){
+                echo 3;
+                exit;
+            }
             if (DEBUG) {
                 error_log(date("Y-m-d H:i:s") . " " . __FUNCTION__ . ", Observations récupérées\n", 3, LOG_FILE);
             }
@@ -853,7 +860,7 @@ function fusionPoi()
             }
             $j=0;
             while ($row2 = mysql_fetch_array($result2)) {
-                $sql = "INSERT INTO commentaires (text_commentaires, display_commentaires, mail_commentaires, poi_id_poi,url_photo) VALUES ('".$row2['text_commentaires']."', '".$row2['display_commentaires']."', '".$row2['mail_commentaires']."',$olderPoi,'".$row2['url_photo']."')";
+                $sql = "INSERT INTO commentaires (text_commentaires, display_commentaires, mail_commentaires, poi_id_poi,url_photo, datecreation, lastmodif_comment, lastmodif_user_comment) VALUES ('".$row2['text_commentaires']." (Commentaire issu de l\'observation $newerPoi, copié ici après fusion par un modérateur).', '".$row2['display_commentaires']."', '".$row2['mail_commentaires']."',$olderPoi,'".$row2['url_photo']."','".$row2['datecreation']."','".$row2['lasmodif_comment']."','".$row2['lasmodif_user_comment']."')";
                 $result = mysql_query($sql);
                 if (DEBUG) {
                     error_log(date("Y-m-d H:i:s") . " " . __FUNCTION__ . ", sql : $sql\n", 3, LOG_FILE);
