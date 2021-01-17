@@ -1844,7 +1844,6 @@ function getLinksUserPole($start, $limit)
             
             $sql = "SELECT ulp.user_link_pole_id, u.id_users, u.lib_users, t.lib_territoire, p.lib_pole FROM users_link_pole ulp INNER JOIN territoire t ON t.id_territoire = ulp.territoire_id_territoire INNER JOIN pole p on p.id_pole = ulp.num_pole INNER JOIN users u ON u.id_users = ulp.id_user ORDER BY u.lib_users ASC ";
             if (DEBUG) {
-                // error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - " . getLocations($latitude_poi,$longitude_poi)[1]."\n", 3, LOG_FILE);
                 error_log(date("Y-m-d H:i:s") . " " . __FUNCTION__ . " - sql - " . $sql . "\n", 3, LOG_FILE);
             }
             $result = mysql_query($sql);

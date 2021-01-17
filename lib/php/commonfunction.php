@@ -355,6 +355,16 @@
 		$arrayColumns[$numberOfColumns]['columnIntitule'] = 'Repère' ;
 		$arrayColumns[$numberOfColumns]['dataType'] = 'string' ;
 		$numberOfColumns++;
+		$arrayColumns[$numberOfColumns]['columnSQL'] = 'latitude_poi' ;
+		$arrayColumns[$numberOfColumns]['columnPOST'] = 'latitude_poi' ;
+		$arrayColumns[$numberOfColumns]['columnIntitule'] = 'Latitude observation' ;
+		$arrayColumns[$numberOfColumns]['dataType'] = 'position' ;
+		$numberOfColumns++;
+		$arrayColumns[$numberOfColumns]['columnSQL'] = 'longitude_poi' ;
+		$arrayColumns[$numberOfColumns]['columnPOST'] = 'longitude_poi' ;
+		$arrayColumns[$numberOfColumns]['columnIntitule'] = 'Longitude observation' ;
+		$arrayColumns[$numberOfColumns]['dataType'] = 'position' ;
+		$numberOfColumns++;
 		$arrayColumns[$numberOfColumns]['columnSQL'] = 'pole_id_pole' ;
 		$arrayColumns[$numberOfColumns]['columnPOST'] = 'pole_id_pole' ;
 		$arrayColumns[$numberOfColumns]['columnIntitule'] = 'Pôle' ;
@@ -477,16 +487,6 @@
 		$arrayColumns[$numberOfColumns]['columnIntitule'] = 'Mode de géolocalisation utilisé' ;
 		$arrayColumns[$numberOfColumns]['dataType'] = 'integer' ;
 		$numberOfColumns++;
-		$arrayColumns[$numberOfColumns]['columnSQL'] = 'latitude_poi' ;
-		$arrayColumns[$numberOfColumns]['columnPOST'] = 'latitude_poi' ;
-		$arrayColumns[$numberOfColumns]['columnIntitule'] = 'Latitude observation' ;
-		$arrayColumns[$numberOfColumns]['dataType'] = 'position' ;
-		$numberOfColumns++;
-		$arrayColumns[$numberOfColumns]['columnSQL'] = 'longitude_poi' ;
-		$arrayColumns[$numberOfColumns]['columnPOST'] = 'longitude_poi' ;
-		$arrayColumns[$numberOfColumns]['columnIntitule'] = 'Longitude observation' ;
-		$arrayColumns[$numberOfColumns]['dataType'] = 'position' ;
-		$numberOfColumns++;
 		$arrayColumns[$numberOfColumns]['columnSQL'] = 'photo_poi' ;
 		$arrayColumns[$numberOfColumns]['columnPOST'] = 'photo_poi' ;
 		$arrayColumns[$numberOfColumns]['columnIntitule'] = 'Photo' ;
@@ -551,6 +551,33 @@
 							$sqlUpdate .= ", geom_poi = GeomFromText('POINT(".$_POST['longitude_poi']." ".$_POST['latitude_poi'].")')";
 							$positionAlreadyMoidified = 1;
 							//TODO have to modify pole and commune
+							
+							$locations = getLocations($_POST['latitude_poi'], $_POST['longitude_poi']);
+							if (DEBUG) {
+							    error_log(date("Y-m-d H:i:s") . " " . __FUNCTION__ . " - place locations - " . $locations[0] . ", " . $locations[1] . ", " . $locations[2] . ", " . $locations[3] . "\n", 3, LOG_FILE);
+							}
+							
+							$commune_id_commune = $locations[0];
+							$lib_commune = $locations[1];
+							$pole_id_pole = $locations[2];
+							$lib_pole = $locations[3];
+							if ($arrayObservation['commune_id_commune'] != $commune_id_commune){
+							   // $sqlUpdate .= ", commune_id_commune = $commune_id_commune";
+							    $_POST['commune_id_commune'] = $commune_id_commune;
+							}
+							if ($arrayObservation['pole_id_pole'] != $pole_id_pole){
+							   // $sqlUpdate .= ", pole_id_pole = $pole_id_pole";
+							    $_POST['pole_id_pole'] = $pole_id_pole;
+							}
+// 							if ($commune_id_commune == 99999) {
+// 							    if (DEBUG) {
+// 							        error_log(date("Y-m-d H:i:s") . " " . __FUNCTION__ . " L'observation semble être dans une zone non couverte par velobs\n", 3, LOG_FILE);
+// 							    }
+// 							    $erreur = "L'observation semble être dans une zone non couverte par VelObs, si ce n'est pas le cas, merci de nous contacter à l'adresse " . MAIL_FROM;
+// 							    $return['success'] = false;
+// 							    $return['pb'] = $erreur;
+// 							}
+							
 						}
 						
 					}else{

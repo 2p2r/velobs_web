@@ -22,7 +22,7 @@ if (isset ( $_POST ['lat']) && isset ( $_POST ['lon']) ){
     if ($obj != null){
         //var_dump($obj['features']);
     }
-    echo $obj['features'][0]['properties']['name'];
+    echo $obj['features'][0]['properties']['name'].':'.$obj['features'][0]['properties']['city'];
 }else{
 	    if (DEBUG) {
 	        error_log ( date ( "Y-m-d H:i:s" ) . " - public/getAdresse.php sans GET \n", 3, LOG_FILE );
