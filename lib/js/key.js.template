@@ -45,7 +45,7 @@ var osmcyclemap = new OpenLayers.Layer.OSM("OSM Cycle Map",
 );
 //la carte affichée par défaut est la première
 var mapLayersArray = [
-        [0, 'Mapnik',mapnik],
+        [0, 'Mapnik',mapnik]
         //[1, 'OpenCycleMap', osmcyclemap]
 ];
 
