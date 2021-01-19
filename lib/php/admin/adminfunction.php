@@ -2805,8 +2805,7 @@ function getNumPageIdParam($idToFind, $usertype, $numRecordPerPage)
 								INNER JOIN quartier ON (quartier.id_quartier = poi.quartier_id_quartier) 
 								INNER JOIN priorite ON (priorite.id_priorite = poi.priorite_id_priorite) 
 								INNER JOIN status ON (status.id_status = poi.status_id_status) 
-								WHERE pole_id_pole IN (" . $_SESSION['pole'] . ") 
-									AND delete_poi = FALSE 
+								WHERE delete_poi = FALSE 
 								ORDER BY id_poi DESC";
                     $result = mysql_query($sql);
                     
