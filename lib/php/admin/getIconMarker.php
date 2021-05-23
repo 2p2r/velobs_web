@@ -9,14 +9,11 @@
 			array_push($tab, trim(fgets($handle, 4096)));
 		}
 		fclose($handle);
-	}
-	if ($handle){
 		foreach($tab as $cle => $valeur) { 
 			$temp_css = explode('{', $valeur);
 			$icon_css = substr($temp_css[0],1);
 			array_push($temp, $icon_css);
 		}
-		fclose($handle);
 	}
 	sort($temp);
 	array_shift($temp);
