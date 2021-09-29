@@ -97,6 +97,7 @@ switch (SGBD) {
 			$arr [$i] ['date'] = $row ['datecreation_poi'];
 			$arr [$i] ['desc'] = stripslashes ( nl2br($row ['desc_poi']) );
 			$arr [$i] ['repgt'] = stripslashes ( nl2br($row ['reponse_collectivite_poi']) );
+			$arr [$i] ['reppole'] = stripslashes ( nl2br($row ['reponsepole_poi']) );
 			$arr [$i] ['cmt'] = stripslashes ( nl2br($row ['commentfinal_poi']) );
 			$arr [$i] ['prop'] = stripslashes ( nl2br($row ['prop_poi']) );
 			$arr [$i] ['photo'] = $row ['photo_poi'];
