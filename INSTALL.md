@@ -13,7 +13,7 @@ Méditerranée-Métropole.
 
 - Disposer d’un serveur web public avec
 
-    - PHP (versions testées = 5.4.16, 5.6 et 7.0.19)
+    - PHP (versions testées = 5.4.16, 5.6, 7.0 et 7.3)
     - MySQL (versions testées = TBD) ou MariaDB ( versions testées =
         5.5.47, 10.1.26)
     - phpMyAdmin installé sur le serveur web (optionnel)
