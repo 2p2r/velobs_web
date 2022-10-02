@@ -478,9 +478,9 @@ function getPoi($start, $limit, $asc, $sort, $dir)
 							AND poi.pole_id_pole = ' . $_SESSION["pole"] . ' 
 							AND priorite.non_visible_par_collectivite = 0 ';
             } 
-//             elseif ($_SESSION["type"] == 4) {
-//                 $whereClause .= ' AND poi.pole_id_pole IN (' . $_SESSION["pole"] . ') ';
-//             }
+             elseif ($_SESSION["type"] == 4) {
+                 $whereClause .= ' AND poi.pole_id_pole IN (' . $_SESSION["pole"] . ') ';
+             }
             $sql = "SELECT poi.*, subcategory.lib_subcategory, commune.lib_commune, pole.lib_pole, quartier.lib_quartier, priorite.lib_priorite, status.lib_status, x(poi.geom_poi) AS X, y(poi.geom_poi) AS Y FROM poi INNER JOIN subcategory ON (subcategory.id_subcategory = poi.subcategory_id_subcategory) INNER JOIN commune ON (commune.id_commune = poi.commune_id_commune) INNER JOIN pole ON (pole.id_pole = poi.pole_id_pole) INNER JOIN quartier ON (quartier.id_quartier = poi.quartier_id_quartier) INNER JOIN priorite ON (priorite.id_priorite = poi.priorite_id_priorite) INNER JOIN status ON (status.id_status = poi.status_id_status) WHERE $whereClause ";
             
             $sql .= " ORDER BY ";
