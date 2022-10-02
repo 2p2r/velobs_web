@@ -74,7 +74,7 @@
 						$subject = 'Nouveau commentaire à modérer sur le pole '.$arrayObs['lib_pole'];
 						$message = "Bonjour !
 Un nouveau commentaire a été ajouté sur le pole ".$arrayObs['lib_pole'].". Veuillez vous connecter à l'interface d'administration pour le modérer (cliquer sur le bouton \"Commentaires\", en bas à droite, une fois les détails de l'observation affichés).
-Lien vers la modération : ".URL.'/admin.php?id='.$arrayObs['id_poi']."\n".
+Lien vers la modération : <a href=\"".URL.'/admin.php?id='.$arrayObs['id_poi']."\">".URL.'/admin.php?id='.$arrayObs['id_poi']."</a>\n".
 $newCommentInfo. $arrayDetailsAndUpdateSQL['detailObservationString']."\n";
 						$mails = array();
 						$mails = getMailsToSend($whereClause, $subject, $message, $id_poi);

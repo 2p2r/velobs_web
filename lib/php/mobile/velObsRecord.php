@@ -161,7 +161,7 @@
                     	$subject = 'Nouvelle observation à modérer sur le pole '.$arrayObs['lib_pole'];
                     	$message = "Bonjour !
 Une nouvelle observation a été ajoutée sur le pole ".$arrayObs['lib_pole'].". Veuillez vous connecter à l'interface d'administration pour la modérer.
-Lien vers la modération : ".URL.'/admin.php?id='.$arrayObs['id_poi']."\n".$arrayDetailsAndUpdateSQL['detailObservationString']."\n";
+Lien vers la modération : <a href=\"".URL.'/admin.php?id='.$arrayObs['id_poi']."\">".URL.'/admin.php?id='.$arrayObs['id_poi']."</a>\n".$arrayDetailsAndUpdateSQL['detailObservationString']."\n";
                     	$mails = array();
                     	$mails = getMailsToSend($whereClause, $subject, $message, $id_poi);
                     	if (DEBUG){
