@@ -80,10 +80,11 @@
 									elseif ($_SESSION['type'] == 4){
 										$extraSQL = " AND poi.pole_id_pole = " .$_SESSION['pole'] . " ";
 									}
-							    }elseif (isset($_GET['pole_poi']) && $_GET['pole_poi'] != ''){
-							        $extraSQL = " AND pole.id_pole = " .$_GET['pole_poi'] . " ";
+							    }
+							    if (isset($_GET['pole_poi']) && $_GET['pole_poi'] != ''){
+							        $extraSQL .= " AND pole.id_pole = " .$_GET['pole_poi'] . " ";
 							    }elseif (isset($_GET['commune_poi']) && $_GET['commune_poi'] != ''){
-								    $extraSQL = " AND commune.id_commune = " .$_GET['commune_poi'] . " "; 
+								    $extraSQL .= " AND commune.id_commune = " .$_GET['commune_poi'] . " "; 
 								}elseif (isset($_GET['territoire_poi']) && $_GET['territoire_poi'] != ''){
 								    $sqlTerritoire = "SELECT ids_territoire FROM territoire WHERE id_territoire = ". $_GET['territoire_poi'];
 								    $resultTerritoire = mysql_query($sqlTerritoire);
@@ -91,9 +92,9 @@
 								    while ($row = mysql_fetch_array($resultTerritoire)) {
 								       $ids_communes = $row['ids_territoire'];
 								    }
-								    $extraSQL = " AND commune.id_commune IN (" .str_replace(";",",",$ids_communes) . ") ";
+								    $extraSQL .= " AND commune.id_commune IN (" .str_replace(";",",",$ids_communes) . ") ";
 								}elseif (isset($_GET['customPolygon_poi']) && $_GET['customPolygon_poi'] != ''){
-								    $extraSQL = " AND ST_Within(poi.geom_poi,ST_GeomFromText('".$_GET['customPolygon_poi']."') )=1";
+								    $extraSQL .= " AND ST_Within(poi.geom_poi,ST_GeomFromText('".$_GET['customPolygon_poi']."') )=1";
 								}
 								//si personne n'est connecté, on ne récupère que les observations dont la priorité est visible par le public
 								if (!isset($_SESSION['user'])) {
