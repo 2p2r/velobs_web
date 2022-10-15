@@ -57,7 +57,7 @@
                     
                     $arrayObs = getObservationDetailsInArray($id_poi);
                     $arrayDetailsAndUpdateSQL = getObservationDetailsInString($arrayObs);
-                    if (DEBUG){
+                    if (DEBUG  && is_countable($arrayDetailsAndUpdateSQL)){
                     	error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - Il y a ". count($arrayDetailsAndUpdateSQL) ." infos chargées pour l'update de l'obs $id_poi \n", 3, LOG_FILE);
                     	error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - updateObsBoolean ". $arrayDetailsAndUpdateSQL['updateObsBoolean'] ." pour l'update de l'obs $id_poi \n", 3, LOG_FILE);
                     	error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - sqlUpdate ". $arrayDetailsAndUpdateSQL['sqlUpdate'] ." pour l'update de l'obs $id_poi \n", 3, LOG_FILE);
@@ -87,7 +87,7 @@ $newCommentInfo.$arrayDetailsAndUpdateSQL['detailObservationString']."\n
 Cordialement, l'Association ".VELOBS_ASSOCIATION." :)";
 					$mailArray = [$mail_commentaires,"Soumetteur", $subject, $message ];
 					array_push($mails,$mailArray);
-					if (DEBUG){
+					if (DEBUG  && is_countable($mails)){
 						error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - Il y a ". count($mails) ." mails à envoyer\n", 3, LOG_FILE);
 					}
 					$succes = sendMails($mails);

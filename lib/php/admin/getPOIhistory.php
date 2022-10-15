@@ -128,10 +128,18 @@ if (isset($_SESSION['user'])) {
             $result = mysql_query($sqlPOI);
 
             $rowPOI = mysql_fetch_array($result);
-            if (count(array_keys($rowPOI)) == 0){
+            if (!empty($rowPOI)){
+                $arraySearch = array();
+                $arraySearch = array_keys($rowPOI);
+            }else{
                 echo "Cette observation n'existe pas";
                 break;
             }
+            
+//             if (is_countable($arraySearch) && count($arraySearch) == 0){
+//                 echo "Cette observation n'existe pas";
+//                 break;
+//             }
             error_log(date("Y-m-d H:i:s") . " - rowPOI " . $sqlPOI . " \n", 3, LOG_FILE);
 
             $array1 = array(
@@ -254,7 +262,7 @@ if (isset($_SESSION['user'])) {
             $keysHistory = array_keys($modificationArray);
             rsort($keysHistory);
             if (count($keysHistory) == 0){
-                echo "Aucune modification n'a encore été apportée à cette observation ou alors les modification ont été apportées avant la mise en place de l'historisation sur velobs (2018-05-30)";
+                echo "Aucune modification n'a encore été apportée à cette observation ou alors les modifications ont été apportées avant la mise en place de l'historisation sur velobs (2018-05-30)";
             }
             foreach ($keysHistory as $key) {
                 echo "<ul><li>" . $key . "<ul>";

@@ -45,18 +45,20 @@ switch (SGBD) {
             $arrayGlobalTop5[$rank]['territoire'] = $row['lib_territoire'] . " - " . $row['lib_pole'];
             $globalTop5counter ++;
         }
-
-        $ranks = array_keys($arrayGlobalTop5);
-        rsort($ranks);
-        $sortNumber = 1;
-        $topVotedText .= "<div class=\"voteTerritoire\"><H1>Top  " . count(array_keys($arrayGlobalTop5)) . " des observations pour tout le territoire couvert</H1>\r\n";
-        $topVotedText .= "<ul>";
-        foreach ($ranks as $rank) {
-            
+        if (! empty($arrayGlobalTop5)){
+            $ranks = array_keys($arrayGlobalTop5);
+            rsort($ranks);
+            $sortNumber = 1;
+            $topVotedText .= "<div class=\"voteTerritoire\"><H1>Top  " . count(array_keys($arrayGlobalTop5)) . " des observations pour tout le territoire couvert</H1>\r\n";
+            $topVotedText .= "<ul>";
+            foreach ($ranks as $rank) {
+                
                 $topVotedText .= "<li>" . $arrayGlobalTop5[$rank]['nbVotes'] . " vote(s) pour l'observation <a href=\"" . $arrayGlobalTop5[$rank]['url'] . "\" target=\"_blank\">" . $arrayGlobalTop5[$rank]['id_poi'] . "</a> (catégorie " . $arrayGlobalTop5[$rank]['categorie'] . ", localisée sur " . $arrayGlobalTop5[$rank]['territoire'] . ")</li>\r\n";
-            
+                
+            }
+            $topVotedText .= "</ul></div>\r\n";
         }
-        $topVotedText .= "</ul></div>\r\n";
+       
         $result = mysql_query($sql . $sqlCityVotes);
         $i = 0;
 
@@ -64,7 +66,7 @@ switch (SGBD) {
 
         if ($groupByCity) {
             while ($row = mysql_fetch_array($result)) {
-                if (count(array_keys($arr[$row['lib_commune']])) > $nbObservationsToReturn - 1) {
+                if (!empty($arr[$row['lib_commune']]) && count(array_keys($arr[$row['lib_commune']])) > $nbObservationsToReturn - 1) {
                     continue;
                 }
                 $arr[$row['lib_commune']][$i]['nbVotes'] = $row['nb_votes'];
@@ -88,7 +90,7 @@ switch (SGBD) {
         } else {
 
             while ($row = mysql_fetch_array($result)) {
-                if (count(array_keys($arr[$row['lib_territoire']][$row['lib_pole']][$row['lib_commune']])) > $nbObservationsToReturn - 1) {
+                if (!empty($arr[$row['lib_territoire']][$row['lib_pole']][$row['lib_commune']]) && count(array_keys($arr[$row['lib_territoire']][$row['lib_pole']][$row['lib_commune']])) > $nbObservationsToReturn - 1) {
                     continue;
                 }
                 $arr[$row['lib_territoire']][$row['lib_pole']][$row['lib_commune']][$i]['nbVotes'] = $row['nb_votes'];

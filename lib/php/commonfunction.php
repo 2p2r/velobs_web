@@ -743,7 +743,7 @@
 			}
 			
 		}
-		if (DEBUG){
+		if (DEBUG && is_countable($mails)){
 			error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " Il y a ". count($mails) . " mails à envoyer \n", 3, LOG_FILE);
 		}
 		return $mails;
@@ -791,7 +791,7 @@
 	        }
 	        
 	    }
-	    if (DEBUG){
+	    if (DEBUG && is_countable($mails)){
 	        error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " Il y a ". count($mails) . " mails à envoyer pour les followers \n", 3, LOG_FILE);
 	    }
 	    return $mails;
