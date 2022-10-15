@@ -910,10 +910,10 @@ function fusionPoi()
             
             $subject = 'Fusion des observations ' . $olderPoi . ' et ' . $newerPoi ;
             $messageMail = 'Bonjour !<br />
-Les observations '. $olderPoi . ' et ' . $newerPoi . ' viennent d\être fusionnées. Les actions suivantes ont automatiquement été réalisées :'.
+Les observations '. $olderPoi . ' et ' . $newerPoi . ' viennent d\'être fusionnées. Les actions suivantes ont automatiquement été réalisées :'.
 nl2br($message).'
-Lien vers la modération : <a href="' . URL . '/admin.php?id=' . $newerPoi . '">' . URL . '/admin.php?id=' . $newerPoi . '</a> fusionné dans <a href="'.URL . '/admin.php?id=' . $olderPoi.'">'.URL . '/admin.php?id=' . $olderPoi.'</a><br />\n" .  '
-' . $signature;
+Lien vers la modération : <a href="' . URL . '/admin.php?id=' . $newerPoi . '">' . URL . '/admin.php?id=' . $newerPoi . '</a> fusionné dans <a href="'.URL . '/admin.php?id=' . $olderPoi.'">'.URL . '/admin.php?id=' . $olderPoi."</a><br />\n"
+ . $signature;
             // usertype_id_usertype : 1=Admin, 2=comcom, 3=pole tech, 4=moderateur
             // mail aux admins velobs et aux modérateurs du pole concerné par l'observation
             $whereClause = " u.usertype_id_usertype = 1 OR (u.usertype_id_usertype = 4 AND ulp.num_pole = " . $arrayOlderPoi['pole_id_pole'] . ")";
@@ -2609,8 +2609,8 @@ function createPublicPoi()
                         $whereClause = "u.usertype_id_usertype = 1 OR (u.usertype_id_usertype = 4 AND ulp.num_pole = " . $arrayObs['pole_id_pole'] . ")";
                         $subject = 'Nouvelle observation à modérer sur le pole ' . $arrayObs['lib_pole'];
                         $message = "Bonjour !\n<br />
-Une nouvelle observation a été ajoutée sur le pole\n " . $arrayObs['lib_pole'] . ".\n Veuillez vous connecter à l'interface\n d'administration pour la modérer.\n<br />
-Lien vers la modération : \n<a href=\"" . URL . '/admin.php?id=' . $arrayObs['id_poi'] . "\">. URL . '/admin.php?id=' . $arrayObs['id_poi'] . "</a>\n<br />" . $arrayDetailsAndUpdateSQL['detailObservationString'] . "\n<br />";
+Une nouvelle observation a été ajoutée sur le pole\n " . $arrayObs['lib_pole'] . ".\n Veuillez vous connecter à l'interface d'administration pour la modérer.\n<br />
+Lien vers la modération : \n<a href=\"" . URL . '/admin.php?id=' . $arrayObs['id_poi'] . "\">". URL . '/admin.php?id=' . $arrayObs['id_poi'] . "</a>\n<br />" . $arrayDetailsAndUpdateSQL['detailObservationString'] . "\n<br />";
                         $mails = array();
                         $mails = getMailsToSend($whereClause, $subject, $message,$arrayObs['id_poi']);
                         if (DEBUG) {
