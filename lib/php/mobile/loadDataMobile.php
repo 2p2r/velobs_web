@@ -41,52 +41,21 @@
 			}
 			
 			$commune_id_commune = 99999;
-			$sql = "SELECT id_commune, AsText(geom_commune) AS geom FROM commune";
+			$sql = "SELECT id_commune,lib_commune FROM commune WHERE ST_CONTAINS(geom_commune,GeomFromText('Point(".$longitude_poi." ".$latitude_poi.")'))";
+			
 			$result = mysql_query($sql);
 			while ($row = mysql_fetch_array($result)) {
-				$commune = $row['geom'];
-				$temp = substr($commune,9,-2);
-				$tab = explode(',',$temp);
-				$vertices_x = array();
-				$vertices_y = array();
-				for ($i = 0; $i < count($tab) - 1; $i++) {
-					$temp = explode(" ",$tab[$i]);
-					array_push($vertices_x,$temp[0]);
-					array_push($vertices_y,$temp[1]);
-				}
-				$points_polygon = count($vertices_x) - 1;
-				if (is_in_polygon($points_polygon, $vertices_x, $vertices_y, $longitude_poi, $latitude_poi)) {
 					$commune_id_commune = $row['id_commune'];
-				}
 			}
 			
 			$pole_id_pole = 9;
-			$sql = "SELECT id_pole, AsText(geom_pole) AS geom FROM pole";
+			$sql = "SELECT id_pole,lib_pole FROM pole WHERE ST_CONTAINS(geom_pole,GeomFromText('Point(".$longitude_poi." ".$latitude_poi.")'))";
+			
 			$result = mysql_query($sql);
 			while ($row = mysql_fetch_array($result)) {
-				$pole = $row['geom'];
-				$temp = substr($pole,9,-2);
-				$tab = explode(',',$temp);
-				$vertices_x = array();
-				$vertices_y = array();
-				for ($i = 0; $i < count($tab) - 1; $i++) {
-					$temp = explode(" ",$tab[$i]);
-					array_push($vertices_x,$temp[0]);
-					array_push($vertices_y,$temp[1]);
-				}
-				$points_polygon = count($vertices_x) - 1;
-				if (is_in_polygon($points_polygon, $vertices_x, $vertices_y, $longitude_poi, $latitude_poi)) {
 					$pole_id_pole = $row['id_pole'];
-				}
+					$lib_pole = mysql_real_escape_string($row['lib_pole']);
 			}
-			
-			$sql = "SELECT lib_pole FROM pole WHERE id_pole = ".$pole_id_pole;
-			$result = mysql_query($sql);
-			while ($row = mysql_fetch_array($result)) {
-				$lib_pole = mysql_real_escape_string($row['lib_pole']);	
-			}
-			
-			$quartier_id_quartier = 99999;
 			
 			$sql = "SELECT lib_subcategory FROM subcategory WHERE id_subcategory = ".$subcategory_id_subcategory;
 			$result = mysql_query($sql);
@@ -98,16 +67,6 @@
 			} else {
 				$sql = "INSERT INTO poi (priorite_id_priorite, quartier_id_quartier, pole_id_pole, lib_poi, desc_poi, prop_poi, datecreation_poi, subcategory_id_subcategory, display_poi, geom_poi, geolocatemode_poi, commune_id_commune, num_poi, rue_poi, mail_poi, tel_poi, moderation_poi, fix_poi, status_id_status) VALUES (4, $quartier_id_quartier, $pole_id_pole, '$lib_poi', '$desc_poi', '$prop_poi', '$date_poi', $subcategory_id_subcategory, 1, GeomFromText('POINT(".$longitude_poi." ".$latitude_poi.")'), $geolocatemode_poi, $commune_id_commune, '$num_poi', '$rue_poi', '$mail_poi', '$tel_poi', 0, 0, 5)";			
 			}
-
-
-
-
-
-
-
-
-
-
 
 			$result = mysql_query($sql);
 			if (!$result) {
