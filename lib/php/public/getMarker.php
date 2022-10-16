@@ -6,7 +6,7 @@ switch (SGBD) {
 	case 'mysql' :
 		if (DEBUG) {
 			error_log ( date ( "Y-m-d H:i:s" ) . " - public/getMarker.php \n", 3, LOG_FILE );
-			error_log ( date ( "Y-m-d H:i:s" ) . " - bounds = ".$_GET['bounds']." \n", 3, LOG_FILE );
+			error_log ( date ( "Y-m-d H:i:s" ) . " - bounds = ".$_POST['bounds']." \n", 3, LOG_FILE );
 		}
 		$link = mysql_connect ( DB_HOST, DB_USER, DB_PASS );
 		mysql_select_db ( DB_NAME );
@@ -21,7 +21,7 @@ switch (SGBD) {
 					status.color_status,
 					priorite.lib_priorite
 					FROM poi ";
-		if ($_GET ['getCount']){
+		if ($_POST ['getCount']){
 		    $sql = "SELECT COUNT(DISTINCT(poi.id_poi)) as total_number_of_observations
 					FROM poi ";
 		}
@@ -29,47 +29,47 @@ switch (SGBD) {
 					INNER JOIN commune ON (commune.id_commune = poi.commune_id_commune)
 					INNER JOIN priorite ON (poi.priorite_id_priorite = priorite.id_priorite)
 					INNER JOIN status ON (status.id_status = poi.status_id_status) ";
-		if (isset ( $_GET ['id'] )) {
-			$sqlappend .= " WHERE delete_poi = FALSE AND poi.id_poi = " . $_GET ['id'];
+		if (isset ( $_POST ['id'] )) {
+			$sqlappend .= " WHERE delete_poi = FALSE AND poi.id_poi = " . $_POST ['id'];
 		} else {
 			if (DEBUG) {
-				error_log ( date ( "Y-m-d H:i:s" ) . " - public/getMarker.php dateLastModif = ".$_GET ['dateLastModif']."\n", 3, LOG_FILE );
+				error_log ( date ( "Y-m-d H:i:s" ) . " - public/getMarker.php dateLastModif = ".$_POST ['dateLastModif']."\n", 3, LOG_FILE );
 			}
-			if ($_GET ['dateLastModif'] == NULL || $_GET ['dateLastModif'] == 'undefined') {
+			if ($_POST ['dateLastModif'] == NULL || $_POST ['dateLastModif'] == 'undefined') {
 				$datesqlappend = '';
 				// $datesqlappend = ' AND (TO_DAYS(NOW()) - TO_DAYS(datecreation_poi)) <= 365';
 			} else {
-				$datesqlappend = " AND (lastdatemodif_poi >= '".mysql_real_escape_string($_GET['dateLastModif'])."' OR datecreation_poi >= '".mysql_real_escape_string($_GET['dateLastModif'])."') ";
+				$datesqlappend = " AND (lastdatemodif_poi >= '".mysql_real_escape_string($_POST['dateLastModif'])."' OR datecreation_poi >= '".mysql_real_escape_string($_POST['dateLastModif'])."') ";
 				if (DEBUG) {
 					error_log ( date ( "Y-m-d H:i:s" ) . " - public/getMarker.php datesqlappend = ".$datesqlappend."\n", 3, LOG_FILE );
 				}
 			}
-			if (isset($_GET['bounds']) && $_GET['bounds'] != ''){
-			    $boundsSQL = " AND ST_Within(poi.geom_poi,ST_GeomFromText('".$_GET['bounds']."') )=1 ";
+			if (isset($_POST['bounds']) && $_POST['bounds'] != ''){
+			    $boundsSQL = " AND ST_Within(poi.geom_poi,ST_GeomFromText('".$_POST['bounds']."') )=1 ";
 			}
-			if (isset ($_GET ['status']) && ($_GET ['status'] == "" || $_GET ['status'] == 'all'|| $_GET ['status'] == 'undefined')) {
+			if (isset ($_POST ['status']) && ($_POST ['status'] == "" || $_POST ['status'] == 'all'|| $_POST ['status'] == 'undefined')) {
 				$statussqlappend = '';
 			} else {
-				$statussqlappend = ' AND status_id_status = ' . $_GET ['status'];
+				$statussqlappend = ' AND status_id_status = ' . $_POST ['status'];
 			}
-			$listType = mysql_real_escape_string($_GET ['listType']);
+			$listType = mysql_real_escape_string($_POST ['listType']);
 			$sqlappend = " WHERE poi.geom_poi IS NOT NULL AND subcategory_id_subcategory IN ( " . $listType . ") AND poi.display_poi = TRUE 
 					AND poi.fix_poi = FALSE 
 					AND poi.moderation_poi = TRUE 
 					AND priorite.non_visible_par_public = 0
 					AND poi.delete_poi = 0 ";
 			//une priorite a ete selectionnee, on n'affiche qu'elle
-			if (isset($_GET ['priorite']) && $_GET ['priorite'] != "") {
-				$sqlappend .= " AND priorite.id_priorite =  " . mysql_real_escape_string($_GET ['priorite']);
+			if (isset($_POST ['priorite']) && $_POST ['priorite'] != "") {
+				$sqlappend .= " AND priorite.id_priorite =  " . mysql_real_escape_string($_POST ['priorite']);
 			} else{
 			//aucune priorite n'a ete selectionnee, on n'affiche que celles visibles par défaut par le public 
 				$sqlappend .= " AND priorite.visible_public_par_defaut =  1 ";
 			}
-			if (isset ( $_GET ["nbSupportMinimum"] ) && $_GET ["nbSupportMinimum"] != '' && $_GET ["nbSupportMinimum"] > 0) { // filter by status given by the collectivity
-			    $sqlappend .= ' AND poi.id_poi IN (select poi_poi_id from support_poi group by poi_poi_id having count(*) >= '.$_GET ["nbSupportMinimum"].')';
+			if (isset ( $_POST ["nbSupportMinimum"] ) && $_POST ["nbSupportMinimum"] != '' && $_POST ["nbSupportMinimum"] > 0) { // filter by status given by the collectivity
+			    $sqlappend .= ' AND poi.id_poi IN (select poi_poi_id from support_poi group by poi_poi_id having count(*) >= '.$_POST ["nbSupportMinimum"].')';
 			}
-			if (isset ( $_GET ["alreadyLoadedObservations"] ) && $_GET ["alreadyLoadedObservations"] != '') { // filter by status given by the collectivity
-			    $sqlappend .= ' AND poi.id_poi NOT IN ('.$_GET ["alreadyLoadedObservations"].')';
+			if (isset ( $_POST ["alreadyLoadedObservations"] ) && $_POST ["alreadyLoadedObservations"] != '') { // filter by status given by the collectivity
+			    $sqlappend .= ' AND poi.id_poi NOT IN ('.$_POST ["alreadyLoadedObservations"].')';
 			}
 			
 			$sqlappend .= $datesqlappend . $statussqlappend . $boundsSQL;
@@ -81,7 +81,7 @@ switch (SGBD) {
 			error_log ( date ( "Y-m-d H:i:s" ) . " - public/getMarker.php datesqlappend = $datesqlappend\n", 3, LOG_FILE );
 		}
 		
-		if ($_GET ['getCount']){
+		if ($_POST ['getCount']){
 		    
 		    
 		    while ( $row = mysql_fetch_array ( $result ) ) {
@@ -112,7 +112,7 @@ switch (SGBD) {
 			$arr [$i] ['iconCls'] = $row ['icon_subcategory'];
 			$arr [$i] ['lat'] = $row ['Y'];
 			$arr [$i] ['lon'] = $row ['X'];
-			$arr [$i] ['mail_poi'] = stripslashes ( $row ['mail_poi'] );
+			$arr [$i] ['mail_poi'] = "***";
 			$arr [$i] ['lastdatemodif_poi'] = $row ['lastdatemodif_poi'];
 			//récupération des commentaires
 			$sql2 = "SELECT * FROM commentaires WHERE poi_id_poi = " . $row ['id_poi'] . " AND display_commentaires = 'Modéré accepté'";

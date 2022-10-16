@@ -25,7 +25,7 @@ if (isset ( $_SESSION ['user'] )) {
 						color_status,
 						users.lib_users
 					FROM poi  ";
-			if ($_GET ['getCount']){
+			if ($_POST ['getCount']){
 		      $sql = "SELECT COUNT(DISTINCT(poi.id_poi)) as total_number_of_observations
 					FROM poi ";
 		      }
@@ -39,40 +39,40 @@ if (isset ( $_SESSION ['user'] )) {
 			$sqlappend = ' WHERE ';
 			// TODO : chek user type and pole
 			
-			if (isset ( $_GET ['id'] )) {
+			if (isset ( $_POST ['id'] )) {
 				if (DEBUG) {
 					error_log ( date ( "Y-m-d H:i:s" ) . " - admin/getMarker.php avec id\n", 3, LOG_FILE );
 				}
-				$sqlappend .= " delete_poi = FALSE AND poi.id_poi = " . $_GET ['id'];
+				$sqlappend .= " delete_poi = FALSE AND poi.id_poi = " . $_POST ['id'];
 			} else {
-				$listType = $_GET ['listType'];
+				$listType = $_POST ['listType'];
 				if (DEBUG) {
 					error_log ( date ( "Y-m-d H:i:s" ) . " - admin/getMarker.php avec listType $listType\n", 3, LOG_FILE );
 				}
 				// $tabListType = preg_split ( '#,#', $listType );
 				$sqlappend .= " poi.geom_poi IS NOT NULL AND subcategory_id_subcategory IN ( " . $listType . ") AND poi.display_poi = TRUE AND poi.fix_poi = FALSE AND delete_poi = FALSE ";
-				if (isset ( $_GET ['displayObservationsToBeAnalyzedByComCom'] ) && $_GET ['displayObservationsToBeAnalyzedByComCom'] == 1 && $_SESSION ["type"] == 2) {
+				if (isset ( $_POST ['displayObservationsToBeAnalyzedByComCom'] ) && $_POST ['displayObservationsToBeAnalyzedByComCom'] == 1 && $_SESSION ["type"] == 2) {
 					$sqlappend .= " AND (reponse_collectivite_poi IS NULL OR reponse_collectivite_poi = '') AND (transmission_poi IS NULL OR transmission_poi = 0) ";
 				}
-				if (isset ( $_GET ['commentToModerate'] ) && $_GET ['commentToModerate'] == 1 && ($_SESSION ["type"] == 4 || $_SESSION ["type"] == 1)) {
+				if (isset ( $_POST ['commentToModerate'] ) && $_POST ['commentToModerate'] == 1 && ($_SESSION ["type"] == 4 || $_SESSION ["type"] == 1)) {
 					$sql .= " INNER JOIN commentaires ON (poi.id_poi = commentaires.poi_id_poi) ";
 					$sqlappend .= " AND commentaires.display_commentaires = 'Non modéré' ";
 				}
-				if (isset ( $_GET ['observationsWithoutPicture'] ) && $_GET ['observationsWithoutPicture'] == 1 && ($_SESSION ["type"] == 4 || $_SESSION ["type"] == 1)) {
+				if (isset ( $_POST ['observationsWithoutPicture'] ) && $_POST ['observationsWithoutPicture'] == 1 && ($_SESSION ["type"] == 4 || $_SESSION ["type"] == 1)) {
 				    $sqlappend .= " AND (photo_poi = '' OR photo_poi is null) ";
 				}
 				//une priorite a ete selectionnee, on n'affiche qu'elle
-			    if (isset ( $_GET ['priority'] ) && $_GET ['priority'] != '') {
-			      $sqlappend .= " AND poi.priorite_id_priorite = " . mysql_real_escape_string($_GET ['priority']);
+			    if (isset ( $_POST ['priority'] ) && $_POST ['priority'] != '') {
+			      $sqlappend .= " AND poi.priorite_id_priorite = " . mysql_real_escape_string($_POST ['priority']);
 			    }else{
 			      //aucune priorite n'a ete selectionnee, on n'affiche que celles visibles par défaut par les moderateurs
 			      $sqlappend .= " AND priorite.visible_moderateur_par_defaut =  1 ";
 			    }
 				
 				if (DEBUG) {
-					error_log ( date ( "Y-m-d H:i:s" ) . " - admin/getMarker.php displayObservationsToBeAnalyzedByPole = " . $_GET ['displayObservationsToBeAnalyzedByPole'] . ", type = " . $_SESSION ["type"] . "\n", 3, LOG_FILE );
+					error_log ( date ( "Y-m-d H:i:s" ) . " - admin/getMarker.php displayObservationsToBeAnalyzedByPole = " . $_POST ['displayObservationsToBeAnalyzedByPole'] . ", type = " . $_SESSION ["type"] . "\n", 3, LOG_FILE );
 				}
-				if (isset ( $_GET ['displayObservationsToBeAnalyzedByPole'] ) && $_GET ['displayObservationsToBeAnalyzedByPole'] == 1 && $_SESSION ["type"] == 3) {
+				if (isset ( $_POST ['displayObservationsToBeAnalyzedByPole'] ) && $_POST ['displayObservationsToBeAnalyzedByPole'] == 1 && $_SESSION ["type"] == 3) {
 					$sqlappend .= " AND (reponsepole_poi is NULL OR reponsepole_poi = '') AND (traiteparpole_poi IS NULL OR traiteparpole_poi = 0) ";
 				}
 			}
@@ -94,35 +94,38 @@ if (isset ( $_SESSION ['user'] )) {
 // 				$sqlappend .= ' AND poi.pole_id_pole IN (' . $_SESSION ["pole"] . ') ';
 // 			}
 			
-			if (isset ( $_GET ["status"] ) && $_GET ["status"] != '') { // filter by status given by the collectivity
-				$sqlappend .= ' AND poi.status_id_status = ' . $_GET ["status"];
+			if (isset ( $_POST ["status"] ) && $_POST ["status"] != '') { // filter by status given by the collectivity
+				$sqlappend .= ' AND poi.status_id_status = ' . $_POST ["status"];
 			}
 			
-			if ($_GET ['dateNotModifiedSince'] == NULL || $_GET ['dateNotModifiedSince'] == 'undefined') {
+			if ($_POST ['dateNotModifiedSince'] == NULL || $_POST ['dateNotModifiedSince'] == 'undefined') {
 			    $dateNotModifiedSinceSqlAppend = '';
 			    // $datesqlappend = ' AND (TO_DAYS(NOW()) - TO_DAYS(datecreation_poi)) <= 365';
 			} else {
-			    $dateNotModifiedSinceSqlAppend = " AND COALESCE(lastdatemodif_poi,datecreation_poi) <= '" . mysql_real_escape_string ( $_GET ['dateNotModifiedSince'] ) . "' ";
+			    $dateNotModifiedSinceSqlAppend = " AND COALESCE(lastdatemodif_poi,datecreation_poi) <= '" . mysql_real_escape_string ( $_POST ['dateNotModifiedSince'] ) . "' ";
 			    if (DEBUG) {
 			        error_log ( date ( "Y-m-d H:i:s" ) . " - admin/getMarker.php datesqlappend = " . $datesqlappend . "\n", 3, LOG_FILE );
 			    }
 			}
 			
-			if ($_GET ['dateLastModif'] == NULL || $_GET ['dateLastModif'] == 'undefined') {
+			if ($_POST ['dateLastModif'] == NULL || $_POST ['dateLastModif'] == 'undefined') {
 				$datesqlappend = '';
 				// $datesqlappend = ' AND (TO_DAYS(NOW()) - TO_DAYS(datecreation_poi)) <= 365';
 			} else {
-				$datesqlappend = " AND COALESCE(lastdatemodif_poi,datecreation_poi) >= '" . mysql_real_escape_string ( $_GET ['dateLastModif'] ) . "' ";
+				$datesqlappend = " AND COALESCE(lastdatemodif_poi,datecreation_poi) >= '" . mysql_real_escape_string ( $_POST ['dateLastModif'] ) . "' ";
 				if (DEBUG) {
 					error_log ( date ( "Y-m-d H:i:s" ) . " - admin/getMarker.php datesqlappend = " . $datesqlappend . "\n", 3, LOG_FILE );
 				}
 			}
+			if (isset ( $_POST ["alreadyLoadedObservations"] ) && $_POST ["alreadyLoadedObservations"] != '') { // filter by status given by the collectivity
+			    $sqlappend .= ' AND poi.id_poi NOT IN ('.$_POST ["alreadyLoadedObservations"].')';
+			}
 
 			if (DEBUG) {
-			    error_log ( date ( "Y-m-d H:i:s" ) . " - admin/getMarker.php nbSupportMinimum = " . $_GET ["nbSupportMinimum"] . "\n", 3, LOG_FILE );
+			    error_log ( date ( "Y-m-d H:i:s" ) . " - admin/getMarker.php nbSupportMinimum = " . $_POST ["nbSupportMinimum"] . "\n", 3, LOG_FILE );
 			}
-			if (isset ( $_GET ["nbSupportMinimum"] ) && $_GET ["nbSupportMinimum"] != '' && $_GET ["nbSupportMinimum"] > 0) { // filter by status given by the collectivity
-			    $sqlappend .= ' AND poi.id_poi IN (select poi_poi_id from support_poi group by poi_poi_id having count(*) >= '.$_GET ["nbSupportMinimum"].')';
+			if (isset ( $_POST ["nbSupportMinimum"] ) && $_POST ["nbSupportMinimum"] != '' && $_POST ["nbSupportMinimum"] > 0) { // filter by status given by the collectivity
+			    $sqlappend .= ' AND poi.id_poi IN (select poi_poi_id from support_poi group by poi_poi_id having count(*) >= '.$_POST ["nbSupportMinimum"].')';
 			}
 			$sql .= $sqlappend.$datesqlappend.$dateNotModifiedSinceSqlAppend;
 
@@ -134,7 +137,7 @@ if (isset ( $_SESSION ['user'] )) {
 				error_log ( date ( "Y-m-d H:i:s" ) . " - admin/getMarker.php avant while\n", 3, LOG_FILE );
 			}
 			
-			if ($_GET ['getCount']){
+			if ($_POST ['getCount']){
 		      while ( $row = mysql_fetch_array ( $result ) ) {
 		        $total_number_of_observations = $row ['total_number_of_observations'];
 		      }
@@ -259,8 +262,8 @@ if (isset ( $_SESSION ['user'] )) {
 				$nb_support = mysql_result($resultSupport,0);
 				$comments .= '<br /><b>Nombre de votes pour cette fiche </b> : ' . $nb_support;
 				$arr [$i] ['comments'] = stripslashes ( $comments );
-				if (DEBUG && isset ( $_GET ['id'] )) {
-				    error_log ( date ( "Y-m-d H:i:s" ) . " - admin/getMarker.php retour json avec comment for id ". $_GET ['id']." $comments\n", 3, LOG_FILE );
+				if (DEBUG && isset ( $_POST ['id'] )) {
+				    error_log ( date ( "Y-m-d H:i:s" ) . " - admin/getMarker.php retour json avec comment for id ". $_POST ['id']." $comments\n", 3, LOG_FILE );
 				}
 				$i ++;
 			}
