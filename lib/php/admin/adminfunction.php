@@ -699,7 +699,7 @@ Le pole ' . $arrayObs['lib_pole'] . ' a modifié l\'observation n°' . $arrayObs
                         $updatePOI = 0;
                         $returnCode = 10;
                     }
-                    $mailsFollowers = getMailsToSendFromVotesAndComments($id_poi, $subject, "Vous recevez ce mail car vous avez souhaité suivre l'évolution de cette observation. Message envoyé à la personne qui a remonté l'observation : \n".$message);
+                    $mailsFollowers = getMailsToSendFromVotesAndComments($id_poi, "Mise à jour observation ".$arrayObs['id_poi'], "Vous recevez ce mail car vous avez souhaité suivre l'évolution de cette observation.\n<br /> Message envoyé à la personne qui a remonté l'observation : \n".$message);
                     if ($updatePOI == 1 && $subject != "") {
                         $mailArray = [
                             $arrayObs['mail_poi'],
@@ -2997,9 +2997,20 @@ function editComment($id_comment, $text_comment, $status_comment)
             mysql_select_db(DB_NAME);
             mysql_query("SET NAMES utf8mb4");
             
+            
+            
             $text = mysql_real_escape_string($text_comment);
             $status = mysql_real_escape_string($status_comment);
             $lastdatemodif_poi = date("Y-m-d H:i:s");
+            
+            $sql = "SELECT c.poi_id_poi, p.mail_poi,c.mail_commentaires,c.display_commentaires FROM commentaires c INNER JOIN poi p ON p.id_poi = c.poi_id_poi WHERE c.id_commentaires = " . $id_comment;
+            $res = mysql_query($sql);
+            $id_poi = mysql_result($res, 0, "poi_id_poi");
+            $mail_poi = mysql_result($res, 0, "mail_poi");
+            $mail_commentaire = mysql_result($res, 0, "mail_commentaires");
+            $current_status_commentaire = mysql_result($res, 0, "display_commentaires");
+            
+            
             $sql = "UPDATE commentaires SET text_commentaires = '$text', display_commentaires = '$status', lastdatemodif_comment = '$lastdatemodif_poi',lastmodif_user_comment = " . $_SESSION['id_users'] . " WHERE id_commentaires = $id_comment";
             
             $result = mysql_query($sql);
@@ -3007,10 +3018,7 @@ function editComment($id_comment, $text_comment, $status_comment)
                 error_log(date("Y-m-d H:i:s") . " " . __FUNCTION__ . ", $sql  \n", 3, LOG_FILE);
             }
             
-            $sql = "SELECT c.poi_id_poi, p.mail_poi FROM commentaires c INNER JOIN poi p ON p.id_poi = c.poi_id_poi WHERE c.id_commentaires = " . $id_comment;
-            $res = mysql_query($sql);
-            $id_poi = mysql_result($res, 0, "poi_id_poi");
-            $mail_poi = mysql_result($res, 0, "mail_poi");
+            
             $sql3 = "UPDATE poi SET lastdatemodif_poi = '$lastdatemodif_poi', lastmodif_user_poi = " . $_SESSION['id_users'] . " WHERE id_poi = $id_poi";
             $result3 = mysql_query($sql3);
             
@@ -3020,19 +3028,14 @@ function editComment($id_comment, $text_comment, $status_comment)
                 echo '1';
             }
             
-            if ($status == 'Modéré accepté'){
-                $subject = 'Nouveau commentaire validé sur l\'observation ' . $id_poi;
+            if ($status == 'Modéré accepté' && $current_status_commentaire != $status ){
+                $subject = 'Nouveau commentaire validé sur votre observation ' . $id_poi;
                 $message = "Bonjour !\n<br />
 Un nouveau commentaire a été validé\n sur l'observation n° $id_poi.\n<br />
-Lien vers l'observation :\n " . URL . '/index.php?id=' . $id_poi . "\n<br />";
-                $mailsFollowers = array();
-                $mailsFollowers = getMailsToSendFromVotesAndComments($id_poi, $subject, "Vous recevez ce mail car vous avez souhaité\n suivre l'évolution de cette observation.\n Message envoyé à la personne\n qui a remonté l'observation : \n<br />".$message);
-                if (DEBUG) {
-                    error_log(date("Y-m-d H:i:s") . " " . __FUNCTION__ . "in editComment mailsFollowers =  $mailsFollowers\n", 3, LOG_FILE);
-                }
-                $mails = array();
+Lien vers l'observation :\n <a href=\"" . URL . '/index.php?id=' . $id_poi . "\">" . URL . '/index.php?id=' . $id_poi . "</a>\n<br />";
                 
                 /* debut envoi d'un mail au contributeur */
+                $mails = array();
                 $mailArray = [
                     $mail_poi,
                     "Soumetteur",
@@ -3041,6 +3044,30 @@ Lien vers l'observation :\n " . URL . '/index.php?id=' . $id_poi . "\n<br />";
                 ];
                 array_push($mails, $mailArray);
                 
+                $mailsFollowers = array();
+                $mailsFollowers = getMailsToSendFromVotesAndComments($id_poi, $subject, "Vous recevez ce mail car vous avez souhaité\n suivre l'évolution de cette observation.\n<br />Message envoyé à la personne\n qui a remonté l'observation : \n<br />".$message);
+                if (DEBUG) {
+                    error_log(date("Y-m-d H:i:s") . " " . __FUNCTION__ . "in editComment mailsFollowers =  $mailsFollowers\n", 3, LOG_FILE);
+                }
+                
+                $subject = 'Votre commentaire sur l\'observation'. $id_poi.' a été validé' ;
+                $message = "Bonjour !\n<br />
+Le commentaire que vous avez ajouté \n sur l'observation n° $id_poi.\n a été modéré positivement\n.<br />
+Lien vers l'observation :\n <a href=\"" . URL . '/index.php?id=' . $id_poi . "\">" . URL . '/index.php?id=' . $id_poi . "</a>\n<br />";
+                $mailSubmitter = array();
+                $mailArray = [
+                    $mail_commentaire,
+                    "Soumetteur",
+                    $subject,
+                    $message
+                ];
+                array_push($mailSubmitter, $mailArray);
+                if (isset($mailSubmitter)) {
+                    if (DEBUG) {
+                        error_log(date("Y-m-d H:i:s") . " " . __FUNCTION__ . "in editComment $mailSubmitter is not empty, we send email\n", 3, LOG_FILE);
+                    }
+                    $succes = sendMails($mailSubmitter);
+                }
                 if (isset($mailsFollowers)) {
                     if (DEBUG) {
                         error_log(date("Y-m-d H:i:s") . " " . __FUNCTION__ . "in editComment mailsFollowers is not empty, we send email\n", 3, LOG_FILE);
@@ -3204,7 +3231,7 @@ function createPublicComment()
                         $return['ok'] = "Le commentaire a été correctement ajouté et est en attente de modération. Merci pour votre aide.";
                         $arrayObs = getObservationDetailsInArray($id_poi);
                         $arrayDetailsAndUpdateSQL = getObservationDetailsInString($arrayObs);
-                        $newCommentInfo = "Nouveau commentaire : $text \nPosté par $mail_commentaires \n";
+                        $newCommentInfo = "Nouveau commentaire : $text \n<br />Posté par $mail_commentaires <br />\n";
                         if ($url_photo != "") {
                             $newCommentInfo .= "Photo : " . URL . "/resources/pictures/" . $url_photo . "\n";
                         }
@@ -3220,7 +3247,7 @@ Lien vers la modération : <a href=\"" . URL . '/admin.php?id=' . $arrayObs['id_
                         /* debut envoi d'un mail au contributeur */
                         $subject = 'Commentaire en attente de modération';
                         $message = "Bonjour !\n<br />
-Vous venez d'ajouter un commentaire à l'observation \n" . $arrayObs['id_poi'] . " sur VelObs et nous vous en remercions.\n Celui-ci devrait être administré sous peu.\n<br />" . $newCommentInfo . $arrayDetailsAndUpdateSQL['detailObservationString'] . "\n<br />
+Vous venez d'ajouter un commentaire à l'observation \n" . $arrayObs['id_poi'] . " sur VelObs et nous vous en remercions.\n<br />Celui-ci devrait être administré sous peu.\n<br />" . $newCommentInfo . $arrayDetailsAndUpdateSQL['detailObservationString'] . "\n<br />
 Cordialement, l'Association " . VELOBS_ASSOCIATION . " :)\n<br />";
                         $mailArray = [
                             $mail_commentaires,
@@ -3290,7 +3317,7 @@ function createSupport()
                 }
                 $result3 = mysql_query($sql3);
                 $return['success'] = true;
-                $return['msg'] = "Votre vote a été correctement ajouté, nous vous remercions.";
+                $return['msg'] = "Votre vote a été correctement ajouté, nous vous en remercions.";
                 if ($follow) {
                     $return['msg'] .= " Vous serez averti(e) à chaque mise à jour de cette fiche.";
                 } else {
