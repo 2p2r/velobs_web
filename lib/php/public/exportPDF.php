@@ -109,7 +109,7 @@
                 $html .= '<li>Commentaire collectivité : <i>'.$poi['reponse_collectivite_poi'].'</i></li>';
                 if (isset($poi['photo_poi'])) {
                     $photo_filename = '../../../resources/pictures/' . $poi['photo_poi'];
-                    if (file_exists($photo_filename) && is_file($photo_filename))
+                    if (file_exists($photo_filename) && is_file($photo_filename)){
                         $exifimagetype = exif_imagetype ( $photo_filename );
                         $imagefiletype = [
                             1 => 'GIF',
@@ -128,6 +128,7 @@
                             $html .= '<li>Photo : </li></ul><img src="'.$photo_filename.'"  width="'.$width.'"px height="'.$height.'px"  />';
                             $html .= '<li><a href="'.URL.'/resources/pictures/' . $poi['photo_poi'].'">Lien photo</a></li><br />';
                         }
+                    }
                 }
                 $html .= '<br /><hr /><H1>Commentaires éventuels</H1>';
                 $whereSelectCommentAppend = '';
@@ -164,7 +165,7 @@
                     
                     if (isset($row2 ['url_photo']) && $row2 ['url_photo'] != "") {
                         $photo_filename = '../../../resources/pictures/' . $row2 ['url_photo'];
-                        if (file_exists($photo_filename) && is_file($photo_filename))
+                        if (file_exists($photo_filename) && is_file($photo_filename)){
                             $exifimagetype = exif_imagetype ( $photo_filename );
                             $imagefiletype = [
                                 1 => 'GIF',
@@ -185,7 +186,7 @@
                                 }
                                 $html .= '<li>Photo : </li><img src="'.$photo_filename.'" width="'.$width.'"px height="'.$height.'px" />';
                                 $html .= '<li><a href="'.URL.'/resources/pictures/' . $row2 ['url_photo'].'">Lien photo</a></li><br />';
-                               
+                        }
                                 
                     }
                     $html .= '<BR /><HR width="150px"/>';
