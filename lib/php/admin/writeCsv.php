@@ -51,6 +51,9 @@
 							break;	
 												
 						case 'poi':
+						    if (DEBUG){
+						        error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " Exporting poi in csv \n", 3, LOG_FILE);
+						    }
 						    $filenamePrefix = 'velobs_poi_';
 						    if (isset($_GET['commune_poi'])&& $_GET['commune_poi'] != ''){
 						        $filenamePrefix .= 'commune_';
@@ -77,9 +80,9 @@
 										$extraSQL = " AND priorite.non_visible_par_collectivite = 0 
 												AND moderation_poi = 1 ";
 									}//si l'utilisateur fait partie des modérateurs, on restreint les POI correspondant au pole
-									elseif ($_SESSION['type'] == 4){
-										$extraSQL = " AND poi.pole_id_pole = " .$_SESSION['pole'] . " ";
-									}
+// 									elseif ($_SESSION['type'] == 4){
+// 										$extraSQL = " AND poi.pole_id_pole = " .$_SESSION['pole'] . " ";
+// 									}
 							    }
 							    if (isset($_GET['pole_poi']) && $_GET['pole_poi'] != ''){
 							        $extraSQL .= " AND pole.id_pole = " .$_GET['pole_poi'] . " ";
@@ -121,6 +124,9 @@
 											poi.delete_poi = FALSE 
 											$extraSQL
 										ORDER BY id_poi DESC";
+								if (DEBUG){
+								    error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " Exporting poi in csv withn sql $sql\n", 3, LOG_FILE);
+								}
 								$result = mysql_query($sql);
 								$csv = '"Identifiant";"Commentaire final de l\'association";"Réponse de la collectivité";"Observation terrain";"Priorité";"Pôle";"Adhérent";"Libellé observation";"Catégorie";"Sous-catégorie";"Repère";"Rue";"Commune";"Description";"Proposition";"Modération";"Affichage sur la carte";"Latitude";"Longitude";"Date création";"Mode géolocalisation";"Email";"Statut";"Traité par le pôle";"Transmis au pôle";"Lien administration";"Créer pdf"';
 								$csv .= "\r\n";
