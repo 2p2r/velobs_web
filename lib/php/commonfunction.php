@@ -703,7 +703,7 @@
 			error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - commonfunction.php, sqlUpdate " . $sqlUpdate . " \n", 3, LOG_FILE );
 			error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - commonfunction.php, updateObservationBoolean " . $updateObservationBoolean . " \n", 3, LOG_FILE );
 		}
-		$DetailObservation .= "Lien direct vers l'observation \n(non visible sur la carte tant que la modération \nn'a pas été effectuée) : \n".URL.'?id='.$arrayObservation['id_poi']."\n<br >";
+		$DetailObservation .= "Lien direct vers l'observation \n(non visible sur la carte tant que la modération \nn'a pas été effectuée) : \n<a href=\"".URL.'?id='.$arrayObservation['id_poi']."\">".URL.'?id='.$arrayObservation['id_poi']."</a>\n<br >";
 		if ($sqlUpdate != ""){
 			$lastdatemodif_poi = date("Y-m-d H:i:s");
 			$sqlUpdate = " lastdatemodif_poi = '$lastdatemodif_poi', lastmodif_user_poi = ".$_SESSION ['id_users']." ".$sqlUpdate;
