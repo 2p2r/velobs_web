@@ -2990,6 +2990,9 @@ function editComment($id_comment, $text_comment, $status_comment)
 {
     switch (SGBD) {
         case 'mysql':
+            if (DEBUG) {
+                error_log(date("Y-m-d H:i:s") . " " . __FUNCTION__ . "in editComment\n", 3, LOG_FILE);
+            }
             $link = mysql_connect(DB_HOST, DB_USER, DB_PASS);
             mysql_select_db(DB_NAME);
             mysql_query("SET NAMES utf8mb4");
@@ -3024,7 +3027,9 @@ Un nouveau commentaire a été validé\n sur l'observation n° $id_poi.\n<br />
 Lien vers l'observation :\n " . URL . '/index.php?id=' . $id_poi . "\n<br />";
                 $mailsFollowers = array();
                 $mailsFollowers = getMailsToSendFromVotesAndComments($id_poi, $subject, "Vous recevez ce mail car vous avez souhaité\n suivre l'évolution de cette observation.\n Message envoyé à la personne\n qui a remonté l'observation : \n<br />".$message);
-            
+                if (DEBUG) {
+                    error_log(date("Y-m-d H:i:s") . " " . __FUNCTION__ . "in editComment mailsFollowers =  $mailsFollowers\n", 3, LOG_FILE);
+                }
                 $mails = array();
                 
                 /* debut envoi d'un mail au contributeur */
@@ -3037,9 +3042,15 @@ Lien vers l'observation :\n " . URL . '/index.php?id=' . $id_poi . "\n<br />";
                 array_push($mails, $mailArray);
                 
                 if (isset($mailsFollowers)) {
+                    if (DEBUG) {
+                        error_log(date("Y-m-d H:i:s") . " " . __FUNCTION__ . "in editComment mailsFollowers is not empty, we send email\n", 3, LOG_FILE);
+                    }
                     $succes = sendMails($mailsFollowers);
                 }
                 if (isset($mails)) {
+                    if (DEBUG) {
+                        error_log(date("Y-m-d H:i:s") . " " . __FUNCTION__ . "in editComment mails is not empty, we send email\n", 3, LOG_FILE);
+                    }
                     $succes = sendMails($mails);
                 }
             }
@@ -3072,6 +3083,9 @@ function createPublicComment()
             $text = mysql_real_escape_string($_POST['text_comment']);
             $mail_commentaires = mysql_real_escape_string($_POST['mail_comment']);
             $follow = mysql_real_escape_string($_POST['beInformedField']);
+            if (DEBUG) {
+                error_log(date("Y-m-d H:i:s") . " " . __FUNCTION__ . "follow = $follow\n", 3, LOG_FILE);
+            }
             if ($follow == 'on') {
                 $follow = 1;
             }else{
@@ -3164,7 +3178,7 @@ function createPublicComment()
                 if ($num_rows2 == 0) {
                     $displayFlag = 'Non modéré';
                 }
-                $sql = "INSERT INTO commentaires (text_commentaires, display_commentaires, mail_commentaires, poi_id_poi,url_photo) VALUES ('$text', '$displayFlag', '$mail_commentaires',$id_poi,'$url_photo')";
+                $sql = "INSERT INTO commentaires (text_commentaires, display_commentaires, mail_commentaires, poi_id_poi,url_photo, comment_poi_follow) VALUES ('$text', '$displayFlag', '$mail_commentaires',$id_poi,'$url_photo',$follow)";
                 $result = mysql_query($sql);
                 if (DEBUG) {
                     error_log(date("Y-m-d H:i:s") . " " . __FUNCTION__ . " " . $_POST['task'] . ", sql : $sql\n", 3, LOG_FILE);
