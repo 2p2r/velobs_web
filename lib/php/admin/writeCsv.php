@@ -112,7 +112,8 @@
 											lib_category, 
 											lib_subcategory, 
 											lib_commune,
-											lib_status 
+											lib_status,
+                                            COALESCE(users.mail_users, 'Inconnu') as emailModif
 										FROM poi 
 											INNER JOIN subcategory ON (subcategory.id_subcategory = poi.subcategory_id_subcategory) 
 											INNER JOIN category ON (subcategory.category_id_category = category.id_category) 
@@ -120,6 +121,7 @@
 											INNER JOIN pole ON (pole.id_pole = poi.pole_id_pole) 
 											INNER JOIN priorite ON (priorite.id_priorite = poi.priorite_id_priorite)
 											INNER JOIN status ON (status.id_status = poi.status_id_status)
+                                            LEFT JOIn users on poi.lastmodif_user_poi = users.id_users
 										WHERE 
 											poi.delete_poi = FALSE 
 											$extraSQL
@@ -128,7 +130,7 @@
 								    error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " Exporting poi in csv withn sql $sql\n", 3, LOG_FILE);
 								}
 								$result = mysql_query($sql);
-								$csv = '"Identifiant";"Commentaire final de l\'association";"Réponse de la collectivité";"Observation terrain";"Priorité";"Pôle";"Adhérent";"Libellé observation";"Catégorie";"Sous-catégorie";"Repère";"Rue";"Commune";"Description";"Proposition";"Modération";"Affichage sur la carte";"Latitude";"Longitude";"Date création";"Mode géolocalisation";"Email";"Statut";"Traité par le pôle";"Transmis au pôle";"Lien administration";"Créer pdf"';
+								$csv = '"Identifiant";"Commentaire final de l\'association";"Réponse de la collectivité";"Observation terrain";"Priorité";"Pôle";"Adhérent";"Libellé observation";"Catégorie";"Sous-catégorie";"Repère";"Rue";"Commune";"Description";"Proposition";"Modération";"Affichage sur la carte";"Latitude";"Longitude";"Date création";"Mode géolocalisation";"Email";"Statut";"Traité par le pôle";"Transmis au pôle";"Lien administration";"Créer pdf";"Date dernière modification";"Mail dernière modification"';
 								$csv .= "\r\n";
 								$numberOfRecords = 0;
 								while ($row = mysql_fetch_array($result)) {
@@ -138,7 +140,13 @@
 										$row ['tel_poi'] = '******' ;
 										$row ['adherent_poi'] = '******' ;
 									}
-									$csv .= stripslashes($row['id_poi'].';"'.str_replace('"', "", $row['commentfinal_poi']).'";"'.str_replace('"', "", $row['reponse_collectivite_poi']).'";"'.str_replace('"', "", $row['observationterrain_poi']).'";"'.$row['lib_priorite'].'";"'.$row['lib_pole'].'";"'.$row['adherent_poi'].'";"'.str_replace('"', "", $row['lib_poi']).'";"'.stripslashes($row['lib_category']).'";"'.stripslashes($row['lib_subcategory']).'";"'.str_replace('"', "", $row['num_poi']).'";"'.str_replace('"', "", $row['rue_poi']).'";"'.$row['lib_commune'].'";"'.str_replace('"', "", $row['desc_poi']).'";"'.str_replace('"', "", $row['prop_poi']).'";'.$row['moderation_poi'].';'.$row['display_poi'].';'.$row['Y'].';'.$row['X'].';"'.$row['datecreation_poi'].'";'.$row['geolocatemode_poi'].';"'.$row['mail_poi'].'";"'.$row['lib_status'].'";"'.$row['traiteparpole_poi'].'";"'.$row['transmission_poi'].'";"'.URL.'/admin.php?id='.$row['id_poi'].'";"'.URL.'/lib/php/public/exportPDF.php?id_poi='.$row['id_poi'].'"');
+									$dateLastModif = $row['datelastmodif_poi'];
+									if ($row['datelastmodif_poi'] == null){
+									    $dateLastModif = $row['datecreation_poi'];
+									}else{
+									    $dateLastModif = $row['datelastmodif_poi'];
+									}
+									$csv .= stripslashes($row['id_poi'].';"'.str_replace('"', "", $row['commentfinal_poi']).'";"'.str_replace('"', "", $row['reponse_collectivite_poi']).'";"'.str_replace('"', "", $row['observationterrain_poi']).'";"'.$row['lib_priorite'].'";"'.$row['lib_pole'].'";"'.$row['adherent_poi'].'";"'.str_replace('"', "", $row['lib_poi']).'";"'.stripslashes($row['lib_category']).'";"'.stripslashes($row['lib_subcategory']).'";"'.str_replace('"', "", $row['num_poi']).'";"'.str_replace('"', "", $row['rue_poi']).'";"'.$row['lib_commune'].'";"'.str_replace('"', "", $row['desc_poi']).'";"'.str_replace('"', "", $row['prop_poi']).'";'.$row['moderation_poi'].';'.$row['display_poi'].';'.$row['Y'].';'.$row['X'].';"'.$row['datecreation_poi'].'";'.$row['geolocatemode_poi'].';"'.$row['mail_poi'].'";"'.$row['lib_status'].'";"'.$row['traiteparpole_poi'].'";"'.$row['transmission_poi'].'";"'.URL.'/admin.php?id='.$row['id_poi'].'";"'.URL.'/lib/php/public/exportPDF.php?id_poi='.$row['id_poi'].'";"'.$dateLastModif.'";"'.$row['emailModif'].'"');
 									$csv .= "\r\n";
 								}
 								fputs($fh, $csv);
