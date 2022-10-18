@@ -2,7 +2,7 @@
 session_start ();
 include_once 'adminfunction.php';
 if (DEBUG) {
-	error_log ( date ( "Y-m-d H:i:s" ) . " " . __FUNCTION__ . " - dans database.php \n", 3, LOG_FILE );
+	error_log ( date ( "Y-m-d H:i:s" ) . " " . __FUNCTION__ . " - dans database.php, session= ". $_SESSION ['user']." \n", 3, LOG_FILE );
 }
 
 if (isset ( $_SESSION ['user'] )) {

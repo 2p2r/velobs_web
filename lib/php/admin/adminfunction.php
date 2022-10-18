@@ -2549,7 +2549,7 @@ function createPublicPoi()
                         $url_photo = $newnamefichier;
                         
                         $return['success'] = true;
-                        $return['ok'] = getTranslation($_SESSION['id_language'], 'PHOTOTRANSFERTDONE');
+                        $return['ok'] = getTranslation(1, 'PHOTOTRANSFERTDONE');
                     } else {
                         $erreur = "Erreur lors du traitement de la photo.";
                         $return['success'] = false;
