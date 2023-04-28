@@ -71,18 +71,22 @@
 									$extraSQL = "";
 									//si l'utilisateur fait partie d'un pole technique, on restreint les POI correspondant à une priorite qui lui est accessible, qui a été modéré et qui lui a été transmis par la collectivité
 									if ($_SESSION['type'] == 3){
-										$extraSQL = " AND poi.pole_id_pole = " .$_SESSION['pole'] . " 
-												AND priorite.non_visible_par_collectivite = 0 
-												AND poi.moderation_poi = 1 
-												AND poi.transmission_poi = 1";
+										$extraSQL = " AND display_poi = 1 
+							AND transmission_poi = 1 
+							AND delete_poi = FALSE 
+							AND poi.pole_id_pole = ' . $_SESSION["pole"] . ' 
+							AND priorite.non_visible_par_collectivite = 0";
+
+												
+												
 									}//si l'utilisateur fait partie d'une communauté de communes, on restreint les POI correspondant à une priorite qui lui est accessible, qui a été modéré et ce quel que soit le territoire
 									elseif ($_SESSION['type'] == 2){
-										$extraSQL = " AND priorite.non_visible_par_collectivite = 0 
-												AND moderation_poi = 1 ";
-									}//si l'utilisateur fait partie des modérateurs, on restreint les POI correspondant au pole
-// 									elseif ($_SESSION['type'] == 4){
-// 										$extraSQL = " AND poi.pole_id_pole = " .$_SESSION['pole'] . " ";
-// 									}
+										$extraSQL = " AND moderation_poi = 1 
+							AND display_poi = 1 
+							AND commune_id_commune IN (' . str_replace(';', ',', $_SESSION['territoire']) . ') AND delete_poi = FALSE 
+							AND priorite.non_visible_par_collectivite = 0 ";
+									}
+
 							    }
 							    if (isset($_GET['pole_poi']) && $_GET['pole_poi'] != ''){
 							        $extraSQL .= " AND pole.id_pole = " .$_GET['pole_poi'] . " ";
