@@ -35,18 +35,63 @@ var mapnik = new OpenLayers.Layer.OSM("OpenStreetMap Mapnik", "https://tile.open
                 'attribution': '<a href="http://www.openstreetmap.org" target="_blank">OpenStreetMap</a>'
         }
 );
-var osmcyclemap = new OpenLayers.Layer.OSM("OSM Cycle Map",
-        ['https://tile.thunderforest.com/cycle/${z}/${x}/${y}.png?apikey='+ TF_key],
-    {
-        'sphericalMercator': true,
-        isBaseLayer: true,
-        'attribution': 'Maps © <a href="http://www.thunderforest.com/" target="_blank">Thunderforest</a>, Data © <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap contributors</a>'
-    }
-);
+//var osmcyclemap = new OpenLayers.Layer.OSM("OSM Cycle Map",
+//        ['https://tile.thunderforest.com/cycle/${z}/${x}/${y}.png?apikey='+ TF_key],
+//    {
+//        'sphericalMercator': true,
+//        isBaseLayer: true,
+//        'attribution': 'Maps © <a href="http://www.thunderforest.com/" target="_blank">Thunderforest</a>, Data © <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap contributors</a>'
+//    }
+//);
+
+//optional external layer to be displayed in velobs
+//define the layer (in this following example, create a Reseau Express Velo layer for Toulouse using custom style, not visible by default
+//to add it in velobs, add this layer to mapLayersArray
+var REVStyles = new OpenLayers.StyleMap({
+                        "default": new OpenLayers.Style({
+                            fillColor: "${getColor}",
+                            strokeWidth: 4,
+                            strokeColor: "${getColor}",
+                            fillOpacity: 0.8,
+                            graphicZIndex: 5,
+                            label: "${getName}",
+                        fontColor: "${getColor}",
+        fontSize: "14px",
+        fontFamily: "Courier New, monospace",
+        fontWeight: "bold",
+        labelXOffset: "5",
+        labelYOffset: "5",
+                            labelOutlineColor: "white",
+                            labelOutlineWidth: 1
+                        },
+                        {
+                            context: {
+                                getColor : function (feature) {
+                                    if (feature.attributes.couleurREV){
+                                                return feature.attributes.couleurREV.value;
+                                        }else{
+                                                return "#000000";
+                                        }
+                                },
+                                getName : function (feature) {
+                                    if (feature.attributes.Num_REV){
+                                        return feature.attributes.Num_REV.value;
+                                        }else{
+                                                return "";
+                                        }
+                                }
+
+                            }
+                        })
+                    });
+//var layerREV = new OpenLayers.Layer.Vector("Projet REV", {styleMap : REVStyles,strategies: [new OpenLayers.Strategy.Fixed()], projection: new OpenLayers.Projection("EPSG:4326"), reportError:true, visibility: false, displayInLayerSwitcher: true, protocol: new OpenLayers.Protocol.HTTP({ url: "resources/kml/REV1Sud.kml",format: new OpenLayers.Format.KML({format: OpenLayers.Format.KML,extractStyles: false,extractAttributes: true})})
+//}
+//);
 //la carte affichée par défaut est la première
 var mapLayersArray = [
         [0, 'Mapnik',mapnik]
-        //[1, 'OpenCycleMap', osmcyclemap]
+        //[1, 'OpenCycleMap', osmcyclemap],
+        //[2, 'REV', layerREV]
 ];
 
 //Création de la carte utilisée dans la vue de modification d'une observation dans l'interface d'administration
