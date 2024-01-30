@@ -1,5 +1,35 @@
 <?php
 	include_once 'key.php';
+	$link = mysql_connect(DB_HOST,DB_USER,DB_PASS);
+	mysql_select_db(DB_NAME);
+	mysql_query("SET NAMES utf8mb4");
+	
+	function getObservationDetailsForTwitterCard($id_poi){
+	    
+	    $sql = "SELECT poi.id_poi,
+                        poi.desc_poi,
+                        commune.id_commune,
+                        commune.lib_commune,
+                        subcategory.id_subcategory,
+                        subcategory.icon_subcategory,
+                        subcategory.lib_subcategory
+                                        
+                FROM poi
+                    INNER JOIN subcategory ON (subcategory.id_subcategory = poi.subcategory_id_subcategory)
+                    INNER JOIN commune ON (commune.id_commune = poi.commune_id_commune)
+                WHERE poi.id_poi = ".$id_poi;
+	    $result = mysql_query($sql);
+	    $nbrows = mysql_num_rows($result);
+	    $row = mysql_fetch_assoc( $result );
+	    $observationArray = array();
+	    if ($result && $nbrows ==1){
+	        $observationArray['id_poi'] = addslashes($row['id_poi']);
+	        $observationArray['desc_poi'] = addslashes($row['desc_poi']);
+	        $observationArray['commune_poi'] = addslashes($row['lib_commune']);
+	        $observationArray['lib_category'] = addslashes($row['lib_subcategory']);
+	    }
+	    return $observationArray;
+	}
 	/* 	Function name 	: getTranslation
 	 * 	Input			: language id, string
 	 * 	Output			: string translation

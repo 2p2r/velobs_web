@@ -10,7 +10,7 @@
 			}
 			if (isset($_FILES['photo-path']) && isset($_POST['id_POI'])) {
 				if (DEBUG){
-					error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - fichier : ".$_FILES['photo-path']." et poi id = ".$_POST['id_POI']."\n", 3, LOG_FILE);
+				    error_log(date("Y-m-d H:i:s") . " " .__FUNCTION__ . " - fichier : ".$_FILES['photo-path']." et poi id = ".$_POST['id_POI']." ".$_SESSION['id_language']."\n", 3, LOG_FILE);
 				}
 				if ($_FILES['photo-path']['name'] != '') {
 					$link = mysql_connect(DB_HOST,DB_USER,DB_PASS);
